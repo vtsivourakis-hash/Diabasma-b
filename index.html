@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Διάβασμα Β΄ Γυμνασίου</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400;600;800&family=Literata:ital,opsz,wght@0,7..72,400;1,7..72,400;1,7..72,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FAFBFD; --grid:#E3EAF5; --card:#FFFFFF; --line:#D3DBE8;
+  --ink:#1F3A93; --on-ink:#FFFFFF; --text:#1E2430; --muted:#5B6475;
+  --mark:#FFE15A; --mark-soft:#FFF7CC; --red:#D62839; --ok:#1E8E5A; --ok-soft:#E3F5EC;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#141A22; --grid:#1D2531; --card:#1B2330; --line:#2E3A4B;
+    --ink:#8FB0FF; --on-ink:#0F1622; --text:#E8ECF2; --muted:#9AA4B4;
+    --mark:#8A7414; --mark-soft:#2F2B14; --red:#FF6B7A; --ok:#4CC38A; --ok-soft:#173528;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#141A22; --grid:#1D2531; --card:#1B2330; --line:#2E3A4B;
+  --ink:#8FB0FF; --on-ink:#0F1622; --text:#E8ECF2; --muted:#9AA4B4;
+  --mark:#8A7414; --mark-soft:#2F2B14; --red:#FF6B7A; --ok:#4CC38A; --ok-soft:#173528;
+  color-scheme:dark;
+}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px);background:var(--paper)}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;color:var(--text);
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px;
+  font-family:'Commissioner',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  font-size:17px;line-height:1.55;
+}
+.wrap{max-width:600px;margin:0 auto;padding:16px 18px 40px}
+h1{font-weight:800;font-size:clamp(30px,9vw,40px);line-height:1.02;letter-spacing:-.02em;margin:10px 0 8px;color:var(--ink)}
+.lede{margin:0;color:var(--muted);font-size:15px;max-width:44ch}
+h2,h3{margin:0}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.f{font-family:'Literata',Georgia,serif;font-style:italic}
+
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;background:var(--paper);padding:12px 0 0;margin:14px 0 18px;border-bottom:2px solid var(--ink)}
+.tab{flex:1;font-weight:600;font-size:15px;padding:10px 2px 12px;border:0;background:transparent;color:var(--muted);cursor:pointer;white-space:nowrap}
+.tab span{padding:0 3px}
+.tab[aria-selected="true"]{color:var(--text)}
+.tab[aria-selected="true"] span{background:linear-gradient(transparent 52%,var(--mark) 52%)}
+.panel[hidden]{display:none}
+
+.chap{margin:0 0 14px}
+.ref{font-size:14px;color:var(--muted)}
+.ct{font-size:24px;line-height:1.2;font-weight:800;margin-top:2px}
+.seg{display:flex;gap:8px;margin-bottom:14px}
+.seg button{flex:1;padding:10px 4px;border-radius:10px;border:1.5px solid var(--line);background:var(--card);cursor:pointer;font-weight:600;font-size:15px}
+.seg button[aria-pressed="true"]{border-color:var(--ink);color:var(--ink);background:linear-gradient(transparent 70%,var(--mark) 70%),var(--card)}
+
+.sheet{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:20px}
+.blk{padding:14px 0;border-bottom:1.5px dashed var(--line)}
+.blk:first-child{padding-top:0}
+.blk:last-of-type{border-bottom:0}
+.blk h3{font-size:17px;font-weight:800;color:var(--ink);margin-bottom:4px}
+.blk p{margin:6px 0 0}
+.blk.warn{background:var(--mark-soft);border:0;border-left:4px solid var(--red);border-radius:8px;padding:12px 14px;margin:6px 0}
+.blk.warn h3{color:var(--red)}
+.formula{font-size:21px;color:var(--ink);margin:6px 0 0}
+.quote{font-family:'Literata',Georgia,serif;font-size:19px;color:var(--ink)}
+
+.btn{display:block;width:100%;padding:14px 18px;border-radius:12px;border:2px solid var(--ink);background:var(--ink);color:var(--on-ink);font-weight:700;cursor:pointer;margin-top:12px}
+.btn.ghost{background:transparent;color:var(--ink)}
+.row{display:flex;gap:10px}.row .btn{flex:1}
+
+.card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;width:100%;min-height:240px;padding:22px;text-align:center;border:1.5px solid var(--line);border-radius:14px;background:var(--card);cursor:pointer}
+.card.back{border-color:var(--ink)}
+.card strong{font-size:21px;line-height:1.3}
+.card .a{font-size:19px;line-height:1.45;color:var(--ink)}
+.hint{font-size:14px;color:var(--muted)}
+.count{text-align:center;font-size:14px;color:var(--muted);margin:10px 0 0}
+
+.grade{position:relative;width:210px;height:150px;margin:6px auto 4px}
+.grade svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.grade ellipse{fill:none;stroke:var(--red);stroke-width:3.5;stroke-linecap:round;stroke-dasharray:560;stroke-dashoffset:560;animation:draw .9s .15s ease-out forwards}
+.grade .num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Literata',Georgia,serif;font-style:italic;font-weight:600;color:var(--red);font-size:64px;line-height:1;transform:rotate(-4deg)}
+.grade .num small{font-size:26px;margin-left:4px;align-self:flex-end;margin-bottom:38px}
+@keyframes draw{to{stroke-dashoffset:0}}
+.center{text-align:center}
+
+.ex{margin-bottom:12px}
+.ex .n{font-size:14px;color:var(--muted)}
+.ex .q{font-weight:600;margin:2px 0 0}
+.ex .btn{margin-top:12px;padding:10px 14px}
+.sol{margin-top:14px;padding-top:12px;border-top:1.5px dashed var(--line)}
+.sol[hidden]{display:none}
+.sol ol{margin:0;padding-left:22px}
+.sol li{margin:0 0 6px}
+.ans{margin:10px 0 0;font-weight:700;color:var(--ok)}
+.ans span{background:linear-gradient(transparent 60%,var(--mark) 60%);color:var(--text);padding:0 2px}
+
+.timer{text-align:center}
+.ring{width:220px;height:220px;margin:6px auto 10px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:10}
+.ring .bg{stroke:var(--grid)}
+.ring .fg{stroke:var(--ink);stroke-linecap:round;transition:stroke-dashoffset .25s linear}
+.ring .time{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring .time b{font-size:48px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.ring .time span{font-size:15px;color:var(--muted)}
+#tmsg{min-height:1.5em;margin:4px 0 0;font-weight:600;color:var(--ok)}
+
+footer{margin-top:28px;font-size:14px;color:var(--muted);text-align:center}
+footer p{margin:0 0 6px}
+@media (prefers-reduced-motion: reduce){
+  .grade ellipse{animation:none;stroke-dashoffset:0}
+  .ring .fg{transition:none}
+}
+@media (max-width:370px){ .tab{font-size:14px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Διάβασμα Β΄&nbsp;Γυμνασίου</h1>
+    <p class="lede">Μία ενότητα από κάθε βιβλίο, με σύντομη περίληψη, κάρτες επανάληψης και λυμένες ασκήσεις.</p>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-p="F"><span>Φυσική</span></button>
+    <button class="tab" role="tab" aria-selected="false" data-p="M"><span>Μαθηματικά</span></button>
+    <button class="tab" role="tab" aria-selected="false" data-p="A"><span>Αρχαία</span></button>
+    <button class="tab" role="tab" aria-selected="false" data-p="timer"><span>Χρονόμετρο</span></button>
+  </nav>
+
+  <section class="panel" id="F"></section>
+  <section class="panel" id="M" hidden></section>
+  <section class="panel" id="A" hidden></section>
+  <section class="panel" id="timer" hidden>
+    <div class="sheet timer">
+      <div class="seg" id="tmodes">
+        <button data-m="study" aria-pressed="true">Μελέτη 25΄</button>
+        <button data-m="rest" aria-pressed="false">Διάλειμμα 5΄</button>
+      </div>
+      <div class="ring">
+        <svg viewBox="0 0 200 200" aria-hidden="true"><circle class="bg" cx="100" cy="100" r="88"/><circle class="fg" id="tfg" cx="100" cy="100" r="88"/></svg>
+        <div class="time"><b id="tclock">25:00</b><span id="tlabel">Μελέτη</span></div>
+      </div>
+      <p id="tmsg" aria-live="polite"></p>
+      <div class="row">
+        <button class="btn" id="tgo">Ξεκίνα</button>
+        <button class="btn ghost" id="treset">Επαναφορά</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Βασισμένο στα σχολικά βιβλία της Β΄ Γυμνασίου (ebooks.edu.gr).</p>
+    <p>Βρήκες λάθος ή θέλεις κι άλλη ενότητα; Πες το στον εκπρόσωπο της τάξης.</p>
+  </footer>
+</div>
+
+<script>
+const S = {
+F: {
+ title:"Η κίνηση των σωμάτων", ref:"Κεφάλαιο 1, ενότητα 1.1",
+ exTitle:"Λυμένες ασκήσεις",
+ summary:[
+  {h:"Κίνηση και σύστημα αναφοράς", t:"Ένα σώμα κινείται όταν αλλάζει η θέση του σε σχέση με κάτι που θεωρούμε ακίνητο, το σύστημα αναφοράς. Ο επιβάτης ενός τρένου είναι ακίνητος για τον διπλανό του, αλλά κινείται για όποιον στέκεται στην αποβάθρα."},
+  {h:"Θέση", t:"Πάνω σε έναν άξονα x με σημείο αναφοράς το 0, η θέση ενός σώματος είναι ένας αριθμός με πρόσημο. Ο αριθμός λέει πόσο απέχει από το 0 και το πρόσημο από ποια πλευρά βρίσκεται. Μονάδα στο S.I. είναι το 1 m."},
+  {h:"Μετατόπιση", f:"Δx = x<sub>τελ</sub> − x<sub>αρχ</sub>", t:"Δείχνει πόσο και προς τα πού άλλαξε η θέση. Θετική μετατόπιση σημαίνει κίνηση προς τη θετική κατεύθυνση του άξονα, αρνητική προς την αντίθετη."},
+  {h:"Απόσταση (διάστημα)", t:"Είναι το μήκος της διαδρομής που έκανε το σώμα, γι' αυτό δεν είναι ποτέ αρνητική."},
+  {warn:true, h:"Η κλασική παγίδα", t:"Μετατόπιση και απόσταση <b>δεν</b> είναι το ίδιο. Αν πας στο περίπτερο και γυρίσεις σπίτι, η απόσταση είναι όλη η διαδρομή, ενώ η μετατόπιση είναι μηδέν. Βγαίνουν ίδιος αριθμός μόνο όταν το σώμα κινείται συνέχεια προς τη θετική κατεύθυνση, χωρίς να γυρίσει πίσω."},
+  {h:"Χρονική στιγμή και χρονική διάρκεια", f:"Δt = t<sub>τελ</sub> − t<sub>αρχ</sub>", t:"Η χρονική στιγμή t είναι η ένδειξη του ρολογιού σε μια θέση. Η χρονική διάρκεια Δt είναι πόσος χρόνος πέρασε από τη μία θέση στην άλλη."},
+  {h:"Μέση ταχύτητα", f:"υ<sub>μ</sub> = s / Δt", t:"Η απόσταση που διανύει το σώμα σε κάθε μονάδα χρόνου. Μονάδα στο S.I. είναι το 1 m/s, αλλά χρησιμοποιούμε και km/h, cm/s κ.ά."},
+  {h:"Μετατροπή μονάδων", f:"m/s × 3,6 = km/h", t:"Από km/h σε m/s κάνεις το αντίθετο και διαιρείς με 3,6. Για παράδειγμα, 72 km/h = 20 m/s."},
+  {h:"Στιγμιαία ταχύτητα", t:"Είναι η ταχύτητα σε μια συγκεκριμένη στιγμή, αυτή που δείχνει το κοντέρ. Έχει μέτρο και κατεύθυνση, γι' αυτό είναι <b>διανυσματικό μέγεθος</b>, όπως και η μετατόπιση."}
+ ],
+ cards:[
+  ["Τι είναι κίνηση;","Η μεταβολή της θέσης ενός σώματος σε σχέση με ένα σύστημα αναφοράς που θεωρούμε ακίνητο."],
+  ["Τι δείχνει το πρόσημο της θέσης x;","Από ποια πλευρά του σημείου αναφοράς (0) βρίσκεται το σώμα."],
+  ["Πώς υπολογίζεται η μετατόπιση;","Δx = x<sub>τελ</sub> − x<sub>αρχ</sub>"],
+  ["Τι σημαίνει αρνητική μετατόπιση;","Ότι το σώμα μετακινήθηκε προς την αρνητική κατεύθυνση του άξονα."],
+  ["Μπορεί η απόσταση να είναι αρνητική;","Όχι. Είναι μήκος διαδρομής, άρα πάντα θετική ή μηδέν."],
+  ["Ένα σώμα ξεκινά και επιστρέφει στο ίδιο σημείο. Πόση είναι η μετατόπισή του;","Μηδέν, γιατί η τελική θέση είναι ίδια με την αρχική. Η απόσταση όμως δεν είναι μηδέν."],
+  ["Ποια η διαφορά χρονικής στιγμής και χρονικής διάρκειας;","Στιγμή t είναι η ένδειξη του ρολογιού. Διάρκεια Δt = t<sub>τελ</sub> − t<sub>αρχ</sub> είναι πόσος χρόνος πέρασε."],
+  ["Πώς ορίζεται η μέση ταχύτητα;","υ<sub>μ</sub> = s / Δt, δηλαδή η απόσταση που διανύει το σώμα στη μονάδα του χρόνου."],
+  ["Ποια είναι η μονάδα ταχύτητας στο S.I.;","Το 1 m/s."],
+  ["Πώς πας από m/s σε km/h;","Πολλαπλασιάζεις με 3,6."],
+  ["Πώς πας από km/h σε m/s;","Διαιρείς με 3,6."],
+  ["Τι είναι η στιγμιαία ταχύτητα;","Η ταχύτητα σε μια συγκεκριμένη στιγμή, όπως τη δείχνει το κοντέρ. Έχει μέτρο και κατεύθυνση."],
+  ["Τι είναι διανυσματικό μέγεθος;","Μέγεθος που χρειάζεται μέτρο και κατεύθυνση για να περιγραφεί, όπως η μετατόπιση και η στιγμιαία ταχύτητα."]
+ ],
+ ex:[
+  {q:"Ένα παιδί πηγαίνει από τη θέση x = +2 m στη θέση x = −4 m. Βρες τη μετατόπιση και την απόσταση που διάνυσε.",
+   steps:["Μετατόπιση: Δx = x<sub>τελ</sub> − x<sub>αρχ</sub> = (−4) − (+2) = −6 m.","Το μείον σημαίνει ότι κινήθηκε προς την αρνητική κατεύθυνση του άξονα.","Απόσταση: το μήκος της διαδρομής από το +2 ως το −4 είναι 6 m."],
+   ans:"Δx = −6 m και s = 6 m"},
+  {q:"Ένα σώμα ξεκινά από x₁ = +1 m, πηγαίνει στο x₂ = +5 m και μετά γυρίζει στο x₃ = −1 m. Βρες τη μετατόπιση και την απόσταση.",
+   steps:["Για τη μετατόπιση μετράνε μόνο η αρχή και το τέλος: Δx = x₃ − x₁ = (−1) − (+1) = −2 m.","Για την απόσταση μετράει όλη η διαδρομή: από το +1 στο +5 είναι 4 m και από το +5 στο −1 είναι 6 m.","Σύνολο: 4 + 6 = 10 m. Βγήκαν διαφορετικά επειδή το σώμα γύρισε πίσω."],
+   ans:"Δx = −2 m και s = 10 m"},
+  {q:"Ένας ποδηλάτης διανύει 12 km σε 30 λεπτά. Βρες τη μέση ταχύτητά του σε km/h και σε m/s.",
+   steps:["Μετατρέπω τον χρόνο σε ώρες: 30 min = 0,5 h.","υ<sub>μ</sub> = s / Δt = 12 km / 0,5 h = 24 km/h.","Σε m/s διαιρώ με 3,6: 24 / 3,6 ≈ 6,7 m/s.","Έλεγχος με άλλο τρόπο: 12.000 m / 1.800 s ≈ 6,7 m/s."],
+   ans:"24 km/h, δηλαδή περίπου 6,7 m/s"},
+  {q:"Ποιος τρέχει πιο γρήγορα: ένα σκούτερ με 54 km/h ή ένας λαγός με 16 m/s;",
+   steps:["Για να συγκρίνω, φέρνω τις δύο ταχύτητες στην ίδια μονάδα.","54 km/h = 54 / 3,6 = 15 m/s.","15 m/s < 16 m/s."],
+   ans:"Ο λαγός"},
+  {q:"Ένα τρένο κινείται με σταθερή ταχύτητα 25 m/s. Πόση απόσταση διανύει σε 2 λεπτά;",
+   steps:["Από υ = s / Δt λύνω ως προς την απόσταση: s = υ · Δt.","Μετατρέπω τον χρόνο σε δευτερόλεπτα: 2 min = 120 s.","s = 25 · 120 = 3.000 m."],
+   ans:"3.000 m, δηλαδή 3 km"}
+ ]
+},
+M: {
+ title:"Ρητοί αριθμοί και αλγεβρικές παραστάσεις", ref:"Επανάληψη Α΄ Γυμνασίου και ενότητα Α.1.1",
+ exTitle:"Λυμένες ασκήσεις",
+ summary:[
+  {h:"Πρόσθεση ρητών", t:"Ομόσημοι: προσθέτεις τις απόλυτες τιμές και κρατάς το κοινό πρόσημο, π.χ. (−3) + (−5) = −8. Ετερόσημοι: αφαιρείς τη μικρότερη απόλυτη τιμή από τη μεγαλύτερη και κρατάς το πρόσημο εκείνου με τη μεγαλύτερη, π.χ. (−9) + 4 = −5."},
+  {h:"Αφαίρεση", f:"α − β = α + (−β)", t:"Αφαιρώ σημαίνει προσθέτω τον αντίθετο. Έτσι 6 − (−2) = 6 + 2 = 8."},
+  {h:"Πολλαπλασιασμός και διαίρεση", t:"Ομόσημοι δίνουν θετικό αποτέλεσμα, ετερόσημοι αρνητικό: (−4)·(−5) = 20 και (−12) : 3 = −4."},
+  {h:"Δυνάμεις αρνητικών", t:"Αρνητική βάση με άρτιο εκθέτη δίνει θετικό, με περιττό δίνει αρνητικό: (−2)² = 4 και (−2)³ = −8."},
+  {warn:true, h:"Η κλασική παγίδα", t:"Το (−3)² είναι 9, αλλά το −3² είναι −9. Χωρίς παρένθεση η δύναμη αφορά μόνο το 3, όχι το μείον."},
+  {h:"Σειρά των πράξεων", t:"Πρώτα οι παρενθέσεις, μετά οι δυνάμεις, μετά πολλαπλασιασμοί και διαιρέσεις, και στο τέλος προσθέσεις και αφαιρέσεις, από αριστερά προς τα δεξιά."},
+  {h:"Μεταβλητή", t:"Ένα γράμμα, π.χ. x, που μπορεί να πάρει οποιαδήποτε τιμή από ένα σύνολο αριθμών. Μας βοηθά να γράφουμε γενικούς κανόνες: η περίμετρος ενός τετραγώνου με πλευρά x είναι 4x."},
+  {h:"Αλγεβρική παράσταση και αριθμητική τιμή", t:"Αλγεβρική παράσταση είναι μια έκφραση με αριθμούς, μεταβλητές και πράξεις, π.χ. 3x + 5. Αν βάλουμε x = 2, βρίσκουμε την αριθμητική τιμή της: 3·2 + 5 = 11."},
+  {h:"Αναγωγή ομοίων όρων", f:"7x − 2x + x = 6x", t:"Όμοιοι όροι έχουν το ίδιο γράμμα στην ίδια δύναμη. Τους μαζεύουμε προσθέτοντας τους συντελεστές τους. Τα 3x και 3x² δεν είναι όμοιοι."},
+  {h:"Επιμεριστική ιδιότητα", f:"α(β + γ) = αβ + αγ", t:"Ο αριθμός έξω από την παρένθεση πολλαπλασιάζει κάθε όρο μέσα της. Ένα μείον μπροστά από παρένθεση αλλάζει όλα τα πρόσημα: −(x − 4) = −x + 4."}
+ ],
+ cards:[
+  ["(−7) + (−3) = ;","−10. Ομόσημοι: προσθέτω και κρατάω το μείον."],
+  ["(−7) + 3 = ;","−4. Ετερόσημοι: 7 − 3 = 4, με το πρόσημο του 7."],
+  ["5 − (−2) = ;","7, γιατί αφαιρώ σημαίνει προσθέτω τον αντίθετο: 5 + 2."],
+  ["(−4) · (−6) = ;","24. Ομόσημοι δίνουν θετικό."],
+  ["(−18) : 3 = ;","−6. Ετερόσημοι δίνουν αρνητικό."],
+  ["Πόσο κάνει (−2)² και πόσο −2²;","(−2)² = 4, ενώ −2² = −(2²) = −4."],
+  ["Πόσο κάνει (−1)⁵;","−1, γιατί ο εκθέτης είναι περιττός."],
+  ["Ποια είναι η σειρά των πράξεων;","Παρενθέσεις, δυνάμεις, πολλαπλασιασμοί και διαιρέσεις, προσθέσεις και αφαιρέσεις."],
+  ["Τι είναι μεταβλητή;","Ένα γράμμα που παριστάνει οποιονδήποτε αριθμό από ένα σύνολο αριθμών."],
+  ["Τι είναι η αριθμητική τιμή μιας παράστασης;","Ο αριθμός που βγαίνει όταν βάλουμε συγκεκριμένες τιμές στη θέση των μεταβλητών."],
+  ["Ποιοι όροι λέγονται όμοιοι;","Όσοι έχουν το ίδιο γράμμα στην ίδια δύναμη, π.χ. 4x και −x."],
+  ["Τι λέει η επιμεριστική ιδιότητα;","α(β + γ) = αβ + αγ"],
+  ["−(x − 3) = ;","−x + 3. Το μείον αλλάζει τα πρόσημα όλων των όρων."],
+  ["Περίμετρος τετραγώνου με πλευρά x;","4x"]
+ ],
+ ex:[
+  {q:"Υπολόγισε: −3 + 4·(−2) − (−5)",
+   steps:["Πρώτα ο πολλαπλασιασμός: 4·(−2) = −8.","Το −(−5) γίνεται +5.","−3 − 8 + 5 = −11 + 5 = −6."], ans:"−6"},
+  {q:"Υπολόγισε: (−2)³ − 3·(−1)² + 10 : (−5)",
+   steps:["Δυνάμεις: (−2)³ = −8 και (−1)² = 1.","Πολλαπλασιασμός και διαίρεση: 3·1 = 3 και 10 : (−5) = −2.","−8 − 3 + (−2) = −8 − 3 − 2 = −13."], ans:"−13"},
+  {q:"Απλοποίησε: 5x − 2 + 3x + 7 − x",
+   steps:["Μαζεύω τους όρους με x: 5x + 3x − x = 7x.","Μαζεύω τους σκέτους αριθμούς: −2 + 7 = 5."], ans:"7x + 5"},
+  {q:"Απλοποίησε: 3(2x − 1) − 2(x − 4)",
+   steps:["Επιμεριστική στην πρώτη παρένθεση: 3·2x − 3·1 = 6x − 3.","Επιμεριστική στη δεύτερη, με προσοχή στο μείον: (−2)·x + (−2)·(−4) = −2x + 8.","6x − 3 − 2x + 8 = 4x + 5."], ans:"4x + 5"},
+  {q:"Βρες την αριθμητική τιμή της Α = 2x² − 3x + 1 για x = −2.",
+   steps:["Βάζω το −2 πάντα σε παρένθεση: Α = 2·(−2)² − 3·(−2) + 1.","(−2)² = 4, άρα 2·4 = 8.","−3·(−2) = +6.","Α = 8 + 6 + 1 = 15."], ans:"Α = 15"},
+  {q:"Ένα ταξί χρεώνει 3 € για την εκκίνηση και 0,80 € για κάθε χιλιόμετρο. Γράψε μια παράσταση για το κόστος x χιλιομέτρων και βρες πόσο κοστίζει μια διαδρομή 10 km.",
+   steps:["Τα 3 € πληρώνονται πάντα και κάθε χιλιόμετρο προσθέτει 0,80 €. Για x χιλιόμετρα: Κ = 3 + 0,8x.","Για x = 10: Κ = 3 + 0,8·10 = 3 + 8 = 11."], ans:"Κ = 3 + 0,8x και για 10 km 11 €"}
+ ]
+},
+A: {
+ title:"Ιλιάδα: εισαγωγή και ραψωδία Α", ref:"Ομηρικά Έπη, Ιλιάδα",
+ exTitle:"Ερωτήσεις κατανόησης με απαντήσεις",
+ summary:[
+  {h:"Το έπος", t:"Η Ιλιάδα αποδίδεται στον Όμηρο και, κατά την επικρατέστερη άποψη, πήρε τη μορφή της στα τέλη του 8ου αι. π.Χ. Έχει 24 ραψωδίες, που συμβολίζονται με τα κεφαλαία γράμματα του αλφαβήτου, από Α έως Ω, και είναι γραμμένη σε δακτυλικό εξάμετρο."},
+  {h:"Θέμα", t:"Η <b>μήνις</b>, δηλαδή η μεγάλη και επίμονη οργή του Αχιλλέα, και τα δεινά που έφερε στους Αχαιούς. Τα γεγονότα γίνονται μέσα σε λίγες μέρες, στον δέκατο χρόνο του Τρωικού πολέμου."},
+  {h:"Το προοίμιο (Α 1–7)", quote:"Μῆνιν ἄειδε, θεά, Πηληϊάδεω Ἀχιλῆος", t:"Ο ποιητής καλεί τη Μούσα να τραγουδήσει την οργή του Αχιλλέα, του γιου του Πηλέα. Από την αρχή μάς λέει το θέμα, τις συνέπειες (πολλοί νεκροί Αχαιοί), ότι όλα έγιναν σύμφωνα με το θέλημα του Δία, και πού ξεκινούν: στη σύγκρουση του Αχιλλέα με τον Αγαμέμνονα."},
+  {h:"Ο Χρύσης", t:"Ο ιερέας του Απόλλωνα έρχεται στο στρατόπεδο με λύτρα για να πάρει πίσω την κόρη του, τη Χρυσηίδα, που την είχε ο Αγαμέμνονας. Οι Αχαιοί θέλουν να δεχτούν, αλλά ο Αγαμέμνονας τον διώχνει με προσβολές και απειλές."},
+  {h:"Ο λοιμός", t:"Ο Χρύσης προσεύχεται στον Απόλλωνα, κι εκείνος ρίχνει τα βέλη του στο στρατόπεδο. Ένας λοιμός σκοτώνει ζώα και ανθρώπους για εννιά μέρες."},
+  {h:"Η φιλονικία", t:"Τη δέκατη μέρα ο Αχιλλέας καλεί συνέλευση και ο μάντης Κάλχας αποκαλύπτει την αιτία. Ο Αγαμέμνονας δέχεται να επιστρέψει τη Χρυσηίδα, αλλά για να μη μείνει χωρίς γέρας παίρνει τη Βρισηίδα από τον Αχιλλέα. Η Αθηνά, σταλμένη από την Ήρα, τον εμποδίζει να τραβήξει το σπαθί. Ο Αχιλλέας αποσύρεται από τη μάχη."},
+  {warn:true, h:"Το κλειδί για να καταλάβεις", t:"Στον κόσμο του Ομήρου το <b>γέρας</b>, το τιμητικό δώρο από τα λάφυρα, δείχνει δημόσια την αξία ενός ήρωα. Γι' αυτό η αφαίρεσή του δεν είναι απλή στενοχώρια αλλά βαριά προσβολή της τιμής του Αχιλλέα."},
+  {h:"Γνωρίσματα του έπους", t:"Επίκληση στη Μούσα, αφήγηση που ξεκινά από τη μέση της ιστορίας (in medias res), σταθερά επίθετα που συνοδεύουν πρόσωπα, και θεοί που παίρνουν μέρος στα ανθρώπινα."}
+ ],
+ cards:[
+  ["Ποιο είναι το θέμα της Ιλιάδας;","Η οργή (μήνις) του Αχιλλέα και οι συνέπειές της για τους Αχαιούς."],
+  ["Τι σημαίνει «μήνις»;","Μεγάλη και επίμονη οργή."],
+  ["Σε ποιον απευθύνεται ο ποιητής στο προοίμιο;","Στη Μούσα. Αυτό λέγεται επίκληση."],
+  ["Πόσες ραψωδίες έχει η Ιλιάδα και πώς συμβολίζονται;","24, με τα κεφαλαία γράμματα του αλφαβήτου, από Α έως Ω."],
+  ["Σε ποιο μέτρο είναι γραμμένη;","Σε δακτυλικό εξάμετρο."],
+  ["Πότε γίνονται τα γεγονότα της Ιλιάδας;","Στον δέκατο χρόνο του Τρωικού πολέμου, μέσα σε λίγες μέρες."],
+  ["Τι σημαίνει in medias res;","Ότι η αφήγηση ξεκινά από τη μέση της ιστορίας, όχι από την αρχή του πολέμου."],
+  ["Ποιος είναι ο Χρύσης;","Ιερέας του Απόλλωνα και πατέρας της Χρυσηίδας."],
+  ["Πώς τιμωρεί ο Απόλλωνας τους Αχαιούς;","Στέλνει λοιμό με τα βέλη του, για εννιά μέρες."],
+  ["Ποιος αποκαλύπτει την αιτία του λοιμού;","Ο μάντης Κάλχας, στη συνέλευση που κάλεσε ο Αχιλλέας."],
+  ["Τι είναι το γέρας;","Τιμητικό δώρο από τα λάφυρα, που δείχνει δημόσια την αξία ενός ήρωα."],
+  ["Γιατί οργίζεται ο Αχιλλέας;","Ο Αγαμέμνονας του παίρνει τη Βρισηίδα, το γέρας του, και τον προσβάλλει μπροστά σε όλους."],
+  ["Ποια θεά συγκρατεί τον Αχιλλέα;","Η Αθηνά, σταλμένη από την Ήρα. Τη βλέπει μόνο εκείνος."],
+  ["Τι είναι το σταθερό (κοσμητικό) επίθετο;","Επίθετο που συνοδεύει πάντα ένα πρόσωπο ή πράγμα, π.χ. ο γοργοπόδαρος Αχιλλέας."]
+ ],
+ ex:[
+  {q:"Γιατί ο ποιητής ξεκινά με επίκληση στη Μούσα;",
+   steps:["Οι αρχαίοι πίστευαν ότι οι Μούσες γνωρίζουν όσα έγιναν παλιά και εμπνέουν τον ποιητή.","Έτσι η ιστορία παρουσιάζεται ως αληθινή και αποκτά κύρος, και ο ποιητής δείχνει σεβασμό στους θεούς."],
+   ans:"Για έμπνευση και κύρος: η ιστορία έρχεται «από τους θεούς»."},
+  {q:"Τι μαθαίνουμε από το προοίμιο για την υπόθεση; Γιατί ο ποιητής μάς λέει από πριν το αποτέλεσμα;",
+   steps:["Μαθαίνουμε το θέμα (η οργή του Αχιλλέα), τις συνέπειες (πολλοί νεκροί Αχαιοί), ότι όλα γίνονται με το θέλημα του Δία και ότι η αρχή είναι η σύγκρουση με τον Αγαμέμνονα.","Αφού ξέρουμε τι θα γίνει, η αγωνία μας μετατοπίζεται στο πώς θα γίνει."],
+   ans:"Θέμα, συνέπειες, θεϊκό σχέδιο, αφετηρία, και αγωνία για το «πώς»."},
+  {q:"Σύγκρινε τη στάση του Αγαμέμνονα με τη στάση των άλλων Αχαιών απέναντι στον Χρύση.",
+   steps:["Οι Αχαιοί σέβονται τον ιερέα και θέλουν να δεχτούν τα λύτρα.","Ο Αγαμέμνονας δείχνει αλαζονεία: τον διώχνει, τον απειλεί και έτσι ασεβεί και προς τον θεό.","Η αλαζονεία του έχει συνέπειες για όλους: τον λοιμό."],
+   ans:"Σεβασμός από τους Αχαιούς, αλαζονεία από τον Αγαμέμνονα."},
+  {q:"Γιατί η αφαίρεση της Βρισηίδας είναι τόσο σοβαρή για τον Αχιλλέα;",
+   steps:["Η Βρισηίδα είναι το γέρας του, δηλαδή η δημόσια αναγνώριση της αξίας του στη μάχη.","Στην ομηρική κοινωνία η τιμή είναι το πιο σημαντικό αγαθό για έναν ήρωα.","Όταν του την παίρνουν μπροστά σε όλους, ο Αχιλλέας νιώθει ότι ακυρώνεται η αξία του, γι' αυτό αποσύρεται από τη μάχη."],
+   ans:"Γιατί προσβάλλεται δημόσια η τιμή του."},
+  {q:"Πώς παρεμβαίνουν οι θεοί στη ραψωδία Α; Δώσε δύο παραδείγματα.",
+   steps:["Ο Απόλλωνας ακούει την προσευχή του Χρύση και στέλνει τον λοιμό.","Η Αθηνά εμφανίζεται μόνο στον Αχιλλέα και τον εμποδίζει να σκοτώσει τον Αγαμέμνονα.","Οι θεοί επηρεάζουν τα γεγονότα, αλλά οι άνθρωποι έχουν την ευθύνη των επιλογών τους."],
+   ans:"Απόλλωνας με τον λοιμό, Αθηνά που συγκρατεί τον Αχιλλέα."}
+ ]
+}
+};
+
+const $ = (s, r=document) => r.querySelector(s);
+function shuffle(arr){ const a = arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+/* Tabs */
+document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => {
+  document.querySelectorAll(".tab").forEach(x => x.setAttribute("aria-selected", x === t ? "true" : "false"));
+  document.querySelectorAll(".panel").forEach(p => p.hidden = p.id !== t.dataset.p);
+  window.scrollTo({top:0});
+}));
+
+/* Subjects */
+const VIEWS = [["sum","Περίληψη"],["cards","Κάρτες"],["ex","Λυμένες"]];
+const state = {};
+function startCards(k){
+  const st = state[k];
+  st.queue = shuffle(S[k].cards.map((c,i) => ({q:c[0], a:c[1], i})));
+  st.total = st.queue.length; st.missed = new Set(); st.knew = 0; st.flipped = false;
+}
+function setView(k, v){ state[k].view = v; render(k); const el = $("#"+k); el.scrollIntoView({block:"start"}); }
+
+function render(k){
+  const s = S[k], st = state[k], el = $("#"+k);
+  let body = "";
+  if(st.view === "sum"){
+    body = `<div class="sheet">${s.summary.map(b => `<section class="blk${b.warn ? " warn" : ""}"><h3>${b.h}</h3>${b.quote ? `<p class="quote" lang="grc">${b.quote}</p>` : ""}${b.f ? `<p class="f formula">${b.f}</p>` : ""}<p>${b.t}</p></section>`).join("")}
+      <button class="btn" data-go="cards">Έλεγξε τι θυμάσαι με τις κάρτες</button></div>`;
+  } else if(st.view === "cards"){
+    if(!st.queue.length){
+      const g = Math.round(st.knew / st.total * 20);
+      const msg = g >= 18 ? "Άριστα! Είσαι έτοιμος για το μάθημα." : g >= 14 ? "Πολύ καλά. Ξαναδιάβασε όσα σου ξέφυγαν." : "Καλή αρχή. Ρίξε μια ματιά στην περίληψη και ξαναδοκίμασε.";
+      body = `<div class="sheet center">
+        <div class="grade" role="img" aria-label="Βαθμός ${g} στα 20"><svg viewBox="0 0 210 150" aria-hidden="true"><ellipse cx="105" cy="76" rx="92" ry="60" transform="rotate(-6 105 76)"/></svg><div class="num">${g}<small>/20</small></div></div>
+        <p>Ήξερες με την πρώτη ${st.knew} από ${st.total} κάρτες. ${msg}</p>
+        <div class="row"><button class="btn" data-act="restart">Ξανά από την αρχή</button><button class="btn ghost" data-go="sum">Στην περίληψη</button></div></div>`;
+    } else {
+      const c = st.queue[0];
+      body = `<button class="card${st.flipped ? " back" : ""}" data-act="flip" aria-live="polite">${st.flipped
+          ? `<span class="hint">${c.q}</span><span class="a">${c.a}</span>`
+          : `<strong>${c.q}</strong><span class="hint">Σκέψου την απάντηση και πάτα την κάρτα</span>`}</button>
+        ${st.flipped ? `<div class="row"><button class="btn ghost" data-act="later">Ξανά αργότερα</button><button class="btn" data-act="knew">Το ήξερα</button></div>` : ""}
+        <p class="count">Έμειναν ${st.queue.length} από ${st.total}</p>`;
+    }
+  } else {
+    body = `<h3 style="font-size:17px;margin:0 0 10px">${s.exTitle}</h3>` + s.ex.map((e,i) => `<div class="sheet ex">
+      <span class="n">${k === "A" ? "Ερώτηση" : "Άσκηση"} ${i+1}</span>
+      <p class="q">${e.q}</p>
+      <button class="btn ghost" data-sol="${i}" aria-expanded="false">Δες τη λύση</button>
+      <div class="sol" id="${k}-sol-${i}" hidden><ol>${e.steps.map(x => `<li>${x}</li>`).join("")}</ol><p class="ans">Απάντηση: <span>${e.ans}</span></p></div>
+    </div>`).join("") + `<p class="hint center">Δοκίμασε πρώτα μόνος σου και μετά δες τη λύση.</p>`;
+  }
+  el.innerHTML = `<div class="chap"><span class="ref">${s.ref}</span><h2 class="ct">${s.title}</h2></div>
+    <div class="seg">${VIEWS.map(([v,l]) => `<button data-go="${v}" aria-pressed="${st.view === v}">${l}</button>`).join("")}</div>${body}`;
+
+  el.querySelectorAll("[data-go]").forEach(b => b.onclick = () => setView(k, b.dataset.go));
+  el.querySelectorAll("[data-act]").forEach(b => b.onclick = () => {
+    const a = b.dataset.act;
+    if(a === "flip"){ st.flipped = !st.flipped; }
+    else if(a === "knew"){ const c = st.queue.shift(); if(!st.missed.has(c.i)) st.knew++; st.flipped = false; }
+    else if(a === "later"){ const c = st.queue.shift(); st.missed.add(c.i); st.queue.push(c); st.flipped = false; }
+    else if(a === "restart"){ startCards(k); }
+    render(k);
+  });
+  el.querySelectorAll("[data-sol]").forEach(b => b.onclick = () => {
+    const sol = $("#"+k+"-sol-"+b.dataset.sol);
+    sol.hidden = !sol.hidden;
+    b.setAttribute("aria-expanded", String(!sol.hidden));
+    b.textContent = sol.hidden ? "Δες τη λύση" : "Κρύψε τη λύση";
+  });
+}
+["F","M","A"].forEach(k => { state[k] = {view:"sum"}; startCards(k); render(k); });
+
+/* Timer */
+const MODES = { study:{min:25, label:"Μελέτη"}, rest:{min:5, label:"Διάλειμμα"} };
+const C = 2 * Math.PI * 88;
+const tm = { mode:"study", left:25*60, end:null, int:null };
+const fg = $("#tfg");
+fg.style.strokeDasharray = C;
+function total(){ return MODES[tm.mode].min * 60; }
+function drawT(){
+  const m = Math.floor(tm.left / 60), s = tm.left % 60;
+  const t = `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+  $("#tclock").textContent = t;
+  $("#tlabel").textContent = MODES[tm.mode].label;
+  fg.style.strokeDashoffset = C * (1 - tm.left / total());
+  $("#tgo").textContent = tm.end ? "Παύση" : (tm.left < total() ? "Συνέχεια" : "Ξεκίνα");
+  document.title = tm.end ? `${t} ${MODES[tm.mode].label}` : "Διάβασμα Β΄ Γυμνασίου";
+  document.querySelectorAll("#tmodes button").forEach(b => b.setAttribute("aria-pressed", b.dataset.m === tm.mode ? "true" : "false"));
+}
+function stopT(){ clearInterval(tm.int); tm.int = null; tm.end = null; }
+function setMode(m){ stopT(); tm.mode = m; tm.left = total(); drawT(); }
+function tick(){
+  tm.left = Math.max(0, Math.round((tm.end - Date.now()) / 1000));
+  if(tm.left === 0){
+    const was = tm.mode;
+    stopT();
+    try { navigator.vibrate && navigator.vibrate([200,100,200]); } catch(e){}
+    setMode(was === "study" ? "rest" : "study");
+    $("#tmsg").textContent = was === "study" ? "Μπράβο! Ώρα για διάλειμμα." : "Τέλος το διάλειμμα. Πάμε πάλι!";
+    return;
+  }
+  drawT();
+}
+$("#tgo").onclick = () => {
+  $("#tmsg").textContent = "";
+  if(tm.end){ stopT(); drawT(); }
+  else { tm.end = Date.now() + tm.left * 1000; tm.int = setInterval(tick, 250); drawT(); }
+};
+$("#treset").onclick = () => { $("#tmsg").textContent = ""; setMode(tm.mode); };
+document.querySelectorAll("#tmodes button").forEach(b => b.onclick = () => { $("#tmsg").textContent = ""; setMode(b.dataset.m); });
+drawT();
+</script>
+</body>
+</html>
