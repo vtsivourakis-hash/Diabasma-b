@@ -4,11 +4,22 @@ const fs = require("fs");
 const path = require("path");
 
 const dir = path.join(__dirname, "content");
+
+// Πίνακες γραμματικής (κλίσεις, συζυγίες). Στα κείμενα μια λέξη γίνεται «κουμπί» γραμματικής με {{τύπος|κλειδί}}.
+const G = JSON.parse(fs.readFileSync(path.join(dir, "_grammar.json"), "utf8"));
+for (const [k, g] of Object.entries(G)) {
+  if (!g.lemma || !g.book) throw new Error(`_grammar.json: το "${k}" θέλει lemma και book`);
+  if (!g.tenses && !(g.sg && g.pl)) throw new Error(`_grammar.json: το "${k}" θέλει tenses (ρήμα) ή sg/pl (όνομα)`);
+  for (const t of g.tenses || []) for (const [m, f] of t.moods) if (f.length !== 6) throw new Error(`_grammar.json: ${k}, ${t.n}, ${m}: θέλει 6 πρόσωπα`);
+  for (const n of ["sg", "pl"]) if (g[n] && g[n].length !== 5) throw new Error(`_grammar.json: ${k}.${n}: θέλει 5 πτώσεις`);
+}
+
 const C = {};
-for (const f of fs.readdirSync(dir).filter(f => f.endsWith(".json")).sort()) {
+for (const f of fs.readdirSync(dir).filter(f => f.endsWith(".json") && !f.startsWith("_")).sort()) {
   // F-1.1.json -> "F/1.1", M-A1.2.json -> "M/A1.2", A-r3.json -> "A/r3"
   const key = f.replace(/\.json$/, "").replace("-", "/");
-  const data = JSON.parse(fs.readFileSync(path.join(dir, f), "utf8"));
+  const raw = fs.readFileSync(path.join(dir, f), "utf8");
+  const data = JSON.parse(raw);
   for (const field of ["title", "exTitle", "summary", "quiz", "ex"]) {
     if (!(field in data)) throw new Error(`${f}: λείπει το πεδίο "${field}"`);
   }
@@ -18,16 +29,22 @@ for (const f of fs.readdirSync(dir).filter(f => f.endsWith(".json")).sort()) {
   });
   data.ex.forEach((e, i) => {
     if ("topic" in e && !(e.topic >= 0 && e.topic < data.summary.length)) throw new Error(`${f}: η άσκηση ${i + 1} δείχνει σε θέμα ${e.topic} που δεν υπάρχει`);
+    if (![1, 2, 3].includes(e.lvl)) throw new Error(`${f}: η άσκηση ${i + 1} θέλει "lvl": 1 (Εύκολη), 2 (Μέτρια) ή 3 (Δύσκολη)`);
   });
+  for (const m of raw.matchAll(/\{\{[^|}]+\|([^}]+)\}\}/g)) {
+    if (!G[m[1]]) throw new Error(`${f}: η λέξη γραμματικής "${m[0]}" δείχνει σε "${m[1]}", που δεν υπάρχει στο _grammar.json`);
+  }
   C[key] = data;
 }
 
 const template = fs.readFileSync(path.join(__dirname, "src", "template.html"), "utf8");
-if (!template.includes("/*__DATA__*/")) throw new Error("Το template δεν έχει το /*__DATA__*/");
-const html = template.replace("/*__DATA__*/", JSON.stringify(C));
+for (const mark of ["/*__DATA__*/", "/*__GRAMMAR__*/"]) {
+  if (!template.includes(mark)) throw new Error(`Το template δεν έχει το ${mark}`);
+}
+const html = template.replace("/*__DATA__*/", JSON.stringify(C)).replace("/*__GRAMMAR__*/", JSON.stringify(G));
 
-// Έλεγχος ότι το JavaScript της σελίδας είναι συντακτικά σωστό
-new Function(html.split("<script>")[1].split("</script>")[0]);
+// Έλεγχος ότι κάθε <script> της σελίδας είναι συντακτικά σωστό
+for (const s of html.split("<script>").slice(1)) new Function(s.split("</script>")[0]);
 
 fs.writeFileSync(path.join(__dirname, "index.html"), html);
-console.log(`OK: ${Object.keys(C).length} ενότητες -> index.html (${html.length} bytes)`);
+console.log(`OK: ${Object.keys(C).length} ενότητες, ${Object.keys(G).length} πίνακες γραμματικής -> index.html (${html.length} bytes)`);

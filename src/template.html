@@ -11,36 +11,39 @@ try { if(localStorage.getItem("diab-theme") === "light") document.documentElemen
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@700;800&family=Literata:ital,opsz,wght@0,7..72,400;1,7..72,400;1,7..72,600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#F4F5FA; --grid:#E9EBF4; --card:#FFFFFF; --card2:#F0F2F9; --line:#E1E4EF;
-  --ink:#1D2C8F; --on-ink:#FFFFFF; --text:#0E1126; --muted:#5E6483;
-  --accent:#F5C842; --on-accent:#0E1126; --hi:#1D2C8F; --glow:rgba(59,79,208,.16);
-  --mark:#F5C842; --mark-soft:#FBF1CF; --red:#D7352B; --ok:#16804F; --ok-soft:#E1F3E9; --no-soft:#FBE7E5;
-  --nav:rgba(255,255,255,.82); --nav-text:#6A7090; --gold:#E0AE1E;
-  --hero:radial-gradient(120% 140% at 100% 0%,#3B4FD0 0%,#1B2A8C 45%,#0F1857 100%); --on-hero:#FFFFFF;
-  --shadow:0 1px 0 rgba(14,17,38,.04);
+  --paper:#F7F5FC; --grid:#EEEAF7; --card:#FFFFFF; --card2:#F2EEFA; --line:#E5DFF2;
+  --ink:#6D28D9; --on-ink:#FFFFFF; --text:#15111F; --muted:#6B6580;
+  --accent:#7C3AED; --on-accent:#FFFFFF; --hi:#7C3AED; --glow:rgba(124,58,237,.12);
+  --grad:linear-gradient(135deg,#7C3AED 0%,#DB2777 100%); --grad-glow:rgba(219,39,119,.35);
+  --mark:rgba(236,72,153,.28); --mark-soft:#F6EEFF; --red:#E11D48; --mid:#B45309; --mid-soft:#FEF3C7; --ok:#4D7C0F; --ok-soft:#EBF6D8; --no-soft:#FDE7EC;
+  --nav:rgba(255,255,255,.84); --nav-text:#7A7490;
+  --hero:radial-gradient(120% 140% at 100% 0%,#8B5CF6 0%,#5B21B6 48%,#2E1065 100%); --on-hero:#FFFFFF;
+  --shadow:0 1px 0 rgba(21,17,31,.04);
   color-scheme:light;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --paper:#07091A; --grid:#0E1229; --card:#10142B; --card2:#161B38; --line:#232945;
-    --ink:#B4C1FF; --on-ink:#07091A; --text:#EEF0FA; --muted:#8D93B5;
-    --accent:#F5C842; --on-accent:#07091A; --hi:#F5C842; --glow:rgba(91,112,255,.22);
-    --mark:#8C6E12; --mark-soft:#231F10; --red:#FF6B5E; --ok:#4FD18B; --ok-soft:#0F2A1F; --no-soft:#2E1418;
-    --nav:rgba(10,12,28,.78); --nav-text:#7C83A8; --gold:#F5C842;
-    --hero:radial-gradient(120% 140% at 100% 0%,#3346C8 0%,#18237A 42%,#0B1033 100%); --on-hero:#FFFFFF;
+    --paper:#0B0A12; --grid:#13111D; --card:#15131F; --card2:#1C1A29; --line:#2A2638;
+    --ink:#C4B5FD; --on-ink:#0B0A12; --text:#F1EEF9; --muted:#9A94AD;
+    --accent:#8B5CF6; --on-accent:#FFFFFF; --hi:#C4B5FD; --glow:rgba(139,92,246,.22);
+    --grad:linear-gradient(135deg,#8B5CF6 0%,#EC4899 100%); --grad-glow:rgba(236,72,153,.45);
+    --mark:rgba(236,72,153,.42); --mark-soft:#211A30; --red:#FB7185; --mid:#FBBF24; --mid-soft:#2A2110; --ok:#A3E635; --ok-soft:#1C2610; --no-soft:#2C1420;
+    --nav:rgba(11,10,18,.8); --nav-text:#7F7896;
+    --hero:radial-gradient(120% 140% at 100% 0%,#7C3AED 0%,#4C1D95 45%,#1A0F33 100%); --on-hero:#FFFFFF;
     --shadow:none;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --paper:#07091A; --grid:#0E1229; --card:#10142B; --card2:#161B38; --line:#232945;
-  --ink:#B4C1FF; --on-ink:#07091A; --text:#EEF0FA; --muted:#8D93B5;
-  --accent:#F5C842; --on-accent:#07091A; --hi:#F5C842; --glow:rgba(91,112,255,.22);
-  --mark:#8C6E12; --mark-soft:#231F10; --red:#FF6B5E; --ok:#4FD18B; --ok-soft:#0F2A1F; --no-soft:#2E1418;
-  --nav:rgba(10,12,28,.78); --nav-text:#7C83A8; --gold:#F5C842;
-  --hero:radial-gradient(120% 140% at 100% 0%,#3346C8 0%,#18237A 42%,#0B1033 100%); --on-hero:#FFFFFF;
+  --paper:#0B0A12; --grid:#13111D; --card:#15131F; --card2:#1C1A29; --line:#2A2638;
+  --ink:#C4B5FD; --on-ink:#0B0A12; --text:#F1EEF9; --muted:#9A94AD;
+  --accent:#8B5CF6; --on-accent:#FFFFFF; --hi:#C4B5FD; --glow:rgba(139,92,246,.22);
+  --grad:linear-gradient(135deg,#8B5CF6 0%,#EC4899 100%); --grad-glow:rgba(236,72,153,.45);
+  --mark:rgba(236,72,153,.42); --mark-soft:#211A30; --red:#FB7185; --mid:#FBBF24; --mid-soft:#2A2110; --ok:#A3E635; --ok-soft:#1C2610; --no-soft:#2C1420;
+  --nav:rgba(11,10,18,.8); --nav-text:#7F7896;
+  --hero:radial-gradient(120% 140% at 100% 0%,#7C3AED 0%,#4C1D95 45%,#1A0F33 100%); --on-hero:#FFFFFF;
   --shadow:none;
   color-scheme:dark;
 }
@@ -57,7 +60,7 @@ body{
 h1,h2,h3,.ct,.big,.tab .lb,.btn,.seg button{font-family:'Inter Tight','Inter',system-ui,sans-serif}
 .wrap{max-width:600px;margin:0 auto;padding:12px 16px 24px}
 header{display:flex;align-items:center;gap:12px;margin:4px 0 18px}
-header .logo{flex:0 0 auto;display:grid;place-items:center;width:38px;height:38px;border-radius:11px;background:var(--hero);color:var(--accent);font-family:'Inter Tight',sans-serif;font-weight:800;font-size:17px;letter-spacing:-.02em;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+header .logo{flex:0 0 auto;display:grid;place-items:center;width:38px;height:38px;border-radius:11px;background:var(--grad);color:#fff;font-family:'Inter Tight',sans-serif;font-weight:800;font-size:17px;letter-spacing:-.02em;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
 header .ttl{flex:1;min-width:0}
 h1{font-weight:800;font-size:19px;line-height:1.1;letter-spacing:-.025em;margin:0;color:var(--text)}
 .lede{margin:1px 0 0;color:var(--muted);font-size:13px;line-height:1.3}
@@ -80,7 +83,7 @@ nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;justify-
 .tab .ic{display:grid;place-items:center;height:24px}
 .tab[aria-current="page"]{color:var(--text)}
 .tab[aria-current="page"] .ic{color:var(--hi)}
-.tab[aria-current="page"]::before{content:"";position:absolute;top:-7px;width:22px;height:3px;border-radius:0 0 3px 3px;background:var(--hi)}
+.tab[aria-current="page"]::before{content:"";position:absolute;top:-7px;width:22px;height:3px;border-radius:0 0 3px 3px;background:var(--grad)}
 .panel[hidden]{display:none}
 
 .chap{margin:0 0 14px}
@@ -93,14 +96,14 @@ nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;justify-
 
 /* Ευρετήριο */
 .hero{position:relative;overflow:hidden;padding:20px 18px 18px;margin:0 0 22px;border-radius:20px;background:var(--hero);color:var(--on-hero);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
-.hero::after{content:"";position:absolute;right:-60px;top:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(245,200,66,.28),transparent 65%);pointer-events:none}
+.hero::after{content:"";position:absolute;right:-60px;top:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(236,72,153,.38),transparent 65%);pointer-events:none}
 .hero .ref{display:block;padding-right:72px;color:rgba(255,255,255,.62)}
 .hero .ct{color:#fff;margin-bottom:8px;font-size:30px}
 .hero p{position:relative;margin:0 0 6px;font-size:14px;color:rgba(255,255,255,.78);max-width:40ch}
-.hero .big{position:absolute;right:18px;top:18px;font-size:34px;font-weight:800;letter-spacing:-.04em;line-height:1;color:var(--accent)}
+.hero .big{position:absolute;right:18px;top:18px;font-size:34px;font-weight:800;letter-spacing:-.04em;line-height:1;color:#fff}
 .hero .big small{font-size:15px;color:rgba(255,255,255,.55);font-weight:700}
 .bar{height:6px;border-radius:999px;background:rgba(255,255,255,.14);overflow:hidden;margin-top:14px}
-.bar i{display:block;height:100%;border-radius:999px;background:var(--accent);box-shadow:0 0 12px rgba(245,200,66,.6)}
+.bar i{display:block;height:100%;border-radius:999px;background:var(--grad);box-shadow:0 0 12px var(--grad-glow)}
 .hero small{display:block;margin-top:7px;font-size:12.5px;font-weight:600;color:rgba(255,255,255,.62)}
 .toc{margin:0 0 22px}
 .toc h3{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:0 0 10px 2px;line-height:1.4}
@@ -136,11 +139,11 @@ a.item::after{content:"";flex:0 0 auto;width:8px;height:8px;border-top:2px solid
 .defb b{color:var(--muted)}
 .quote{font-family:'Literata',Georgia,serif;font-size:19px;color:var(--ink)}
 
-.btn{display:block;width:100%;padding:15px 18px;border-radius:14px;border:0;background:var(--accent);color:var(--on-accent);font-weight:800;font-size:16px;letter-spacing:-.01em;cursor:pointer;margin-top:12px;text-align:center;text-decoration:none;transition:transform .12s,filter .12s}
+.btn{display:block;width:100%;padding:15px 18px;border-radius:14px;border:0;background:var(--grad);color:#fff;font-weight:800;font-size:16px;letter-spacing:-.01em;cursor:pointer;margin-top:12px;box-shadow:0 6px 20px -8px var(--grad-glow);text-align:center;text-decoration:none;transition:transform .12s,filter .12s}
 .btn:active{transform:scale(.97)}
 .btn:hover{filter:brightness(1.05)}
 .btn.ghost{background:var(--card);color:var(--text);box-shadow:inset 0 0 0 1px var(--line)}
-.btn.gold{background:var(--accent);color:var(--on-accent)}
+.btn.gold{background:var(--grad);color:#fff}
 .btn:disabled{opacity:.35;cursor:default}
 .row{display:flex;gap:10px}.row .btn{flex:1}
 
@@ -163,7 +166,7 @@ a.item::after{content:"";flex:0 0 auto;width:8px;height:8px;border-top:2px solid
 .pager .mid .btn{width:100%;font-size:15px}
 @keyframes inR{from{transform:translateX(35%);opacity:0}to{transform:none;opacity:1}}
 @keyframes inL{from{transform:translateX(-35%);opacity:0}to{transform:none;opacity:1}}
-.retex{display:inline-flex;align-items:center;margin:0 0 12px;padding:9px 14px;border:0;border-radius:10px;background:var(--accent);color:var(--on-accent);font-size:14.5px;font-weight:800;cursor:pointer}
+.retex{display:inline-flex;align-items:center;margin:0 0 12px;padding:9px 14px;border:0;border-radius:10px;background:var(--grad);color:#fff;font-size:14.5px;font-weight:800;cursor:pointer}
 
 .qcard{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px 14px 14px}
 .qcard::before{content:"";position:absolute;inset:0 0 auto 0;height:120px;background:radial-gradient(80% 100% at 0% 0%,var(--glow),transparent 70%);pointer-events:none}
@@ -188,10 +191,10 @@ a.item::after{content:"";flex:0 0 auto;width:8px;height:8px;border-top:2px solid
 
 .grade{position:relative;width:210px;height:150px;margin:6px auto 4px}
 .grade svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.grade ellipse{fill:none;stroke:var(--accent);stroke-width:3.5;stroke-linecap:round;stroke-dasharray:560;stroke-dashoffset:560;animation:draw .9s .15s ease-out forwards}
+.grade ellipse{fill:none;stroke:#EC4899;stroke-width:3.5;stroke-linecap:round;stroke-dasharray:560;stroke-dashoffset:560;animation:draw .9s .15s ease-out forwards}
 .grade .num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Inter Tight',sans-serif;font-weight:800;letter-spacing:-.05em;color:var(--text);font-size:72px;line-height:1}
 .grade .num small{font-size:24px;margin-left:4px;align-self:flex-end;margin-bottom:42px;color:var(--muted);letter-spacing:-.02em}
-.cheer{display:inline-block;margin:4px 0 0;padding:4px 10px;border-radius:6px;background:var(--accent);color:var(--on-accent);font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;animation:pop .5s .9s both cubic-bezier(.2,1.6,.4,1)}
+.cheer{display:inline-block;margin:4px 0 0;padding:4px 10px;border-radius:6px;background:var(--grad);color:#fff;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;animation:pop .5s .9s both cubic-bezier(.2,1.6,.4,1)}
 @keyframes draw{to{stroke-dashoffset:0}}
 @keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
 
@@ -270,6 +273,54 @@ a.item::after{content:"";flex:0 0 auto;width:8px;height:8px;border-top:2px solid
 .faq .alert{margin:0 0 8px;padding:12px 14px;border-radius:12px;background:var(--no-soft);box-shadow:inset 3px 0 0 var(--red);font-size:15.5px}
 .faq .alert p{margin:0 0 6px}.faq .alert p:last-child{margin:0}
 .faq .src{font-size:13px;color:var(--muted);margin-top:18px}
+
+/* Γραμματική: λέξεις που ανοίγουν πίνακα, και ο πίνακας σαν φύλλο από κάτω */
+.gw{display:inline;padding:0;margin:0;border:0;background:none;font:inherit;color:inherit;cursor:pointer;text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:3px}
+.gw:hover{color:var(--hi)}
+.gram .hint{margin:-4px 0 10px 2px}
+.gchips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+.glab{width:100%;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:2px 0 0 2px}
+.gchip{padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:15px;font-weight:600;cursor:pointer}
+.gchip:hover{border-color:var(--accent)}
+dialog#gsheet{position:fixed;inset:auto 0 0 0;margin:0 auto;width:100%;max-width:600px;max-height:88vh;max-height:88dvh;padding:0;border:0;border-radius:22px 22px 0 0;background:var(--card);color:var(--text);box-shadow:0 -10px 40px rgba(0,0,0,.45)}
+dialog#gsheet::backdrop{background:rgba(5,4,10,.62);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+dialog#gsheet[open]{animation:sheetUp .28s cubic-bezier(.2,.8,.2,1)}
+@keyframes sheetUp{from{transform:translateY(40%);opacity:.4}to{transform:none;opacity:1}}
+.gwrap{position:relative;display:flex;flex-direction:column;max-height:88vh;max-height:88dvh}
+.gwrap::before{content:"";flex:0 0 auto;display:block;width:40px;height:4px;border-radius:4px;background:var(--line);margin:10px auto 0}
+.gclose{position:absolute;top:12px;right:12px;z-index:1;width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--card2);color:var(--text);font-size:15px;cursor:pointer}
+.gbody{overflow-y:auto;overscroll-behavior:contain;padding:6px 18px calc(22px + env(safe-area-inset-bottom,0px))}
+.ghead{padding-right:44px}
+.ghead h2{font-family:'Inter Tight','Inter',sans-serif;font-size:30px;font-weight:800;letter-spacing:-.02em;margin:6px 0 0}
+.ghead .muted{margin:0 0 12px}
+.gnote{margin:0 0 12px;padding:10px 12px;border-radius:12px;background:var(--card2);box-shadow:inset 3px 0 0 var(--accent);font-size:14.5px}
+.pp{margin:0 0 12px;padding:10px 12px;border-radius:12px;background:var(--card2);font-size:15px}
+.pp b{display:block;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:3px}
+.pp p{margin:4px 0 0}.pp p b{display:inline;margin-right:6px}
+.gtabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -18px 4px;padding:2px 18px 6px}
+.gtabs::-webkit-scrollbar{display:none}
+.gtabs button{flex:0 0 auto;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card2);color:var(--muted);font-weight:700;font-size:13.5px;cursor:pointer;white-space:nowrap}
+.gtabs button[aria-selected="true"]{background:var(--grad);border-color:transparent;color:#fff}
+#gsheet h4{margin:14px 0 6px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--hi)}
+.gt{width:100%;border-collapse:separate;border-spacing:0;font-size:15.5px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.gt th,.gt td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+.gt tr:last-child th,.gt tr:last-child td{border-bottom:0}
+.gt thead th{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:var(--card2)}
+.gt tbody th{width:3.6em;font-size:12.5px;font-weight:700;color:var(--muted)}
+.gt td{font-weight:500}
+.glink{display:block;margin:16px 0 0;padding:12px 14px;border-radius:12px;border:1px solid var(--line);text-align:center;font-weight:700;text-decoration:none;color:var(--text)}
+
+/* Δυσκολία λυμένων */
+.lvls{display:flex;gap:6px;margin:0 0 12px;overflow-x:auto;scrollbar-width:none}
+.lvls::-webkit-scrollbar{display:none}
+.lvls button{flex:0 0 auto;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--muted);font-weight:700;font-size:13.5px;cursor:pointer}
+.lvls button small{font-size:12px;font-weight:600;opacity:.7;margin-left:2px}
+.lvls button[aria-pressed="true"]{background:var(--text);border-color:var(--text);color:var(--paper)}
+.exh{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.lvl{flex:0 0 auto;font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.05em}
+.lvl.l1{background:var(--ok-soft);color:var(--ok)}
+.lvl.l2{background:var(--mid-soft);color:var(--mid)}
+.lvl.l3{background:var(--no-soft);color:var(--red)}
 
 footer{margin-top:28px;font-size:12.5px;color:var(--muted);text-align:center}
 footer p{margin:0 0 6px}
@@ -460,6 +511,8 @@ footer p{margin:0 0 6px}
     </section>
   </main>
 
+  <dialog id="gsheet" aria-label="Πίνακας γραμματικής"><div class="gwrap"><button class="gclose" aria-label="Κλείσιμο">✕</button><div class="gbody"></div></div></dialog>
+
   <footer>
     <p>Βασισμένο στα σχολικά βιβλία της Β΄ Γυμνασίου (ebooks.edu.gr).</p>
     <p><a href="#send">Στείλε τις σημειώσεις σου</a> για να γίνει η σελίδα καλύτερη.</p>
@@ -614,6 +667,11 @@ const BOOKS = {
 };
 
 const C = /*__DATA__*/;
+const GR = /*__GRAMMAR__*/;
+const GRBOOK = "https://ebooks.edu.gr/ebooks/v/html/8547/2340/Grammatiki-Archaias-Ellinikis_Gymnasiou-Lykeiou_html-apli/";
+/* {{τύπος|κλειδί}} στο περιεχόμενο: κουμπί που ανοίγει τον πίνακα γραμματικής. Μέσα σε κουμπιά μένει απλό κείμενο. */
+const rich = t => String(t).replace(/\{\{([^|}]+)\|([^}]+)\}\}/g, (m, w, g) => `<button class="gw" data-g="${g}">${w}</button>`);
+const plain = t => String(t).replace(/\{\{([^|}]+)\|[^}]+\}\}/g, "$1");
 
 const $ = (s, r=document) => r.querySelector(s);
 function shuffle(arr){ const a = arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
@@ -655,13 +713,14 @@ function renderIndex(k){
   $("#"+k).innerHTML = `<div class="hero"><span class="big">${ready}<small>/${total}</small></span><span class="ref">${b.book}</span><h2 class="ct">${b.name}</h2>
     ${b.note ? `<p>${b.note}</p>` : ""}<p>Νέες ενότητες κάθε εβδομάδα.</p>
     <div class="bar" role="img" aria-label="Έτοιμες ${ready} από ${total} ενότητες"><i style="width:${Math.max(3, Math.round(ready / total * 100))}%"></i></div>
-    <small>Έτοιμες ${ready} από ${total} ενότητες</small></div>${html}`;
+    <small>Έτοιμες ${ready} από ${total} ενότητες</small></div>${k === "G" ? grammarIndex() : ""}${html}`;
 }
 
 /* Section */
 const VIEWS = [["sum","Περίληψη"],["quiz","Ερωτήσεις"],["ex","Λυμένες"]];
 const CALM = matchMedia("(prefers-reduced-motion: reduce)");
 const LETTERS = ["Α","Β","Γ","Δ"];
+const LEVELS = ["", "Εύκολη", "Μέτρια", "Δύσκολη"];
 const state = {};
 function st(key){
   if(!state[key]){ state[key] = {view:"sum", idx:0, anim:"", from:null, open:new Set()}; startQuiz(key); }
@@ -727,7 +786,7 @@ function renderSection(k, id){
   if(s.view === "sum"){
     const n = c.summary.length, i = Math.min(s.idx, n - 1), b = c.summary[i], last = i === n - 1;
     body = `${s.from !== null ? `<button class="retex" data-ret>← Πίσω στην ${k === "A" ? "ερώτηση" : "άσκηση"} ${s.from + 1}</button>` : ""}<div class="prog"><div class="bar" role="img" aria-label="Θέμα ${i+1} από ${n}"><i style="width:${Math.round((i+1) / n * 100)}%"></i></div><span>${i+1}/${n}</span></div>
-      <div class="deck"><section class="blk slide${b.warn ? " warn" : ""}${s.anim ? " " + s.anim : ""}" aria-live="polite"><span class="k">${b.warn ? "Προσοχή" : "Θέμα " + (i+1)}</span><h3>${b.h}</h3>${b.quote ? `<p class="quote" lang="grc">${b.quote}</p>` : ""}<p>${b.t}</p>${b.f ? `<p class="f formula">${b.f}</p>` : ""}${b.ex ? `<div class="box exb"><b>Παράδειγμα</b><p>${b.ex}</p></div>` : ""}${b.def ? `<div class="box defb"><b>${b.defLabel || "Στο διαγώνισμα γράφεις"}</b><p>${b.def}</p></div>` : ""}</section></div>
+      <div class="deck"><section class="blk slide${b.warn ? " warn" : ""}${s.anim ? " " + s.anim : ""}" aria-live="polite"><span class="k">${b.warn ? "Προσοχή" : "Θέμα " + (i+1)}</span><h3>${b.h}</h3>${b.quote ? `<p class="quote" lang="grc">${b.quote}</p>` : ""}<p>${rich(b.t)}</p>${b.f ? `<p class="f formula">${b.f}</p>` : ""}${b.ex ? `<div class="box exb"><b>Παράδειγμα</b><p>${rich(b.ex)}</p></div>` : ""}${b.def ? `<div class="box defb"><b>${b.defLabel || "Στο διαγώνισμα γράφεις"}</b><p>${rich(b.def)}</p></div>` : ""}</section></div>
       ${pager(i > 0, !last, last ? `<button class="btn gold" data-go="quiz">Πάμε στις ερωτήσεις →</button>` : `← σύρε →`)}`;
     go = d => { const j = i + d; if(j < 0 || j >= n) return false; s.idx = j; s.anim = d > 0 ? "in-next" : "in-prev"; renderSection(k, id); return true; };
   } else if(s.view === "quiz"){
@@ -744,24 +803,26 @@ function renderSection(k, id){
       const i = s.qi, q = s.qs[i], p = s.picked[i], has = p !== undefined, last = i === n - 1;
       const opts = q.opts.map((o, j) => {
         const cls = !has ? "" : o.ok ? " right" + (j === p ? " picked" : "") : j === p ? " wrong picked" : " dim";
-        return `<button class="opt${cls}" data-opt="${j}"${has ? " disabled" : ""}><span class="l" aria-hidden="true">${has && o.ok ? "✓" : has && j === p ? "✕" : LETTERS[j]}</span><span>${o.t}</span></button>`;
+        return `<button class="opt${cls}" data-opt="${j}"${has ? " disabled" : ""}><span class="l" aria-hidden="true">${has && o.ok ? "✓" : has && j === p ? "✕" : LETTERS[j]}</span><span>${plain(o.t)}</span></button>`;
       }).join("");
       const verdict = has ? (q.opts[p].ok ? `<b class="y">Σωστά</b>` : `<b class="n">Όχι ακριβώς</b>`) : "";
       const mid = answered === n ? `<button class="btn gold" data-act="finish">Δες τον βαθμό σου</button>` : (has && last ? `Έμειναν ${n - answered} αναπάντητες` : `← σύρε →`);
       body = `<div class="prog"><div class="bar" role="img" aria-label="Απάντησες ${answered} από ${n}"><i style="width:${Math.round(answered / n * 100)}%"></i></div><span class="sc"><span>✓ ${right}</span><span>✕ ${wrong}</span></span></div>
         <div class="deck"><div class="qcard slide${s.anim ? " " + s.anim : ""}">
-          <span class="tag">Ερώτηση ${i+1} από ${n}</span><h3>${q.q}</h3>${opts}
-          <div aria-live="polite">${has ? `<div class="why">${verdict}${q.why}</div>` : ""}</div>
+          <span class="tag">Ερώτηση ${i+1} από ${n}</span><h3>${rich(q.q)}</h3>${opts}
+          <div aria-live="polite">${has ? `<div class="why">${verdict}${rich(q.why)}</div>` : ""}</div>
         </div></div>
         ${pager(i > 0, !last, mid)}`;
       go = d => { const j = i + d; if(j < 0 || j >= n) return false; s.qi = j; s.anim = d > 0 ? "in-next" : "in-prev"; renderSection(k, id); return true; };
     }
   } else {
-    body = `<h3 style="font-size:18px;font-weight:800;margin:0 0 10px">${c.exTitle}</h3>` + c.ex.map((e,i) => `<div class="sheet ex">
-      <span class="n">${k === "A" ? "Ερώτηση" : "Άσκηση"} ${i+1}</span>
-      <p class="q">${e.q}</p>
+    const lv = s.lvl || 0, shown = c.ex.map((e, i) => [e, i]).filter(([e]) => !lv || e.lvl === lv);
+    body = `<h3 style="font-size:18px;font-weight:800;margin:0 0 10px">${c.exTitle}</h3>
+      <div class="lvls" role="group" aria-label="Δυσκολία">${LEVELS.map((l, j) => `<button data-lvl="${j}" aria-pressed="${lv === j}"${j ? ` class="l${j}"` : ""}>${j ? l : "Όλες"} <small>${j ? c.ex.filter(e => e.lvl === j).length : c.ex.length}</small></button>`).join("")}</div>` + shown.map(([e,i]) => `<div class="sheet ex" id="ex-${k}-${i}">
+      <div class="exh"><span class="n">${k === "A" ? "Ερώτηση" : "Άσκηση"} ${i+1}</span><span class="lvl l${e.lvl}">${LEVELS[e.lvl]}</span></div>
+      <p class="q">${rich(e.q)}</p>
       <button class="btn ghost" data-sol="${i}" aria-expanded="${s.open.has(i)}">${s.open.has(i) ? "Κρύψε τη λύση" : "Δες τη λύση"}</button>
-      <div class="sol" id="sol-${k}-${i}"${s.open.has(i) ? "" : " hidden"}>${e.learn ? `<div class="learn"><b>Θυμήσου τη θεωρία</b><p>${e.learn}</p>${"topic" in e ? `<button class="go" data-topic="${e.topic}" data-from="${i}">Δες τη θεωρία →</button>` : ""}</div>` : ""}<ol>${e.steps.map(x => `<li>${x}</li>`).join("")}</ol><p class="ans">Απάντηση: <span>${e.ans}</span></p></div>
+      <div class="sol" id="sol-${k}-${i}"${s.open.has(i) ? "" : " hidden"}>${e.learn ? `<div class="learn"><b>Θυμήσου τη θεωρία</b><p>${rich(e.learn)}</p>${"topic" in e ? `<button class="go" data-topic="${e.topic}" data-from="${i}">Δες τη θεωρία →</button>` : ""}</div>` : ""}<ol>${e.steps.map(x => `<li>${rich(x)}</li>`).join("")}</ol><p class="ans">Απάντηση: <span>${rich(e.ans)}</span></p></div>
     </div>`).join("") + `<p class="hint center">Δοκίμασε πρώτα μόνος σου και μετά δες τη λύση.</p>`;
   }
   s.anim = "";
@@ -792,6 +853,7 @@ function renderSection(k, id){
     else if(a === "restart"){ startQuiz(key); }
     renderSection(k, id); top();
   });
+  el.querySelectorAll("[data-lvl]").forEach(b => b.onclick = () => { s.lvl = +b.dataset.lvl; renderSection(k, id); });
   el.querySelectorAll("[data-sol]").forEach(b => b.onclick = () => {
     const sol = $("#sol-"+k+"-"+b.dataset.sol);
     sol.hidden = !sol.hidden;
@@ -811,9 +873,9 @@ function renderSection(k, id){
 }
 function backToEx(k, id){
   const s = state[k+"/"+id], i = s.from;
-  s.view = "ex"; s.from = null; s.open.add(i);
+  s.view = "ex"; s.from = null; s.open.add(i); s.lvl = 0;
   renderSection(k, id);
-  const card = $("#"+k).querySelectorAll(".ex")[i];
+  const card = document.getElementById("ex-"+k+"-"+i);
   if(card) card.scrollIntoView({block:"start"});
 }
 window.addEventListener("popstate", e => {
@@ -821,6 +883,53 @@ window.addEventListener("popstate", e => {
   const k = parts[0], id = parts.slice(1).join("/"), s = state[k+"/"+id];
   if(s && s.from !== null && !(e.state && e.state.theory) && !$("#"+k).hidden) backToEx(k, id);
 });
+
+/* Πίνακες γραμματικής */
+function grammarIndex(){
+  const all = Object.entries(GR), chips = list => list.map(([key, g]) => `<button class="gchip" data-g="${key}">${g.lemma}</button>`).join("");
+  return `<section class="toc gram"><h3>Πίνακες γραμματικής</h3><p class="hint">Όλες οι κλίσεις και οι χρόνοι, για όσες λέξεις έχουμε δει στις ενότητες.</p>
+    <div class="gchips"><span class="glab">Ρήματα</span>${chips(all.filter(([, g]) => g.tenses))}</div>
+    <div class="gchips"><span class="glab">Ουσιαστικά</span>${chips(all.filter(([, g]) => !g.tenses))}</div></section>`;
+}
+const PERS = ["α΄", "β΄", "γ΄"], CASES = ["Ονομ.", "Γεν.", "Δοτ.", "Αιτ.", "Κλητ."];
+const gst = { key:null, t:0 };
+function gtable(sg, pl, labels){
+  return `<table class="gt"><thead><tr><th></th><th>Ενικός</th><th>Πληθυντικός</th></tr></thead><tbody>${labels.map((l, r) => `<tr><th>${l}</th><td>${sg[r] || "—"}</td><td>${pl[r] || "—"}</td></tr>`).join("")}</tbody></table>`;
+}
+function drawGrammar(){
+  const g = GR[gst.key];
+  let body;
+  if(g.tenses){
+    const t = g.tenses[gst.t];
+    body = `<div class="pp"><b>Αρχικοί χρόνοι</b>${g.pp.join(" · ")}</div>
+      <div class="gtabs" role="tablist">${g.tenses.map((x, j) => `<button role="tab" data-gt="${j}" aria-selected="${j === gst.t}">${x.n}</button>`).join("")}</div>
+      ${t.moods.map(([m, f]) => `<h4>${m}</h4>${gtable(f.slice(0, 3), f.slice(3), PERS)}`).join("")}
+      ${t.inf || t.part ? `<div class="pp" style="margin-top:12px">${t.inf ? `<p><b>Απαρέμφατο</b>${t.inf}</p>` : ""}${t.part ? `<p><b>Μετοχή</b>${t.part}</p>` : ""}</div>` : ""}`;
+  } else {
+    body = gtable(g.sg, g.pl, CASES);
+  }
+  const box = $("#gsheet .gbody");
+  box.innerHTML = `<div class="ghead"><span class="ref">${g.kind}</span><h2>${g.lemma}</h2><p class="muted">${g.mean}</p></div>
+    ${g.note ? `<p class="gnote">${g.note}</p>` : ""}${body}
+    <a class="glink" href="${GRBOOK + g.book}" target="_blank" rel="noopener">Δες το στη σχολική Γραμματική ↗</a>`;
+  box.querySelectorAll("[data-gt]").forEach(b => b.onclick = () => { gst.t = +b.dataset.gt; drawGrammar(); });
+}
+/* Ανοίγει με μια εγγραφή στο ιστορικό, ώστε το «πίσω» του κινητού να το κλείνει */
+function openGrammar(key){
+  const d = $("#gsheet");
+  gst.key = key; gst.t = 0; drawGrammar();
+  $("#gsheet .gbody").scrollTop = 0;
+  if(!d.open){ d.showModal(); history.pushState({gram:key}, ""); }
+}
+function closeGrammar(){ if(history.state && history.state.gram) history.back(); else $("#gsheet").close(); }
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-g]");
+  if(b && GR[b.dataset.g]){ e.preventDefault(); openGrammar(b.dataset.g); }
+});
+$("#gsheet .gclose").onclick = closeGrammar;
+$("#gsheet").addEventListener("cancel", e => { e.preventDefault(); closeGrammar(); });
+$("#gsheet").addEventListener("click", e => { if(e.target === e.currentTarget) closeGrammar(); });
+window.addEventListener("popstate", () => { const d = $("#gsheet"); if(d.open) d.close(); });
 
 /* Notes upload */
 let tsWidget = null, tsToken = "", photoBlob = null;
