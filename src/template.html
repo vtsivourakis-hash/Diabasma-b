@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Διάβασμα Β΄ Γυμνασίου</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0B0A12">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-title" content="Διάβασμα">
 <script>/* Σκούρο θέμα από προεπιλογή. Αν ο χρήστης διάλεξε φωτεινό, το θυμόμαστε μόνο σε αυτή τη συσκευή. */
 try { if(localStorage.getItem("diab-theme") === "light") document.documentElement.dataset.theme = "light"; } catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -310,6 +315,38 @@ dialog#gsheet[open]{animation:sheetUp .28s cubic-bezier(.2,.8,.2,1)}
 .gt td{font-weight:500}
 .glink{display:block;margin:16px 0 0;padding:12px 14px;border-radius:12px;border:1px solid var(--line);text-align:center;font-weight:700;text-decoration:none;color:var(--text)}
 
+/* Εξάσκηση */
+.pseg{margin-bottom:18px}
+.seg a{flex:1;display:block;padding:10px 4px;border-radius:10px;text-align:center;text-decoration:none;font-family:'Inter Tight','Inter',sans-serif;font-weight:700;font-size:14.5px;letter-spacing:-.01em;color:var(--muted)}
+.seg a[aria-current="page"]{background:var(--text);color:var(--paper)}
+.seg.four button{font-size:13.5px;padding:10px 2px}
+.toc .seg{margin:0}
+.toc .seg button[aria-pressed="true"]{background:var(--text);color:var(--paper)}
+.gchip.sel{font-size:14px;text-align:left}
+.gchip.sel[aria-pressed="true"]{background:var(--grad);border-color:transparent;color:#fff}
+.glab .linkbtn{margin-left:6px;font-size:11.5px;text-transform:uppercase;letter-spacing:.07em}
+.linkbtn{padding:0;border:0;background:none;color:var(--hi);font-weight:700;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.exbar{display:flex;align-items:center;justify-content:space-between;margin:0 0 12px}
+.clock{font-family:'Inter Tight','Inter',sans-serif;font-weight:800;font-size:20px;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.qmode{margin:0 0 12px;font-size:14px;color:var(--muted)}
+.brk{display:flex;flex-direction:column;gap:6px;margin:4px 0 14px;text-align:left}
+.brk a,.brk button{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:var(--text);text-decoration:none;font-size:15px;font-weight:600;text-align:left;cursor:pointer}
+.brk b{flex:0 0 auto;font-variant-numeric:tabular-nums}
+.ok{color:var(--ok)}.mid{color:var(--mid)}.low{color:var(--red)}
+.chip.score{text-transform:none;letter-spacing:0;font-size:12.5px;font-variant-numeric:tabular-nums}
+.chip.score.ok{background:var(--ok-soft)}.chip.score.mid{background:var(--mid-soft)}.chip.score.low{background:var(--no-soft)}
+
+/* Κάρτες λεξιλογίου */
+.vcard{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;width:100%;min-height:calc(100vh - 430px);min-height:calc(100dvh - 430px);padding:26px 20px;border:1px solid var(--line);border-radius:22px;background:var(--hero);color:#fff;text-align:center;cursor:pointer;font:inherit}
+.vcard.back-side{background:var(--card);color:var(--text)}
+.vcard .tag{font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;opacity:.7}
+.vcard .vw{font-family:'Inter Tight','Inter',sans-serif;font-weight:800;letter-spacing:-.02em;font-size:22px;color:var(--hi)}
+.vcard .vw.big{font-size:34px;color:#fff}
+.vcard strong{font-size:22px;line-height:1.3}
+.vcard .tap{padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.14);font-size:14px;font-weight:700}
+.vcard .vd{margin-top:6px;padding:10px 14px;border-radius:12px;background:var(--card2);font-size:15px}
+.vcard .vd b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:2px}
+
 /* Δυσκολία λυμένων */
 .lvls{display:flex;gap:6px;margin:0 0 12px;overflow-x:auto;scrollbar-width:none}
 .lvls::-webkit-scrollbar{display:none}
@@ -348,7 +385,7 @@ footer p{margin:0 0 6px}
     <a class="tab" href="#A" data-p="A"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 19.5 6v5.5c0 4.6-3.2 8.2-7.5 9.5-4.3-1.3-7.5-4.9-7.5-9.5V6z"/><path d="M12 7.5v9M8.5 11h7"/></svg></span><span class="lb">Ιλιάδα</span></a>
     <a class="tab" href="#G" data-p="G"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M4.5 18h15M6 18v-7M10 18v-7M14 18v-7M18 18v-7M3 9l9-5 9 5z"/></svg></span><span class="lb">Αρχαία</span></a>
     <a class="tab" href="#school" data-p="school"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M10 21v-5h4v5"/><circle cx="12" cy="11" r="1.6"/></svg></span><span class="lb">Σχολείο</span></a>
-    <a class="tab" href="#timer" data-p="timer"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 10v3.5l2.5 2M9.5 2.5h5M12 2.5V6"/></svg></span><span class="lb">Χρονόμετρο</span></a>
+    <a class="tab" href="#practice" data-p="practice"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".8"/></svg></span><span class="lb">Εξάσκηση</span></a>
   </nav>
 
   <main>
@@ -489,7 +526,9 @@ footer p{margin:0 0 6px}
 
       <p class="src">Πηγές: Εσωτερικός Κανονισμός Λειτουργίας του σχολείου (Σεπτέμβριος 2024), ελεγμένος με την ΚΥΑ 102791/ΓΔ4/2024 (ΦΕΚ Β΄ 5130/2024). Αν κάτι έχει αλλάξει, πες το στον εκπρόσωπο της τάξης.</p>
     </section>
+    <section class="panel" id="practice" hidden></section>
     <section class="panel" id="timer" hidden>
+      <nav class="seg pseg" aria-label="Εξάσκηση"><a href="#practice">Διαγώνισμα</a><a href="#practice/mistakes">Τα λάθη μου</a><a href="#timer" aria-current="page">Χρονόμετρο</a></nav>
       <div class="hero"><span class="ref">Μελέτη με διαλείμματα</span><h2 class="ct">Χρονόμετρο</h2>
         <p>25 λεπτά διάβασμα, 5 λεπτά διάλειμμα. Κλείσε τις ειδοποιήσεις και ξεκίνα.</p></div>
       <div class="sheet timer" id="tbox">
@@ -686,16 +725,18 @@ function route(){
   keyNav = null;
   const parts = decodeURIComponent(location.hash.slice(1)).split("/").filter(Boolean);
   let p = parts[0] || "F";
-  if(!["F","M","G","A","timer","send","school"].includes(p)) p = "F";
+  if(!["F","M","G","A","practice","timer","send","school"].includes(p)) p = "F";
   document.querySelectorAll(".panel").forEach(el => el.hidden = el.id !== p);
   document.querySelectorAll(".tab").forEach(t => {
-    if(t.dataset.p === p) t.setAttribute("aria-current","page"); else t.removeAttribute("aria-current");
+    if(t.dataset.p === (p === "timer" ? "practice" : p)) t.setAttribute("aria-current","page"); else t.removeAttribute("aria-current");
   });
   if(p === "F" || p === "M" || p === "G" || p === "A"){
     const id = parts.slice(1).join("/");
     if(id && C[p+"/"+id]) renderSection(p, id); else renderIndex(p);
   } else if(p === "send"){
     renderSend(parts[1], parts.slice(2).join("/"));
+  } else if(p === "practice"){
+    renderPractice(parts[1] === "mistakes" ? "mistakes" : "exam");
   }
   window.scrollTo({top:0});
 }
@@ -704,16 +745,22 @@ window.addEventListener("hashchange", route);
 /* Table of contents */
 function renderIndex(k){
   const b = BOOKS[k];
-  let total = 0, ready = 0;
+  let total = 0, ready = 0, solved = 0;
   const html = b.chapters.map(ch => `<section class="toc"><h3>${ch.t}</h3>${ch.s.map(([id,num,title]) => {
     total++;
-    if(C[k+"/"+id]){ ready++; return `<a class="item" href="#${k}/${id}"><span class="num">${num}</span><span class="tt">${title}</span><span class="chip ok">Έτοιμη</span></a>`; }
+    if(C[k+"/"+id]){
+      ready++;
+      const best = bestOf(k+"/"+id);
+      if(best !== undefined) solved++;
+      const chip = best === undefined ? `<span class="chip ok">Έτοιμη</span>` : `<span class="chip score ${best >= 14 ? "ok" : best >= 10 ? "mid" : "low"}" title="Ο καλύτερος βαθμός σου στις ερωτήσεις">${best}/20</span>`;
+      return `<a class="item" href="#${k}/${id}"><span class="num">${num}</span><span class="tt">${title}</span>${chip}</a>`;
+    }
     return `<div class="item off"><span class="num">${num}</span><span class="tt">${title}</span><span class="chip">Σύντομα</span></div>`;
   }).join("")}</section>`).join("");
   $("#"+k).innerHTML = `<div class="hero"><span class="big">${ready}<small>/${total}</small></span><span class="ref">${b.book}</span><h2 class="ct">${b.name}</h2>
     ${b.note ? `<p>${b.note}</p>` : ""}<p>Νέες ενότητες κάθε εβδομάδα.</p>
     <div class="bar" role="img" aria-label="Έτοιμες ${ready} από ${total} ενότητες"><i style="width:${Math.max(3, Math.round(ready / total * 100))}%"></i></div>
-    <small>Έτοιμες ${ready} από ${total} ενότητες</small></div>${k === "G" ? grammarIndex() : ""}${html}`;
+    <small>Έτοιμες ${ready} από ${total} ενότητες${solved ? ` · Έλυσες τις ερωτήσεις σε ${solved}` : ""}</small></div>${k === "G" ? grammarIndex() : ""}${html}`;
 }
 
 /* Section */
@@ -723,19 +770,93 @@ const LETTERS = ["Α","Β","Γ","Δ"];
 const LEVELS = ["", "Εύκολη", "Μέτρια", "Δύσκολη"];
 const state = {};
 function st(key){
-  if(!state[key]){ state[key] = {view:"sum", idx:0, anim:"", from:null, open:new Set()}; startQuiz(key); }
+  if(!state[key]) state[key] = {view:"sum", idx:0, anim:"", from:null, open:new Set(), vi:0, vflip:false, quiz:newQuiz(unitItems(key), "unit")};
   return state[key];
 }
-/* Κάθε φορά οι ερωτήσεις και οι απαντήσεις τους έρχονται με άλλη σειρά */
-function startQuiz(key){
-  const s = state[key];
-  s.qs = shuffle(C[key].quiz.map(q => ({q:q.q, why:q.why, opts:shuffle([{t:q.c, ok:true}, ...q.w.map(t => ({t, ok:false}))])})));
-  s.qi = 0; s.picked = {}; s.done = false;
+/* Αποθήκευση μόνο σε αυτή τη συσκευή. Αν ο browser δεν την επιτρέπει, η σελίδα δουλεύει κανονικά χωρίς αυτήν. */
+const store = {
+  get(k, d){ try { const v = JSON.parse(localStorage.getItem(k)); return v === null ? d : v; } catch(e){ return d; } },
+  set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+};
+/* «Τα λάθη μου»: για κάθε ενότητα, ποιες ερωτήσεις απαντήθηκαν λάθος. Φεύγουν όταν απαντηθούν σωστά. */
+function markAnswer(key, oi, ok){
+  const m = store.get("diab-mistakes", {}), set = new Set(m[key] || []);
+  if(ok) set.delete(oi); else set.add(oi);
+  if(set.size) m[key] = [...set].sort((a, b) => a - b); else delete m[key];
+  store.set("diab-mistakes", m);
 }
-function quizScore(s){
+function mistakeItems(onlyKey){
+  return Object.entries(store.get("diab-mistakes", {}))
+    .filter(([k]) => C[k] && (!onlyKey || k === onlyKey))
+    .flatMap(([k, list]) => list.filter(oi => C[k].quiz[oi]).map(oi => ({key:k, oi})));
+}
+/* Πρόοδος: ο καλύτερος βαθμός (στα 20) στις ερωτήσεις κάθε ενότητας */
+const bestOf = key => store.get("diab-best", {})[key];
+function saveBest(key, g){ const b = store.get("diab-best", {}); if(!(b[key] >= g)){ b[key] = g; store.set("diab-best", b); } }
+
+const unitItems = key => C[key].quiz.map((_, oi) => ({key, oi}));
+/* Κάθε φορά οι ερωτήσεις και οι απαντήσεις τους έρχονται με άλλη σειρά */
+function newQuiz(items, mode){
+  return { mode, qi:0, picked:{}, done:false, anim:"",
+    qs: shuffle(items).map(({key, oi}) => { const q = C[key].quiz[oi];
+      return {key, oi, q:q.q, why:q.why, opts:shuffle([{t:q.c, ok:true}, ...q.w.map(t => ({t, ok:false}))])}; }) };
+}
+function quizScore(z){
   let right = 0, wrong = 0;
-  for(const i in s.picked) s.qs[i].opts[s.picked[i]].ok ? right++ : wrong++;
+  for(const i in z.picked) z.qs[i].opts[z.picked[i]].ok ? right++ : wrong++;
   return {right, wrong};
+}
+const gradeOf = z => Math.round(quizScore(z).right / z.qs.length * 20);
+function unitName(key){ const [k, id] = key.split("/"), info = findSection(k, id); return `${BOOKS[k].name} ${info ? info.num : ""}`.trim(); }
+/* Η κάρτα του κουίζ (ενότητα, διαγώνισμα, λάθη). Επιστρέφει το HTML και τη συνάρτηση για επόμενη/προηγούμενη ερώτηση. */
+function quizView(z, rerender, extraDone){
+  const n = z.qs.length, {right, wrong} = quizScore(z), answered = right + wrong, anim = z.anim;
+  z.anim = "";
+  if(z.done){
+    const g = gradeOf(z);
+    const msg = g >= 18 ? "Άριστα! Είσαι έτοιμος για το μάθημα." : g >= 14 ? "Πολύ καλά. Ξαναδιάβασε όσα σου ξέφυγαν." : "Καλή αρχή. Ρίξε μια ματιά στην περίληψη και ξαναδοκίμασε.";
+    return { go:null, body:`<div class="sheet center">
+      <span class="cheer">${g >= 18 ? "Άριστα" : g >= 14 ? "Πολύ καλά" : "Συνέχισε"}</span>
+      <div class="grade" role="img" aria-label="Βαθμός ${g} στα 20"><svg viewBox="0 0 210 150" aria-hidden="true"><ellipse cx="105" cy="76" rx="92" ry="60" transform="rotate(-6 105 76)"/></svg><div class="num">${g}<small>/20</small></div></div>
+      <p>Βρήκες σωστά ${right} από ${n} ερωτήσεις.${answered < n ? ` Αναπάντητες: ${n - answered}.` : ""} ${msg}</p>
+      ${extraDone || ""}
+      <div class="row"><button class="btn" data-qa="restart">Ξανά από την αρχή</button><button class="btn ghost" data-qa="review">Δες τις απαντήσεις</button></div></div>` };
+  }
+  const i = z.qi, q = z.qs[i], p = z.picked[i], has = p !== undefined, last = i === n - 1;
+  const opts = q.opts.map((o, j) => {
+    const cls = !has ? "" : o.ok ? " right" + (j === p ? " picked" : "") : j === p ? " wrong picked" : " dim";
+    return `<button class="opt${cls}" data-opt="${j}"${has ? " disabled" : ""}><span class="l" aria-hidden="true">${has && o.ok ? "✓" : has && j === p ? "✕" : LETTERS[j]}</span><span>${plain(o.t)}</span></button>`;
+  }).join("");
+  const verdict = has ? (q.opts[p].ok ? `<b class="y">Σωστά</b>` : `<b class="n">Όχι ακριβώς</b>`) : "";
+  const mid = answered === n ? `<button class="btn gold" data-qa="finish">Δες τον βαθμό σου</button>`
+    : z.mode === "exam" && last ? `<button class="btn ghost" data-qa="finish">Παράδοση (${n - answered} αναπάντητες)</button>`
+    : (has && last ? `Έμειναν ${n - answered} αναπάντητες` : `← σύρε →`);
+  return { body:`<div class="prog"><div class="bar" role="img" aria-label="Απάντησες ${answered} από ${n}"><i style="width:${Math.round(answered / n * 100)}%"></i></div><span class="sc"><span>✓ ${right}</span><span>✕ ${wrong}</span></span></div>
+      <div class="deck"><div class="qcard slide${anim ? " " + anim : ""}">
+        <span class="tag">Ερώτηση ${i+1} από ${n}${z.mode !== "unit" ? ` · ${unitName(q.key)}` : ""}</span><h3>${rich(q.q)}</h3>${opts}
+        <div aria-live="polite">${has ? `<div class="why">${verdict}${rich(q.why)}</div>` : ""}</div>
+      </div></div>
+      ${pager(i > 0, !last, mid)}`,
+    go: d => { const j = i + d; if(j < 0 || j >= n) return false; z.qi = j; z.anim = d > 0 ? "in-next" : "in-prev"; rerender(); return true; } };
+}
+function bindQuiz(el, z, rerender, hooks){
+  el.querySelectorAll("[data-opt]").forEach(b => b.onclick = () => {
+    const q = z.qs[z.qi], j = +b.dataset.opt;
+    z.picked[z.qi] = j;
+    markAnswer(q.key, q.oi, q.opts[j].ok);
+    try { navigator.vibrate && navigator.vibrate(q.opts[j].ok ? 30 : [40,60,40]); } catch(e){}
+    rerender();
+    /* Η εξήγηση να φαίνεται πάνω από την κάτω μπάρα */
+    const why = $(".why", el), barH = $("nav.tabs").offsetHeight;
+    if(why){ const r = why.getBoundingClientRect(), over = r.bottom - (innerHeight - barH - 12); if(over > 0) window.scrollBy({top: over, behavior: CALM.matches ? "auto" : "smooth"}); }
+  });
+  el.querySelectorAll("[data-qa]").forEach(b => b.onclick = () => {
+    const a = b.dataset.qa;
+    if(a === "finish"){ z.done = true; hooks.finish && hooks.finish(); }
+    else if(a === "review"){ z.done = false; z.qi = 0; }
+    else if(hooks[a]) hooks[a]();
+    rerender(); hooks.top && hooks.top();
+  });
 }
 /* Το ← → του πληκτρολογίου κάνει ό,τι και το σύρσιμο */
 let keyNav = null;
@@ -789,32 +910,20 @@ function renderSection(k, id){
       <div class="deck"><section class="blk slide${b.warn ? " warn" : ""}${s.anim ? " " + s.anim : ""}" aria-live="polite"><span class="k">${b.warn ? "Προσοχή" : "Θέμα " + (i+1)}</span><h3>${b.h}</h3>${b.quote ? `<p class="quote" lang="grc">${b.quote}</p>` : ""}<p>${rich(b.t)}</p>${b.f ? `<p class="f formula">${b.f}</p>` : ""}${b.ex ? `<div class="box exb"><b>Παράδειγμα</b><p>${rich(b.ex)}</p></div>` : ""}${b.def ? `<div class="box defb"><b>${b.defLabel || "Στο διαγώνισμα γράφεις"}</b><p>${rich(b.def)}</p></div>` : ""}</section></div>
       ${pager(i > 0, !last, last ? `<button class="btn gold" data-go="quiz">Πάμε στις ερωτήσεις →</button>` : `← σύρε →`)}`;
     go = d => { const j = i + d; if(j < 0 || j >= n) return false; s.idx = j; s.anim = d > 0 ? "in-next" : "in-prev"; renderSection(k, id); return true; };
+  } else if(s.view === "voc"){
+    const n = c.vocab.length, i = Math.min(s.vi, n - 1), [w, m, d] = c.vocab[i], last = i === n - 1;
+    body = `<div class="prog"><div class="bar" role="img" aria-label="Λέξη ${i+1} από ${n}"><i style="width:${Math.round((i+1) / n * 100)}%"></i></div><span>${i+1}/${n}</span></div>
+      <div class="deck"><button class="vcard slide${s.vflip ? " back-side" : ""}${s.anim ? " " + s.anim : ""}" data-vflip aria-live="polite">${s.vflip
+        ? `<span class="tag">Σημαίνει</span><span class="vw" lang="grc">${w}</span><strong>${m}</strong>${d ? `<span class="vd"><b>Στα νέα ελληνικά</b>${d}</span>` : ""}`
+        : `<span class="tag">Λέξη ${i+1} από ${n}</span><strong class="vw big" lang="grc">${w}</strong><span class="tap">Πάτα για τη σημασία</span>`}</button></div>
+      ${pager(i > 0, !last, last ? `<button class="btn gold" data-go="quiz">Πάμε στις ερωτήσεις →</button>` : `← σύρε →`)}`;
+    go = d => { const j = i + d; if(j < 0 || j >= n) return false; s.vi = j; s.vflip = false; s.anim = d > 0 ? "in-next" : "in-prev"; renderSection(k, id); return true; };
   } else if(s.view === "quiz"){
-    const n = s.qs.length, {right, wrong} = quizScore(s), answered = right + wrong;
-    if(s.done){
-      const g = Math.round(right / n * 20);
-      const msg = g >= 18 ? "Άριστα! Είσαι έτοιμος για το μάθημα." : g >= 14 ? "Πολύ καλά. Ξαναδιάβασε όσα σου ξέφυγαν." : "Καλή αρχή. Ρίξε μια ματιά στην περίληψη και ξαναδοκίμασε.";
-      body = `<div class="sheet center">
-        <span class="cheer">${g >= 18 ? "Άριστα" : g >= 14 ? "Πολύ καλά" : "Συνέχισε"}</span>
-        <div class="grade" role="img" aria-label="Βαθμός ${g} στα 20"><svg viewBox="0 0 210 150" aria-hidden="true"><ellipse cx="105" cy="76" rx="92" ry="60" transform="rotate(-6 105 76)"/></svg><div class="num">${g}<small>/20</small></div></div>
-        <p>Βρήκες σωστά ${right} από ${n} ερωτήσεις. ${msg}</p>
-        <div class="row"><button class="btn" data-act="restart">Ξανά από την αρχή</button><button class="btn ghost" data-act="review">Δες τις απαντήσεις</button></div></div>`;
-    } else {
-      const i = s.qi, q = s.qs[i], p = s.picked[i], has = p !== undefined, last = i === n - 1;
-      const opts = q.opts.map((o, j) => {
-        const cls = !has ? "" : o.ok ? " right" + (j === p ? " picked" : "") : j === p ? " wrong picked" : " dim";
-        return `<button class="opt${cls}" data-opt="${j}"${has ? " disabled" : ""}><span class="l" aria-hidden="true">${has && o.ok ? "✓" : has && j === p ? "✕" : LETTERS[j]}</span><span>${plain(o.t)}</span></button>`;
-      }).join("");
-      const verdict = has ? (q.opts[p].ok ? `<b class="y">Σωστά</b>` : `<b class="n">Όχι ακριβώς</b>`) : "";
-      const mid = answered === n ? `<button class="btn gold" data-act="finish">Δες τον βαθμό σου</button>` : (has && last ? `Έμειναν ${n - answered} αναπάντητες` : `← σύρε →`);
-      body = `<div class="prog"><div class="bar" role="img" aria-label="Απάντησες ${answered} από ${n}"><i style="width:${Math.round(answered / n * 100)}%"></i></div><span class="sc"><span>✓ ${right}</span><span>✕ ${wrong}</span></span></div>
-        <div class="deck"><div class="qcard slide${s.anim ? " " + s.anim : ""}">
-          <span class="tag">Ερώτηση ${i+1} από ${n}</span><h3>${rich(q.q)}</h3>${opts}
-          <div aria-live="polite">${has ? `<div class="why">${verdict}${rich(q.why)}</div>` : ""}</div>
-        </div></div>
-        ${pager(i > 0, !last, mid)}`;
-      go = d => { const j = i + d; if(j < 0 || j >= n) return false; s.qi = j; s.anim = d > 0 ? "in-next" : "in-prev"; renderSection(k, id); return true; };
-    }
+    const z = s.quiz, nm = mistakeItems(key).length;
+    const extra = nm ? `<button class="btn gold" data-qa="mist" style="margin-bottom:10px">Ξανά μόνο τα λάθη (${nm})</button>` : "";
+    const head = z.mode === "mist" && !z.done ? `<p class="qmode">Μόνο οι ερωτήσεις που είχες κάνει λάθος. <button class="linkbtn" data-qa="restart">Όλες οι ερωτήσεις</button></p>` : "";
+    const v = quizView(z, () => renderSection(k, id), extra);
+    body = head + v.body; go = v.go;
   } else {
     const lv = s.lvl || 0, shown = c.ex.map((e, i) => [e, i]).filter(([e]) => !lv || e.lvl === lv);
     body = `<h3 style="font-size:18px;font-weight:800;margin:0 0 10px">${c.exTitle}</h3>
@@ -830,7 +939,7 @@ function renderSection(k, id){
   keyNav = go;
   el.innerHTML = `<a class="back" href="#${k}">← ${BOOKS[k].name}</a>
     <div class="chap"><span class="ref">${info ? (k === "G" ? "Ενότητα " + info.num : info.ch.t) : ""}</span><h2 class="ct">${info && k !== "A" && k !== "G" ? info.num + " " : ""}${c.title}</h2></div>
-    <div class="seg">${VIEWS.map(([v,l]) => `<button data-go="${v}" aria-pressed="${s.view === v}">${l}</button>`).join("")}</div>${body}
+    <div class="seg${c.vocab ? " four" : ""}">${(c.vocab ? [VIEWS[0], ["voc","Λέξεις"], VIEWS[1], VIEWS[2]] : VIEWS).map(([v,l]) => `<button data-go="${v}" aria-pressed="${s.view === v}">${l}</button>`).join("")}</div>${body}
     <a class="btn ghost sendlink" href="#send/${k}/${id}">Έχεις καλές σημειώσεις; Στείλ' τες</a>`;
 
   const top = () => { const r = $(".seg", el).getBoundingClientRect(); if(r.top < 0) window.scrollBy({top: r.top - 12}); };
@@ -838,21 +947,13 @@ function renderSection(k, id){
   el.querySelectorAll("[data-nav]").forEach(b => b.onclick = () => go && go(+b.dataset.nav));
   const slide = $(".slide", el);
   if(slide && go) swipe(slide, go);
-  el.querySelectorAll("[data-opt]").forEach(b => b.onclick = () => {
-    s.picked[s.qi] = +b.dataset.opt;
-    try { navigator.vibrate && navigator.vibrate(s.qs[s.qi].opts[+b.dataset.opt].ok ? 30 : [40,60,40]); } catch(e){}
-    renderSection(k, id);
-    /* Η εξήγηση να φαίνεται πάνω από την κάτω μπάρα */
-    const why = $(".why", el), barH = $("nav.tabs").offsetHeight;
-    if(why){ const r = why.getBoundingClientRect(), over = r.bottom - (innerHeight - barH - 12); if(over > 0) window.scrollBy({top: over, behavior: CALM.matches ? "auto" : "smooth"}); }
+  if(s.view === "quiz") bindQuiz(el, s.quiz, () => renderSection(k, id), {
+    top,
+    restart: () => { s.quiz = newQuiz(unitItems(key), "unit"); },
+    mist: () => { s.quiz = newQuiz(mistakeItems(key), "mist"); },
+    finish: () => { if(s.quiz.mode === "unit") saveBest(key, gradeOf(s.quiz)); }
   });
-  el.querySelectorAll("[data-act]").forEach(b => b.onclick = () => {
-    const a = b.dataset.act;
-    if(a === "finish"){ s.done = true; }
-    else if(a === "review"){ s.done = false; s.qi = 0; }
-    else if(a === "restart"){ startQuiz(key); }
-    renderSection(k, id); top();
-  });
+  el.querySelectorAll("[data-vflip]").forEach(b => b.onclick = () => { s.vflip = !s.vflip; renderSection(k, id); });
   el.querySelectorAll("[data-lvl]").forEach(b => b.onclick = () => { s.lvl = +b.dataset.lvl; renderSection(k, id); });
   el.querySelectorAll("[data-sol]").forEach(b => b.onclick = () => {
     const sol = $("#sol-"+k+"-"+b.dataset.sol);
@@ -883,6 +984,91 @@ window.addEventListener("popstate", e => {
   const k = parts[0], id = parts.slice(1).join("/"), s = state[k+"/"+id];
   if(s && s.from !== null && !(e.state && e.state.theory) && !$("#"+k).hidden) backToEx(k, id);
 });
+
+/* Εξάσκηση: διαγώνισμα από πολλές ενότητες και «Τα λάθη μου» */
+const P = { sub:"exam", quiz:null, mkey:null, sel:new Set(store.get("diab-exam-sel", [])), n:10, min:0, end:null, int:null };
+const SUBJ = ["F", "M", "G", "A"];
+const readyKeys = k => BOOKS[k].chapters.flatMap(ch => ch.s.map(x => k + "/" + x[0])).filter(key => C[key]);
+function startExam(){
+  const keys = [...P.sel].filter(k => C[k]);
+  const pool = shuffle(keys.flatMap(unitItems));
+  P.quiz = newQuiz(P.n ? pool.slice(0, P.n) : pool, "exam");
+  P.end = P.min ? Date.now() + P.min * 60000 : null;
+  clearInterval(P.int);
+  if(P.end) P.int = setInterval(tickExam, 1000);
+}
+function clockText(){ const left = Math.max(0, Math.round((P.end - Date.now()) / 1000)); return `${Math.floor(left / 60)}:${String(left % 60).padStart(2, "0")}`; }
+function tickExam(){
+  if(!P.quiz || P.quiz.done || !P.end){ clearInterval(P.int); return; }
+  const c = $("#exclock");
+  if(c) c.textContent = clockText();
+  if(Date.now() >= P.end){
+    P.quiz.done = true; clearInterval(P.int);
+    try { navigator.vibrate && navigator.vibrate([200,100,200]); } catch(e){}
+    if(!$("#practice").hidden) renderPractice(P.sub);
+  }
+}
+function breakdown(z){
+  const by = {};
+  z.qs.forEach((q, i) => { const b = by[q.key] || (by[q.key] = [0, 0]); b[1]++; if(z.picked[i] !== undefined && q.opts[z.picked[i]].ok) b[0]++; });
+  return `<div class="brk">${Object.entries(by).map(([key, [r, t]]) => `<a href="#${key}"><span>${unitName(key)} · ${C[key].title}</span><b class="${r === t ? "ok" : r * 2 >= t ? "mid" : "low"}">${r}/${t}</b></a>`).join("")}</div>`;
+}
+function renderPractice(sub){
+  P.sub = sub;
+  const el = $("#practice");
+  const nav = `<nav class="seg pseg" aria-label="Εξάσκηση"><a href="#practice"${sub === "exam" ? ' aria-current="page"' : ""}>Διαγώνισμα</a><a href="#practice/mistakes"${sub === "mistakes" ? ' aria-current="page"' : ""}>Τα λάθη μου</a><a href="#timer">Χρονόμετρο</a></nav>`;
+  const running = P.quiz && (P.quiz.mode === "exam") === (sub === "exam");
+  let body = "", go = null;
+  if(running){
+    const z = P.quiz, extra = z.mode === "exam" ? breakdown(z) : "";
+    const head = `<div class="exbar">${z.mode === "exam" ? (P.end && !z.done ? `<span class="clock" id="exclock">${clockText()}</span>` : `<span class="clock">Διαγώνισμα</span>`) : `<span class="clock">Τα λάθη μου</span>`}<button class="linkbtn" data-px="quit">${z.done ? "Νέο" : "Έξοδος"}</button></div>`;
+    const v = quizView(z, () => renderPractice(sub), extra);
+    body = head + v.body; go = v.go;
+  } else if(sub === "exam"){
+    const groups = SUBJ.map(k => [k, readyKeys(k)]).filter(([, keys]) => keys.length);
+    const avail = [...P.sel].filter(k => C[k]).reduce((a, k) => a + C[k].quiz.length, 0);
+    const opt = (name, val, list) => list.map(([v, l]) => `<button data-${name}="${v}" aria-pressed="${val === v}">${l}</button>`).join("");
+    body = `<div class="hero"><span class="ref">Εξάσκηση</span><h2 class="ct">Διαγώνισμα</h2><p>Διάλεξε ενότητες και λύσε ερωτήσεις ανακατεμένες, σαν σε διαγώνισμα. Στο τέλος παίρνεις βαθμό στα 20.</p></div>
+      <section class="toc"><h3>Ενότητες</h3>${groups.map(([k, keys]) => `<div class="gchips"><span class="glab">${BOOKS[k].name} <button class="linkbtn" data-selall="${k}">${keys.every(x => P.sel.has(x)) ? "καμία" : "όλες"}</button></span>${keys.map(key => { const info = findSection(k, key.split("/")[1]); return `<button class="gchip sel" data-sel="${key}" aria-pressed="${P.sel.has(key)}">${info.num} · ${C[key].title}</button>`; }).join("")}</div>`).join("")}</section>
+      <section class="toc"><h3>Ερωτήσεις</h3><div class="seg">${opt("pn", P.n, [[10, "10"], [20, "20"], [0, "Όλες"]])}</div></section>
+      <section class="toc"><h3>Χρόνος</h3><div class="seg">${opt("pm", P.min, [[0, "Χωρίς"], [10, "10΄"], [20, "20΄"]])}</div></section>
+      <button class="btn" data-px="start"${avail ? "" : " disabled"}>${avail ? `Ξεκίνα (${P.n ? Math.min(P.n, avail) : avail} ερωτήσεις)` : "Διάλεξε τουλάχιστον μία ενότητα"}</button>`;
+  } else {
+    const all = mistakeItems(), by = {};
+    all.forEach(({key}) => by[key] = (by[key] || 0) + 1);
+    body = `<div class="hero"><span class="ref">Εξάσκηση</span><h2 class="ct">Τα λάθη μου</h2><p>Οι ερωτήσεις που απάντησες λάθος. Μόλις απαντήσεις μια ερώτηση σωστά, φεύγει από εδώ.</p></div>
+      ${all.length ? `<button class="btn" data-mk="*">Όλα τα λάθη μαζί (${all.length})</button>
+        <section class="toc" style="margin-top:20px"><h3>Ανά ενότητα</h3><div class="brk">${Object.entries(by).map(([key, n]) => `<button data-mk="${key}"><span>${unitName(key)} · ${C[key].title}</span><b class="low">${n}</b></button>`).join("")}</div></section>`
+        : `<div class="sheet center"><p style="margin:0">Δεν έχεις λάθη. Λύσε τις ερωτήσεις μιας ενότητας ή ένα διαγώνισμα, και όσα σου ξεφύγουν θα έρθουν εδώ.</p></div>`}`;
+  }
+  if(CALM.matches) body = body.replace(/ in-(next|prev)/g, "");
+  el.innerHTML = nav + body;
+  keyNav = go;
+  const top = () => { const r = $(".pseg", el).getBoundingClientRect(); if(r.top < 0) window.scrollBy({top: r.top - 12}); };
+  const slide = $(".slide", el);
+  if(slide && go) swipe(slide, go);
+  el.querySelectorAll("[data-nav]").forEach(b => b.onclick = () => go && go(+b.dataset.nav));
+  if(running) bindQuiz(el, P.quiz, () => renderPractice(sub), {
+    top,
+    restart: () => { if(P.quiz.mode === "exam") startExam(); else P.quiz = newQuiz(mistakeItems(P.mkey), "mist"); }
+  });
+  el.querySelectorAll("[data-sel]").forEach(b => b.onclick = () => { const k = b.dataset.sel; P.sel.has(k) ? P.sel.delete(k) : P.sel.add(k); store.set("diab-exam-sel", [...P.sel]); renderPractice(sub); });
+  el.querySelectorAll("[data-selall]").forEach(b => b.onclick = () => {
+    const keys = readyKeys(b.dataset.selall), on = !keys.every(x => P.sel.has(x));
+    keys.forEach(x => on ? P.sel.add(x) : P.sel.delete(x)); store.set("diab-exam-sel", [...P.sel]); renderPractice(sub);
+  });
+  el.querySelectorAll("[data-pn]").forEach(b => b.onclick = () => { P.n = +b.dataset.pn; renderPractice(sub); });
+  el.querySelectorAll("[data-pm]").forEach(b => b.onclick = () => { P.min = +b.dataset.pm; renderPractice(sub); });
+  el.querySelectorAll("[data-px]").forEach(b => b.onclick = () => {
+    if(b.dataset.px === "start") startExam(); else { P.quiz = null; P.end = null; clearInterval(P.int); }
+    renderPractice(sub); top();
+  });
+  el.querySelectorAll("[data-mk]").forEach(b => b.onclick = () => {
+    P.mkey = b.dataset.mk === "*" ? null : b.dataset.mk;
+    P.quiz = newQuiz(mistakeItems(P.mkey), "mist"); P.end = null;
+    renderPractice(sub); top();
+  });
+}
 
 /* Πίνακες γραμματικής */
 function grammarIndex(){
@@ -1101,6 +1287,11 @@ $("#themebtn").onclick = () => {
   drawTheme();
 };
 drawTheme();
+
+/* Λειτουργία χωρίς internet και «Προσθήκη στην αρχική οθόνη» (βλ. sw.js) */
+if("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")){
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+}
 
 route();
 </script>

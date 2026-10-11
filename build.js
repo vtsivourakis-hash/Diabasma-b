@@ -27,6 +27,9 @@ for (const f of fs.readdirSync(dir).filter(f => f.endsWith(".json") && !f.starts
     if (!q.q || !q.c || !Array.isArray(q.w) || q.w.length < 2) throw new Error(`${f}: η ερώτηση ${i + 1} θέλει q, c και τουλάχιστον 2 λάθος απαντήσεις στο w`);
     if (q.w.includes(q.c)) throw new Error(`${f}: στην ερώτηση ${i + 1} η σωστή απάντηση υπάρχει και στις λάθος`);
   });
+  for (const [i, v] of (data.vocab || []).entries()) {
+    if (!Array.isArray(v) || v.length !== 3) throw new Error(`${f}: η λέξη ${i + 1} του vocab θέλει [λέξη, σημασία, λέξεις των νέων ελληνικών]`);
+  }
   data.ex.forEach((e, i) => {
     if ("topic" in e && !(e.topic >= 0 && e.topic < data.summary.length)) throw new Error(`${f}: η άσκηση ${i + 1} δείχνει σε θέμα ${e.topic} που δεν υπάρχει`);
     if (![1, 2, 3].includes(e.lvl)) throw new Error(`${f}: η άσκηση ${i + 1} θέλει "lvl": 1 (Εύκολη), 2 (Μέτρια) ή 3 (Δύσκολη)`);
