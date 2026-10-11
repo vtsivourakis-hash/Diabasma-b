@@ -1,138 +1,154 @@
 <!doctype html>
-<html lang="el">
+<html lang="el" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Διάβασμα Β΄ Γυμνασίου</title>
+<script>/* Σκούρο θέμα από προεπιλογή. Αν ο χρήστης διάλεξε φωτεινό, το θυμόμαστε μόνο σε αυτή τη συσκευή. */
+try { if(localStorage.getItem("diab-theme") === "light") document.documentElement.dataset.theme = "light"; } catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400;600;800&family=Literata:ital,opsz,wght@0,7..72,400;1,7..72,400;1,7..72,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Inter+Tight:wght@700;800&family=Literata:ital,opsz,wght@0,7..72,400;1,7..72,400;1,7..72,600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#F3F4FB; --grid:#E4E6F5; --card:#FFFFFF; --line:#E0E3F2;
-  --ink:#18256C; --on-ink:#FFFFFF; --text:#1B2033; --muted:#565D78;
-  --mark:#F5C842; --mark-soft:#FDF3D0; --red:#D7352B; --ok:#1E7F52; --ok-soft:#E3F3EA; --no-soft:#FCE9E7;
-  --nav:#18256C; --nav-text:rgba(255,255,255,.72); --gold:#F5C842;
-  --hero:linear-gradient(135deg,#18256C 0%,#3346A8 100%); --on-hero:#FFFFFF;
-  --shadow:0 1px 2px rgba(24,37,108,.06),0 6px 18px rgba(24,37,108,.08);
+  --paper:#F4F5FA; --grid:#E9EBF4; --card:#FFFFFF; --card2:#F0F2F9; --line:#E1E4EF;
+  --ink:#1D2C8F; --on-ink:#FFFFFF; --text:#0E1126; --muted:#5E6483;
+  --accent:#F5C842; --on-accent:#0E1126; --hi:#1D2C8F; --glow:rgba(59,79,208,.16);
+  --mark:#F5C842; --mark-soft:#FBF1CF; --red:#D7352B; --ok:#16804F; --ok-soft:#E1F3E9; --no-soft:#FBE7E5;
+  --nav:rgba(255,255,255,.82); --nav-text:#6A7090; --gold:#E0AE1E;
+  --hero:radial-gradient(120% 140% at 100% 0%,#3B4FD0 0%,#1B2A8C 45%,#0F1857 100%); --on-hero:#FFFFFF;
+  --shadow:0 1px 0 rgba(14,17,38,.04);
   color-scheme:light;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --paper:#0D1126; --grid:#1A1F3D; --card:#171D3B; --line:#262E57;
-    --ink:#A9B8F2; --on-ink:#10142A; --text:#E9EBF5; --muted:#A0A7C4;
-    --mark:#8C6E12; --mark-soft:#2E2A14; --red:#FF7A6B; --ok:#56C892; --ok-soft:#14322A; --no-soft:#3A1D1F;
-    --nav:#171D3B; --nav-text:rgba(255,255,255,.66); --gold:#F5C842;
-    --hero:linear-gradient(135deg,#1F2A6E 0%,#33429A 100%); --on-hero:#FFFFFF;
-    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.25);
+    --paper:#07091A; --grid:#0E1229; --card:#10142B; --card2:#161B38; --line:#232945;
+    --ink:#B4C1FF; --on-ink:#07091A; --text:#EEF0FA; --muted:#8D93B5;
+    --accent:#F5C842; --on-accent:#07091A; --hi:#F5C842; --glow:rgba(91,112,255,.22);
+    --mark:#8C6E12; --mark-soft:#231F10; --red:#FF6B5E; --ok:#4FD18B; --ok-soft:#0F2A1F; --no-soft:#2E1418;
+    --nav:rgba(10,12,28,.78); --nav-text:#7C83A8; --gold:#F5C842;
+    --hero:radial-gradient(120% 140% at 100% 0%,#3346C8 0%,#18237A 42%,#0B1033 100%); --on-hero:#FFFFFF;
+    --shadow:none;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --paper:#0D1126; --grid:#1A1F3D; --card:#171D3B; --line:#262E57;
-  --ink:#A9B8F2; --on-ink:#10142A; --text:#E9EBF5; --muted:#A0A7C4;
-  --mark:#8C6E12; --mark-soft:#2E2A14; --red:#FF7A6B; --ok:#56C892; --ok-soft:#14322A; --no-soft:#3A1D1F;
-  --nav:#171D3B; --nav-text:rgba(255,255,255,.66); --gold:#F5C842;
-  --hero:linear-gradient(135deg,#1F2A6E 0%,#33429A 100%); --on-hero:#FFFFFF;
-  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.25);
+  --paper:#07091A; --grid:#0E1229; --card:#10142B; --card2:#161B38; --line:#232945;
+  --ink:#B4C1FF; --on-ink:#07091A; --text:#EEF0FA; --muted:#8D93B5;
+  --accent:#F5C842; --on-accent:#07091A; --hi:#F5C842; --glow:rgba(91,112,255,.22);
+  --mark:#8C6E12; --mark-soft:#231F10; --red:#FF6B5E; --ok:#4FD18B; --ok-soft:#0F2A1F; --no-soft:#2E1418;
+  --nav:rgba(10,12,28,.78); --nav-text:#7C83A8; --gold:#F5C842;
+  --hero:radial-gradient(120% 140% at 100% 0%,#3346C8 0%,#18237A 42%,#0B1033 100%); --on-hero:#FFFFFF;
+  --shadow:none;
   color-scheme:dark;
 }
 html{scroll-padding-top:16px;background:var(--paper);-webkit-tap-highlight-color:transparent}
 *,*::before,*::after{box-sizing:inherit}
 body{
   margin:0;color:var(--text);background:var(--paper);
-  font-family:'Commissioner',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
-  font-size:17px;line-height:1.55;
-  padding-bottom:calc(82px + env(safe-area-inset-bottom,0px));
+  background-image:radial-gradient(90% 50% at 50% -10%,var(--glow),transparent 70%);background-repeat:no-repeat;
+  font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  font-size:16.5px;line-height:1.55;letter-spacing:-.006em;
+  padding-bottom:calc(76px + env(safe-area-inset-bottom,0px));
   overflow-x:hidden;overflow-x:clip;
 }
-.wrap{max-width:600px;margin:0 auto;padding:14px 16px 24px}
-header{display:flex;align-items:center;gap:10px;margin:2px 0 16px}
-header .logo{flex:0 0 auto;display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--hero);font-size:21px}
-h1{font-weight:800;font-size:19px;line-height:1.15;letter-spacing:-.01em;margin:0;color:var(--text)}
-.lede{margin:0;color:var(--muted);font-size:13px;line-height:1.3}
+h1,h2,h3,.ct,.big,.tab .lb,.btn,.seg button{font-family:'Inter Tight','Inter',system-ui,sans-serif}
+.wrap{max-width:600px;margin:0 auto;padding:12px 16px 24px}
+header{display:flex;align-items:center;gap:12px;margin:4px 0 18px}
+header .logo{flex:0 0 auto;display:grid;place-items:center;width:38px;height:38px;border-radius:11px;background:var(--hero);color:var(--accent);font-family:'Inter Tight',sans-serif;font-weight:800;font-size:17px;letter-spacing:-.02em;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+header .ttl{flex:1;min-width:0}
+h1{font-weight:800;font-size:19px;line-height:1.1;letter-spacing:-.025em;margin:0;color:var(--text)}
+.lede{margin:1px 0 0;color:var(--muted);font-size:13px;line-height:1.3}
+.themebtn{flex:0 0 auto;display:grid;place-items:center;width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);cursor:pointer}
+.themebtn svg{width:19px;height:19px}
 h2,h3{margin:0}
 a{color:var(--ink)}
 button,input,select,textarea{font:inherit;color:inherit}
 button{-webkit-user-select:none;user-select:none}
-:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .f{font-family:'Literata',Georgia,serif;font-style:italic}
 .muted{color:var(--muted);font-size:15px;margin:6px 0 0}
 .hint{font-size:14px;color:var(--muted)}
 .center{text-align:center}
+svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
-/* Κάτω μπάρα, όπως στις εφαρμογές */
-nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;justify-content:center;background:var(--nav);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));box-shadow:0 -4px 20px rgba(13,17,38,.18)}
-.tab{flex:1;max-width:120px;display:flex;flex-direction:column;align-items:center;gap:1px;text-decoration:none;color:var(--nav-text);font-size:11px;font-weight:600;padding:6px 2px 5px;border-radius:14px;white-space:nowrap;transition:background .2s,color .2s}
-.tab .ic{font-size:22px;line-height:1.15;transition:transform .2s}
-.tab[aria-current="page"]{color:#fff;background:rgba(255,255,255,.12)}
-.tab[aria-current="page"] .ic{transform:translateY(-2px) scale(1.12)}
-.tab[aria-current="page"] .lb{box-shadow:inset 0 -2px 0 var(--gold)}
+/* Κάτω μπάρα: γυάλινη, με εικονίδια γραμμής */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;justify-content:center;background:var(--nav);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px))}
+.tab{position:relative;flex:1;max-width:110px;display:flex;flex-direction:column;align-items:center;gap:3px;text-decoration:none;color:var(--nav-text);font-size:10.5px;font-weight:600;padding:6px 2px 4px;white-space:nowrap;transition:color .2s}
+.tab .ic{display:grid;place-items:center;height:24px}
+.tab[aria-current="page"]{color:var(--text)}
+.tab[aria-current="page"] .ic{color:var(--hi)}
+.tab[aria-current="page"]::before{content:"";position:absolute;top:-7px;width:22px;height:3px;border-radius:0 0 3px 3px;background:var(--hi)}
 .panel[hidden]{display:none}
 
 .chap{margin:0 0 14px}
-.ref{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
-.ct{font-size:26px;line-height:1.15;font-weight:800;margin-top:4px;letter-spacing:-.01em}
-.back{display:inline-flex;align-items:center;gap:6px;font-size:15px;font-weight:700;text-decoration:none;margin-bottom:12px;padding:8px 14px 8px 10px;border-radius:999px;background:var(--card);box-shadow:var(--shadow)}
-.seg{display:flex;gap:4px;margin:0 0 16px;padding:4px;border-radius:999px;background:var(--card);box-shadow:var(--shadow)}
-.seg button{flex:1;padding:10px 4px;border-radius:999px;border:0;background:transparent;cursor:pointer;font-weight:700;font-size:14px;color:var(--muted);transition:background .2s,color .2s}
-.seg button[aria-pressed="true"]{background:var(--ink);color:var(--on-ink)}
+.ref{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.ct{font-size:27px;line-height:1.1;font-weight:800;margin-top:6px;letter-spacing:-.03em}
+.back{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:700;text-decoration:none;color:var(--muted);margin-bottom:12px;padding:7px 12px 7px 9px;border-radius:10px;border:1px solid var(--line);background:var(--card)}
+.seg{display:flex;gap:4px;margin:0 0 16px;padding:4px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
+.seg button{flex:1;padding:10px 4px;border-radius:10px;border:0;background:transparent;cursor:pointer;font-weight:700;font-size:14.5px;letter-spacing:-.01em;color:var(--muted);transition:background .2s,color .2s}
+.seg button[aria-pressed="true"]{background:var(--text);color:var(--paper)}
 
 /* Ευρετήριο */
-.hero{position:relative;overflow:hidden;padding:18px 18px 16px;margin:0 0 18px;border-radius:22px;background:var(--hero);color:var(--on-hero)}
-.hero .emo{position:absolute;right:-6px;top:-10px;font-size:92px;opacity:.22;transform:rotate(12deg)}
-.hero .ref{color:rgba(255,255,255,.75)}
-.hero .ct{color:#fff;margin-bottom:10px}
-.hero p{margin:0 0 6px;font-size:14px;color:rgba(255,255,255,.85);max-width:40ch}
-.bar{height:8px;border-radius:999px;background:rgba(255,255,255,.2);overflow:hidden;margin-top:12px}
-.bar i{display:block;height:100%;border-radius:999px;background:var(--gold)}
-.hero small{display:block;margin-top:6px;font-size:13px;font-weight:600;color:rgba(255,255,255,.85)}
-.toc{margin:0 0 20px}
-.toc h3{font-size:14px;font-weight:800;color:var(--muted);margin:0 0 8px 4px}
-.item{display:flex;align-items:center;gap:12px;padding:13px 14px;margin:0 0 8px;background:var(--card);border-radius:16px;text-decoration:none;color:var(--text);box-shadow:var(--shadow);transition:transform .15s}
-a.item:active{transform:scale(.98)}
-.item .num{flex:0 0 auto;display:grid;place-items:center;min-width:3.4em;height:2.2em;padding:0 6px;border-radius:10px;background:var(--mark-soft);font-weight:800;font-size:14px;color:var(--ink);font-variant-numeric:tabular-nums}
-.item .tt{flex:1;line-height:1.3;font-weight:600;font-size:16px}
-.chip{flex:0 0 auto;font-size:12px;font-weight:700;padding:4px 9px;border-radius:999px;background:var(--paper);color:var(--muted)}
+.hero{position:relative;overflow:hidden;padding:20px 18px 18px;margin:0 0 22px;border-radius:20px;background:var(--hero);color:var(--on-hero);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+.hero::after{content:"";position:absolute;right:-60px;top:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(245,200,66,.28),transparent 65%);pointer-events:none}
+.hero .ref{color:rgba(255,255,255,.62)}
+.hero .ct{color:#fff;margin-bottom:8px;font-size:30px}
+.hero p{position:relative;margin:0 0 6px;font-size:14px;color:rgba(255,255,255,.78);max-width:40ch}
+.hero .big{position:absolute;right:18px;top:18px;font-size:34px;font-weight:800;letter-spacing:-.04em;line-height:1;color:var(--accent)}
+.hero .big small{font-size:15px;color:rgba(255,255,255,.55);font-weight:700}
+.bar{height:6px;border-radius:999px;background:rgba(255,255,255,.14);overflow:hidden;margin-top:14px}
+.bar i{display:block;height:100%;border-radius:999px;background:var(--accent);box-shadow:0 0 12px rgba(245,200,66,.6)}
+.hero small{display:block;margin-top:7px;font-size:12.5px;font-weight:600;color:rgba(255,255,255,.62)}
+.toc{margin:0 0 22px}
+.toc h3{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:0 0 10px 2px;line-height:1.4}
+.item{display:flex;align-items:center;gap:12px;padding:14px 14px;margin:0 0 6px;background:var(--card);border:1px solid var(--line);border-radius:14px;text-decoration:none;color:var(--text);transition:transform .15s,border-color .15s}
+a.item:hover{border-color:var(--muted)}
+a.item:active{transform:scale(.985)}
+a.item::after{content:"";flex:0 0 auto;width:8px;height:8px;border-top:2px solid var(--muted);border-right:2px solid var(--muted);transform:rotate(45deg);margin-right:4px}
+.item .num{flex:0 0 auto;min-width:3.2em;font-weight:700;font-size:13px;color:var(--hi);font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.item .tt{flex:1;line-height:1.3;font-weight:600;font-size:15.5px;letter-spacing:-.01em}
+.chip{flex:0 0 auto;font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;background:var(--card2);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
 .chip.ok{background:var(--ok-soft);color:var(--ok)}
-.item.off{box-shadow:none;background:transparent;border:1.5px dashed var(--line)}
-.item.off .tt{font-weight:400;color:var(--muted)}
-.item.off .num{background:transparent;color:var(--muted)}
+.item.off{background:transparent;border-style:dashed}
+.item.off .tt{font-weight:500;color:var(--muted)}
+.item.off .num{color:var(--muted)}
 
 /* Περίληψη */
 .stack{display:flex;flex-direction:column;gap:12px}
-.sheet{background:var(--card);border-radius:20px;padding:18px;box-shadow:var(--shadow)}
-.sheet .seg{background:var(--paper);box-shadow:none}
-.blk{background:var(--card);border-radius:20px;padding:18px;box-shadow:var(--shadow)}
-.blk .k{display:inline-block;font-size:12px;font-weight:800;color:var(--muted);margin-bottom:4px}
-.blk h3{font-size:19px;font-weight:800;color:var(--ink);margin-bottom:2px;line-height:1.25}
-.blk p{margin:6px 0 0}
-.blk.warn{background:var(--mark-soft);box-shadow:inset 4px 0 0 var(--red)}
-.blk.warn h3{color:var(--red)}
-.formula{font-size:22px;color:var(--ink);margin:8px 0 0;padding:8px 12px;border-radius:12px;background:var(--paper);display:inline-block}
-.box{margin:12px 0 0;padding:12px 14px;border-radius:14px;font-size:16px}
-.box b{display:block;font-size:13px;font-weight:800;margin-bottom:3px}
+.sheet{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px}
+.sheet .seg{background:var(--paper)}
+.blk{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px 18px}
+.blk .k{display:inline-block;font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+.blk h3{font-size:22px;font-weight:800;color:var(--text);margin-bottom:4px;line-height:1.2;letter-spacing:-.025em}
+.blk p{margin:8px 0 0}
+.blk.warn{border-color:var(--red);background:linear-gradient(180deg,var(--no-soft),var(--card) 70%)}
+.blk.warn .k,.blk.warn h3{color:var(--red)}
+.formula{font-size:22px;color:var(--text);margin:12px 0 0;padding:10px 14px;border-radius:12px;background:var(--card2);display:inline-block}
+.box{margin:12px 0 0;padding:12px 14px;border-radius:12px;font-size:15.5px}
+.box b{display:block;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
 .box p{margin:0}
 .exb{background:var(--ok-soft)}
 .exb b{color:var(--ok)}
-.defb{background:var(--paper);box-shadow:inset 0 0 0 1.5px var(--ink)}
-.defb b{color:var(--ink)}
+.defb{background:var(--card2);box-shadow:inset 3px 0 0 var(--accent)}
+.defb b{color:var(--muted)}
 .quote{font-family:'Literata',Georgia,serif;font-size:19px;color:var(--ink)}
 
-.btn{display:block;width:100%;padding:15px 18px;border-radius:999px;border:0;background:var(--ink);color:var(--on-ink);font-weight:800;font-size:16px;cursor:pointer;margin-top:12px;text-align:center;text-decoration:none;transition:transform .12s}
+.btn{display:block;width:100%;padding:15px 18px;border-radius:14px;border:0;background:var(--accent);color:var(--on-accent);font-weight:800;font-size:16px;letter-spacing:-.01em;cursor:pointer;margin-top:12px;text-align:center;text-decoration:none;transition:transform .12s,filter .12s}
 .btn:active{transform:scale(.97)}
-.btn.ghost{background:var(--card);color:var(--ink);box-shadow:inset 0 0 0 2px var(--line)}
-.btn.gold{background:var(--gold);color:#18256C}
-.btn:disabled{opacity:.5;cursor:default}
+.btn:hover{filter:brightness(1.05)}
+.btn.ghost{background:var(--card);color:var(--text);box-shadow:inset 0 0 0 1px var(--line)}
+.btn.gold{background:var(--accent);color:var(--on-accent)}
+.btn:disabled{opacity:.35;cursor:default}
 .row{display:flex;gap:10px}.row .btn{flex:1}
 
 /* Κάρτες που σύρονται δεξιά-αριστερά: περίληψη και ερωτήσεις */
-.prog{display:flex;align-items:center;gap:10px;margin:0 0 10px;font-size:13px;font-weight:700;color:var(--muted)}
+.prog{display:flex;align-items:center;gap:10px;margin:0 0 12px;font-size:12.5px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
 .prog .bar{flex:1;margin:0;background:var(--line)}
 .prog .sc{display:flex;gap:6px}
-.prog .sc span{padding:2px 8px;border-radius:999px;background:var(--ok-soft);color:var(--ok)}
+.prog .sc span{padding:2px 8px;border-radius:6px;background:var(--ok-soft);color:var(--ok)}
 .prog .sc span+span{background:var(--no-soft);color:var(--red)}
 .deck{touch-action:pan-y}
 .slide{will-change:transform}
@@ -142,138 +158,144 @@ a.item:active{transform:scale(.98)}
 .slide.in-prev{animation:inL .28s cubic-bezier(.2,.8,.2,1)}
 .deck .blk{min-height:calc(100vh - 420px);min-height:calc(100dvh - 420px)}
 .pager{display:flex;align-items:center;gap:10px;margin-top:12px}
-.pager .btn{margin:0;flex:0 0 auto;width:58px;padding:13px 0;font-size:20px;line-height:1.2}
-.pager .mid{flex:1;text-align:center;font-size:13px;font-weight:700;color:var(--muted)}
+.pager .btn{margin:0;flex:0 0 auto;width:56px;padding:13px 0;font-size:19px;line-height:1.2}
+.pager .mid{flex:1;text-align:center;font-size:12.5px;font-weight:600;color:var(--muted)}
 .pager .mid .btn{width:100%;font-size:15px}
 @keyframes inR{from{transform:translateX(35%);opacity:0}to{transform:none;opacity:1}}
 @keyframes inL{from{transform:translateX(-35%);opacity:0}to{transform:none;opacity:1}}
+.retex{display:inline-flex;align-items:center;margin:0 0 12px;padding:9px 14px;border:0;border-radius:10px;background:var(--accent);color:var(--on-accent);font-size:14.5px;font-weight:800;cursor:pointer}
 
-.qcard{background:var(--hero);color:#fff;border-radius:24px;padding:20px 16px 16px;box-shadow:0 14px 34px rgba(24,37,108,.25)}
-.qcard .tag{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;opacity:.75}
-.qcard h3{font-size:21px;line-height:1.3;font-weight:800;color:#fff;margin:6px 4px 16px}
-.opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:13px 14px;margin:0 0 8px;border:0;border-radius:16px;background:var(--card);color:var(--text);font-size:16px;font-weight:600;line-height:1.35;cursor:pointer;transition:transform .12s}
-.opt:active{transform:scale(.98)}
-.opt .l{flex:0 0 auto;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--paper);font-weight:800;font-size:14px;color:var(--ink)}
+.qcard{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px 14px 14px}
+.qcard::before{content:"";position:absolute;inset:0 0 auto 0;height:120px;background:radial-gradient(80% 100% at 0% 0%,var(--glow),transparent 70%);pointer-events:none}
+.qcard .tag{position:relative;font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.qcard h3{position:relative;font-size:22px;line-height:1.25;font-weight:800;letter-spacing:-.025em;margin:8px 4px 16px}
+.opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:13px 14px;margin:0 0 8px;border:1px solid var(--line);border-radius:14px;background:var(--card2);color:var(--text);font-size:15.5px;font-weight:500;line-height:1.35;cursor:pointer;transition:transform .12s,border-color .15s}
+.opt:hover{border-color:var(--muted)}
+.opt:active{transform:scale(.985)}
+.opt .l{flex:0 0 auto;display:grid;place-items:center;width:28px;height:28px;border-radius:8px;border:1px solid var(--line);background:var(--card);font-weight:700;font-size:13px;color:var(--muted)}
 .opt:disabled{cursor:default;transform:none}
-.opt.dim{opacity:.55}
-.opt.right{background:var(--ok-soft);box-shadow:inset 0 0 0 2.5px var(--ok);opacity:1}
-.opt.right .l{background:var(--ok);color:#fff}
-.opt.wrong{background:var(--no-soft);box-shadow:inset 0 0 0 2.5px var(--red)}
-.opt.wrong .l{background:var(--red);color:#fff}
+.opt.dim{opacity:.45}
+.opt.right{background:var(--ok-soft);border-color:var(--ok);opacity:1}
+.opt.right .l{background:var(--ok);border-color:var(--ok);color:var(--paper)}
+.opt.wrong{background:var(--no-soft);border-color:var(--red)}
+.opt.wrong .l{background:var(--red);border-color:var(--red);color:var(--paper)}
 .opt.right.picked{animation:pop .35s cubic-bezier(.2,1.6,.4,1)}
 .opt.wrong.picked{animation:shake .35s}
-.why{margin:8px 0 0;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.14);font-size:15px}
-.why b{display:block;font-size:14px;margin-bottom:2px}
+.why{margin:6px 0 0;padding:12px 14px;border-radius:14px;background:var(--card2);font-size:15px}
+.why b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px}
+.why b.y{color:var(--ok)}.why b.n{color:var(--red)}
 @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 
 .grade{position:relative;width:210px;height:150px;margin:6px auto 4px}
 .grade svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.grade ellipse{fill:none;stroke:var(--red);stroke-width:3.5;stroke-linecap:round;stroke-dasharray:560;stroke-dashoffset:560;animation:draw .9s .15s ease-out forwards}
-.grade .num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Literata',Georgia,serif;font-style:italic;font-weight:600;color:var(--red);font-size:64px;line-height:1;transform:rotate(-4deg)}
-.grade .num small{font-size:26px;margin-left:4px;align-self:flex-end;margin-bottom:38px}
-.cheer{font-size:44px;line-height:1;margin:4px 0 0;animation:pop .5s .9s both cubic-bezier(.2,1.6,.4,1)}
+.grade ellipse{fill:none;stroke:var(--accent);stroke-width:3.5;stroke-linecap:round;stroke-dasharray:560;stroke-dashoffset:560;animation:draw .9s .15s ease-out forwards}
+.grade .num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Inter Tight',sans-serif;font-weight:800;letter-spacing:-.05em;color:var(--text);font-size:72px;line-height:1}
+.grade .num small{font-size:24px;margin-left:4px;align-self:flex-end;margin-bottom:42px;color:var(--muted);letter-spacing:-.02em}
+.cheer{display:inline-block;margin:4px 0 0;padding:4px 10px;border-radius:6px;background:var(--accent);color:var(--on-accent);font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;animation:pop .5s .9s both cubic-bezier(.2,1.6,.4,1)}
 @keyframes draw{to{stroke-dashoffset:0}}
 @keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
 
 /* Λυμένες */
-.ex{margin-bottom:12px}
-.ex .n{display:inline-block;font-size:12px;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--mark-soft);color:var(--ink)}
-.ex .q{font-weight:600;margin:8px 0 0}
+.ex{margin-bottom:10px}
+.ex .n{display:inline-block;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--hi)}
+.ex .q{font-weight:600;margin:6px 0 0;font-size:16.5px}
 .ex .btn{margin-top:14px;padding:11px 14px;font-size:15px}
-.sol{margin-top:14px;padding:14px;border-radius:14px;background:var(--paper)}
-.learn{margin:0 0 12px;padding:12px 14px;border-radius:14px;background:var(--mark-soft)}
-.learn b{display:block;font-size:13px;font-weight:800;color:var(--ink);margin-bottom:3px}
+.sol{margin-top:14px;padding:14px;border-radius:14px;background:var(--card2)}
+.learn{margin:0 0 12px;padding:12px 14px;border-radius:12px;background:var(--card);box-shadow:inset 3px 0 0 var(--accent)}
+.learn b{display:block;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:4px}
 .learn p{margin:0}
-.learn .go{display:inline-block;margin-top:8px;padding:6px 12px;border:0;border-radius:999px;background:var(--ink);color:var(--on-ink);font-size:14px;font-weight:800;cursor:pointer}
+.learn .go{display:inline-block;margin-top:10px;padding:7px 12px;border:0;border-radius:9px;background:var(--text);color:var(--paper);font-size:13.5px;font-weight:700;cursor:pointer}
 .sol[hidden]{display:none}
 .sol ol{margin:0;padding-left:22px}
 .sol li{margin:0 0 6px}
 .ans{margin:10px 0 0;font-weight:800;color:var(--ok)}
-.ans span{background:linear-gradient(transparent 60%,var(--mark) 60%);color:var(--text);padding:0 2px}
+.ans span{background:linear-gradient(transparent 62%,var(--mark) 62%);color:var(--text);padding:0 2px}
 .sendlink{margin-top:20px}
 
 /* Χρονόμετρο */
 .timer{text-align:center}
-.ring{width:230px;height:230px;margin:8px auto 10px;position:relative}
+.ring{width:236px;height:236px;margin:10px auto 12px;position:relative}
 .ring svg{width:100%;height:100%;transform:rotate(-90deg)}
-.ring circle{fill:none;stroke-width:14}
+.ring circle{fill:none;stroke-width:10}
 .ring .bg{stroke:var(--line)}
-.ring .fg{stroke:var(--ink);stroke-linecap:round;transition:stroke-dashoffset .25s linear}
+.ring .fg{stroke:var(--accent);stroke-linecap:round;transition:stroke-dashoffset .25s linear}
 .timer.rest .ring .fg{stroke:var(--ok)}
 .ring .time{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.ring .time b{font-size:52px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
-.ring .time span{font-size:15px;font-weight:600;color:var(--muted)}
+.ring .time b{font-family:'Inter Tight',sans-serif;font-size:56px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.04em}
+.ring .time span{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
 #tmsg{min-height:1.5em;margin:4px 0 0;font-weight:700;color:var(--ok)}
-.streak{display:flex;align-items:center;justify-content:center;gap:8px;width:fit-content;max-width:100%;margin:14px auto 0;padding:8px 14px;border-radius:999px;background:var(--mark-soft);font-size:14px;font-weight:700;color:var(--text)}
-.streak b{font-size:18px}
+.streak{display:flex;align-items:center;justify-content:center;gap:8px;width:fit-content;max-width:100%;margin:14px auto 0;padding:7px 12px;border-radius:10px;background:var(--card2);font-size:13.5px;font-weight:600;color:var(--text)}
+.streak b{font-size:16px}
 
 /* Αποστολή */
-.form label{display:block;font-weight:700;font-size:15px;margin:14px 0 6px}
-.form select,.form textarea{width:100%;padding:12px 14px;border:0;border-radius:14px;background:var(--paper);box-shadow:inset 0 0 0 1.5px var(--line)}
+.form label{display:block;font-weight:700;font-size:14.5px;margin:14px 0 6px}
+.form select,.form textarea{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card2)}
 .form textarea{min-height:76px;resize:vertical}
-.rules{margin:10px 0 0;padding:12px 14px;border-radius:14px;background:var(--mark-soft);font-size:15px}
+.rules{margin:10px 0 0;padding:12px 14px;border-radius:12px;background:var(--card2);box-shadow:inset 3px 0 0 var(--accent);font-size:15px}
 .rules p{margin:0 0 6px}.rules p:last-child{margin:0}
-.pick{display:flex;align-items:center;justify-content:center;min-height:120px;border:2px dashed var(--line);border-radius:18px;background:var(--paper);cursor:pointer;text-align:center;padding:14px;font-weight:700;color:var(--ink)}
+.pick{display:flex;align-items:center;justify-content:center;min-height:120px;border:1.5px dashed var(--line);border-radius:16px;background:var(--card2);cursor:pointer;text-align:center;padding:14px;font-weight:700;color:var(--text)}
 .pick input{position:absolute;opacity:0;width:1px;height:1px}
-.preview{display:block;max-width:100%;max-height:260px;margin:10px auto 0;border-radius:14px}
+.preview{display:block;max-width:100%;max-height:260px;margin:10px auto 0;border-radius:12px}
 #ts{margin-top:14px;min-height:65px}
 .status{margin:12px 0 0;font-weight:700}
 .status.ok{color:var(--ok)}.status.no{color:var(--red)}
 
 /* Σχολείο: τι κάνω, τι δεν κάνω */
-.faq .note{margin:0 0 16px;padding:14px 16px;border-radius:18px;background:var(--mark-soft);font-size:15px}
+.faq .note{margin:0 0 16px;padding:14px 16px;border-radius:14px;background:var(--card);border:1px solid var(--line);box-shadow:inset 3px 0 0 var(--accent);font-size:15px}
 .faq .note p{margin:0 0 6px}.faq .note p:last-child{margin:0}
-.faq details{background:var(--card);border-radius:20px;margin:0 0 10px;box-shadow:var(--shadow);overflow:hidden}
-.faq summary{display:flex;align-items:center;gap:12px;cursor:pointer;list-style:none;padding:14px 16px;font-weight:800;font-size:17px;line-height:1.25}
+.faq details{background:var(--card);border:1px solid var(--line);border-radius:16px;margin:0 0 8px;overflow:hidden}
+.faq details[open]{border-color:var(--muted)}
+.faq summary{display:flex;align-items:center;gap:14px;cursor:pointer;list-style:none;padding:14px 16px;font-family:'Inter Tight','Inter',sans-serif;font-weight:800;font-size:17px;line-height:1.25;letter-spacing:-.015em}
 .faq summary::-webkit-details-marker{display:none}
-.faq summary .emo{flex:0 0 auto;display:grid;place-items:center;width:42px;height:42px;border-radius:14px;background:var(--paper);font-size:22px}
+.faq summary .emo{flex:0 0 auto;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.04em;width:20px;color:var(--hi)}
 .faq summary .st{flex:1}
-.faq summary .st small{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-top:2px}
-.faq summary::after{content:"";flex:0 0 auto;width:9px;height:9px;border-right:2.5px solid var(--muted);border-bottom:2.5px solid var(--muted);transform:rotate(45deg);margin:0 4px 4px;transition:transform .2s}
+.faq summary .st small{display:block;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:var(--muted);margin-top:2px;letter-spacing:0}
+.faq summary::after{content:"";flex:0 0 auto;width:8px;height:8px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);margin:0 4px 4px;transition:transform .2s}
 .faq details[open] summary::after{transform:rotate(-135deg);margin-bottom:-4px}
 .faq .a{padding:0 16px 16px}
 .faq .a > p{margin:0 0 10px}
-.do,.dont,.info{margin:0 0 10px;padding:12px 14px;border-radius:16px}
+.do,.dont,.info{margin:0 0 8px;padding:12px 14px;border-radius:12px}
 .do{background:var(--ok-soft)}
 .dont{background:var(--no-soft)}
-.info{background:var(--paper)}
-.do>b,.dont>b,.info>b{display:block;font-size:13px;font-weight:800;margin-bottom:4px}
-.do>b{color:var(--ok)}.dont>b{color:var(--red)}.info>b{color:var(--ink)}
+.info{background:var(--card2)}
+.do>b,.dont>b,.info>b{display:block;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+.do>b{color:var(--ok)}.dont>b{color:var(--red)}.info>b{color:var(--muted)}
 .do ul,.dont ul,.info ul{margin:0;padding:0;list-style:none}
-.do li,.dont li,.info li{position:relative;padding-left:24px;margin:0 0 6px;font-size:16px;line-height:1.45}
+.do li,.dont li,.info li{position:relative;padding-left:22px;margin:0 0 6px;font-size:15.5px;line-height:1.45}
 .do li:last-child,.dont li:last-child,.info li:last-child{margin:0}
 .do li::before,.dont li::before,.info li::before{position:absolute;left:0;top:0;font-weight:800}
 .do li::before{content:"✓";color:var(--ok)}
 .dont li::before{content:"✕";color:var(--red)}
-.info li::before{content:"•";color:var(--ink);left:6px}
-.faq .alert{margin:0 0 10px;padding:12px 14px;border-radius:16px;background:var(--mark-soft);box-shadow:inset 4px 0 0 var(--red);font-size:16px}
+.info li::before{content:"";top:.62em;left:4px;width:5px;height:5px;border-radius:50%;background:var(--muted)}
+.faq .alert{margin:0 0 8px;padding:12px 14px;border-radius:12px;background:var(--no-soft);box-shadow:inset 3px 0 0 var(--red);font-size:15.5px}
 .faq .alert p{margin:0 0 6px}.faq .alert p:last-child{margin:0}
 .faq .src{font-size:13px;color:var(--muted);margin-top:18px}
 
-footer{margin-top:28px;font-size:13px;color:var(--muted);text-align:center}
+footer{margin-top:28px;font-size:12.5px;color:var(--muted);text-align:center}
 footer p{margin:0 0 6px}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
   .grade ellipse{stroke-dashoffset:0}
 }
-@media (max-width:360px){ .tab{font-size:10px} .tab .ic{font-size:20px} }
+@media (max-width:360px){ .tab{font-size:9.5px} }
 @media (min-width:640px){ .wrap{padding-top:24px} }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <span class="logo" aria-hidden="true">📚</span>
-    <div><h1>Διάβασμα Β΄&nbsp;Γυμνασίου</h1>
-    <p class="lede">Η ύλη απλά, με κάρτες και λυμένες ασκήσεις</p></div>
+    <span class="logo" aria-hidden="true">Β΄</span>
+    <div class="ttl"><h1>Διάβασμα</h1>
+    <p class="lede">Β΄ Γυμνασίου · ύλη, ερωτήσεις, λυμένες</p></div>
+    <button class="themebtn" id="themebtn" aria-label="Φωτεινό θέμα"></button>
   </header>
 
   <nav class="tabs" aria-label="Μαθήματα">
-    <a class="tab" href="#F" data-p="F"><span class="ic" aria-hidden="true">⚡</span><span class="lb">Φυσική</span></a>
-    <a class="tab" href="#M" data-p="M"><span class="ic" aria-hidden="true">📐</span><span class="lb">Μαθηματικά</span></a>
-    <a class="tab" href="#A" data-p="A"><span class="ic" aria-hidden="true">🏛️</span><span class="lb">Αρχαία</span></a>
-    <a class="tab" href="#school" data-p="school"><span class="ic" aria-hidden="true">🏫</span><span class="lb">Σχολείο</span></a>
-    <a class="tab" href="#timer" data-p="timer"><span class="ic" aria-hidden="true">⏱️</span><span class="lb">Χρονόμετρο</span></a>
+    <a class="tab" href="#F" data-p="F"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12z"/></svg></span><span class="lb">Φυσική</span></a>
+    <a class="tab" href="#M" data-p="M"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V4l16 16z"/><path d="M8 16v-3.5L11.5 16z"/></svg></span><span class="lb">Μαθηματικά</span></a>
+    <a class="tab" href="#A" data-p="A"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M4.5 18h15M6 18v-7M10 18v-7M14 18v-7M18 18v-7M3 9l9-5 9 5z"/></svg></span><span class="lb">Αρχαία</span></a>
+    <a class="tab" href="#school" data-p="school"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M10 21v-5h4v5"/><circle cx="12" cy="11" r="1.6"/></svg></span><span class="lb">Σχολείο</span></a>
+    <a class="tab" href="#timer" data-p="timer"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 10v3.5l2.5 2M9.5 2.5h5M12 2.5V6"/></svg></span><span class="lb">Χρονόμετρο</span></a>
   </nav>
 
   <main>
@@ -282,14 +304,14 @@ footer p{margin:0 0 6px}
     <section class="panel" id="A" hidden></section>
     <section class="panel" id="send" hidden></section>
     <section class="panel faq" id="school" hidden>
-      <div class="hero"><span class="emo" aria-hidden="true">🏫</span><span class="ref">Για τη ζωή στο σχολείο</span><h2 class="ct">Τι κάνω, τι δεν κάνω</h2>
+      <div class="hero"><span class="ref">Για τη ζωή στο σχολείο</span><h2 class="ct">Τι κάνω, τι δεν κάνω</h2>
         <p>Οι κανόνες με απλά λόγια. Πάτα ένα θέμα για να το ανοίξεις.</p></div>
       <div class="note">
         <p>Εδώ γράφουμε μόνο ό,τι είναι <b>σίγουρο</b>: ό,τι λέει ο κανονισμός του σχολείου μας και δεν το αλλάζει ο νόμος.</p>
         <p>Για τα όρια των απουσιών, τις αποβολές και ό,τι αφορά εσένα προσωπικά, ρώτα τον υπεύθυνο καθηγητή του τμήματός σου.</p>
       </div>
 
-      <details><summary><span class="emo" aria-hidden="true">⏰</span><span class="st">Ώρες, αργοπορία, έξοδος<small>Τι κάνω αν αργήσω</small></span></summary><div class="a">
+      <details><summary><span class="emo" aria-hidden="true">01</span><span class="st">Ώρες, αργοπορία, έξοδος<small>Τι κάνω αν αργήσω</small></span></summary><div class="a">
         <div class="info"><b>Καλό να ξέρεις</b><ul>
           <li>Το βασικό πρόγραμμα είναι 08:00–14:00, Δευτέρα με Παρασκευή. Μετά υπάρχουν δραστηριότητες μέχρι τις 17:00.</li>
           <li>Αν αλλάξει το ωράριο, το σχολείο το ανακοινώνει.</li>
@@ -305,7 +327,7 @@ footer p{margin:0 0 6px}
         </ul></div>
       </div></details>
 
-      <details><summary><span class="emo" aria-hidden="true">📚</span><span class="st">Στην τάξη και στο διάλειμμα<small>Τουαλέτα, κενό, εργαστήρια</small></span></summary><div class="a">
+      <details><summary><span class="emo" aria-hidden="true">02</span><span class="st">Στην τάξη και στο διάλειμμα<small>Τουαλέτα, κενό, εργαστήρια</small></span></summary><div class="a">
         <div class="do"><b>Κάνε</b><ul>
           <li>Για τουαλέτα ή Γραμματεία την ώρα του μαθήματος: μόνο αν είναι πραγματικά ανάγκη, και αφού σου δώσει άδεια ο καθηγητής.</li>
           <li>Αν λείπει ο καθηγητής, μείνε στην αίθουσα, χωρίς φασαρία, και άκου τον καθηγητή που θα έρθει να καλύψει την ώρα.</li>
@@ -321,7 +343,7 @@ footer p{margin:0 0 6px}
         </ul></div>
       </div></details>
 
-      <details><summary><span class="emo" aria-hidden="true">🎒</span><span class="st">Τι φέρνω στο σχολείο<small>Τι επιτρέπεται στην τσάντα</small></span></summary><div class="a">
+      <details><summary><span class="emo" aria-hidden="true">03</span><span class="st">Τι φέρνω στο σχολείο<small>Τι επιτρέπεται στην τσάντα</small></span></summary><div class="a">
         <div class="do"><b>Φέρε</b><ul>
           <li>Τα βιβλία σου και ό,τι χρειάζεσαι για τα μαθήματα.</li>
         </ul></div>
@@ -333,7 +355,7 @@ footer p{margin:0 0 6px}
         </ul></div>
       </div></details>
 
-      <details><summary><span class="emo" aria-hidden="true">📱</span><span class="st">Κινητό<small>Πού το έχω, τι απαγορεύεται</small></span></summary><div class="a">
+      <details><summary><span class="emo" aria-hidden="true">04</span><span class="st">Κινητό<small>Πού το έχω, τι απαγορεύεται</small></span></summary><div class="a">
         <div class="do"><b>Κάνε</b><ul>
           <li>Κράτα το κινητό <b>κλειστό και μέσα στην τσάντα</b>. Το ανοίγεις όταν τελειώσουν τα μαθήματα.</li>
           <li>Αν πρέπει να μιλήσεις με τους γονείς σου, ζήτα άδεια από τη Διεύθυνση και πάρε από το τηλέφωνο του σχολείου.</li>
@@ -342,12 +364,12 @@ footer p{margin:0 0 6px}
           <li>Μη χρησιμοποιείς κινητό ή άλλη συσκευή με κάμερα πουθενά στο σχολείο, ούτε μέσα στα κτήρια ούτε στην αυλή. Εξαίρεση: ιατρικές εφαρμογές, μόνο με γνωμάτευση γιατρού.</li>
         </ul></div>
         <div class="alert">
-          <p><b>⛔ Ποτέ φωτογραφία, βίντεο ή ηχογράφηση καθηγητών ή συμμαθητών.</b> Ισχύει στο μάθημα, στο διάλειμμα, στην είσοδο και στην έξοδο.</p>
+          <p><b>Ποτέ φωτογραφία, βίντεο ή ηχογράφηση καθηγητών ή συμμαθητών.</b> Ισχύει στο μάθημα, στο διάλειμμα, στην είσοδο και στην έξοδο.</p>
           <p>Ο Διευθυντής παίρνει τη συσκευή και καλεί τους γονείς όλων όσων εμπλέκονται. Η ποινή είναι αποβολή μέχρι 3 μέρες, ή μέχρι 5 αν αποφασίσει ο σύλλογος των καθηγητών. Αν αφορά πολύ προσωπικά δεδομένα κάποιου, ο μαθητής αλλάζει σχολείο.</p>
         </div>
       </div></details>
 
-      <details><summary><span class="emo" aria-hidden="true">📅</span><span class="st">Απουσίες<small>Πώς μετράνε, ποιος ενημερώνεται</small></span></summary><div class="a">
+      <details><summary><span class="emo" aria-hidden="true">05</span><span class="st">Απουσίες<small>Πώς μετράνε, ποιος ενημερώνεται</small></span></summary><div class="a">
         <div class="info"><b>Καλό να ξέρεις</b><ul>
           <li>Κάθε διδακτική ώρα που λείπεις είναι μία απουσία.</li>
           <li>Αν περάσεις το όριο που βάζει ο νόμος, η φοίτηση είναι «ανεπαρκής» και πρέπει να επαναλάβεις την ίδια τάξη.</li>
@@ -360,7 +382,7 @@ footer p{margin:0 0 6px}
         </ul></div>
       </div></details>
 
-      <details><summary><span class="emo" aria-hidden="true">🤝</span><span class="st">Σεβασμός και εκφοβισμός<small>Αν κάποιος σε πειράζει</small></span></summary><div class="a">
+      <details><summary><span class="emo" aria-hidden="true">06</span><span class="st">Σεβασμός και εκφοβισμός<small>Αν κάποιος σε πειράζει</small></span></summary><div class="a">
         <div class="do"><b>Κάνε</b><ul>
           <li>Να είσαι ευγενικός με όλους: καθηγητές, συμμαθητές, γραμματείς, επιστάτες, οδηγούς, συνοδούς, καθαριστές.</li>
           <li>Στις εκδρομές και στις επισκέψεις, άκου τους καθηγητές που σας συνοδεύουν.</li>
@@ -375,7 +397,7 @@ footer p{margin:0 0 6px}
         </div>
       </div></details>
 
-      <details><summary><span class="emo" aria-hidden="true">👕</span><span class="st">Ρούχα και Γυμναστική<small>Εμφάνιση, αθλητικά, απαλλαγή</small></span></summary><div class="a">
+      <details><summary><span class="emo" aria-hidden="true">07</span><span class="st">Ρούχα και Γυμναστική<small>Εμφάνιση, αθλητικά, απαλλαγή</small></span></summary><div class="a">
         <div class="do"><b>Κάνε</b><ul>
           <li>Ντύσου απλά, καθαρά και όχι προκλητικά.</li>
           <li>Στις επίσημες εκδηλώσεις, όπως η παρέλαση, φόρα τα ρούχα που ορίζει το σχολείο.</li>
@@ -386,7 +408,7 @@ footer p{margin:0 0 6px}
         </ul></div>
       </div></details>
 
-      <details><summary><span class="emo" aria-hidden="true">🚌</span><span class="st">Σχολικό λεωφορείο<small>Στάσεις και επιστροφή με τα πόδια</small></span></summary><div class="a">
+      <details><summary><span class="emo" aria-hidden="true">08</span><span class="st">Σχολικό λεωφορείο<small>Στάσεις και επιστροφή με τα πόδια</small></span></summary><div class="a">
         <div class="dont"><b>Μην κάνεις</b><ul>
           <li>Μην αλλάζεις στάση ή λεωφορείο, εκτός αν οι γονείς σου το έχουν πει από πριν στη Γραμματεία.</li>
         </ul></div>
@@ -395,7 +417,7 @@ footer p{margin:0 0 6px}
         </ul></div>
       </div></details>
 
-      <details><summary><span class="emo" aria-hidden="true">⚖️</span><span class="st">Μέτρα και διαγωγή<small>Τι γίνεται αν παραβώ κανόνα</small></span></summary><div class="a">
+      <details><summary><span class="emo" aria-hidden="true">09</span><span class="st">Μέτρα και διαγωγή<small>Τι γίνεται αν παραβώ κανόνα</small></span></summary><div class="a">
         <div class="info"><b>Καλό να ξέρεις</b><ul>
           <li>Αν παραβείς έναν κανόνα, παίρνεις ένα «παιδαγωγικό μέτρο». Τα πιο ελαφριά είναι η προφορική παρατήρηση, η επίπληξη και η <b>ωριαία απομάκρυνση</b>: ο καθηγητής σε βγάζει από το μάθημα για εκείνη την ώρα.</li>
           <li>Πιο βαριά είναι η αποβολή και η αλλαγή σχολείου.</li>
@@ -404,7 +426,7 @@ footer p{margin:0 0 6px}
         </ul></div>
       </div></details>
 
-      <details><summary><span class="emo" aria-hidden="true">🗳️</span><span class="st">Μαθητικά συμβούλια<small>5μελές και 15μελές</small></span></summary><div class="a">
+      <details><summary><span class="emo" aria-hidden="true">10</span><span class="st">Μαθητικά συμβούλια<small>5μελές και 15μελές</small></span></summary><div class="a">
         <div class="info"><b>Καλό να ξέρεις</b><ul>
           <li>Το σχολείο συνεργάζεται με τα 5μελή και το 15μελές μαθητικό συμβούλιο για τους κανόνες της σχολικής ζωής.</li>
           <li>Όσοι εκλέγονται πρέπει να τηρούν ό,τι ορίζει ο νόμος.</li>
@@ -414,7 +436,7 @@ footer p{margin:0 0 6px}
       <p class="src">Πηγές: Εσωτερικός Κανονισμός Λειτουργίας του σχολείου (Σεπτέμβριος 2024), ελεγμένος με την ΚΥΑ 102791/ΓΔ4/2024 (ΦΕΚ Β΄ 5130/2024). Αν κάτι έχει αλλάξει, πες το στον εκπρόσωπο της τάξης.</p>
     </section>
     <section class="panel" id="timer" hidden>
-      <div class="hero"><span class="emo" aria-hidden="true">⏱️</span><span class="ref">Μελέτη με διαλείμματα</span><h2 class="ct">Χρονόμετρο</h2>
+      <div class="hero"><span class="ref">Μελέτη με διαλείμματα</span><h2 class="ct">Χρονόμετρο</h2>
         <p>25 λεπτά διάβασμα, 5 λεπτά διάλειμμα. Κλείσε τις ειδοποιήσεις και ξεκίνα.</p></div>
       <div class="sheet timer" id="tbox">
         <div class="seg" id="tmodes">
@@ -595,30 +617,28 @@ function route(){
 }
 window.addEventListener("hashchange", route);
 
-const EMO = { F:"⚡", M:"📐", A:"🏛️" };
-
 /* Table of contents */
 function renderIndex(k){
   const b = BOOKS[k];
   let total = 0, ready = 0;
   const html = b.chapters.map(ch => `<section class="toc"><h3>${ch.t}</h3>${ch.s.map(([id,num,title]) => {
     total++;
-    if(C[k+"/"+id]){ ready++; return `<a class="item" href="#${k}/${id}"><span class="num">${num}</span><span class="tt">${title}</span><span class="chip ok">Έτοιμη ✓</span></a>`; }
+    if(C[k+"/"+id]){ ready++; return `<a class="item" href="#${k}/${id}"><span class="num">${num}</span><span class="tt">${title}</span><span class="chip ok">Έτοιμη</span></a>`; }
     return `<div class="item off"><span class="num">${num}</span><span class="tt">${title}</span><span class="chip">Σύντομα</span></div>`;
   }).join("")}</section>`).join("");
-  $("#"+k).innerHTML = `<div class="hero"><span class="emo" aria-hidden="true">${EMO[k]}</span><span class="ref">${b.book}</span><h2 class="ct">${b.name}</h2>
+  $("#"+k).innerHTML = `<div class="hero"><span class="big">${ready}<small>/${total}</small></span><span class="ref">${b.book}</span><h2 class="ct">${b.name}</h2>
     ${b.note ? `<p>${b.note}</p>` : ""}<p>Νέες ενότητες κάθε εβδομάδα.</p>
     <div class="bar" role="img" aria-label="Έτοιμες ${ready} από ${total} ενότητες"><i style="width:${Math.max(3, Math.round(ready / total * 100))}%"></i></div>
     <small>Έτοιμες ${ready} από ${total} ενότητες</small></div>${html}`;
 }
 
 /* Section */
-const VIEWS = [["sum","📖 Περίληψη"],["quiz","🎯 Ερωτήσεις"],["ex","✏️ Λυμένες"]];
+const VIEWS = [["sum","Περίληψη"],["quiz","Ερωτήσεις"],["ex","Λυμένες"]];
 const CALM = matchMedia("(prefers-reduced-motion: reduce)");
 const LETTERS = ["Α","Β","Γ","Δ"];
 const state = {};
 function st(key){
-  if(!state[key]){ state[key] = {view:"sum", idx:0, anim:""}; startQuiz(key); }
+  if(!state[key]){ state[key] = {view:"sum", idx:0, anim:"", from:null, open:new Set()}; startQuiz(key); }
   return state[key];
 }
 /* Κάθε φορά οι ερωτήσεις και οι απαντήσεις τους έρχονται με άλλη σειρά */
@@ -680,9 +700,9 @@ function renderSection(k, id){
   let body = "", go = null;
   if(s.view === "sum"){
     const n = c.summary.length, i = Math.min(s.idx, n - 1), b = c.summary[i], last = i === n - 1;
-    body = `<div class="prog"><div class="bar" role="img" aria-label="Θέμα ${i+1} από ${n}"><i style="width:${Math.round((i+1) / n * 100)}%"></i></div><span>${i+1}/${n}</span></div>
-      <div class="deck"><section class="blk slide${b.warn ? " warn" : ""}${s.anim ? " " + s.anim : ""}" aria-live="polite"><span class="k">${b.warn ? "⚠️ Προσοχή" : "📖 Θέμα " + (i+1)}</span><h3>${b.h}</h3>${b.quote ? `<p class="quote" lang="grc">${b.quote}</p>` : ""}<p>${b.t}</p>${b.f ? `<p class="f formula">${b.f}</p>` : ""}${b.ex ? `<div class="box exb"><b>💡 Παράδειγμα</b><p>${b.ex}</p></div>` : ""}${b.def ? `<div class="box defb"><b>📝 ${b.defLabel || "Στο διαγώνισμα γράφεις"}</b><p>${b.def}</p></div>` : ""}</section></div>
-      ${pager(i > 0, !last, last ? `<button class="btn gold" data-go="quiz">🎯 Πάμε στις ερωτήσεις</button>` : `← σύρε →`)}`;
+    body = `${s.from !== null ? `<button class="retex" data-ret>← Πίσω στην ${k === "A" ? "ερώτηση" : "άσκηση"} ${s.from + 1}</button>` : ""}<div class="prog"><div class="bar" role="img" aria-label="Θέμα ${i+1} από ${n}"><i style="width:${Math.round((i+1) / n * 100)}%"></i></div><span>${i+1}/${n}</span></div>
+      <div class="deck"><section class="blk slide${b.warn ? " warn" : ""}${s.anim ? " " + s.anim : ""}" aria-live="polite"><span class="k">${b.warn ? "Προσοχή" : "Θέμα " + (i+1)}</span><h3>${b.h}</h3>${b.quote ? `<p class="quote" lang="grc">${b.quote}</p>` : ""}<p>${b.t}</p>${b.f ? `<p class="f formula">${b.f}</p>` : ""}${b.ex ? `<div class="box exb"><b>Παράδειγμα</b><p>${b.ex}</p></div>` : ""}${b.def ? `<div class="box defb"><b>${b.defLabel || "Στο διαγώνισμα γράφεις"}</b><p>${b.def}</p></div>` : ""}</section></div>
+      ${pager(i > 0, !last, last ? `<button class="btn gold" data-go="quiz">Πάμε στις ερωτήσεις →</button>` : `← σύρε →`)}`;
     go = d => { const j = i + d; if(j < 0 || j >= n) return false; s.idx = j; s.anim = d > 0 ? "in-next" : "in-prev"; renderSection(k, id); return true; };
   } else if(s.view === "quiz"){
     const n = s.qs.length, {right, wrong} = quizScore(s), answered = right + wrong;
@@ -690,7 +710,7 @@ function renderSection(k, id){
       const g = Math.round(right / n * 20);
       const msg = g >= 18 ? "Άριστα! Είσαι έτοιμος για το μάθημα." : g >= 14 ? "Πολύ καλά. Ξαναδιάβασε όσα σου ξέφυγαν." : "Καλή αρχή. Ρίξε μια ματιά στην περίληψη και ξαναδοκίμασε.";
       body = `<div class="sheet center">
-        <p class="cheer" aria-hidden="true">${g >= 18 ? "🏆" : g >= 14 ? "🔥" : "💪"}</p>
+        <span class="cheer">${g >= 18 ? "Άριστα" : g >= 14 ? "Πολύ καλά" : "Συνέχισε"}</span>
         <div class="grade" role="img" aria-label="Βαθμός ${g} στα 20"><svg viewBox="0 0 210 150" aria-hidden="true"><ellipse cx="105" cy="76" rx="92" ry="60" transform="rotate(-6 105 76)"/></svg><div class="num">${g}<small>/20</small></div></div>
         <p>Βρήκες σωστά ${right} από ${n} ερωτήσεις. ${msg}</p>
         <div class="row"><button class="btn" data-act="restart">Ξανά από την αρχή</button><button class="btn ghost" data-act="review">Δες τις απαντήσεις</button></div></div>`;
@@ -700,12 +720,12 @@ function renderSection(k, id){
         const cls = !has ? "" : o.ok ? " right" + (j === p ? " picked" : "") : j === p ? " wrong picked" : " dim";
         return `<button class="opt${cls}" data-opt="${j}"${has ? " disabled" : ""}><span class="l" aria-hidden="true">${has && o.ok ? "✓" : has && j === p ? "✕" : LETTERS[j]}</span><span>${o.t}</span></button>`;
       }).join("");
-      const verdict = has ? (q.opts[p].ok ? "✅ Σωστά!" : "❌ Όχι ακριβώς.") : "";
-      const mid = answered === n ? `<button class="btn gold" data-act="finish">🏁 Δες τον βαθμό σου</button>` : (has && last ? `Έμειναν ${n - answered} αναπάντητες` : `← σύρε →`);
+      const verdict = has ? (q.opts[p].ok ? `<b class="y">Σωστά</b>` : `<b class="n">Όχι ακριβώς</b>`) : "";
+      const mid = answered === n ? `<button class="btn gold" data-act="finish">Δες τον βαθμό σου</button>` : (has && last ? `Έμειναν ${n - answered} αναπάντητες` : `← σύρε →`);
       body = `<div class="prog"><div class="bar" role="img" aria-label="Απάντησες ${answered} από ${n}"><i style="width:${Math.round(answered / n * 100)}%"></i></div><span class="sc"><span>✓ ${right}</span><span>✕ ${wrong}</span></span></div>
         <div class="deck"><div class="qcard slide${s.anim ? " " + s.anim : ""}">
           <span class="tag">Ερώτηση ${i+1} από ${n}</span><h3>${q.q}</h3>${opts}
-          <div aria-live="polite">${has ? `<div class="why"><b>${verdict}</b>${q.why}</div>` : ""}</div>
+          <div aria-live="polite">${has ? `<div class="why">${verdict}${q.why}</div>` : ""}</div>
         </div></div>
         ${pager(i > 0, !last, mid)}`;
       go = d => { const j = i + d; if(j < 0 || j >= n) return false; s.qi = j; s.anim = d > 0 ? "in-next" : "in-prev"; renderSection(k, id); return true; };
@@ -714,9 +734,9 @@ function renderSection(k, id){
     body = `<h3 style="font-size:18px;font-weight:800;margin:0 0 10px">${c.exTitle}</h3>` + c.ex.map((e,i) => `<div class="sheet ex">
       <span class="n">${k === "A" ? "Ερώτηση" : "Άσκηση"} ${i+1}</span>
       <p class="q">${e.q}</p>
-      <button class="btn ghost" data-sol="${i}" aria-expanded="false">Δες τη λύση</button>
-      <div class="sol" id="sol-${k}-${i}" hidden>${e.learn ? `<div class="learn"><b>📖 Θυμήσου τη θεωρία</b><p>${e.learn}</p>${"topic" in e ? `<button class="go" data-topic="${e.topic}">Δες τη θεωρία →</button>` : ""}</div>` : ""}<ol>${e.steps.map(x => `<li>${x}</li>`).join("")}</ol><p class="ans">Απάντηση: <span>${e.ans}</span></p></div>
-    </div>`).join("") + `<p class="hint center">🧠 Δοκίμασε πρώτα μόνος σου και μετά δες τη λύση.</p>`;
+      <button class="btn ghost" data-sol="${i}" aria-expanded="${s.open.has(i)}">${s.open.has(i) ? "Κρύψε τη λύση" : "Δες τη λύση"}</button>
+      <div class="sol" id="sol-${k}-${i}"${s.open.has(i) ? "" : " hidden"}>${e.learn ? `<div class="learn"><b>Θυμήσου τη θεωρία</b><p>${e.learn}</p>${"topic" in e ? `<button class="go" data-topic="${e.topic}" data-from="${i}">Δες τη θεωρία →</button>` : ""}</div>` : ""}<ol>${e.steps.map(x => `<li>${x}</li>`).join("")}</ol><p class="ans">Απάντηση: <span>${e.ans}</span></p></div>
+    </div>`).join("") + `<p class="hint center">Δοκίμασε πρώτα μόνος σου και μετά δες τη λύση.</p>`;
   }
   s.anim = "";
   if(CALM.matches) body = body.replace(/ in-(next|prev)/g, "");
@@ -724,7 +744,7 @@ function renderSection(k, id){
   el.innerHTML = `<a class="back" href="#${k}">← ${BOOKS[k].name}</a>
     <div class="chap"><span class="ref">${info ? info.ch.t : ""}</span><h2 class="ct">${info && k !== "A" ? info.num + " " : ""}${c.title}</h2></div>
     <div class="seg">${VIEWS.map(([v,l]) => `<button data-go="${v}" aria-pressed="${s.view === v}">${l}</button>`).join("")}</div>${body}
-    <a class="btn ghost sendlink" href="#send/${k}/${id}">📸 Έχεις καλές σημειώσεις; Στείλ' τες</a>`;
+    <a class="btn ghost sendlink" href="#send/${k}/${id}">Έχεις καλές σημειώσεις; Στείλ' τες</a>`;
 
   const top = () => { const r = $(".seg", el).getBoundingClientRect(); if(r.top < 0) window.scrollBy({top: r.top - 12}); };
   el.querySelectorAll("[data-go]").forEach(b => b.onclick = () => { s.view = b.dataset.go; renderSection(k, id); top(); });
@@ -749,14 +769,32 @@ function renderSection(k, id){
   el.querySelectorAll("[data-sol]").forEach(b => b.onclick = () => {
     const sol = $("#sol-"+k+"-"+b.dataset.sol);
     sol.hidden = !sol.hidden;
+    if(sol.hidden) s.open.delete(+b.dataset.sol); else s.open.add(+b.dataset.sol);
     b.setAttribute("aria-expanded", String(!sol.hidden));
     b.textContent = sol.hidden ? "Δες τη λύση" : "Κρύψε τη λύση";
   });
+  /* Από τη λύση στη θεωρία. Μπαίνει μια εγγραφή στο ιστορικό, ώστε το «πίσω» του κινητού να γυρίζει στην άσκηση. */
   el.querySelectorAll("[data-topic]").forEach(b => b.onclick = () => {
-    s.view = "sum"; s.idx = +b.dataset.topic; s.anim = "in-next";
+    s.view = "sum"; s.idx = +b.dataset.topic; s.anim = "in-next"; s.from = +b.dataset.from;
+    history.pushState({theory:key}, "");
     renderSection(k, id); top();
   });
+  el.querySelectorAll("[data-ret]").forEach(b => b.onclick = () => {
+    if(history.state && history.state.theory === key) history.back(); else backToEx(k, id);
+  });
 }
+function backToEx(k, id){
+  const s = state[k+"/"+id], i = s.from;
+  s.view = "ex"; s.from = null; s.open.add(i);
+  renderSection(k, id);
+  const card = $("#"+k).querySelectorAll(".ex")[i];
+  if(card) card.scrollIntoView({block:"start"});
+}
+window.addEventListener("popstate", e => {
+  const parts = decodeURIComponent(location.hash.slice(1)).split("/").filter(Boolean);
+  const k = parts[0], id = parts.slice(1).join("/"), s = state[k+"/"+id];
+  if(s && s.from !== null && !(e.state && e.state.theory) && !$("#"+k).hidden) backToEx(k, id);
+});
 
 /* Notes upload */
 let tsWidget = null, tsToken = "", photoBlob = null;
@@ -870,7 +908,7 @@ function rounds(){ try { const r = JSON.parse(localStorage.getItem("diab-rounds"
 function addRound(){ try { localStorage.setItem("diab-rounds", JSON.stringify({d:today(), n:rounds() + 1})); } catch(e){} }
 function drawStreak(){
   const n = rounds();
-  $("#tstreak").innerHTML = n ? `<b aria-hidden="true">🔥</b> Σήμερα: ${n} ${n === 1 ? "γύρος" : "γύροι"} μελέτης` : `<b aria-hidden="true">🎯</b> Ξεκίνα τον πρώτο γύρο της μέρας`;
+  $("#tstreak").innerHTML = n ? `<b aria-hidden="true">🔥</b> Σήμερα: ${n} ${n === 1 ? "γύρος" : "γύροι"} μελέτης` : `Ξεκίνα τον πρώτο γύρο της μέρας`;
 }
 const CIRC = 2 * Math.PI * 88;
 const tm = { mode:"study", left:25*60, end:null, int:null };
@@ -898,7 +936,7 @@ function tick(){
     try { navigator.vibrate && navigator.vibrate([200,100,200]); } catch(e){}
     if(was === "study"){ addRound(); drawStreak(); }
     setMode(was === "study" ? "rest" : "study");
-    $("#tmsg").textContent = was === "study" ? "🎉 Μπράβο! Ώρα για διάλειμμα." : "💪 Τέλος το διάλειμμα. Πάμε πάλι!";
+    $("#tmsg").textContent = was === "study" ? "Μπράβο! Ώρα για διάλειμμα." : "Τέλος το διάλειμμα. Πάμε πάλι!";
     return;
   }
   drawT();
@@ -912,6 +950,22 @@ $("#treset").onclick = () => { $("#tmsg").textContent = ""; setMode(tm.mode); };
 document.querySelectorAll("#tmodes button").forEach(b => b.onclick = () => { $("#tmsg").textContent = ""; setMode(b.dataset.m); });
 drawT();
 drawStreak();
+
+/* Φωτεινό / σκούρο θέμα */
+const SUN = `<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>`;
+const MOON = `<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>`;
+function drawTheme(){
+  const dark = document.documentElement.dataset.theme !== "light";
+  $("#themebtn").innerHTML = dark ? SUN : MOON;
+  $("#themebtn").setAttribute("aria-label", dark ? "Φωτεινό θέμα" : "Σκούρο θέμα");
+}
+$("#themebtn").onclick = () => {
+  const next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  document.documentElement.dataset.theme = next;
+  try { localStorage.setItem("diab-theme", next); } catch(e){}
+  drawTheme();
+};
+drawTheme();
 
 route();
 </script>
