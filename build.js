@@ -9,9 +9,16 @@ for (const f of fs.readdirSync(dir).filter(f => f.endsWith(".json")).sort()) {
   // F-1.1.json -> "F/1.1", M-A1.2.json -> "M/A1.2", A-r3.json -> "A/r3"
   const key = f.replace(/\.json$/, "").replace("-", "/");
   const data = JSON.parse(fs.readFileSync(path.join(dir, f), "utf8"));
-  for (const field of ["title", "exTitle", "summary", "cards", "ex"]) {
+  for (const field of ["title", "exTitle", "summary", "quiz", "ex"]) {
     if (!(field in data)) throw new Error(`${f}: λείπει το πεδίο "${field}"`);
   }
+  data.quiz.forEach((q, i) => {
+    if (!q.q || !q.c || !Array.isArray(q.w) || q.w.length < 2) throw new Error(`${f}: η ερώτηση ${i + 1} θέλει q, c και τουλάχιστον 2 λάθος απαντήσεις στο w`);
+    if (q.w.includes(q.c)) throw new Error(`${f}: στην ερώτηση ${i + 1} η σωστή απάντηση υπάρχει και στις λάθος`);
+  });
+  data.ex.forEach((e, i) => {
+    if ("topic" in e && !(e.topic >= 0 && e.topic < data.summary.length)) throw new Error(`${f}: η άσκηση ${i + 1} δείχνει σε θέμα ${e.topic} που δεν υπάρχει`);
+  });
   C[key] = data;
 }
 

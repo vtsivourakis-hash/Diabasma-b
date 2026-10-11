@@ -46,6 +46,7 @@ body{
   font-family:'Commissioner',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   font-size:17px;line-height:1.55;
   padding-bottom:calc(82px + env(safe-area-inset-bottom,0px));
+  overflow-x:hidden;overflow-x:clip;
 }
 .wrap{max-width:600px;margin:0 auto;padding:14px 16px 24px}
 header{display:flex;align-items:center;gap:10px;margin:2px 0 16px}
@@ -127,28 +128,43 @@ a.item:active{transform:scale(.98)}
 .btn:disabled{opacity:.5;cursor:default}
 .row{display:flex;gap:10px}.row .btn{flex:1}
 
-/* Κάρτες: μία κάρτα σε όλη την οθόνη, σύρε πάνω για την επόμενη */
+/* Κάρτες που σύρονται δεξιά-αριστερά: περίληψη και ερωτήσεις */
 .prog{display:flex;align-items:center;gap:10px;margin:0 0 10px;font-size:13px;font-weight:700;color:var(--muted)}
 .prog .bar{flex:1;margin:0;background:var(--line)}
-.stage{position:relative;height:calc(100vh - 430px);height:calc(100dvh - 430px);min-height:280px;max-height:520px}
-.fc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;width:100%;padding:26px 22px;text-align:center;border:0;border-radius:28px;background:var(--hero);color:#fff;cursor:pointer;box-shadow:0 14px 34px rgba(24,37,108,.28);touch-action:none;will-change:transform}
-.fc.back-side{background:var(--card);color:var(--text);box-shadow:var(--shadow),inset 0 0 0 2.5px var(--ink)}
-.fc .tag{position:absolute;top:16px;left:18px;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;opacity:.7}
-.fc strong{font-size:24px;line-height:1.3}
-.fc .a{font-size:21px;line-height:1.45;color:var(--ink);font-weight:600}
-.fc .hint{color:inherit;opacity:.75}
-.fc .tap{display:inline-block;padding:9px 16px;border-radius:999px;background:rgba(255,255,255,.16);font-size:14px;font-weight:700}
-.fc .up{position:absolute;bottom:16px;left:0;right:0;font-size:13px;font-weight:700;color:var(--muted);animation:bob 1.6s ease-in-out infinite}
-.fc.in{animation:cardIn .32s cubic-bezier(.2,.8,.2,1)}
-.fc.flip{animation:flip .3s ease-out}
-.fc.out{transition:transform .22s ease-in,opacity .22s ease-in;transform:translateY(-110%) rotate(-4deg)!important;opacity:0}
-.fc.drag{transition:none}
-.fc.snap{transition:transform .2s ease-out}
-.react{display:flex;gap:10px;margin-top:12px}
-.react .btn{margin:0;flex:1}
-@keyframes cardIn{from{transform:translateY(40%) scale(.94);opacity:0}to{transform:none;opacity:1}}
-@keyframes flip{from{transform:perspective(900px) rotateY(80deg)}to{transform:perspective(900px) rotateY(0)}}
-@keyframes bob{50%{transform:translateY(-4px)}}
+.prog .sc{display:flex;gap:6px}
+.prog .sc span{padding:2px 8px;border-radius:999px;background:var(--ok-soft);color:var(--ok)}
+.prog .sc span+span{background:var(--no-soft);color:var(--red)}
+.deck{touch-action:pan-y}
+.slide{will-change:transform}
+.slide.drag{transition:none}
+.slide.snap{transition:transform .2s ease-out}
+.slide.in-next{animation:inR .28s cubic-bezier(.2,.8,.2,1)}
+.slide.in-prev{animation:inL .28s cubic-bezier(.2,.8,.2,1)}
+.deck .blk{min-height:calc(100vh - 420px);min-height:calc(100dvh - 420px)}
+.pager{display:flex;align-items:center;gap:10px;margin-top:12px}
+.pager .btn{margin:0;flex:0 0 auto;width:58px;padding:13px 0;font-size:20px;line-height:1.2}
+.pager .mid{flex:1;text-align:center;font-size:13px;font-weight:700;color:var(--muted)}
+.pager .mid .btn{width:100%;font-size:15px}
+@keyframes inR{from{transform:translateX(35%);opacity:0}to{transform:none;opacity:1}}
+@keyframes inL{from{transform:translateX(-35%);opacity:0}to{transform:none;opacity:1}}
+
+.qcard{background:var(--hero);color:#fff;border-radius:24px;padding:20px 16px 16px;box-shadow:0 14px 34px rgba(24,37,108,.25)}
+.qcard .tag{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;opacity:.75}
+.qcard h3{font-size:21px;line-height:1.3;font-weight:800;color:#fff;margin:6px 4px 16px}
+.opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:13px 14px;margin:0 0 8px;border:0;border-radius:16px;background:var(--card);color:var(--text);font-size:16px;font-weight:600;line-height:1.35;cursor:pointer;transition:transform .12s}
+.opt:active{transform:scale(.98)}
+.opt .l{flex:0 0 auto;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--paper);font-weight:800;font-size:14px;color:var(--ink)}
+.opt:disabled{cursor:default;transform:none}
+.opt.dim{opacity:.55}
+.opt.right{background:var(--ok-soft);box-shadow:inset 0 0 0 2.5px var(--ok);opacity:1}
+.opt.right .l{background:var(--ok);color:#fff}
+.opt.wrong{background:var(--no-soft);box-shadow:inset 0 0 0 2.5px var(--red)}
+.opt.wrong .l{background:var(--red);color:#fff}
+.opt.right.picked{animation:pop .35s cubic-bezier(.2,1.6,.4,1)}
+.opt.wrong.picked{animation:shake .35s}
+.why{margin:8px 0 0;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.14);font-size:15px}
+.why b{display:block;font-size:14px;margin-bottom:2px}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 
 .grade{position:relative;width:210px;height:150px;margin:6px auto 4px}
 .grade svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
@@ -165,6 +181,10 @@ a.item:active{transform:scale(.98)}
 .ex .q{font-weight:600;margin:8px 0 0}
 .ex .btn{margin-top:14px;padding:11px 14px;font-size:15px}
 .sol{margin-top:14px;padding:14px;border-radius:14px;background:var(--paper)}
+.learn{margin:0 0 12px;padding:12px 14px;border-radius:14px;background:var(--mark-soft)}
+.learn b{display:block;font-size:13px;font-weight:800;color:var(--ink);margin-bottom:3px}
+.learn p{margin:0}
+.learn .go{display:inline-block;margin-top:8px;padding:6px 12px;border:0;border-radius:999px;background:var(--ink);color:var(--on-ink);font-size:14px;font-weight:800;cursor:pointer}
 .sol[hidden]{display:none}
 .sol ol{margin:0;padding-left:22px}
 .sol li{margin:0 0 6px}
@@ -557,6 +577,7 @@ function findSection(k, id){
 
 /* Routing */
 function route(){
+  keyNav = null;
   const parts = decodeURIComponent(location.hash.slice(1)).split("/").filter(Boolean);
   let p = parts[0] || "F";
   if(!["F","M","A","timer","send","school"].includes(p)) p = "F";
@@ -592,101 +613,148 @@ function renderIndex(k){
 }
 
 /* Section */
-const VIEWS = [["sum","📖 Περίληψη"],["cards","🃏 Κάρτες"],["ex","✏️ Λυμένες"]];
+const VIEWS = [["sum","📖 Περίληψη"],["quiz","🎯 Ερωτήσεις"],["ex","✏️ Λυμένες"]];
 const CALM = matchMedia("(prefers-reduced-motion: reduce)");
+const LETTERS = ["Α","Β","Γ","Δ"];
 const state = {};
 function st(key){
-  if(!state[key]){ state[key] = {view:"sum"}; startCards(key); }
+  if(!state[key]){ state[key] = {view:"sum", idx:0, anim:""}; startQuiz(key); }
   return state[key];
 }
-function startCards(key){
+/* Κάθε φορά οι ερωτήσεις και οι απαντήσεις τους έρχονται με άλλη σειρά */
+function startQuiz(key){
   const s = state[key];
-  s.queue = shuffle(C[key].cards.map((c,i) => ({q:c[0], a:c[1], i})));
-  s.total = s.queue.length; s.missed = new Set(); s.knew = 0; s.flipped = false; s.anim = "in";
+  s.qs = shuffle(C[key].quiz.map(q => ({q:q.q, why:q.why, opts:shuffle([{t:q.c, ok:true}, ...q.w.map(t => ({t, ok:false}))])})));
+  s.qi = 0; s.picked = {}; s.done = false;
+}
+function quizScore(s){
+  let right = 0, wrong = 0;
+  for(const i in s.picked) s.qs[i].opts[s.picked[i]].ok ? right++ : wrong++;
+  return {right, wrong};
+}
+/* Το ← → του πληκτρολογίου κάνει ό,τι και το σύρσιμο */
+let keyNav = null;
+document.addEventListener("keydown", e => {
+  if(!keyNav || e.target.closest("input,textarea,select")) return;
+  if(e.key === "ArrowRight") keyNav(1); else if(e.key === "ArrowLeft") keyNav(-1);
+});
+/* Σύρσιμο δεξιά-αριστερά πάνω σε μια κάρτα. Το κάθετο σύρσιμο μένει για το scroll της σελίδας. */
+function swipe(card, go){
+  let x0 = null, y0 = 0, dx = 0, horiz = false;
+  card.addEventListener("pointerdown", e => {
+    if(e.pointerType === "mouse" && e.button !== 0) return;
+    x0 = e.clientX; y0 = e.clientY; dx = 0; horiz = false;
+  });
+  card.addEventListener("pointermove", e => {
+    if(x0 === null) return;
+    dx = e.clientX - x0;
+    if(!horiz){
+      if(Math.abs(e.clientY - y0) > 12 && Math.abs(e.clientY - y0) > Math.abs(dx)){ x0 = null; return; }
+      if(Math.abs(dx) > 12){ horiz = true; card.setPointerCapture(e.pointerId); card.classList.add("drag"); }
+    }
+    if(horiz) card.style.transform = `translateX(${dx}px) rotate(${dx / 60}deg)`;
+  });
+  const end = () => {
+    if(x0 === null) return;
+    x0 = null;
+    if(!horiz) return;
+    card.classList.remove("drag");
+    /* Μετά από σύρσιμο, το «κλικ» που ακολουθεί δεν μετράει ως πάτημα κουμπιού */
+    const eat = ev => { ev.stopPropagation(); ev.preventDefault(); };
+    card.addEventListener("click", eat, true);
+    setTimeout(() => card.removeEventListener("click", eat, true), 0);
+    if(dx < -60 && go(1)) return;
+    if(dx > 60 && go(-1)) return;
+    card.classList.add("snap"); card.style.transform = "";
+  };
+  card.addEventListener("pointerup", end);
+  card.addEventListener("pointercancel", () => { x0 = null; card.classList.remove("drag"); card.classList.add("snap"); card.style.transform = ""; });
+}
+function pager(prevOk, nextOk, mid){
+  return `<div class="pager"><button class="btn ghost" data-nav="-1" aria-label="Προηγούμενη"${prevOk ? "" : " disabled"}>←</button>
+    <div class="mid">${mid}</div>
+    <button class="btn" data-nav="1" aria-label="Επόμενη"${nextOk ? "" : " disabled"}>→</button></div>`;
 }
 function renderSection(k, id){
   const key = k+"/"+id, c = C[key], s = st(key), info = findSection(k, id), el = $("#"+k);
-  let body = "";
+  let body = "", go = null;
   if(s.view === "sum"){
-    body = `<div class="stack">${c.summary.map((b,i) => `<section class="blk${b.warn ? " warn" : ""}"><span class="k">${b.warn ? "⚠️ Προσοχή" : (i+1) + " / " + c.summary.length}</span><h3>${b.h}</h3>${b.quote ? `<p class="quote" lang="grc">${b.quote}</p>` : ""}<p>${b.t}</p>${b.f ? `<p class="f formula">${b.f}</p>` : ""}${b.ex ? `<div class="box exb"><b>💡 Παράδειγμα</b><p>${b.ex}</p></div>` : ""}${b.def ? `<div class="box defb"><b>📝 ${b.defLabel || "Στο διαγώνισμα γράφεις"}</b><p>${b.def}</p></div>` : ""}</section>`).join("")}</div>
-      <button class="btn gold" data-go="cards">🃏 Έλεγξε τι θυμάσαι με τις κάρτες</button>`;
-  } else if(s.view === "cards"){
-    if(!s.queue.length){
-      const g = Math.round(s.knew / s.total * 20);
+    const n = c.summary.length, i = Math.min(s.idx, n - 1), b = c.summary[i], last = i === n - 1;
+    body = `<div class="prog"><div class="bar" role="img" aria-label="Θέμα ${i+1} από ${n}"><i style="width:${Math.round((i+1) / n * 100)}%"></i></div><span>${i+1}/${n}</span></div>
+      <div class="deck"><section class="blk slide${b.warn ? " warn" : ""}${s.anim ? " " + s.anim : ""}" aria-live="polite"><span class="k">${b.warn ? "⚠️ Προσοχή" : "📖 Θέμα " + (i+1)}</span><h3>${b.h}</h3>${b.quote ? `<p class="quote" lang="grc">${b.quote}</p>` : ""}<p>${b.t}</p>${b.f ? `<p class="f formula">${b.f}</p>` : ""}${b.ex ? `<div class="box exb"><b>💡 Παράδειγμα</b><p>${b.ex}</p></div>` : ""}${b.def ? `<div class="box defb"><b>📝 ${b.defLabel || "Στο διαγώνισμα γράφεις"}</b><p>${b.def}</p></div>` : ""}</section></div>
+      ${pager(i > 0, !last, last ? `<button class="btn gold" data-go="quiz">🎯 Πάμε στις ερωτήσεις</button>` : `← σύρε →`)}`;
+    go = d => { const j = i + d; if(j < 0 || j >= n) return false; s.idx = j; s.anim = d > 0 ? "in-next" : "in-prev"; renderSection(k, id); return true; };
+  } else if(s.view === "quiz"){
+    const n = s.qs.length, {right, wrong} = quizScore(s), answered = right + wrong;
+    if(s.done){
+      const g = Math.round(right / n * 20);
       const msg = g >= 18 ? "Άριστα! Είσαι έτοιμος για το μάθημα." : g >= 14 ? "Πολύ καλά. Ξαναδιάβασε όσα σου ξέφυγαν." : "Καλή αρχή. Ρίξε μια ματιά στην περίληψη και ξαναδοκίμασε.";
       body = `<div class="sheet center">
         <p class="cheer" aria-hidden="true">${g >= 18 ? "🏆" : g >= 14 ? "🔥" : "💪"}</p>
         <div class="grade" role="img" aria-label="Βαθμός ${g} στα 20"><svg viewBox="0 0 210 150" aria-hidden="true"><ellipse cx="105" cy="76" rx="92" ry="60" transform="rotate(-6 105 76)"/></svg><div class="num">${g}<small>/20</small></div></div>
-        <p>Ήξερες με την πρώτη ${s.knew} από ${s.total} κάρτες. ${msg}</p>
-        <div class="row"><button class="btn" data-act="restart">Ξανά από την αρχή</button><button class="btn ghost" data-go="sum">Στην περίληψη</button></div></div>`;
+        <p>Βρήκες σωστά ${right} από ${n} ερωτήσεις. ${msg}</p>
+        <div class="row"><button class="btn" data-act="restart">Ξανά από την αρχή</button><button class="btn ghost" data-act="review">Δες τις απαντήσεις</button></div></div>`;
     } else {
-      const q = s.queue[0], done = s.total - s.queue.length;
-      body = `<div class="prog"><div class="bar" role="img" aria-label="Έμειναν ${s.queue.length} από ${s.total}"><i style="width:${Math.round(done / s.total * 100)}%"></i></div><span>${done}/${s.total}</span></div>
-        <div class="stage"><button class="fc${s.flipped ? " back-side" : ""}${s.anim ? " " + s.anim : ""}" data-act="flip" aria-live="polite">${s.flipped
-          ? `<span class="tag">Απάντηση</span><span class="hint">${q.q}</span><span class="a">${q.a}</span><span class="up" aria-hidden="true">↑ σύρε πάνω αν το ήξερες</span>`
-          : `<span class="tag">Ερώτηση</span><strong>${q.q}</strong><span class="tap">👆 Πάτα για την απάντηση</span>`}</button></div>
-        ${s.flipped ? `<div class="react"><button class="btn ghost" data-act="later">😅 Όχι ακόμα</button><button class="btn" data-act="knew">😎 Το ήξερα</button></div>` : ""}`;
-      s.anim = "";
+      const i = s.qi, q = s.qs[i], p = s.picked[i], has = p !== undefined, last = i === n - 1;
+      const opts = q.opts.map((o, j) => {
+        const cls = !has ? "" : o.ok ? " right" + (j === p ? " picked" : "") : j === p ? " wrong picked" : " dim";
+        return `<button class="opt${cls}" data-opt="${j}"${has ? " disabled" : ""}><span class="l" aria-hidden="true">${has && o.ok ? "✓" : has && j === p ? "✕" : LETTERS[j]}</span><span>${o.t}</span></button>`;
+      }).join("");
+      const verdict = has ? (q.opts[p].ok ? "✅ Σωστά!" : "❌ Όχι ακριβώς.") : "";
+      const mid = answered === n ? `<button class="btn gold" data-act="finish">🏁 Δες τον βαθμό σου</button>` : (has && last ? `Έμειναν ${n - answered} αναπάντητες` : `← σύρε →`);
+      body = `<div class="prog"><div class="bar" role="img" aria-label="Απάντησες ${answered} από ${n}"><i style="width:${Math.round(answered / n * 100)}%"></i></div><span class="sc"><span>✓ ${right}</span><span>✕ ${wrong}</span></span></div>
+        <div class="deck"><div class="qcard slide${s.anim ? " " + s.anim : ""}">
+          <span class="tag">Ερώτηση ${i+1} από ${n}</span><h3>${q.q}</h3>${opts}
+          <div aria-live="polite">${has ? `<div class="why"><b>${verdict}</b>${q.why}</div>` : ""}</div>
+        </div></div>
+        ${pager(i > 0, !last, mid)}`;
+      go = d => { const j = i + d; if(j < 0 || j >= n) return false; s.qi = j; s.anim = d > 0 ? "in-next" : "in-prev"; renderSection(k, id); return true; };
     }
   } else {
     body = `<h3 style="font-size:18px;font-weight:800;margin:0 0 10px">${c.exTitle}</h3>` + c.ex.map((e,i) => `<div class="sheet ex">
       <span class="n">${k === "A" ? "Ερώτηση" : "Άσκηση"} ${i+1}</span>
       <p class="q">${e.q}</p>
       <button class="btn ghost" data-sol="${i}" aria-expanded="false">Δες τη λύση</button>
-      <div class="sol" id="sol-${k}-${i}" hidden><ol>${e.steps.map(x => `<li>${x}</li>`).join("")}</ol><p class="ans">Απάντηση: <span>${e.ans}</span></p></div>
+      <div class="sol" id="sol-${k}-${i}" hidden>${e.learn ? `<div class="learn"><b>📖 Θυμήσου τη θεωρία</b><p>${e.learn}</p>${"topic" in e ? `<button class="go" data-topic="${e.topic}">Δες τη θεωρία →</button>` : ""}</div>` : ""}<ol>${e.steps.map(x => `<li>${x}</li>`).join("")}</ol><p class="ans">Απάντηση: <span>${e.ans}</span></p></div>
     </div>`).join("") + `<p class="hint center">🧠 Δοκίμασε πρώτα μόνος σου και μετά δες τη λύση.</p>`;
   }
+  s.anim = "";
+  if(CALM.matches) body = body.replace(/ in-(next|prev)/g, "");
+  keyNav = go;
   el.innerHTML = `<a class="back" href="#${k}">← ${BOOKS[k].name}</a>
     <div class="chap"><span class="ref">${info ? info.ch.t : ""}</span><h2 class="ct">${info && k !== "A" ? info.num + " " : ""}${c.title}</h2></div>
     <div class="seg">${VIEWS.map(([v,l]) => `<button data-go="${v}" aria-pressed="${s.view === v}">${l}</button>`).join("")}</div>${body}
     <a class="btn ghost sendlink" href="#send/${k}/${id}">📸 Έχεις καλές σημειώσεις; Στείλ' τες</a>`;
 
-  el.querySelectorAll("[data-go]").forEach(b => b.onclick = () => { s.view = b.dataset.go; renderSection(k, id); el.scrollIntoView({block:"start"}); });
-  const act = a => {
-    if(a === "flip"){ s.flipped = !s.flipped; s.anim = "flip"; }
-    else if(a === "knew"){ const q = s.queue.shift(); if(!s.missed.has(q.i)) s.knew++; s.flipped = false; s.anim = "in"; }
-    else if(a === "later"){ const q = s.queue.shift(); s.missed.add(q.i); s.queue.push(q); s.flipped = false; s.anim = "in"; }
-    else if(a === "restart"){ startCards(key); }
+  const top = () => { const r = $(".seg", el).getBoundingClientRect(); if(r.top < 0) window.scrollBy({top: r.top - 12}); };
+  el.querySelectorAll("[data-go]").forEach(b => b.onclick = () => { s.view = b.dataset.go; renderSection(k, id); top(); });
+  el.querySelectorAll("[data-nav]").forEach(b => b.onclick = () => go && go(+b.dataset.nav));
+  const slide = $(".slide", el);
+  if(slide && go) swipe(slide, go);
+  el.querySelectorAll("[data-opt]").forEach(b => b.onclick = () => {
+    s.picked[s.qi] = +b.dataset.opt;
+    try { navigator.vibrate && navigator.vibrate(s.qs[s.qi].opts[+b.dataset.opt].ok ? 30 : [40,60,40]); } catch(e){}
     renderSection(k, id);
-  };
-  /* Η κάρτα φεύγει προς τα πάνω και μετά έρχεται η επόμενη */
-  const leave = a => {
-    const card = $(".fc", el);
-    if(!card || CALM.matches){ act(a); return; }
-    card.classList.add("out");
-    setTimeout(() => act(a), 200);
-  };
-  el.querySelectorAll("[data-act]").forEach(b => b.onclick = () => {
-    if(b.dataset.drag){ delete b.dataset.drag; return; }
-    const a = b.dataset.act;
-    if(a === "knew" || a === "later") leave(a); else act(a);
+    /* Η εξήγηση να φαίνεται πάνω από την κάτω μπάρα */
+    const why = $(".why", el), barH = $("nav.tabs").offsetHeight;
+    if(why){ const r = why.getBoundingClientRect(), over = r.bottom - (innerHeight - barH - 12); if(over > 0) window.scrollBy({top: over, behavior: CALM.matches ? "auto" : "smooth"}); }
   });
-  /* Σύρσιμο προς τα πάνω: γυρίζει την κάρτα ή, αν είναι ήδη γυρισμένη, πάει στην επόμενη ως «Το ήξερα» */
-  const fc = $(".fc", el);
-  if(fc){
-    let y0 = null, dy = 0;
-    fc.addEventListener("pointerdown", e => { y0 = e.clientY; dy = 0; fc.setPointerCapture(e.pointerId); fc.classList.add("drag"); });
-    fc.addEventListener("pointermove", e => {
-      if(y0 === null) return;
-      dy = Math.min(0, e.clientY - y0);
-      if(dy < -8) fc.style.transform = `translateY(${dy}px) rotate(${dy / 40}deg)`;
-    });
-    const end = () => {
-      if(y0 === null) return;
-      y0 = null; fc.classList.remove("drag");
-      if(dy < -8) fc.dataset.drag = "1";
-      if(dy < -70){
-        if(s.flipped) leave("knew"); else { fc.style.transform = ""; act("flip"); }
-      } else { fc.classList.add("snap"); fc.style.transform = ""; }
-    };
-    fc.addEventListener("pointerup", end);
-    fc.addEventListener("pointercancel", end);
-  }
+  el.querySelectorAll("[data-act]").forEach(b => b.onclick = () => {
+    const a = b.dataset.act;
+    if(a === "finish"){ s.done = true; }
+    else if(a === "review"){ s.done = false; s.qi = 0; }
+    else if(a === "restart"){ startQuiz(key); }
+    renderSection(k, id); top();
+  });
   el.querySelectorAll("[data-sol]").forEach(b => b.onclick = () => {
     const sol = $("#sol-"+k+"-"+b.dataset.sol);
     sol.hidden = !sol.hidden;
     b.setAttribute("aria-expanded", String(!sol.hidden));
     b.textContent = sol.hidden ? "Δες τη λύση" : "Κρύψε τη λύση";
+  });
+  el.querySelectorAll("[data-topic]").forEach(b => b.onclick = () => {
+    s.view = "sum"; s.idx = +b.dataset.topic; s.anim = "in-next";
+    renderSection(k, id); top();
   });
 }
 
