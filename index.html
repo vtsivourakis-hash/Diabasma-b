@@ -9,186 +9,251 @@
 <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400;600;800&family=Literata:ital,opsz,wght@0,7..72,400;1,7..72,400;1,7..72,600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#FAFAFE; --grid:#E4E6F5; --card:#FFFFFF; --line:#D2D6EC;
+  --paper:#F3F4FB; --grid:#E4E6F5; --card:#FFFFFF; --line:#E0E3F2;
   --ink:#18256C; --on-ink:#FFFFFF; --text:#1B2033; --muted:#565D78;
-  --mark:#F5C842; --mark-soft:#FDF3D0; --red:#D7352B; --ok:#1E7F52; --ok-soft:#E3F3EA;
-  --nav:#363F60; --nav-text:rgba(255,255,255,.74); --gold:#F5C842;
+  --mark:#F5C842; --mark-soft:#FDF3D0; --red:#D7352B; --ok:#1E7F52; --ok-soft:#E3F3EA; --no-soft:#FCE9E7;
+  --nav:#18256C; --nav-text:rgba(255,255,255,.72); --gold:#F5C842;
+  --hero:linear-gradient(135deg,#18256C 0%,#3346A8 100%); --on-hero:#FFFFFF;
+  --shadow:0 1px 2px rgba(24,37,108,.06),0 6px 18px rgba(24,37,108,.08);
   color-scheme:light;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
-  padding-bottom:env(safe-area-inset-bottom,0px);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --paper:#10142A; --grid:#1A1F3D; --card:#181E3C; --line:#2B3462;
+    --paper:#0D1126; --grid:#1A1F3D; --card:#171D3B; --line:#262E57;
     --ink:#A9B8F2; --on-ink:#10142A; --text:#E9EBF5; --muted:#A0A7C4;
-    --mark:#8C6E12; --mark-soft:#2E2A14; --red:#FF7A6B; --ok:#56C892; --ok-soft:#14322A;
-    --nav:#262D4A; --nav-text:rgba(255,255,255,.7); --gold:#F5C842;
+    --mark:#8C6E12; --mark-soft:#2E2A14; --red:#FF7A6B; --ok:#56C892; --ok-soft:#14322A; --no-soft:#3A1D1F;
+    --nav:#171D3B; --nav-text:rgba(255,255,255,.66); --gold:#F5C842;
+    --hero:linear-gradient(135deg,#1F2A6E 0%,#33429A 100%); --on-hero:#FFFFFF;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.25);
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --paper:#10142A; --grid:#1A1F3D; --card:#181E3C; --line:#2B3462;
+  --paper:#0D1126; --grid:#1A1F3D; --card:#171D3B; --line:#262E57;
   --ink:#A9B8F2; --on-ink:#10142A; --text:#E9EBF5; --muted:#A0A7C4;
-  --mark:#8C6E12; --mark-soft:#2E2A14; --red:#FF7A6B; --ok:#56C892; --ok-soft:#14322A;
-  --nav:#262D4A; --nav-text:rgba(255,255,255,.7); --gold:#F5C842;
+  --mark:#8C6E12; --mark-soft:#2E2A14; --red:#FF7A6B; --ok:#56C892; --ok-soft:#14322A; --no-soft:#3A1D1F;
+  --nav:#171D3B; --nav-text:rgba(255,255,255,.66); --gold:#F5C842;
+  --hero:linear-gradient(135deg,#1F2A6E 0%,#33429A 100%); --on-hero:#FFFFFF;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.25);
   color-scheme:dark;
 }
-html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px);background:var(--paper)}
+html{scroll-padding-top:16px;background:var(--paper);-webkit-tap-highlight-color:transparent}
 *,*::before,*::after{box-sizing:inherit}
 body{
-  margin:0;color:var(--text);
-  background-color:var(--paper);
-  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
-  background-size:24px 24px;
+  margin:0;color:var(--text);background:var(--paper);
   font-family:'Commissioner',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   font-size:17px;line-height:1.55;
+  padding-bottom:calc(82px + env(safe-area-inset-bottom,0px));
 }
-.wrap{max-width:600px;margin:0 auto;padding:16px 18px 40px}
-h1{font-weight:800;font-size:clamp(30px,9vw,40px);line-height:1.02;letter-spacing:-.02em;margin:10px 0 8px;color:var(--ink)}
-.lede{margin:0;color:var(--muted);font-size:15px;max-width:44ch}
+.wrap{max-width:600px;margin:0 auto;padding:14px 16px 24px}
+header{display:flex;align-items:center;gap:10px;margin:2px 0 16px}
+header .logo{flex:0 0 auto;display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--hero);font-size:21px}
+h1{font-weight:800;font-size:19px;line-height:1.15;letter-spacing:-.01em;margin:0;color:var(--text)}
+.lede{margin:0;color:var(--muted);font-size:13px;line-height:1.3}
 h2,h3{margin:0}
 a{color:var(--ink)}
 button,input,select,textarea{font:inherit;color:inherit}
-:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+button{-webkit-user-select:none;user-select:none}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .f{font-family:'Literata',Georgia,serif;font-style:italic}
 .muted{color:var(--muted);font-size:15px;margin:6px 0 0}
 .hint{font-size:14px;color:var(--muted)}
 .center{text-align:center}
 
-nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;gap:2px;background:var(--nav);padding:0 6px;margin:16px 0 18px;border-radius:12px;overflow-x:auto;scrollbar-width:none;box-shadow:0 2px 0 rgba(24,37,108,.15)}
-nav.tabs::-webkit-scrollbar{display:none}
-.tab{flex:1 0 auto;text-align:center;text-decoration:none;font-weight:600;font-size:15px;padding:13px 8px;color:var(--nav-text);white-space:nowrap}
-.tab span{padding:0 1px 4px}
-.tab[aria-current="page"]{color:#fff}
-.tab[aria-current="page"] span{box-shadow:inset 0 -3px 0 var(--gold)}
+/* Κάτω μπάρα, όπως στις εφαρμογές */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;justify-content:center;background:var(--nav);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));box-shadow:0 -4px 20px rgba(13,17,38,.18)}
+.tab{flex:1;max-width:120px;display:flex;flex-direction:column;align-items:center;gap:1px;text-decoration:none;color:var(--nav-text);font-size:11px;font-weight:600;padding:6px 2px 5px;border-radius:14px;white-space:nowrap;transition:background .2s,color .2s}
+.tab .ic{font-size:22px;line-height:1.15;transition:transform .2s}
+.tab[aria-current="page"]{color:#fff;background:rgba(255,255,255,.12)}
+.tab[aria-current="page"] .ic{transform:translateY(-2px) scale(1.12)}
+.tab[aria-current="page"] .lb{box-shadow:inset 0 -2px 0 var(--gold)}
 .panel[hidden]{display:none}
 
 .chap{margin:0 0 14px}
-.ref{font-size:14px;color:var(--muted)}
-.ct{font-size:24px;line-height:1.2;font-weight:800;margin-top:2px}
-.back{display:inline-block;font-size:15px;font-weight:600;text-decoration:none;margin-bottom:10px}
-.seg{display:flex;gap:8px;margin-bottom:14px}
-.seg button{flex:1;padding:10px 4px;border-radius:10px;border:1.5px solid var(--line);background:var(--card);cursor:pointer;font-weight:600;font-size:15px}
-.seg button[aria-pressed="true"]{border-color:var(--ink);color:var(--ink);background:linear-gradient(transparent 70%,var(--mark) 70%),var(--card)}
+.ref{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.ct{font-size:26px;line-height:1.15;font-weight:800;margin-top:4px;letter-spacing:-.01em}
+.back{display:inline-flex;align-items:center;gap:6px;font-size:15px;font-weight:700;text-decoration:none;margin-bottom:12px;padding:8px 14px 8px 10px;border-radius:999px;background:var(--card);box-shadow:var(--shadow)}
+.seg{display:flex;gap:4px;margin:0 0 16px;padding:4px;border-radius:999px;background:var(--card);box-shadow:var(--shadow)}
+.seg button{flex:1;padding:10px 4px;border-radius:999px;border:0;background:transparent;cursor:pointer;font-weight:700;font-size:14px;color:var(--muted);transition:background .2s,color .2s}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--on-ink)}
 
-.toc{margin:0 0 18px}
-.toc h3{font-size:16px;font-weight:800;color:var(--ink);margin:0 0 8px}
-.item{display:flex;align-items:center;gap:12px;padding:12px 14px;margin:0 0 8px;background:var(--card);border:1.5px solid var(--line);border-radius:12px;text-decoration:none;color:var(--text)}
-a.item:hover{border-color:var(--ink)}
-.item .num{flex:0 0 auto;min-width:3.2em;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
-.item .tt{flex:1;line-height:1.35}
-.chip{flex:0 0 auto;font-size:13px;font-weight:600;padding:3px 9px;border-radius:999px;border:1.5px solid var(--line);color:var(--muted)}
-.chip.ok{border-color:var(--ok);color:var(--ok);background:var(--ok-soft)}
-.item.off{opacity:.62}
-.item.off .num{color:var(--muted)}
+/* Ευρετήριο */
+.hero{position:relative;overflow:hidden;padding:18px 18px 16px;margin:0 0 18px;border-radius:22px;background:var(--hero);color:var(--on-hero)}
+.hero .emo{position:absolute;right:-6px;top:-10px;font-size:92px;opacity:.22;transform:rotate(12deg)}
+.hero .ref{color:rgba(255,255,255,.75)}
+.hero .ct{color:#fff;margin-bottom:10px}
+.hero p{margin:0 0 6px;font-size:14px;color:rgba(255,255,255,.85);max-width:40ch}
+.bar{height:8px;border-radius:999px;background:rgba(255,255,255,.2);overflow:hidden;margin-top:12px}
+.bar i{display:block;height:100%;border-radius:999px;background:var(--gold)}
+.hero small{display:block;margin-top:6px;font-size:13px;font-weight:600;color:rgba(255,255,255,.85)}
+.toc{margin:0 0 20px}
+.toc h3{font-size:14px;font-weight:800;color:var(--muted);margin:0 0 8px 4px}
+.item{display:flex;align-items:center;gap:12px;padding:13px 14px;margin:0 0 8px;background:var(--card);border-radius:16px;text-decoration:none;color:var(--text);box-shadow:var(--shadow);transition:transform .15s}
+a.item:active{transform:scale(.98)}
+.item .num{flex:0 0 auto;display:grid;place-items:center;min-width:3.4em;height:2.2em;padding:0 6px;border-radius:10px;background:var(--mark-soft);font-weight:800;font-size:14px;color:var(--ink);font-variant-numeric:tabular-nums}
+.item .tt{flex:1;line-height:1.3;font-weight:600;font-size:16px}
+.chip{flex:0 0 auto;font-size:12px;font-weight:700;padding:4px 9px;border-radius:999px;background:var(--paper);color:var(--muted)}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}
+.item.off{box-shadow:none;background:transparent;border:1.5px dashed var(--line)}
+.item.off .tt{font-weight:400;color:var(--muted)}
+.item.off .num{background:transparent;color:var(--muted)}
 
-.sheet{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:20px}
-.blk{padding:14px 0;border-bottom:1.5px dashed var(--line)}
-.blk:first-child{padding-top:0}
-.blk:last-of-type{border-bottom:0}
-.blk h3{font-size:17px;font-weight:800;color:var(--ink);margin-bottom:4px}
+/* Περίληψη */
+.stack{display:flex;flex-direction:column;gap:12px}
+.sheet{background:var(--card);border-radius:20px;padding:18px;box-shadow:var(--shadow)}
+.sheet .seg{background:var(--paper);box-shadow:none}
+.blk{background:var(--card);border-radius:20px;padding:18px;box-shadow:var(--shadow)}
+.blk .k{display:inline-block;font-size:12px;font-weight:800;color:var(--muted);margin-bottom:4px}
+.blk h3{font-size:19px;font-weight:800;color:var(--ink);margin-bottom:2px;line-height:1.25}
 .blk p{margin:6px 0 0}
-.blk.warn{background:var(--mark-soft);border:0;border-left:4px solid var(--red);border-radius:8px;padding:12px 14px;margin:6px 0}
+.blk.warn{background:var(--mark-soft);box-shadow:inset 4px 0 0 var(--red)}
 .blk.warn h3{color:var(--red)}
-.formula{font-size:21px;color:var(--ink);margin:6px 0 0}
-.box{margin:10px 0 0;padding:10px 12px;border-radius:8px;font-size:16px}
-.box b{display:block;font-size:14px;margin-bottom:2px}
+.formula{font-size:22px;color:var(--ink);margin:8px 0 0;padding:8px 12px;border-radius:12px;background:var(--paper);display:inline-block}
+.box{margin:12px 0 0;padding:12px 14px;border-radius:14px;font-size:16px}
+.box b{display:block;font-size:13px;font-weight:800;margin-bottom:3px}
 .box p{margin:0}
-.exb{background:var(--ok-soft);border-left:4px solid var(--ok)}
+.exb{background:var(--ok-soft)}
 .exb b{color:var(--ok)}
-.defb{border:1.5px solid var(--ink);background:var(--card)}
+.defb{background:var(--paper);box-shadow:inset 0 0 0 1.5px var(--ink)}
 .defb b{color:var(--ink)}
 .quote{font-family:'Literata',Georgia,serif;font-size:19px;color:var(--ink)}
 
-.btn{display:block;width:100%;padding:14px 18px;border-radius:12px;border:2px solid var(--ink);background:var(--ink);color:var(--on-ink);font-weight:700;cursor:pointer;margin-top:12px;text-align:center;text-decoration:none}
-.btn.ghost{background:transparent;color:var(--ink)}
+.btn{display:block;width:100%;padding:15px 18px;border-radius:999px;border:0;background:var(--ink);color:var(--on-ink);font-weight:800;font-size:16px;cursor:pointer;margin-top:12px;text-align:center;text-decoration:none;transition:transform .12s}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:var(--card);color:var(--ink);box-shadow:inset 0 0 0 2px var(--line)}
+.btn.gold{background:var(--gold);color:#18256C}
 .btn:disabled{opacity:.5;cursor:default}
 .row{display:flex;gap:10px}.row .btn{flex:1}
 
-.card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;width:100%;min-height:240px;padding:22px;text-align:center;border:1.5px solid var(--line);border-radius:14px;background:var(--card);cursor:pointer}
-.card.back-side{border-color:var(--ink)}
-.card strong{font-size:21px;line-height:1.3}
-.card .a{font-size:19px;line-height:1.45;color:var(--ink)}
-.count{text-align:center;font-size:14px;color:var(--muted);margin:10px 0 0}
+/* Κάρτες: μία κάρτα σε όλη την οθόνη, σύρε πάνω για την επόμενη */
+.prog{display:flex;align-items:center;gap:10px;margin:0 0 10px;font-size:13px;font-weight:700;color:var(--muted)}
+.prog .bar{flex:1;margin:0;background:var(--line)}
+.stage{position:relative;height:calc(100vh - 430px);height:calc(100dvh - 430px);min-height:280px;max-height:520px}
+.fc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;width:100%;padding:26px 22px;text-align:center;border:0;border-radius:28px;background:var(--hero);color:#fff;cursor:pointer;box-shadow:0 14px 34px rgba(24,37,108,.28);touch-action:none;will-change:transform}
+.fc.back-side{background:var(--card);color:var(--text);box-shadow:var(--shadow),inset 0 0 0 2.5px var(--ink)}
+.fc .tag{position:absolute;top:16px;left:18px;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;opacity:.7}
+.fc strong{font-size:24px;line-height:1.3}
+.fc .a{font-size:21px;line-height:1.45;color:var(--ink);font-weight:600}
+.fc .hint{color:inherit;opacity:.75}
+.fc .tap{display:inline-block;padding:9px 16px;border-radius:999px;background:rgba(255,255,255,.16);font-size:14px;font-weight:700}
+.fc .up{position:absolute;bottom:16px;left:0;right:0;font-size:13px;font-weight:700;color:var(--muted);animation:bob 1.6s ease-in-out infinite}
+.fc.in{animation:cardIn .32s cubic-bezier(.2,.8,.2,1)}
+.fc.flip{animation:flip .3s ease-out}
+.fc.out{transition:transform .22s ease-in,opacity .22s ease-in;transform:translateY(-110%) rotate(-4deg)!important;opacity:0}
+.fc.drag{transition:none}
+.fc.snap{transition:transform .2s ease-out}
+.react{display:flex;gap:10px;margin-top:12px}
+.react .btn{margin:0;flex:1}
+@keyframes cardIn{from{transform:translateY(40%) scale(.94);opacity:0}to{transform:none;opacity:1}}
+@keyframes flip{from{transform:perspective(900px) rotateY(80deg)}to{transform:perspective(900px) rotateY(0)}}
+@keyframes bob{50%{transform:translateY(-4px)}}
 
 .grade{position:relative;width:210px;height:150px;margin:6px auto 4px}
 .grade svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .grade ellipse{fill:none;stroke:var(--red);stroke-width:3.5;stroke-linecap:round;stroke-dasharray:560;stroke-dashoffset:560;animation:draw .9s .15s ease-out forwards}
 .grade .num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Literata',Georgia,serif;font-style:italic;font-weight:600;color:var(--red);font-size:64px;line-height:1;transform:rotate(-4deg)}
 .grade .num small{font-size:26px;margin-left:4px;align-self:flex-end;margin-bottom:38px}
+.cheer{font-size:44px;line-height:1;margin:4px 0 0;animation:pop .5s .9s both cubic-bezier(.2,1.6,.4,1)}
 @keyframes draw{to{stroke-dashoffset:0}}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
 
+/* Λυμένες */
 .ex{margin-bottom:12px}
-.ex .n{font-size:14px;color:var(--muted)}
-.ex .q{font-weight:600;margin:2px 0 0}
-.ex .btn{margin-top:12px;padding:10px 14px}
-.sol{margin-top:14px;padding-top:12px;border-top:1.5px dashed var(--line)}
+.ex .n{display:inline-block;font-size:12px;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--mark-soft);color:var(--ink)}
+.ex .q{font-weight:600;margin:8px 0 0}
+.ex .btn{margin-top:14px;padding:11px 14px;font-size:15px}
+.sol{margin-top:14px;padding:14px;border-radius:14px;background:var(--paper)}
 .sol[hidden]{display:none}
 .sol ol{margin:0;padding-left:22px}
 .sol li{margin:0 0 6px}
-.ans{margin:10px 0 0;font-weight:700;color:var(--ok)}
+.ans{margin:10px 0 0;font-weight:800;color:var(--ok)}
 .ans span{background:linear-gradient(transparent 60%,var(--mark) 60%);color:var(--text);padding:0 2px}
-.sendlink{margin-top:18px}
+.sendlink{margin-top:20px}
 
+/* Χρονόμετρο */
 .timer{text-align:center}
-.ring{width:220px;height:220px;margin:6px auto 10px;position:relative}
+.ring{width:230px;height:230px;margin:8px auto 10px;position:relative}
 .ring svg{width:100%;height:100%;transform:rotate(-90deg)}
-.ring circle{fill:none;stroke-width:10}
-.ring .bg{stroke:var(--grid)}
+.ring circle{fill:none;stroke-width:14}
+.ring .bg{stroke:var(--line)}
 .ring .fg{stroke:var(--ink);stroke-linecap:round;transition:stroke-dashoffset .25s linear}
+.timer.rest .ring .fg{stroke:var(--ok)}
 .ring .time{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.ring .time b{font-size:48px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
-.ring .time span{font-size:15px;color:var(--muted)}
-#tmsg{min-height:1.5em;margin:4px 0 0;font-weight:600;color:var(--ok)}
+.ring .time b{font-size:52px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.ring .time span{font-size:15px;font-weight:600;color:var(--muted)}
+#tmsg{min-height:1.5em;margin:4px 0 0;font-weight:700;color:var(--ok)}
+.streak{display:flex;align-items:center;justify-content:center;gap:8px;width:fit-content;max-width:100%;margin:14px auto 0;padding:8px 14px;border-radius:999px;background:var(--mark-soft);font-size:14px;font-weight:700;color:var(--text)}
+.streak b{font-size:18px}
 
-.form label{display:block;font-weight:600;font-size:15px;margin:14px 0 6px}
-.form select,.form textarea{width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--card)}
+/* Αποστολή */
+.form label{display:block;font-weight:700;font-size:15px;margin:14px 0 6px}
+.form select,.form textarea{width:100%;padding:12px 14px;border:0;border-radius:14px;background:var(--paper);box-shadow:inset 0 0 0 1.5px var(--line)}
 .form textarea{min-height:76px;resize:vertical}
-.rules{margin:10px 0 0;padding:12px 14px;border-radius:8px;background:var(--mark-soft);border-left:4px solid var(--red);font-size:15px}
+.rules{margin:10px 0 0;padding:12px 14px;border-radius:14px;background:var(--mark-soft);font-size:15px}
 .rules p{margin:0 0 6px}.rules p:last-child{margin:0}
-.pick{display:flex;align-items:center;justify-content:center;min-height:120px;border:2px dashed var(--line);border-radius:12px;background:var(--card);cursor:pointer;text-align:center;padding:14px;font-weight:600;color:var(--ink)}
+.pick{display:flex;align-items:center;justify-content:center;min-height:120px;border:2px dashed var(--line);border-radius:18px;background:var(--paper);cursor:pointer;text-align:center;padding:14px;font-weight:700;color:var(--ink)}
 .pick input{position:absolute;opacity:0;width:1px;height:1px}
-.preview{display:block;max-width:100%;max-height:260px;margin:10px auto 0;border-radius:10px;border:1.5px solid var(--line)}
+.preview{display:block;max-width:100%;max-height:260px;margin:10px auto 0;border-radius:14px}
 #ts{margin-top:14px;min-height:65px}
-.status{margin:12px 0 0;font-weight:600}
+.status{margin:12px 0 0;font-weight:700}
 .status.ok{color:var(--ok)}.status.no{color:var(--red)}
 
-.faq h3{font-size:16px;font-weight:800;color:var(--ink);margin:20px 0 8px}
-.faq details{background:var(--card);border:1.5px solid var(--line);border-radius:12px;margin:0 0 8px}
-.faq details[open]{border-color:var(--ink)}
-.faq summary{cursor:pointer;list-style:none;padding:13px 40px 13px 14px;font-weight:600;position:relative;line-height:1.35}
-.faq summary::-webkit-details-marker{display:none}
-.faq summary::after{content:"+";position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:22px;font-weight:400;color:var(--ink)}
-.faq details[open] summary::after{content:"−"}
-.faq .a{padding:0 14px 14px}
-.faq .a p{margin:0 0 8px}.faq .a p:last-child{margin:0}
-.faq .a ol{margin:0 0 8px;padding-left:22px}
-.faq .note{margin:0 0 6px;padding:12px 14px;border-radius:8px;background:var(--mark-soft);border-left:4px solid var(--red);font-size:15px}
+/* Σχολείο: τι κάνω, τι δεν κάνω */
+.faq .note{margin:0 0 16px;padding:14px 16px;border-radius:18px;background:var(--mark-soft);font-size:15px}
 .faq .note p{margin:0 0 6px}.faq .note p:last-child{margin:0}
-.faq .src{font-size:14px;color:var(--muted);margin-top:18px}
-footer{margin-top:28px;font-size:14px;color:var(--muted);text-align:center}
+.faq details{background:var(--card);border-radius:20px;margin:0 0 10px;box-shadow:var(--shadow);overflow:hidden}
+.faq summary{display:flex;align-items:center;gap:12px;cursor:pointer;list-style:none;padding:14px 16px;font-weight:800;font-size:17px;line-height:1.25}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary .emo{flex:0 0 auto;display:grid;place-items:center;width:42px;height:42px;border-radius:14px;background:var(--paper);font-size:22px}
+.faq summary .st{flex:1}
+.faq summary .st small{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-top:2px}
+.faq summary::after{content:"";flex:0 0 auto;width:9px;height:9px;border-right:2.5px solid var(--muted);border-bottom:2.5px solid var(--muted);transform:rotate(45deg);margin:0 4px 4px;transition:transform .2s}
+.faq details[open] summary::after{transform:rotate(-135deg);margin-bottom:-4px}
+.faq .a{padding:0 16px 16px}
+.faq .a > p{margin:0 0 10px}
+.do,.dont,.info{margin:0 0 10px;padding:12px 14px;border-radius:16px}
+.do{background:var(--ok-soft)}
+.dont{background:var(--no-soft)}
+.info{background:var(--paper)}
+.do>b,.dont>b,.info>b{display:block;font-size:13px;font-weight:800;margin-bottom:4px}
+.do>b{color:var(--ok)}.dont>b{color:var(--red)}.info>b{color:var(--ink)}
+.do ul,.dont ul,.info ul{margin:0;padding:0;list-style:none}
+.do li,.dont li,.info li{position:relative;padding-left:24px;margin:0 0 6px;font-size:16px;line-height:1.45}
+.do li:last-child,.dont li:last-child,.info li:last-child{margin:0}
+.do li::before,.dont li::before,.info li::before{position:absolute;left:0;top:0;font-weight:800}
+.do li::before{content:"✓";color:var(--ok)}
+.dont li::before{content:"✕";color:var(--red)}
+.info li::before{content:"•";color:var(--ink);left:6px}
+.faq .alert{margin:0 0 10px;padding:12px 14px;border-radius:16px;background:var(--mark-soft);box-shadow:inset 4px 0 0 var(--red);font-size:16px}
+.faq .alert p{margin:0 0 6px}.faq .alert p:last-child{margin:0}
+.faq .src{font-size:13px;color:var(--muted);margin-top:18px}
+
+footer{margin-top:28px;font-size:13px;color:var(--muted);text-align:center}
 footer p{margin:0 0 6px}
 @media (prefers-reduced-motion: reduce){
-  .grade ellipse{animation:none;stroke-dashoffset:0}
-  .ring .fg{transition:none}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .grade ellipse{stroke-dashoffset:0}
 }
-@media (max-width:370px){ .tab{font-size:14px} }
+@media (max-width:360px){ .tab{font-size:10px} .tab .ic{font-size:20px} }
+@media (min-width:640px){ .wrap{padding-top:24px} }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1>Διάβασμα Β΄&nbsp;Γυμνασίου</h1>
-    <p class="lede">Η ύλη κάθε βιβλίου κεφάλαιο προς κεφάλαιο, εξηγημένη απλά, με παραδείγματα, κάρτες επανάληψης και λυμένες ασκήσεις.</p>
+    <span class="logo" aria-hidden="true">📚</span>
+    <div><h1>Διάβασμα Β΄&nbsp;Γυμνασίου</h1>
+    <p class="lede">Η ύλη απλά, με κάρτες και λυμένες ασκήσεις</p></div>
   </header>
 
-  <nav class="tabs">
-    <a class="tab" href="#F" data-p="F"><span>Φυσική</span></a>
-    <a class="tab" href="#M" data-p="M"><span>Μαθηματικά</span></a>
-    <a class="tab" href="#A" data-p="A"><span>Αρχαία</span></a>
-    <a class="tab" href="#school" data-p="school"><span>Σχολείο</span></a>
-    <a class="tab" href="#timer" data-p="timer"><span>Χρονόμετρο</span></a>
+  <nav class="tabs" aria-label="Μαθήματα">
+    <a class="tab" href="#F" data-p="F"><span class="ic" aria-hidden="true">⚡</span><span class="lb">Φυσική</span></a>
+    <a class="tab" href="#M" data-p="M"><span class="ic" aria-hidden="true">📐</span><span class="lb">Μαθηματικά</span></a>
+    <a class="tab" href="#A" data-p="A"><span class="ic" aria-hidden="true">🏛️</span><span class="lb">Αρχαία</span></a>
+    <a class="tab" href="#school" data-p="school"><span class="ic" aria-hidden="true">🏫</span><span class="lb">Σχολείο</span></a>
+    <a class="tab" href="#timer" data-p="timer"><span class="ic" aria-hidden="true">⏱️</span><span class="lb">Χρονόμετρο</span></a>
   </nav>
 
   <main>
@@ -197,109 +262,141 @@ footer p{margin:0 0 6px}
     <section class="panel" id="A" hidden></section>
     <section class="panel" id="send" hidden></section>
     <section class="panel faq" id="school" hidden>
-      <div class="chap"><span class="ref">Για τη ζωή στο σχολείο</span><h2 class="ct">Συχνές ερωτήσεις</h2></div>
+      <div class="hero"><span class="emo" aria-hidden="true">🏫</span><span class="ref">Για τη ζωή στο σχολείο</span><h2 class="ct">Τι κάνω, τι δεν κάνω</h2>
+        <p>Οι κανόνες με απλά λόγια. Πάτα ένα θέμα για να το ανοίξεις.</p></div>
       <div class="note">
-        <p>Οι απαντήσεις βασίζονται στον <b>Εσωτερικό Κανονισμό Λειτουργίας του σχολείου μας</b> (Σεπτέμβριος 2024) και στους κανόνες του Υπουργείου Παιδείας για όλα τα γυμνάσια.</p>
-        <p>Γράφουμε μόνο ό,τι είναι σίγουρο. Όπου ο κανονισμός του σχολείου και ο νόμος λένε διαφορετικά πράγματα, π.χ. για τα όρια των απουσιών ή τις αποβολές, δεν γράφουμε τίποτα. Για αυτά, και για ό,τι αφορά εσένα προσωπικά, ρώτα τον υπεύθυνο καθηγητή του τμήματός σου.</p>
+        <p>Εδώ γράφουμε μόνο ό,τι είναι <b>σίγουρο</b>: ό,τι λέει ο κανονισμός του σχολείου μας και δεν το αλλάζει ο νόμος.</p>
+        <p>Για τα όρια των απουσιών, τις αποβολές και ό,τι αφορά εσένα προσωπικά, ρώτα τον υπεύθυνο καθηγητή του τμήματός σου.</p>
       </div>
 
-      <h3>Καθημερινότητα</h3>
-      <details><summary>Τι ώρα είναι το σχολείο;</summary><div class="a">
-        <p>Το βασικό πρόγραμμα είναι από τις 08:00 έως τις 14:00, Δευτέρα με Παρασκευή. Μετά υπάρχουν δραστηριότητες μέχρι τις 17:00. Αν αλλάξει κάτι στο ωράριο, το σχολείο το ανακοινώνει στους μαθητές και στο site του.</p>
-      </div></details>
-      <details><summary>Τι κάνω αν αργήσω;</summary><div class="a">
-        <p>Δεν μπαίνεις κατευθείαν στην τάξη. Πηγαίνεις πρώτα στη Διεύθυνση, λες γιατί άργησες και παίρνεις ένα σημείωμα για να μπεις. Τον λόγο της καθυστέρησης πρέπει να τον επιβεβαιώσει ο γονιός σου.</p>
-      </div></details>
-      <details><summary>Αν πρέπει να έρθω αργότερα ή να φύγω νωρίτερα;</summary><div class="a">
-        <p>Οι γονείς σου πρέπει να ενημερώσουν τη Διεύθυνση ή τη Γραμματεία <b>την ίδια μέρα</b>.</p>
-        <p>Μόνος σου δεν επιτρέπεται να βγεις από το σχολείο όσο λειτουργεί.</p>
-      </div></details>
-      <details><summary>Μπορώ να πάω τουαλέτα ή στη Γραμματεία την ώρα του μαθήματος;</summary><div class="a">
-        <p>Μόνο αν είναι πραγματικά ανάγκη και αφού σου δώσει άδεια ο καθηγητής.</p>
-      </div></details>
-      <details><summary>Τι γίνεται αν λείπει ο καθηγητής;</summary><div class="a">
-        <p>Μένετε στην αίθουσα, χωρίς φασαρία που ενοχλεί τις διπλανές τάξεις, και ακούτε τον καθηγητή που θα έρθει να καλύψει την ώρα.</p>
-      </div></details>
-      <details><summary>Πού μπορώ να είμαι στο διάλειμμα;</summary><div class="a">
-        <p>Μόνο στους χώρους που έχει ορίσει το σχολείο, για να μη γίνονται ατυχήματα.</p>
-      </div></details>
-      <details><summary>Τι επιτρέπεται να φέρνω στο σχολείο;</summary><div class="a">
-        <p>Τα βιβλία σου και ό,τι χρειάζεσαι για τα μαθήματα.</p>
-        <p>Δεν επιτρέπονται: ακριβά αντικείμενα, πολλά χρήματα, συσκευές για μουσική ή βίντεο, ηλεκτρονικά παιχνίδια, αιχμηρά ή επικίνδυνα αντικείμενα.</p>
+      <details><summary><span class="emo" aria-hidden="true">⏰</span><span class="st">Ώρες, αργοπορία, έξοδος<small>Τι κάνω αν αργήσω</small></span></summary><div class="a">
+        <div class="info"><b>Καλό να ξέρεις</b><ul>
+          <li>Το βασικό πρόγραμμα είναι 08:00–14:00, Δευτέρα με Παρασκευή. Μετά υπάρχουν δραστηριότητες μέχρι τις 17:00.</li>
+          <li>Αν αλλάξει το ωράριο, το σχολείο το ανακοινώνει.</li>
+        </ul></div>
+        <div class="do"><b>Κάνε</b><ul>
+          <li>Έλα στην ώρα σου, και στα μαθήματα και στις εκδηλώσεις.</li>
+          <li>Αν αργήσεις, πήγαινε πρώτα στη Διεύθυνση. Πες γιατί άργησες και πάρε σημείωμα για να μπεις στην τάξη. Τον λόγο πρέπει να τον επιβεβαιώσει ο γονιός σου.</li>
+          <li>Αν πρέπει να έρθεις αργότερα ή να φύγεις νωρίτερα, οι γονείς σου ενημερώνουν τη Διεύθυνση ή τη Γραμματεία <b>την ίδια μέρα</b>.</li>
+        </ul></div>
+        <div class="dont"><b>Μην κάνεις</b><ul>
+          <li>Μη βγεις από το σχολείο μόνος σου όσο λειτουργεί.</li>
+          <li>Μη λείψεις από ένα μάθημα χωρίς λόγο, ενώ είσαι στο σχολείο.</li>
+        </ul></div>
       </div></details>
 
-      <h3>Απουσίες</h3>
-      <details><summary>Πώς μετράνε οι απουσίες;</summary><div class="a">
-        <p>Κάθε διδακτική ώρα που λείπεις είναι μία απουσία. Μια ολόκληρη μέρα είναι λοιπόν 6 ή 7 απουσίες.</p>
-      </div></details>
-      <details><summary>Τι γίνεται αν περάσω το όριο;</summary><div class="a">
-        <p>Η φοίτηση χαρακτηρίζεται «ανεπαρκής» και πρέπει να επαναλάβεις την ίδια τάξη.</p>
-      </div></details>
-      <details><summary>Μαθαίνουν οι γονείς μου για τις απουσίες;</summary><div class="a">
-        <p>Ναι, για κάθε απουσία. Ο υπεύθυνος καθηγητής ενημερώνει τους γονείς σου και ρωτά τον λόγο, με τηλέφωνο, email ή μήνυμα.</p>
-        <p>Αν λείψεις 3 συνεχόμενες μέρες, επικοινωνεί αμέσως μαζί τους και ενημερώνει τη Διεύθυνση.</p>
-      </div></details>
-      <details><summary>Μετράνε οι απουσίες όταν πάω σε αγώνες ή δράσεις του σχολείου;</summary><div class="a">
-        <p>Όχι, αν η δράση έχει εγκριθεί. Οι απουσίες γράφονται, αλλά δεν λογαριάζονται στο όριο.</p>
-      </div></details>
-
-      <h3>Κινητό</h3>
-      <details><summary>Μπορώ να έχω κινητό στο σχολείο;</summary><div class="a">
-        <p>Ναι, αλλά <b>κλειστό και μέσα στην τσάντα</b>, για να το χρησιμοποιήσεις όταν τελειώσουν τα μαθήματα.</p>
-        <p>Δεν επιτρέπεται να το χρησιμοποιήσεις πουθενά στο σχολείο, ούτε μέσα στα κτήρια ούτε στην αυλή. Εξαίρεση είναι οι ιατρικές εφαρμογές, μόνο με γνωμάτευση γιατρού.</p>
-      </div></details>
-      <details><summary>Αν τραβήξω φωτογραφία, βίντεο ή ηχογράφηση κάποιον;</summary><div class="a">
-        <p>Είναι από τα πιο σοβαρά παραπτώματα, και ισχύει στο μάθημα, στο διάλειμμα, στην είσοδο και στην έξοδο.</p>
-        <p>Ο Διευθυντής παίρνει τη συσκευή και καλεί τους γονείς όλων όσων εμπλέκονται. Η ποινή είναι αποβολή μέχρι 3 μέρες, ή μέχρι 5 αν αποφασίσει ο σύλλογος των καθηγητών. Αν αφορά πολύ προσωπικά δεδομένα κάποιου, ο μαθητής αλλάζει σχολείο.</p>
-      </div></details>
-      <details><summary>Αν χρειαστεί να μιλήσω με τους γονείς μου;</summary><div class="a">
-        <p>Με άδεια της Διεύθυνσης, από το τηλέφωνο του σχολείου.</p>
+      <details><summary><span class="emo" aria-hidden="true">📚</span><span class="st">Στην τάξη και στο διάλειμμα<small>Τουαλέτα, κενό, εργαστήρια</small></span></summary><div class="a">
+        <div class="do"><b>Κάνε</b><ul>
+          <li>Για τουαλέτα ή Γραμματεία την ώρα του μαθήματος: μόνο αν είναι πραγματικά ανάγκη, και αφού σου δώσει άδεια ο καθηγητής.</li>
+          <li>Αν λείπει ο καθηγητής, μείνε στην αίθουσα, χωρίς φασαρία, και άκου τον καθηγητή που θα έρθει να καλύψει την ώρα.</li>
+          <li>Όταν αλλάζετε αίθουσα, πηγαίνετε γρήγορα και ήσυχα.</li>
+          <li>Στο διάλειμμα μένεις στους χώρους που έχει ορίσει το σχολείο.</li>
+          <li>Στα εργαστήρια μπαίνεις μόνο με τον καθηγητή και ακολουθείς τους κανόνες ασφαλείας.</li>
+        </ul></div>
+        <div class="dont"><b>Μην κάνεις</b><ul>
+          <li>Μην εμποδίζεις το μάθημα. Οι συμμαθητές σου έχουν δικαίωμα να μάθουν.</li>
+          <li>Μη γράφεις σε θρανία και τοίχους και μη χαλάς πράγματα. Αν χαλάσεις κάτι, παίρνεις μέτρο και οι γονείς σου πληρώνουν τη ζημιά.</li>
+          <li>Μην παίρνεις πράγματα συμμαθητών χωρίς να ρωτήσεις.</li>
+          <li>Μην καπνίζεις. Απαγορεύεται παντού, και στις εκδηλώσεις έξω από το σχολείο.</li>
+        </ul></div>
       </div></details>
 
-      <h3>Ωριαία απομάκρυνση και διαγωγή</h3>
-      <details><summary>Τι είναι η «ωριαία αποβολή»;</summary><div class="a">
-        <p>Το σωστό όνομα είναι <b>ωριαία απομάκρυνση</b>. Αν ένας μαθητής εμποδίζει το μάθημα, ο καθηγητής μπορεί να τον βγάλει από την τάξη για εκείνη την ώρα. Εκείνη την ώρα είναι με ευθύνη της Διεύθυνσης και παίρνει απουσία, που μετράει στο σύνολο.</p>
-      </div></details>
-      <details><summary>Τι είναι η «διαγωγή»;</summary><div class="a">
-        <p>Είναι ο χαρακτηρισμός της συμπεριφοράς σου στο τέλος της χρονιάς: «εξαιρετική», «καλή» ή «μεμπτή». Τα μέτρα που έχεις πάρει μπορεί να την επηρεάσουν.</p>
-      </div></details>
-
-      <h3>Συμπεριφορά</h3>
-      <details><summary>Τι θεωρείται σωστή συμπεριφορά;</summary><div class="a">
-        <p>Σεβασμός και ευγένεια σε καθηγητές, συμμαθητές και σε όλο το προσωπικό: γραμματείς, επιστάτες, οδηγούς, συνοδούς, καθαριστές.</p>
-        <p>Δεν εμποδίζεις το μάθημα, γιατί οι άλλοι έχουν δικαίωμα να μάθουν. Δεν παίρνεις πράγματα συμμαθητών χωρίς να ρωτήσεις. Δεν γράφεις σε θρανία και τοίχους. Αν χαλάσεις κάτι, παίρνεις μέτρο και οι γονείς σου πληρώνουν τη ζημιά.</p>
-        <p>Στα εργαστήρια μπαίνεις μόνο με τον καθηγητή. Το κάπνισμα απαγορεύεται παντού, και στις εκδηλώσεις εκτός σχολείου.</p>
-      </div></details>
-      <details><summary>Τι κάνω αν κάποιος με εκφοβίζει, ή βλέπω να εκφοβίζουν άλλον;</summary><div class="a">
-        <p>Το σχολείο αντιμετωπίζει αυστηρά κάθε βία, λεκτική, σωματική ή ψυχολογική. Αυτό ισχύει και στο σχολικό λεωφορείο και όπου είσαι ως μαθητής του σχολείου.</p>
-        <p>Μίλα σε έναν μεγάλο που εμπιστεύεσαι: τον υπεύθυνο καθηγητή, τον Διευθυντή ή τους γονείς σου. Το να το πεις δεν είναι «κάρφωμα». Είναι βοήθεια.</p>
-        <p>Υπάρχει και η πλατφόρμα του Υπουργείου <b>stop-bullying.gov.gr</b>. Αν θέλεις να μιλήσεις με κάποιον οποιαδήποτε ώρα: <b>1056</b>, η γραμμή του «Χαμόγελου του Παιδιού».</p>
-      </div></details>
-      <details><summary>Υπάρχει στολή;</summary><div class="a">
-        <p>Καθημερινά όχι, αλλά η εμφάνιση πρέπει να είναι απλή, καθαρή και όχι προκλητική. Στις επίσημες εκδηλώσεις, όπως η παρέλαση, φοράς τα ρούχα που ορίζει το σχολείο. Στη Γυμναστική φοράς αθλητικά, και στους σχολικούς αγώνες την επίσημη αθλητική στολή.</p>
+      <details><summary><span class="emo" aria-hidden="true">🎒</span><span class="st">Τι φέρνω στο σχολείο<small>Τι επιτρέπεται στην τσάντα</small></span></summary><div class="a">
+        <div class="do"><b>Φέρε</b><ul>
+          <li>Τα βιβλία σου και ό,τι χρειάζεσαι για τα μαθήματα.</li>
+        </ul></div>
+        <div class="dont"><b>Μη φέρνεις</b><ul>
+          <li>Ακριβά αντικείμενα ή πολλά χρήματα.</li>
+          <li>Συσκευές για μουσική ή βίντεο και ηλεκτρονικά παιχνίδια.</li>
+          <li>Αιχμηρά ή επικίνδυνα αντικείμενα.</li>
+          <li>Έντυπα ή άλλα πράγματα που δεν έχουν σχέση με το μάθημα.</li>
+        </ul></div>
       </div></details>
 
-      <h3>Γυμναστική και λεωφορεία</h3>
-      <details><summary>Πώς παίρνω απαλλαγή από τη Γυμναστική;</summary><div class="a">
-        <p>Οι γονείς σου κάνουν αίτηση με βεβαίωση γιατρού, μέσα σε 5 μέρες από την αρχή των μαθημάτων ή από τη στιγμή που εμφανίστηκε το πρόβλημα υγείας.</p>
-      </div></details>
-      <details><summary>Μπορώ να κατέβω σε άλλη στάση ή να πάρω άλλο σχολικό λεωφορείο;</summary><div class="a">
-        <p>Μόνο αν οι γονείς σου το έχουν πει από πριν στη Γραμματεία. Για να γυρίζεις με τα πόδια, οι γονείς πρέπει να έχουν υπογράψει το σχετικό έντυπο στην αρχή της χρονιάς.</p>
-      </div></details>
-
-      <h3>Μαθητικά συμβούλια</h3>
-      <details><summary>Τι είναι το 5μελές;</summary><div class="a">
-        <p>Κάθε τμήμα εκλέγει κάθε χρόνο ένα συμβούλιο 5 μαθητών: πρόεδρο, γραμματέα, ταμία και δύο μέλη. Μεταφέρει τις ιδέες και τα προβλήματα της τάξης στους καθηγητές και στη Διεύθυνση, και οργανώνει δράσεις.</p>
-        <p>Ο κανονισμός του σχολείου λέει ότι το σχολείο συνεργάζεται με τα 5μελή και το 15μελές για το πώς λειτουργεί η σχολική ζωή.</p>
-      </div></details>
-      <details><summary>Και το 15μελές;</summary><div class="a">
-        <p>Είναι το συμβούλιο όλου του σχολείου. Εκπροσωπεί όλους τους μαθητές.</p>
+      <details><summary><span class="emo" aria-hidden="true">📱</span><span class="st">Κινητό<small>Πού το έχω, τι απαγορεύεται</small></span></summary><div class="a">
+        <div class="do"><b>Κάνε</b><ul>
+          <li>Κράτα το κινητό <b>κλειστό και μέσα στην τσάντα</b>. Το ανοίγεις όταν τελειώσουν τα μαθήματα.</li>
+          <li>Αν πρέπει να μιλήσεις με τους γονείς σου, ζήτα άδεια από τη Διεύθυνση και πάρε από το τηλέφωνο του σχολείου.</li>
+        </ul></div>
+        <div class="dont"><b>Μην κάνεις</b><ul>
+          <li>Μη χρησιμοποιείς κινητό ή άλλη συσκευή με κάμερα πουθενά στο σχολείο, ούτε μέσα στα κτήρια ούτε στην αυλή. Εξαίρεση: ιατρικές εφαρμογές, μόνο με γνωμάτευση γιατρού.</li>
+        </ul></div>
+        <div class="alert">
+          <p><b>⛔ Ποτέ φωτογραφία, βίντεο ή ηχογράφηση καθηγητών ή συμμαθητών.</b> Ισχύει στο μάθημα, στο διάλειμμα, στην είσοδο και στην έξοδο.</p>
+          <p>Ο Διευθυντής παίρνει τη συσκευή και καλεί τους γονείς όλων όσων εμπλέκονται. Η ποινή είναι αποβολή μέχρι 3 μέρες, ή μέχρι 5 αν αποφασίσει ο σύλλογος των καθηγητών. Αν αφορά πολύ προσωπικά δεδομένα κάποιου, ο μαθητής αλλάζει σχολείο.</p>
+        </div>
       </div></details>
 
-      <p class="src">Πηγές: Εσωτερικός Κανονισμός Λειτουργίας του σχολείου (Σεπτέμβριος 2024) και ΚΥΑ 102791/ΓΔ4/2024 (ΦΕΚ Β΄ 5130/2024). Αν κάτι έχει αλλάξει, πες το στον εκπρόσωπο της τάξης.</p>
+      <details><summary><span class="emo" aria-hidden="true">📅</span><span class="st">Απουσίες<small>Πώς μετράνε, ποιος ενημερώνεται</small></span></summary><div class="a">
+        <div class="info"><b>Καλό να ξέρεις</b><ul>
+          <li>Κάθε διδακτική ώρα που λείπεις είναι μία απουσία.</li>
+          <li>Αν περάσεις το όριο που βάζει ο νόμος, η φοίτηση είναι «ανεπαρκής» και πρέπει να επαναλάβεις την ίδια τάξη.</li>
+          <li>Οι γονείς σου μαθαίνουν για κάθε απουσία. Ο υπεύθυνος καθηγητής τους ενημερώνει και ρωτά τον λόγο.</li>
+          <li>Αν λείψεις 3 συνεχόμενες μέρες, επικοινωνεί αμέσως μαζί τους και ενημερώνει τη Διεύθυνση.</li>
+        </ul></div>
+        <div class="do"><b>Κάνε</b><ul>
+          <li>Πρόσεχε τις απουσίες σου. Κάθε ώρα μετράει.</li>
+          <li>Για τα ακριβή όρια, ρώτα τον υπεύθυνο καθηγητή.</li>
+        </ul></div>
+      </div></details>
+
+      <details><summary><span class="emo" aria-hidden="true">🤝</span><span class="st">Σεβασμός και εκφοβισμός<small>Αν κάποιος σε πειράζει</small></span></summary><div class="a">
+        <div class="do"><b>Κάνε</b><ul>
+          <li>Να είσαι ευγενικός με όλους: καθηγητές, συμμαθητές, γραμματείς, επιστάτες, οδηγούς, συνοδούς, καθαριστές.</li>
+          <li>Στις εκδρομές και στις επισκέψεις, άκου τους καθηγητές που σας συνοδεύουν.</li>
+          <li>Δώσε στους γονείς σου τις γραπτές ανακοινώσεις του σχολείου.</li>
+        </ul></div>
+        <div class="dont"><b>Μην κάνεις</b><ul>
+          <li>Καμία βία: ούτε με λόγια, ούτε σωματική, ούτε ψυχολογική. Το σχολείο την αντιμετωπίζει αυστηρά, και στο σχολικό λεωφορείο και όπου είσαι ως μαθητής του σχολείου.</li>
+        </ul></div>
+        <div class="alert">
+          <p><b>Σε εκφοβίζουν ή βλέπεις να εκφοβίζουν άλλον;</b> Μίλα σε έναν μεγάλο που εμπιστεύεσαι: τον υπεύθυνο καθηγητή, τον Διευθυντή ή τους γονείς σου. Το να το πεις δεν είναι «κάρφωμα». Είναι βοήθεια.</p>
+          <p>Υπάρχει και η πλατφόρμα του Υπουργείου <b>stop-bullying.gov.gr</b>. Για να μιλήσεις με κάποιον οποιαδήποτε ώρα: <b>1056</b>, η γραμμή του «Χαμόγελου του Παιδιού».</p>
+        </div>
+      </div></details>
+
+      <details><summary><span class="emo" aria-hidden="true">👕</span><span class="st">Ρούχα και Γυμναστική<small>Εμφάνιση, αθλητικά, απαλλαγή</small></span></summary><div class="a">
+        <div class="do"><b>Κάνε</b><ul>
+          <li>Ντύσου απλά, καθαρά και όχι προκλητικά.</li>
+          <li>Στις επίσημες εκδηλώσεις, όπως η παρέλαση, φόρα τα ρούχα που ορίζει το σχολείο.</li>
+          <li>Στη Γυμναστική φόρα αθλητικά. Στους σχολικούς αγώνες, την επίσημη αθλητική στολή.</li>
+        </ul></div>
+        <div class="info"><b>Απαλλαγή από τη Γυμναστική</b><ul>
+          <li>Οι γονείς σου κάνουν αίτηση με βεβαίωση γιατρού, μέσα σε <b>5 μέρες</b> από την αρχή των μαθημάτων ή από τη στιγμή που εμφανίστηκε το πρόβλημα υγείας.</li>
+        </ul></div>
+      </div></details>
+
+      <details><summary><span class="emo" aria-hidden="true">🚌</span><span class="st">Σχολικό λεωφορείο<small>Στάσεις και επιστροφή με τα πόδια</small></span></summary><div class="a">
+        <div class="dont"><b>Μην κάνεις</b><ul>
+          <li>Μην αλλάζεις στάση ή λεωφορείο, εκτός αν οι γονείς σου το έχουν πει από πριν στη Γραμματεία.</li>
+        </ul></div>
+        <div class="info"><b>Καλό να ξέρεις</b><ul>
+          <li>Για να πηγαινοέρχεσαι με τα πόδια, οι γονείς σου υπογράφουν το σχετικό έντυπο στην αρχή της χρονιάς.</li>
+        </ul></div>
+      </div></details>
+
+      <details><summary><span class="emo" aria-hidden="true">⚖️</span><span class="st">Μέτρα και διαγωγή<small>Τι γίνεται αν παραβώ κανόνα</small></span></summary><div class="a">
+        <div class="info"><b>Καλό να ξέρεις</b><ul>
+          <li>Αν παραβείς έναν κανόνα, παίρνεις ένα «παιδαγωγικό μέτρο». Τα πιο ελαφριά είναι η προφορική παρατήρηση, η επίπληξη και η <b>ωριαία απομάκρυνση</b>: ο καθηγητής σε βγάζει από το μάθημα για εκείνη την ώρα.</li>
+          <li>Πιο βαριά είναι η αποβολή και η αλλαγή σχολείου.</li>
+          <li>Οι γονείς σου ενημερώνονται από τη Διεύθυνση για κάθε μέτρο.</li>
+          <li>Η <b>διαγωγή</b> είναι ο χαρακτηρισμός της συμπεριφοράς σου: «εξαιρετική», «καλή» ή «μεμπτή». Τα μέτρα που έχεις πάρει μπορεί να την επηρεάσουν.</li>
+        </ul></div>
+      </div></details>
+
+      <details><summary><span class="emo" aria-hidden="true">🗳️</span><span class="st">Μαθητικά συμβούλια<small>5μελές και 15μελές</small></span></summary><div class="a">
+        <div class="info"><b>Καλό να ξέρεις</b><ul>
+          <li>Το σχολείο συνεργάζεται με τα 5μελή και το 15μελές μαθητικό συμβούλιο για τους κανόνες της σχολικής ζωής.</li>
+          <li>Όσοι εκλέγονται πρέπει να τηρούν ό,τι ορίζει ο νόμος.</li>
+        </ul></div>
+      </div></details>
+
+      <p class="src">Πηγές: Εσωτερικός Κανονισμός Λειτουργίας του σχολείου (Σεπτέμβριος 2024), ελεγμένος με την ΚΥΑ 102791/ΓΔ4/2024 (ΦΕΚ Β΄ 5130/2024). Αν κάτι έχει αλλάξει, πες το στον εκπρόσωπο της τάξης.</p>
     </section>
     <section class="panel" id="timer" hidden>
-      <div class="sheet timer">
+      <div class="hero"><span class="emo" aria-hidden="true">⏱️</span><span class="ref">Μελέτη με διαλείμματα</span><h2 class="ct">Χρονόμετρο</h2>
+        <p>25 λεπτά διάβασμα, 5 λεπτά διάλειμμα. Κλείσε τις ειδοποιήσεις και ξεκίνα.</p></div>
+      <div class="sheet timer" id="tbox">
         <div class="seg" id="tmodes">
           <button data-m="study" aria-pressed="true">Μελέτη 25΄</button>
           <button data-m="rest" aria-pressed="false">Διάλειμμα 5΄</button>
@@ -313,6 +410,7 @@ footer p{margin:0 0 6px}
           <button class="btn" id="tgo">Ξεκίνα</button>
           <button class="btn ghost" id="treset">Επαναφορά</button>
         </div>
+        <p class="streak" id="tstreak"></p>
       </div>
     </section>
   </main>
@@ -472,11 +570,11 @@ function route(){
   } else if(p === "send"){
     renderSend(parts[1], parts.slice(2).join("/"));
   }
-  const nav = document.querySelector("nav.tabs"), at = document.querySelector('.tab[aria-current="page"]');
-  if(at) nav.scrollLeft = Math.max(0, at.offsetLeft - (nav.clientWidth - at.offsetWidth) / 2);
   window.scrollTo({top:0});
 }
 window.addEventListener("hashchange", route);
+
+const EMO = { F:"⚡", M:"📐", A:"🏛️" };
 
 /* Table of contents */
 function renderIndex(k){
@@ -484,15 +582,18 @@ function renderIndex(k){
   let total = 0, ready = 0;
   const html = b.chapters.map(ch => `<section class="toc"><h3>${ch.t}</h3>${ch.s.map(([id,num,title]) => {
     total++;
-    if(C[k+"/"+id]){ ready++; return `<a class="item" href="#${k}/${id}"><span class="num">${num}</span><span class="tt">${title}</span><span class="chip ok">Έτοιμη</span></a>`; }
+    if(C[k+"/"+id]){ ready++; return `<a class="item" href="#${k}/${id}"><span class="num">${num}</span><span class="tt">${title}</span><span class="chip ok">Έτοιμη ✓</span></a>`; }
     return `<div class="item off"><span class="num">${num}</span><span class="tt">${title}</span><span class="chip">Σύντομα</span></div>`;
   }).join("")}</section>`).join("");
-  $("#"+k).innerHTML = `<div class="chap"><span class="ref">${b.book}</span><h2 class="ct">Περιεχόμενα</h2>
-    ${b.note ? `<p class="muted">${b.note}</p>` : ""}<p class="muted">Έτοιμες ${ready} από ${total} ενότητες. Νέες ενότητες προστίθενται κάθε εβδομάδα.</p></div>${html}`;
+  $("#"+k).innerHTML = `<div class="hero"><span class="emo" aria-hidden="true">${EMO[k]}</span><span class="ref">${b.book}</span><h2 class="ct">${b.name}</h2>
+    ${b.note ? `<p>${b.note}</p>` : ""}<p>Νέες ενότητες κάθε εβδομάδα.</p>
+    <div class="bar" role="img" aria-label="Έτοιμες ${ready} από ${total} ενότητες"><i style="width:${Math.max(3, Math.round(ready / total * 100))}%"></i></div>
+    <small>Έτοιμες ${ready} από ${total} ενότητες</small></div>${html}`;
 }
 
 /* Section */
-const VIEWS = [["sum","Περίληψη"],["cards","Κάρτες"],["ex","Λυμένες"]];
+const VIEWS = [["sum","📖 Περίληψη"],["cards","🃏 Κάρτες"],["ex","✏️ Λυμένες"]];
+const CALM = matchMedia("(prefers-reduced-motion: reduce)");
 const state = {};
 function st(key){
   if(!state[key]){ state[key] = {view:"sum"}; startCards(key); }
@@ -501,52 +602,86 @@ function st(key){
 function startCards(key){
   const s = state[key];
   s.queue = shuffle(C[key].cards.map((c,i) => ({q:c[0], a:c[1], i})));
-  s.total = s.queue.length; s.missed = new Set(); s.knew = 0; s.flipped = false;
+  s.total = s.queue.length; s.missed = new Set(); s.knew = 0; s.flipped = false; s.anim = "in";
 }
 function renderSection(k, id){
   const key = k+"/"+id, c = C[key], s = st(key), info = findSection(k, id), el = $("#"+k);
   let body = "";
   if(s.view === "sum"){
-    body = `<div class="sheet">${c.summary.map(b => `<section class="blk${b.warn ? " warn" : ""}"><h3>${b.h}</h3>${b.quote ? `<p class="quote" lang="grc">${b.quote}</p>` : ""}<p>${b.t}</p>${b.f ? `<p class="f formula">${b.f}</p>` : ""}${b.ex ? `<div class="box exb"><b>Παράδειγμα</b><p>${b.ex}</p></div>` : ""}${b.def ? `<div class="box defb"><b>${b.defLabel || "Στο διαγώνισμα γράφεις"}</b><p>${b.def}</p></div>` : ""}</section>`).join("")}
-      <button class="btn" data-go="cards">Έλεγξε τι θυμάσαι με τις κάρτες</button></div>`;
+    body = `<div class="stack">${c.summary.map((b,i) => `<section class="blk${b.warn ? " warn" : ""}"><span class="k">${b.warn ? "⚠️ Προσοχή" : (i+1) + " / " + c.summary.length}</span><h3>${b.h}</h3>${b.quote ? `<p class="quote" lang="grc">${b.quote}</p>` : ""}<p>${b.t}</p>${b.f ? `<p class="f formula">${b.f}</p>` : ""}${b.ex ? `<div class="box exb"><b>💡 Παράδειγμα</b><p>${b.ex}</p></div>` : ""}${b.def ? `<div class="box defb"><b>📝 ${b.defLabel || "Στο διαγώνισμα γράφεις"}</b><p>${b.def}</p></div>` : ""}</section>`).join("")}</div>
+      <button class="btn gold" data-go="cards">🃏 Έλεγξε τι θυμάσαι με τις κάρτες</button>`;
   } else if(s.view === "cards"){
     if(!s.queue.length){
       const g = Math.round(s.knew / s.total * 20);
       const msg = g >= 18 ? "Άριστα! Είσαι έτοιμος για το μάθημα." : g >= 14 ? "Πολύ καλά. Ξαναδιάβασε όσα σου ξέφυγαν." : "Καλή αρχή. Ρίξε μια ματιά στην περίληψη και ξαναδοκίμασε.";
       body = `<div class="sheet center">
+        <p class="cheer" aria-hidden="true">${g >= 18 ? "🏆" : g >= 14 ? "🔥" : "💪"}</p>
         <div class="grade" role="img" aria-label="Βαθμός ${g} στα 20"><svg viewBox="0 0 210 150" aria-hidden="true"><ellipse cx="105" cy="76" rx="92" ry="60" transform="rotate(-6 105 76)"/></svg><div class="num">${g}<small>/20</small></div></div>
         <p>Ήξερες με την πρώτη ${s.knew} από ${s.total} κάρτες. ${msg}</p>
         <div class="row"><button class="btn" data-act="restart">Ξανά από την αρχή</button><button class="btn ghost" data-go="sum">Στην περίληψη</button></div></div>`;
     } else {
-      const q = s.queue[0];
-      body = `<button class="card${s.flipped ? " back-side" : ""}" data-act="flip" aria-live="polite">${s.flipped
-          ? `<span class="hint">${q.q}</span><span class="a">${q.a}</span>`
-          : `<strong>${q.q}</strong><span class="hint">Σκέψου την απάντηση και πάτα την κάρτα</span>`}</button>
-        ${s.flipped ? `<div class="row"><button class="btn ghost" data-act="later">Ξανά αργότερα</button><button class="btn" data-act="knew">Το ήξερα</button></div>` : ""}
-        <p class="count">Έμειναν ${s.queue.length} από ${s.total}</p>`;
+      const q = s.queue[0], done = s.total - s.queue.length;
+      body = `<div class="prog"><div class="bar" role="img" aria-label="Έμειναν ${s.queue.length} από ${s.total}"><i style="width:${Math.round(done / s.total * 100)}%"></i></div><span>${done}/${s.total}</span></div>
+        <div class="stage"><button class="fc${s.flipped ? " back-side" : ""}${s.anim ? " " + s.anim : ""}" data-act="flip" aria-live="polite">${s.flipped
+          ? `<span class="tag">Απάντηση</span><span class="hint">${q.q}</span><span class="a">${q.a}</span><span class="up" aria-hidden="true">↑ σύρε πάνω αν το ήξερες</span>`
+          : `<span class="tag">Ερώτηση</span><strong>${q.q}</strong><span class="tap">👆 Πάτα για την απάντηση</span>`}</button></div>
+        ${s.flipped ? `<div class="react"><button class="btn ghost" data-act="later">😅 Όχι ακόμα</button><button class="btn" data-act="knew">😎 Το ήξερα</button></div>` : ""}`;
+      s.anim = "";
     }
   } else {
-    body = `<h3 style="font-size:17px;margin:0 0 10px">${c.exTitle}</h3>` + c.ex.map((e,i) => `<div class="sheet ex">
+    body = `<h3 style="font-size:18px;font-weight:800;margin:0 0 10px">${c.exTitle}</h3>` + c.ex.map((e,i) => `<div class="sheet ex">
       <span class="n">${k === "A" ? "Ερώτηση" : "Άσκηση"} ${i+1}</span>
       <p class="q">${e.q}</p>
       <button class="btn ghost" data-sol="${i}" aria-expanded="false">Δες τη λύση</button>
       <div class="sol" id="sol-${k}-${i}" hidden><ol>${e.steps.map(x => `<li>${x}</li>`).join("")}</ol><p class="ans">Απάντηση: <span>${e.ans}</span></p></div>
-    </div>`).join("") + `<p class="hint center">Δοκίμασε πρώτα μόνος σου και μετά δες τη λύση.</p>`;
+    </div>`).join("") + `<p class="hint center">🧠 Δοκίμασε πρώτα μόνος σου και μετά δες τη λύση.</p>`;
   }
-  el.innerHTML = `<a class="back" href="#${k}">← Περιεχόμενα</a>
+  el.innerHTML = `<a class="back" href="#${k}">← ${BOOKS[k].name}</a>
     <div class="chap"><span class="ref">${info ? info.ch.t : ""}</span><h2 class="ct">${info && k !== "A" ? info.num + " " : ""}${c.title}</h2></div>
     <div class="seg">${VIEWS.map(([v,l]) => `<button data-go="${v}" aria-pressed="${s.view === v}">${l}</button>`).join("")}</div>${body}
-    <a class="btn ghost sendlink" href="#send/${k}/${id}">Έχεις καλές σημειώσεις για αυτή την ενότητα; Στείλ' τες</a>`;
+    <a class="btn ghost sendlink" href="#send/${k}/${id}">📸 Έχεις καλές σημειώσεις; Στείλ' τες</a>`;
 
   el.querySelectorAll("[data-go]").forEach(b => b.onclick = () => { s.view = b.dataset.go; renderSection(k, id); el.scrollIntoView({block:"start"}); });
-  el.querySelectorAll("[data-act]").forEach(b => b.onclick = () => {
-    const a = b.dataset.act;
-    if(a === "flip"){ s.flipped = !s.flipped; }
-    else if(a === "knew"){ const q = s.queue.shift(); if(!s.missed.has(q.i)) s.knew++; s.flipped = false; }
-    else if(a === "later"){ const q = s.queue.shift(); s.missed.add(q.i); s.queue.push(q); s.flipped = false; }
+  const act = a => {
+    if(a === "flip"){ s.flipped = !s.flipped; s.anim = "flip"; }
+    else if(a === "knew"){ const q = s.queue.shift(); if(!s.missed.has(q.i)) s.knew++; s.flipped = false; s.anim = "in"; }
+    else if(a === "later"){ const q = s.queue.shift(); s.missed.add(q.i); s.queue.push(q); s.flipped = false; s.anim = "in"; }
     else if(a === "restart"){ startCards(key); }
     renderSection(k, id);
+  };
+  /* Η κάρτα φεύγει προς τα πάνω και μετά έρχεται η επόμενη */
+  const leave = a => {
+    const card = $(".fc", el);
+    if(!card || CALM.matches){ act(a); return; }
+    card.classList.add("out");
+    setTimeout(() => act(a), 200);
+  };
+  el.querySelectorAll("[data-act]").forEach(b => b.onclick = () => {
+    if(b.dataset.drag){ delete b.dataset.drag; return; }
+    const a = b.dataset.act;
+    if(a === "knew" || a === "later") leave(a); else act(a);
   });
+  /* Σύρσιμο προς τα πάνω: γυρίζει την κάρτα ή, αν είναι ήδη γυρισμένη, πάει στην επόμενη ως «Το ήξερα» */
+  const fc = $(".fc", el);
+  if(fc){
+    let y0 = null, dy = 0;
+    fc.addEventListener("pointerdown", e => { y0 = e.clientY; dy = 0; fc.setPointerCapture(e.pointerId); fc.classList.add("drag"); });
+    fc.addEventListener("pointermove", e => {
+      if(y0 === null) return;
+      dy = Math.min(0, e.clientY - y0);
+      if(dy < -8) fc.style.transform = `translateY(${dy}px) rotate(${dy / 40}deg)`;
+    });
+    const end = () => {
+      if(y0 === null) return;
+      y0 = null; fc.classList.remove("drag");
+      if(dy < -8) fc.dataset.drag = "1";
+      if(dy < -70){
+        if(s.flipped) leave("knew"); else { fc.style.transform = ""; act("flip"); }
+      } else { fc.classList.add("snap"); fc.style.transform = ""; }
+    };
+    fc.addEventListener("pointerup", end);
+    fc.addEventListener("pointercancel", end);
+  }
   el.querySelectorAll("[data-sol]").forEach(b => b.onclick = () => {
     const sol = $("#sol-"+k+"-"+b.dataset.sol);
     sol.hidden = !sol.hidden;
@@ -661,6 +796,14 @@ async function onSend(){
 
 /* Timer */
 const MODES = { study:{min:25, label:"Μελέτη"}, rest:{min:5, label:"Διάλειμμα"} };
+/* Πόσοι γύροι μελέτης τελείωσαν σήμερα. Μένει μόνο σε αυτή τη συσκευή, δεν στέλνεται πουθενά. */
+function today(){ return new Date().toLocaleDateString("sv"); }
+function rounds(){ try { const r = JSON.parse(localStorage.getItem("diab-rounds") || "{}"); return r.d === today() ? r.n : 0; } catch(e){ return 0; } }
+function addRound(){ try { localStorage.setItem("diab-rounds", JSON.stringify({d:today(), n:rounds() + 1})); } catch(e){} }
+function drawStreak(){
+  const n = rounds();
+  $("#tstreak").innerHTML = n ? `<b aria-hidden="true">🔥</b> Σήμερα: ${n} ${n === 1 ? "γύρος" : "γύροι"} μελέτης` : `<b aria-hidden="true">🎯</b> Ξεκίνα τον πρώτο γύρο της μέρας`;
+}
 const CIRC = 2 * Math.PI * 88;
 const tm = { mode:"study", left:25*60, end:null, int:null };
 const fg = $("#tfg");
@@ -675,6 +818,7 @@ function drawT(){
   $("#tgo").textContent = tm.end ? "Παύση" : (tm.left < total() ? "Συνέχεια" : "Ξεκίνα");
   document.title = tm.end ? `${t} ${MODES[tm.mode].label}` : "Διάβασμα Β΄ Γυμνασίου";
   document.querySelectorAll("#tmodes button").forEach(b => b.setAttribute("aria-pressed", b.dataset.m === tm.mode ? "true" : "false"));
+  $("#tbox").classList.toggle("rest", tm.mode === "rest");
 }
 function stopT(){ clearInterval(tm.int); tm.int = null; tm.end = null; }
 function setMode(m){ stopT(); tm.mode = m; tm.left = total(); drawT(); }
@@ -684,8 +828,9 @@ function tick(){
     const was = tm.mode;
     stopT();
     try { navigator.vibrate && navigator.vibrate([200,100,200]); } catch(e){}
+    if(was === "study"){ addRound(); drawStreak(); }
     setMode(was === "study" ? "rest" : "study");
-    $("#tmsg").textContent = was === "study" ? "Μπράβο! Ώρα για διάλειμμα." : "Τέλος το διάλειμμα. Πάμε πάλι!";
+    $("#tmsg").textContent = was === "study" ? "🎉 Μπράβο! Ώρα για διάλειμμα." : "💪 Τέλος το διάλειμμα. Πάμε πάλι!";
     return;
   }
   drawT();
@@ -698,6 +843,7 @@ $("#tgo").onclick = () => {
 $("#treset").onclick = () => { $("#tmsg").textContent = ""; setMode(tm.mode); };
 document.querySelectorAll("#tmodes button").forEach(b => b.onclick = () => { $("#tmsg").textContent = ""; setMode(b.dataset.m); });
 drawT();
+drawStreak();
 
 route();
 </script>
