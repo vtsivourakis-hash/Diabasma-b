@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Διάβασμα Β΄ Γυμνασίου</title>
+<title>Διάβασμα · Α΄, Β΄, Γ΄ Γυμνασίου</title>
+<meta name="description" content="Όλα τα μαθήματα του δημόσιου Γυμνασίου: επίσημα βιβλία, ενότητες και υλικό για Α΄, Β΄ και Γ΄ τάξη.">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0B0A12">
 <link rel="icon" type="image/png" href="icons/icon-192.png">
@@ -320,6 +321,37 @@ dialog#gsheet[open]{animation:sheetUp .28s cubic-bezier(.2,.8,.2,1)}
 .seg a{flex:1;display:block;padding:10px 4px;border-radius:10px;text-align:center;text-decoration:none;font-family:'Inter Tight','Inter',sans-serif;font-weight:700;font-size:14.5px;letter-spacing:-.01em;color:var(--muted)}
 .seg a[aria-current="page"]{background:var(--text);color:var(--paper)}
 .seg.four button{font-size:13.5px;padding:10px 2px}
+.seg.five button{font-size:12px;padding:10px 1px}
+.seg.six button{font-size:11px;padding:10px 1px}
+.test-main-tab{color:#b14fd5}
+.test-main-tab .ic{color:#d451a1}
+.test-main-tab[aria-current="page"]{background:linear-gradient(135deg,rgba(139,92,246,.2),rgba(236,72,153,.18))!important;color:var(--text)}
+.test-section-tabs button[aria-pressed="true"]{background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff}
+.test-hub-hero{background:linear-gradient(135deg,#241044,#5f1b65)}
+.test-hub-footer{margin-top:18px}
+.test-mode-tabs{position:sticky;top:65px;z-index:8}
+.test-mode-tabs button[aria-pressed="true"]{background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff}
+.test-mode-note{margin-bottom:14px}
+.test-next-question{margin-top:14px;width:100%}
+.test-review{margin-top:16px;text-align:left}
+.test-review-item{padding:14px 0;border-top:1px solid var(--line)}
+.test-review-item:first-of-type{border-top:0}
+.test-review-item>span{display:block;color:var(--hi);font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
+.test-review-item>b{display:block;font-size:15px;line-height:1.35}
+.test-review-item p{margin:7px 0;font-size:14px}
+.test-review-item small{display:block;color:var(--muted);font-size:13px;line-height:1.4}
+.test-card-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.test-card-heading .k{margin:0}
+.test-source-link{flex:0 0 auto;color:#c4b5fd;font-size:12px;font-weight:800;text-decoration:none;border:1px solid color-mix(in srgb,#a855f7 45%,var(--line));border-radius:999px;padding:7px 10px}
+.test-source-link:hover{background:color-mix(in srgb,#a855f7 12%,transparent)}
+.test-simple{margin:16px 0 20px;padding:17px 18px;border:1px solid color-mix(in srgb,#38bdf8 42%,var(--line));border-radius:16px;background:linear-gradient(135deg,color-mix(in srgb,#38bdf8 12%,var(--card)),color-mix(in srgb,#8b5cf6 9%,var(--card)))}
+.test-simple b{display:block;margin-bottom:7px;color:#7dd3fc;font-size:12px;letter-spacing:.07em;text-transform:uppercase}
+.test-simple p{margin:0;font-size:16px;line-height:1.65}
+.test-summary-title{margin:0 0 10px;color:var(--muted);font-size:12px;letter-spacing:.07em;text-transform:uppercase}
+.test-required-list{margin:0 0 18px;padding:0;display:grid;gap:9px;line-height:1.5;list-style:none;counter-reset:study-point}
+.test-required-list li{counter-increment:study-point;padding:12px 13px;border:1px solid var(--line);border-radius:12px;background:color-mix(in srgb,var(--card2) 84%,transparent)}
+.test-required-list li>span{display:block;margin-bottom:3px;color:#c084fc;font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.test-trap{margin-top:12px;background:color-mix(in srgb,#ef4444 9%,var(--card));border-color:color-mix(in srgb,#ef4444 36%,var(--line))}
 .toc .seg{margin:0}
 .toc .seg button[aria-pressed="true"]{background:var(--text);color:var(--paper)}
 .gchip.sel{font-size:14px;text-align:left}
@@ -368,163 +400,49 @@ footer p{margin:0 0 6px}
 @media (max-width:400px){ .tab{font-size:9.5px;letter-spacing:-.01em} nav.tabs{padding-left:2px;padding-right:2px} }
 @media (max-width:350px){ .tab .lb{font-size:8.5px} }
 @media (min-width:640px){ .wrap{padding-top:24px} }
+/*__CATALOGUE_CSS__*/
+/*__APP_CSS__*/
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Μετάβαση στο περιεχόμενο</a>
 <div class="wrap">
   <header>
     <span class="logo" aria-hidden="true">Β΄</span>
     <div class="ttl"><h1>Διάβασμα</h1>
-    <p class="lede">Β΄ Γυμνασίου · ύλη, ερωτήσεις, λυμένες</p></div>
+    <p class="lede">Α΄ · Β΄ · Γ΄ Γυμνασίου</p></div>
     <button class="themebtn" id="themebtn" aria-label="Φωτεινό θέμα"></button>
   </header>
 
-  <nav class="tabs" aria-label="Μαθήματα">
-    <a class="tab" href="#F" data-p="F"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12z"/></svg></span><span class="lb">Φυσική</span></a>
-    <a class="tab" href="#M" data-p="M"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V4l16 16z"/><path d="M8 16v-3.5L11.5 16z"/></svg></span><span class="lb">Μαθηματικά</span></a>
-    <a class="tab" href="#A" data-p="A"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 19.5 6v5.5c0 4.6-3.2 8.2-7.5 9.5-4.3-1.3-7.5-4.9-7.5-9.5V6z"/><path d="M12 7.5v9M8.5 11h7"/></svg></span><span class="lb">Ιλιάδα</span></a>
-    <a class="tab" href="#G" data-p="G"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M4.5 18h15M6 18v-7M10 18v-7M14 18v-7M18 18v-7M3 9l9-5 9 5z"/></svg></span><span class="lb">Αρχαία</span></a>
-    <a class="tab" href="#school" data-p="school"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M10 21v-5h4v5"/><circle cx="12" cy="11" r="1.6"/></svg></span><span class="lb">Σχολείο</span></a>
-    <a class="tab" href="#practice" data-p="practice"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".8"/></svg></span><span class="lb">Εξάσκηση</span></a>
+  <nav class="tabs" aria-label="Κύρια πλοήγηση">
+    <a class="tab" id="classes-tab" href="#class/B" data-p="class"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h7l2 2 2-2h7v15h-7l-2 2-2-2H3zM12 6v15"/></svg></span><span class="lb">Μαθήματα</span></a>
+    <a class="tab test-main-tab" href="#test-required" data-p="test-required"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v3H7zM5 6h14v15H5zM8 11l2 2 5-5M8 17h8"/></svg></span><span class="lb">Για το τεστ</span></a>
+    <a class="tab" href="#practice" data-p="practice"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/></svg></span><span class="lb">Εξάσκηση</span></a>
+    <a class="tab" href="#school" data-p="school"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V10l7-5 7 5v11M10 21v-5h4v5"/></svg></span><span class="lb">Σχολείο</span></a>
+    <a class="tab" href="#sources" data-p="sources"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7v1"/></svg></span><span class="lb">Πηγές</span></a>
   </nav>
 
-  <main>
-    <section class="panel" id="F"></section>
+<nav class="app-toolbar" aria-label="Γρήγορη πλοήγηση"><button class="app-tool" id="app-back" type="button" aria-label="Πίσω">←</button><a class="app-tool" id="app-home" href="#class/B">Αρχική</a><span class="app-location" id="app-location"></span><button class="app-tool" id="app-voice" type="button" aria-pressed="false" aria-label="Διάβασε το τρέχον περιεχόμενο δυνατά">🔊 Άκουσε</button><button class="app-tool" id="app-search" type="button">Αναζήτηση</button><a class="app-tool" href="#timer" aria-label="Χρονόμετρο μελέτης">25΄</a></nav>
+  <a id="app-resume" class="app-resume" hidden></a>
+  <div class="app-download"><div><strong>Το Διάβασμα ως εφαρμογή</strong><p>Δοκιμαστική έκδοση · δικό της παράθυρο, εύκολη πλοήγηση.</p></div><button class="app-tool" id="app-open" type="button">Λήψη app</button></div>
+  <dialog class="app-dialog" id="app-download" aria-labelledby="app-dialog-title"><button class="app-tool app-dialog-close" id="app-close" type="button" aria-label="Κλείσιμο">✕</button><span class="ref" id="app-mode">Δοκιμαστική έκδοση</span><h2 id="app-dialog-title">Το διάβασμά σου, σε δικό του παράθυρο.</h2><p>Αρχική, πίσω, αναζήτηση και χρονόμετρο με ένα πάτημα. Συνέχισε από την τελευταία ενότητα που άνοιξες.</p><a class="btn" href="downloads/Diabasma-test-windows.zip" download>Λήψη για Windows · δοκιμαστική</a><ol><li>Κατέβασε και αποσυμπίεσε το ZIP σε έναν φάκελο.</li><li>Άνοιξε το <b>Start-Diabasma.cmd</b>. Χρειάζεται Microsoft Edge ή Google Chrome και ανοίγει σε ξεχωριστό παράθυρο.</li><li>Οι ενσωματωμένες ενότητες δουλεύουν χωρίς internet. Τα εξωτερικά βιβλία χρειάζονται σύνδεση ή δικό σου PDF.</li></ol><button class="btn ghost" id="app-install" type="button" hidden>Εγκατάσταση σε αυτή τη συσκευή</button><p id="app-install-status" role="status"></p><details><summary>Κινητό ή άλλος υπολογιστής</summary><p>Άνοιξε το site και διάλεξε «Εγκατάσταση εφαρμογής» από το μενού του browser. Σε iPhone/iPad: Safari → Κοινή χρήση → Προσθήκη στην οθόνη Αφετηρίας.</p></details><p>Η τοπική έκδοση είναι ένα δοκιμαστικό στιγμιότυπο. Για νέο υλικό κατέβασε ξανά το ZIP. Η πρόοδος μένει στη συσκευή και δεν μεταφέρεται αυτόματα από το site.</p></dialog>
+
+  <nav class="seg grade-nav" id="grade-nav" aria-label="Επιλογή τάξης"></nav>
+  <p id="app-voice-status" class="voice-status" role="status" aria-live="polite"></p><main id="main-content" tabindex="-1">
+    <section class="panel" id="catalogue"></section>
+    <section class="panel" id="test-required" hidden></section>
+    <section class="panel" id="sources" hidden></section>
+    <section class="panel" id="F" hidden></section>
     <section class="panel" id="M" hidden></section>
     <section class="panel" id="A" hidden></section>
     <section class="panel" id="G" hidden></section>
     <section class="panel" id="send" hidden></section>
     <section class="panel faq" id="school" hidden>
-      <div class="hero"><span class="ref">Για τη ζωή στο σχολείο</span><h2 class="ct">Τι κάνω, τι δεν κάνω</h2>
-        <p>Οι κανόνες με απλά λόγια. Πάτα ένα θέμα για να το ανοίξεις.</p></div>
-      <div class="note">
-        <p>Εδώ γράφουμε μόνο ό,τι είναι <b>σίγουρο</b>: ό,τι λέει ο κανονισμός του σχολείου μας και δεν το αλλάζει ο νόμος.</p>
-        <p>Για τα όρια των απουσιών, τις αποβολές και ό,τι αφορά εσένα προσωπικά, ρώτα τον υπεύθυνο καθηγητή του τμήματός σου.</p>
-      </div>
-
-      <details><summary><span class="emo" aria-hidden="true">01</span><span class="st">Ώρες, αργοπορία, έξοδος<small>Τι κάνω αν αργήσω</small></span></summary><div class="a">
-        <div class="info"><b>Καλό να ξέρεις</b><ul>
-          <li>Το βασικό πρόγραμμα είναι 08:00–14:00, Δευτέρα με Παρασκευή. Μετά υπάρχουν δραστηριότητες μέχρι τις 17:00.</li>
-          <li>Αν αλλάξει το ωράριο, το σχολείο το ανακοινώνει.</li>
-        </ul></div>
-        <div class="do"><b>Κάνε</b><ul>
-          <li>Έλα στην ώρα σου, και στα μαθήματα και στις εκδηλώσεις.</li>
-          <li>Αν αργήσεις, πήγαινε πρώτα στη Διεύθυνση. Πες γιατί άργησες και πάρε σημείωμα για να μπεις στην τάξη. Τον λόγο πρέπει να τον επιβεβαιώσει ο γονιός σου.</li>
-          <li>Αν πρέπει να έρθεις αργότερα ή να φύγεις νωρίτερα, οι γονείς σου ενημερώνουν τη Διεύθυνση ή τη Γραμματεία <b>την ίδια μέρα</b>.</li>
-        </ul></div>
-        <div class="dont"><b>Μην κάνεις</b><ul>
-          <li>Μη βγεις από το σχολείο μόνος σου όσο λειτουργεί.</li>
-          <li>Μη λείψεις από ένα μάθημα χωρίς λόγο, ενώ είσαι στο σχολείο.</li>
-        </ul></div>
-      </div></details>
-
-      <details><summary><span class="emo" aria-hidden="true">02</span><span class="st">Στην τάξη και στο διάλειμμα<small>Τουαλέτα, κενό, εργαστήρια</small></span></summary><div class="a">
-        <div class="do"><b>Κάνε</b><ul>
-          <li>Για τουαλέτα ή Γραμματεία την ώρα του μαθήματος: μόνο αν είναι πραγματικά ανάγκη, και αφού σου δώσει άδεια ο καθηγητής.</li>
-          <li>Αν λείπει ο καθηγητής, μείνε στην αίθουσα, χωρίς φασαρία, και άκου τον καθηγητή που θα έρθει να καλύψει την ώρα.</li>
-          <li>Όταν αλλάζετε αίθουσα, πηγαίνετε γρήγορα και ήσυχα.</li>
-          <li>Στο διάλειμμα μένεις στους χώρους που έχει ορίσει το σχολείο.</li>
-          <li>Στα εργαστήρια μπαίνεις μόνο με τον καθηγητή και ακολουθείς τους κανόνες ασφαλείας.</li>
-        </ul></div>
-        <div class="dont"><b>Μην κάνεις</b><ul>
-          <li>Μην εμποδίζεις το μάθημα. Οι συμμαθητές σου έχουν δικαίωμα να μάθουν.</li>
-          <li>Μη γράφεις σε θρανία και τοίχους και μη χαλάς πράγματα. Αν χαλάσεις κάτι, παίρνεις μέτρο και οι γονείς σου πληρώνουν τη ζημιά.</li>
-          <li>Μην παίρνεις πράγματα συμμαθητών χωρίς να ρωτήσεις.</li>
-          <li>Μην καπνίζεις. Απαγορεύεται παντού, και στις εκδηλώσεις έξω από το σχολείο.</li>
-        </ul></div>
-      </div></details>
-
-      <details><summary><span class="emo" aria-hidden="true">03</span><span class="st">Τι φέρνω στο σχολείο<small>Τι επιτρέπεται στην τσάντα</small></span></summary><div class="a">
-        <div class="do"><b>Φέρε</b><ul>
-          <li>Τα βιβλία σου και ό,τι χρειάζεσαι για τα μαθήματα.</li>
-        </ul></div>
-        <div class="dont"><b>Μη φέρνεις</b><ul>
-          <li>Ακριβά αντικείμενα ή πολλά χρήματα.</li>
-          <li>Συσκευές για μουσική ή βίντεο και ηλεκτρονικά παιχνίδια.</li>
-          <li>Αιχμηρά ή επικίνδυνα αντικείμενα.</li>
-          <li>Έντυπα ή άλλα πράγματα που δεν έχουν σχέση με το μάθημα.</li>
-        </ul></div>
-      </div></details>
-
-      <details><summary><span class="emo" aria-hidden="true">04</span><span class="st">Κινητό<small>Πού το έχω, τι απαγορεύεται</small></span></summary><div class="a">
-        <div class="do"><b>Κάνε</b><ul>
-          <li>Κράτα το κινητό <b>κλειστό και μέσα στην τσάντα</b>. Το ανοίγεις όταν τελειώσουν τα μαθήματα.</li>
-          <li>Αν πρέπει να μιλήσεις με τους γονείς σου, ζήτα άδεια από τη Διεύθυνση και πάρε από το τηλέφωνο του σχολείου.</li>
-        </ul></div>
-        <div class="dont"><b>Μην κάνεις</b><ul>
-          <li>Μη χρησιμοποιείς κινητό ή άλλη συσκευή με κάμερα πουθενά στο σχολείο, ούτε μέσα στα κτήρια ούτε στην αυλή. Εξαίρεση: ιατρικές εφαρμογές, μόνο με γνωμάτευση γιατρού.</li>
-        </ul></div>
-        <div class="alert">
-          <p><b>Ποτέ φωτογραφία, βίντεο ή ηχογράφηση καθηγητών ή συμμαθητών.</b> Ισχύει στο μάθημα, στο διάλειμμα, στην είσοδο και στην έξοδο.</p>
-          <p>Ο Διευθυντής παίρνει τη συσκευή και καλεί τους γονείς όλων όσων εμπλέκονται. Η ποινή είναι αποβολή μέχρι 3 μέρες, ή μέχρι 5 αν αποφασίσει ο σύλλογος των καθηγητών. Αν αφορά πολύ προσωπικά δεδομένα κάποιου, ο μαθητής αλλάζει σχολείο.</p>
-        </div>
-      </div></details>
-
-      <details><summary><span class="emo" aria-hidden="true">05</span><span class="st">Απουσίες<small>Πώς μετράνε, ποιος ενημερώνεται</small></span></summary><div class="a">
-        <div class="info"><b>Καλό να ξέρεις</b><ul>
-          <li>Κάθε διδακτική ώρα που λείπεις είναι μία απουσία.</li>
-          <li>Αν περάσεις το όριο που βάζει ο νόμος, η φοίτηση είναι «ανεπαρκής» και πρέπει να επαναλάβεις την ίδια τάξη.</li>
-          <li>Οι γονείς σου μαθαίνουν για κάθε απουσία. Ο υπεύθυνος καθηγητής τους ενημερώνει και ρωτά τον λόγο.</li>
-          <li>Αν λείψεις 3 συνεχόμενες μέρες, επικοινωνεί αμέσως μαζί τους και ενημερώνει τη Διεύθυνση.</li>
-        </ul></div>
-        <div class="do"><b>Κάνε</b><ul>
-          <li>Πρόσεχε τις απουσίες σου. Κάθε ώρα μετράει.</li>
-          <li>Για τα ακριβή όρια, ρώτα τον υπεύθυνο καθηγητή.</li>
-        </ul></div>
-      </div></details>
-
-      <details><summary><span class="emo" aria-hidden="true">06</span><span class="st">Σεβασμός και εκφοβισμός<small>Αν κάποιος σε πειράζει</small></span></summary><div class="a">
-        <div class="do"><b>Κάνε</b><ul>
-          <li>Να είσαι ευγενικός με όλους: καθηγητές, συμμαθητές, γραμματείς, επιστάτες, οδηγούς, συνοδούς, καθαριστές.</li>
-          <li>Στις εκδρομές και στις επισκέψεις, άκου τους καθηγητές που σας συνοδεύουν.</li>
-          <li>Δώσε στους γονείς σου τις γραπτές ανακοινώσεις του σχολείου.</li>
-        </ul></div>
-        <div class="dont"><b>Μην κάνεις</b><ul>
-          <li>Καμία βία: ούτε με λόγια, ούτε σωματική, ούτε ψυχολογική. Το σχολείο την αντιμετωπίζει αυστηρά, και στο σχολικό λεωφορείο και όπου είσαι ως μαθητής του σχολείου.</li>
-        </ul></div>
-        <div class="alert">
-          <p><b>Σε εκφοβίζουν ή βλέπεις να εκφοβίζουν άλλον;</b> Μίλα σε έναν μεγάλο που εμπιστεύεσαι: τον υπεύθυνο καθηγητή, τον Διευθυντή ή τους γονείς σου. Το να το πεις δεν είναι «κάρφωμα». Είναι βοήθεια.</p>
-          <p>Υπάρχει και η πλατφόρμα του Υπουργείου <b>stop-bullying.gov.gr</b>. Για να μιλήσεις με κάποιον οποιαδήποτε ώρα: <b>1056</b>, η γραμμή του «Χαμόγελου του Παιδιού».</p>
-        </div>
-      </div></details>
-
-      <details><summary><span class="emo" aria-hidden="true">07</span><span class="st">Ρούχα και Γυμναστική<small>Εμφάνιση, αθλητικά, απαλλαγή</small></span></summary><div class="a">
-        <div class="do"><b>Κάνε</b><ul>
-          <li>Ντύσου απλά, καθαρά και όχι προκλητικά.</li>
-          <li>Στις επίσημες εκδηλώσεις, όπως η παρέλαση, φόρα τα ρούχα που ορίζει το σχολείο.</li>
-          <li>Στη Γυμναστική φόρα αθλητικά. Στους σχολικούς αγώνες, την επίσημη αθλητική στολή.</li>
-        </ul></div>
-        <div class="info"><b>Απαλλαγή από τη Γυμναστική</b><ul>
-          <li>Οι γονείς σου κάνουν αίτηση με βεβαίωση γιατρού, μέσα σε <b>5 μέρες</b> από την αρχή των μαθημάτων ή από τη στιγμή που εμφανίστηκε το πρόβλημα υγείας.</li>
-        </ul></div>
-      </div></details>
-
-      <details><summary><span class="emo" aria-hidden="true">08</span><span class="st">Σχολικό λεωφορείο<small>Στάσεις και επιστροφή με τα πόδια</small></span></summary><div class="a">
-        <div class="dont"><b>Μην κάνεις</b><ul>
-          <li>Μην αλλάζεις στάση ή λεωφορείο, εκτός αν οι γονείς σου το έχουν πει από πριν στη Γραμματεία.</li>
-        </ul></div>
-        <div class="info"><b>Καλό να ξέρεις</b><ul>
-          <li>Για να πηγαινοέρχεσαι με τα πόδια, οι γονείς σου υπογράφουν το σχετικό έντυπο στην αρχή της χρονιάς.</li>
-        </ul></div>
-      </div></details>
-
-      <details><summary><span class="emo" aria-hidden="true">09</span><span class="st">Μέτρα και διαγωγή<small>Τι γίνεται αν παραβώ κανόνα</small></span></summary><div class="a">
-        <div class="info"><b>Καλό να ξέρεις</b><ul>
-          <li>Αν παραβείς έναν κανόνα, παίρνεις ένα «παιδαγωγικό μέτρο». Τα πιο ελαφριά είναι η προφορική παρατήρηση, η επίπληξη και η <b>ωριαία απομάκρυνση</b>: ο καθηγητής σε βγάζει από το μάθημα για εκείνη την ώρα.</li>
-          <li>Πιο βαριά είναι η αποβολή και η αλλαγή σχολείου.</li>
-          <li>Οι γονείς σου ενημερώνονται από τη Διεύθυνση για κάθε μέτρο.</li>
-          <li>Η <b>διαγωγή</b> είναι ο χαρακτηρισμός της συμπεριφοράς σου: «εξαιρετική», «καλή» ή «μεμπτή». Τα μέτρα που έχεις πάρει μπορεί να την επηρεάσουν.</li>
-        </ul></div>
-      </div></details>
-
-      <details><summary><span class="emo" aria-hidden="true">10</span><span class="st">Μαθητικά συμβούλια<small>5μελές και 15μελές</small></span></summary><div class="a">
-        <div class="info"><b>Καλό να ξέρεις</b><ul>
-          <li>Το σχολείο συνεργάζεται με τα 5μελή και το 15μελές μαθητικό συμβούλιο για τους κανόνες της σχολικής ζωής.</li>
-          <li>Όσοι εκλέγονται πρέπει να τηρούν ό,τι ορίζει ο νόμος.</li>
-        </ul></div>
-      </div></details>
-
-      <p class="src">Πηγές: Εσωτερικός Κανονισμός Λειτουργίας του σχολείου (Σεπτέμβριος 2024), ελεγμένος με την ΚΥΑ 102791/ΓΔ4/2024 (ΦΕΚ Β΄ 5130/2024). Αν κάτι έχει αλλάξει, πες το στον εκπρόσωπο της τάξης.</p>
+      <div class="hero catalogue-hero"><span class="ref">Για όλες τις τάξεις του Γυμνασίου</span><h2 class="ct">Η καθημερινότητα στο σχολείο</h2><p>Μικρές συνήθειες που βοηθούν στο διάβασμα και στη συνεργασία.</p></div>
+      <div class="catalogue-note">Κάθε σχολείο έχει τον δικό του εσωτερικό κανονισμό. Για ωράρια, απουσίες, συσκευές και διαδικασίες, συμβουλέψου τον κανονισμό του σχολείου σου και τον/την υπεύθυνο/η εκπαιδευτικό.</div>
+      <details><summary><span class="emo" aria-hidden="true">01</span><span class="st">Οργάνωσε το διάβασμά σου<small>Ένα βήμα κάθε φορά</small></span></summary><div class="a"><ul><li>Σημείωσε τι έχετε για την επόμενη μέρα.</li><li>Διάλεξε τάξη και μάθημα και βρες την ενότητα που δουλεύετε.</li><li>Διάβασε τη θεωρία και δοκίμασε τις ασκήσεις πριν κοιτάξεις τη λύση.</li><li>Κράτησε τις απορίες σου για το επόμενο μάθημα.</li></ul><a href="#timer" class="btn ghost">Χρονόμετρο μελέτης</a></div></details>
+      <details><summary><span class="emo" aria-hidden="true">02</span><span class="st">Ποια κεφάλαια διαβάζω;<small>Βιβλίο και διδακτέα ύλη</small></span></summary><div class="a"><p>Στον κατάλογο θα βρεις τα πλήρη βιβλία. Ο/η εκπαιδευτικός σου θα σε καθοδηγήσει για τις ενότητες, τις ασκήσεις και την έκδοση που χρησιμοποιείτε.</p><p>Στις ξένες γλώσσες μπορεί να υπάρχουν διαφορετικά επίπεδα. Διάλεξε το βιβλίο του τμήματός σου.</p><a href="#sources">Δες τις επίσημες πηγές και οδηγίες</a></div></details>
+      <details><summary><span class="emo" aria-hidden="true">03</span><span class="st">Σεβασμός και συνεργασία<small>Ζήτα βοήθεια όταν τη χρειάζεσαι</small></span></summary><div class="a"><p>Άκου τις απόψεις των άλλων, φρόντιζε τον χώρο σας και ακολούθησε τις οδηγίες στα εργαστήρια και στις δραστηριότητες.</p><p>Αν κάτι σε δυσκολεύει ή σε ανησυχεί, μίλησε σε έναν ενήλικα που εμπιστεύεσαι: έναν γονέα ή έναν/μία εκπαιδευτικό.</p></div></details>
     </section>
     <section class="panel" id="practice" hidden></section>
     <section class="panel" id="timer" hidden>
@@ -553,10 +471,9 @@ footer p{margin:0 0 6px}
   <dialog id="gsheet" aria-label="Πίνακας γραμματικής"><div class="gwrap"><button class="gclose" aria-label="Κλείσιμο">✕</button><div class="gbody"></div></div></dialog>
 
   <footer>
-    <p>Βασισμένο στα σχολικά βιβλία της Β΄ Γυμνασίου (ebooks.edu.gr).</p>
+    <p>Α΄, Β΄ και Γ΄ Γυμνασίου · <a href="#sources">Επίσημα βιβλία και πηγές</a></p>
     <p><a href="#send">Στείλε τις σημειώσεις σου</a> για να γίνει η σελίδα καλύτερη.</p>
-    <p>Βρήκες λάθος; Πες το στον εκπρόσωπο της τάξης.</p>
-    <p>Ανεξάρτητη σελίδα μαθητών. Δεν είναι επίσημη σελίδα του σχολείου.</p>
+    <p>Ανεξάρτητη σελίδα μελέτης. Δεν αποτελεί επίσημη υπηρεσία του Υπουργείου.</p>
   </footer>
 </div>
 
@@ -720,17 +637,32 @@ function findSection(k, id){
   return null;
 }
 
+/*__CATALOGUE_JS__*/
+
 /* Routing */
 function route(){
   keyNav = null;
-  const parts = decodeURIComponent(location.hash.slice(1)).split("/").filter(Boolean);
-  let p = parts[0] || "F";
-  if(!["F","M","G","A","practice","timer","send","school"].includes(p)) p = "F";
-  document.querySelectorAll(".panel").forEach(el => el.hidden = el.id !== p);
+  let parts;
+  try { parts = decodeURIComponent(location.hash.slice(1)).split("/").filter(Boolean); } catch(e){ parts = []; }
+  let p = parts[0] || "class";
+  if(!["class","course","lesson","test-required","sources","F","M","G","A","practice","timer","send","school"].includes(p)) p = "class";
+  if(p === "class" || p === "course" || p === "lesson") selectGrade(parts[1] || selectedGrade);
+  if(["F","M","G","A","send"].includes(p)) selectGrade('B');
+  const panel = p === "class" || p === "course" || p === "lesson" ? "catalogue" : p;
+  document.querySelectorAll(".panel").forEach(el => el.hidden = el.id !== panel);
+  renderGradeNav();
+  $('#grade-nav').hidden = p === 'test-required';
+  document.title = `Διάβασμα · ${getGrade(selectedGrade).label}`;
+  const activeTab = ["F","M","G","A","course","lesson","class","send"].includes(p) ? "class" : p === "timer" ? "practice" : p;
   document.querySelectorAll(".tab").forEach(t => {
-    if(t.dataset.p === (p === "timer" ? "practice" : p)) t.setAttribute("aria-current","page"); else t.removeAttribute("aria-current");
+    if(t.dataset.p === activeTab) t.setAttribute("aria-current","page"); else t.removeAttribute("aria-current");
   });
-  if(p === "F" || p === "M" || p === "G" || p === "A"){
+  if(p === "class") renderCatalogue();
+  else if(p === "course") renderCourse(parts[1], parts[2]);
+  else if(p === "lesson") renderOfficialLesson(parts[1], parts[2], +parts[3], +parts[4]);
+  else if(p === "test-required") renderTestRequired();
+  else if(p === "sources") renderSources();
+  else if(p === "F" || p === "M" || p === "G" || p === "A"){
     const id = parts.slice(1).join("/");
     if(id && C[p+"/"+id]) renderSection(p, id); else renderIndex(p);
   } else if(p === "send"){
@@ -741,12 +673,14 @@ function route(){
   window.scrollTo({top:0});
 }
 window.addEventListener("hashchange", route);
+$('.skip-link').addEventListener('click', e=>{e.preventDefault();$('#main-content').focus();});
 
 /* Table of contents */
 function renderIndex(k){
   const b = BOOKS[k];
+  const subject = getGrade('B').subjects.find(s=>s.legacy === k);
   let total = 0, ready = 0, solved = 0;
-  const html = b.chapters.map(ch => `<section class="toc"><h3>${ch.t}</h3>${ch.s.map(([id,num,title]) => {
+  const html = b.chapters.filter(ch=>ch.s.some(s=>C[k+'/'+s[0]])).map(ch => `<section class="toc"><h3>${ch.t}</h3>${ch.s.filter(s=>C[k+'/'+s[0]]).map(([id,num,title]) => {
     total++;
     if(C[k+"/"+id]){
       ready++;
@@ -757,14 +691,13 @@ function renderIndex(k){
     }
     return `<div class="item off"><span class="num">${num}</span><span class="tt">${title}</span><span class="chip">Σύντομα</span></div>`;
   }).join("")}</section>`).join("");
-  $("#"+k).innerHTML = `<div class="hero"><span class="big">${ready}<small>/${total}</small></span><span class="ref">${b.book}</span><h2 class="ct">${b.name}</h2>
-    ${b.note ? `<p>${b.note}</p>` : ""}<p>Νέες ενότητες κάθε εβδομάδα.</p>
-    <div class="bar" role="img" aria-label="Έτοιμες ${ready} από ${total} ενότητες"><i style="width:${Math.max(3, Math.round(ready / total * 100))}%"></i></div>
-    <small>Έτοιμες ${ready} από ${total} ενότητες${solved ? ` · Έλυσες τις ερωτήσεις σε ${solved}` : ""}</small></div>${k === "G" ? grammarIndex() : ""}${html}`;
+  $("#"+k).innerHTML = `<a class="back" href="${courseHref('B',subject.id)}">← ${subject.name} · Επίσημα βιβλία</a><div class="hero"><span class="ref">Β΄ Γυμνασίου · Συμπληρωματικές σημειώσεις</span><h2 class="ct">${b.name}</h2>
+    <p>${ready} ενότητες με περίληψη, ερωτήσεις και λυμένες ασκήσεις.</p>
+    <small>${solved ? `Έλυσες τις ερωτήσεις σε ${solved} ενότητες` : 'Διάλεξε μια ενότητα για να ξεκινήσεις.'}</small></div><div class="catalogue-note">Οι σημειώσεις έχουν δική τους αρίθμηση και δεν καλύπτουν όλη τη διδακτέα ύλη. <a href="${courseHref('B',subject.id)}">Δες όλα τα κεφάλαια στο επίσημο βιβλίο.</a></div>${k === "G" ? grammarIndex() : ""}${html}`;
 }
 
 /* Section */
-const VIEWS = [["sum","Περίληψη"],["quiz","Ερωτήσεις"],["ex","Λυμένες"]];
+const VIEWS = [["sum","Περίληψη"],["quiz","Quiz"],["ex","Λυμένες"]];
 const CALM = matchMedia("(prefers-reduced-motion: reduce)");
 const LETTERS = ["Α","Β","Γ","Δ"];
 const LEVELS = ["", "Εύκολη", "Μέτρια", "Δύσκολη"];
@@ -908,7 +841,7 @@ function renderSection(k, id){
     const n = c.summary.length, i = Math.min(s.idx, n - 1), b = c.summary[i], last = i === n - 1;
     body = `${s.from !== null ? `<button class="retex" data-ret>← Πίσω στην ${k === "A" ? "ερώτηση" : "άσκηση"} ${s.from + 1}</button>` : ""}<div class="prog"><div class="bar" role="img" aria-label="Θέμα ${i+1} από ${n}"><i style="width:${Math.round((i+1) / n * 100)}%"></i></div><span>${i+1}/${n}</span></div>
       <div class="deck"><section class="blk slide${b.warn ? " warn" : ""}${s.anim ? " " + s.anim : ""}" aria-live="polite"><span class="k">${b.warn ? "Προσοχή" : "Θέμα " + (i+1)}</span><h3>${b.h}</h3>${b.quote ? `<p class="quote" lang="grc">${b.quote}</p>` : ""}<p>${rich(b.t)}</p>${b.f ? `<p class="f formula">${b.f}</p>` : ""}${b.ex ? `<div class="box exb"><b>Παράδειγμα</b><p>${rich(b.ex)}</p></div>` : ""}${b.def ? `<div class="box defb"><b>${b.defLabel || "Στο διαγώνισμα γράφεις"}</b><p>${rich(b.def)}</p></div>` : ""}</section></div>
-      ${pager(i > 0, !last, last ? `<button class="btn gold" data-go="quiz">Πάμε στις ερωτήσεις →</button>` : `← σύρε →`)}`;
+      ${pager(i > 0, !last, last ? `<button class="btn gold" data-go="quiz">Πάμε στο Quiz →</button>` : `← σύρε →`)}`;
     go = d => { const j = i + d; if(j < 0 || j >= n) return false; s.idx = j; s.anim = d > 0 ? "in-next" : "in-prev"; renderSection(k, id); return true; };
   } else if(s.view === "voc"){
     const n = c.vocab.length, i = Math.min(s.vi, n - 1), [w, m, d] = c.vocab[i], last = i === n - 1;
@@ -916,7 +849,7 @@ function renderSection(k, id){
       <div class="deck"><button class="vcard slide${s.vflip ? " back-side" : ""}${s.anim ? " " + s.anim : ""}" data-vflip aria-live="polite">${s.vflip
         ? `<span class="tag">Σημαίνει</span><span class="vw" lang="grc">${w}</span><strong>${m}</strong>${d ? `<span class="vd"><b>Στα νέα ελληνικά</b>${d}</span>` : ""}`
         : `<span class="tag">Λέξη ${i+1} από ${n}</span><strong class="vw big" lang="grc">${w}</strong><span class="tap">Πάτα για τη σημασία</span>`}</button></div>
-      ${pager(i > 0, !last, last ? `<button class="btn gold" data-go="quiz">Πάμε στις ερωτήσεις →</button>` : `← σύρε →`)}`;
+      ${pager(i > 0, !last, last ? `<button class="btn gold" data-go="quiz">Πάμε στο Quiz →</button>` : `← σύρε →`)}`;
     go = d => { const j = i + d; if(j < 0 || j >= n) return false; s.vi = j; s.vflip = false; s.anim = d > 0 ? "in-next" : "in-prev"; renderSection(k, id); return true; };
   } else if(s.view === "quiz"){
     const z = s.quiz, nm = mistakeItems(key).length;
@@ -980,7 +913,8 @@ function backToEx(k, id){
   if(card) card.scrollIntoView({block:"start"});
 }
 window.addEventListener("popstate", e => {
-  const parts = decodeURIComponent(location.hash.slice(1)).split("/").filter(Boolean);
+  let parts;
+  try { parts = decodeURIComponent(location.hash.slice(1)).split("/").filter(Boolean); } catch(e){ return; }
   const k = parts[0], id = parts.slice(1).join("/"), s = state[k+"/"+id];
   if(s && s.from !== null && !(e.state && e.state.theory) && !$("#"+k).hidden) backToEx(k, id);
 });
@@ -1017,6 +951,10 @@ function renderPractice(sub){
   P.sub = sub;
   const el = $("#practice");
   const nav = `<nav class="seg pseg" aria-label="Εξάσκηση"><a href="#practice"${sub === "exam" ? ' aria-current="page"' : ""}>Διαγώνισμα</a><a href="#practice/mistakes"${sub === "mistakes" ? ' aria-current="page"' : ""}>Τα λάθη μου</a><a href="#timer">Χρονόμετρο</a></nav>`;
+  if(selectedGrade !== 'B'){
+    el.innerHTML = nav + `<div class="hero catalogue-hero"><span class="ref">${getGrade(selectedGrade).label}</span><h2 class="ct">Εξάσκηση με το βιβλίο σου</h2><p>Βρες τις ασκήσεις και τις δραστηριότητες μέσα στα επίσημα σχολικά βιβλία.</p></div><div class="book-card"><h3>Διάλεξε το μάθημά σου</h3><p>Τα κουίζ του Διαβάσματος διατίθενται προς το παρόν σε οκτώ ενότητες της Β΄ Γυμνασίου.</p><a class="btn" href="#class/${selectedGrade}">Βιβλία και ασκήσεις ${getGrade(selectedGrade).label}</a><a class="btn ghost" href="#timer">Άνοιξε το χρονόμετρο μελέτης</a></div>`;
+    return;
+  }
   const running = P.quiz && (P.quiz.mode === "exam") === (sub === "exam");
   let body = "", go = null;
   if(running){
@@ -1042,7 +980,7 @@ function renderPractice(sub){
         : `<div class="sheet center"><p style="margin:0">Δεν έχεις λάθη. Λύσε τις ερωτήσεις μιας ενότητας ή ένα διαγώνισμα, και όσα σου ξεφύγουν θα έρθουν εδώ.</p></div>`}`;
   }
   if(CALM.matches) body = body.replace(/ in-(next|prev)/g, "");
-  el.innerHTML = nav + body;
+  el.innerHTML = nav + '<p class="practice-scope">Κουίζ Διαβάσματος · Β΄ Γυμνασίου · 8 διαθέσιμες ενότητες</p>' + body;
   keyNav = go;
   const top = () => { const r = $(".pseg", el).getBoundingClientRect(); if(r.top < 0) window.scrollBy({top: r.top - 12}); };
   const slide = $(".slide", el);
@@ -1293,7 +1231,9 @@ if("serviceWorker" in navigator && (location.protocol === "https:" || location.h
   navigator.serviceWorker.register("sw.js").catch(() => {});
 }
 
+/*__APP_JS__*/
 route();
+updateAppNavigation();
 </script>
 </body>
 </html>

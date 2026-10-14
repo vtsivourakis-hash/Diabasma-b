@@ -1,6 +1,6 @@
 // Service worker: η σελίδα ανοίγει και χωρίς internet.
 // Κρατά ένα αντίγραφο μόνο σε αυτή τη συσκευή. Δεν στέλνει τίποτα πουθενά.
-const CACHE = "diabasma-v1";
+const CACHE = "diabasma-v6-voice";
 const CORE = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-180.png"];
 
 self.addEventListener("install", e => {
@@ -14,11 +14,20 @@ self.addEventListener("activate", e => {
 self.addEventListener("fetch", e => {
   const req = e.request, url = new URL(req.url);
   if (req.method !== "GET") return;
+  if (req.mode === "navigate" && url.origin !== self.location.origin) return;
   // Η σελίδα: πρώτα από το δίκτυο, για να φαίνονται αμέσως οι νέες ενότητες. Χωρίς δίκτυο, από το αντίγραφο.
   if (req.mode === "navigate") {
     e.respondWith(fetch(req)
       .then(res => { const copy = res.clone(); caches.open(CACHE).then(c => c.put("./index.html", copy)); return res; })
       .catch(() => caches.match("./index.html")));
+    return;
+  }
+  // Downloads prefer the newest test package; keep a copy for repeat offline downloads.
+  if(url.origin === self.location.origin && url.pathname.endsWith('/downloads/Diabasma-test-windows.zip')){
+    e.respondWith(fetch(req).then(res => {
+      if(res.ok){const copy=res.clone();e.waitUntil(caches.open(CACHE).then(c=>c.put(req,copy)));}
+      return res;
+    }).catch(()=>caches.match(req).then(hit=>hit || Response.error())));
     return;
   }
   // Εικονίδια και γραμματοσειρές: από το αντίγραφο, και ανανέωση στο παρασκήνιο.

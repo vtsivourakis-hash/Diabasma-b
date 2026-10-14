@@ -4,6 +4,57 @@ const fs = require("fs");
 const path = require("path");
 
 const dir = path.join(__dirname, "content");
+const curriculum = JSON.parse(fs.readFileSync(path.join(__dirname, "src", "curriculum.json"), "utf8"));
+const explanations = JSON.parse(fs.readFileSync(path.join(__dirname, "src", "explanations.json"), "utf8"));
+for (const [key, explanation] of Object.entries(explanations)) {
+  const [gradeId, subjectId, bookText, sectionText] = key.split("/");
+  const grade = curriculum.grades.find(item => item.id === gradeId);
+  const subject = grade?.subjects.find(item => item.id === subjectId);
+  if (!subject?.books[Number(bookText)]?.sections[Number(sectionText)]) throw new Error(`explanations.json: άγνωστη διαδρομή ${key}`);
+  if (!["core", "modified", "optional"].includes(explanation.status)) throw new Error(`explanations.json: ${key} έχει άγνωστο status`);
+  for (const field of ["simple", "remember", "example", "syllabusNote"]) if (!explanation[field]) throw new Error(`explanations.json: ${key} θέλει ${field}`);
+}
+const officialContent = {};
+for (const file of fs.readdirSync(path.join(__dirname, "src")).filter(name => /^official-lessons(?:-.+)?\.json$/.test(name)).sort()) {
+  const entries = JSON.parse(fs.readFileSync(path.join(__dirname, "src", file), "utf8"));
+  for (const [key, value] of Object.entries(entries)) {
+    if (officialContent[key]) throw new Error(`${file}: διπλό μάθημα ${key}`);
+    officialContent[key] = value;
+  }
+}
+for (const [key, lesson] of Object.entries(officialContent)) {
+  const [gradeId, subjectId, bookText, sectionText] = key.split("/");
+  const grade = curriculum.grades.find(item => item.id === gradeId);
+  const subject = grade?.subjects.find(item => item.id === subjectId);
+  const section = subject?.books[Number(bookText)]?.sections[Number(sectionText)];
+  if (!section) throw new Error(`official-lessons.json: άγνωστη διαδρομή ${key}`);
+  for (const field of ["title", "summary", "vocab", "quiz", "exTitle", "ex"]) {
+    if (!lesson[field]?.length) throw new Error(`official-lessons.json: ${key} θέλει ${field}`);
+  }
+  lesson.summary.forEach((card, index) => {
+    for (const field of ["h", "t", "ex", "def"]) if (!card[field]) throw new Error(`${key}: η κάρτα ${index + 1} θέλει ${field}`);
+  });
+  if (lesson.testRequired) {
+    if (!lesson.testRequired.length) throw new Error(`${key}: το testRequired δεν μπορεί να είναι κενό`);
+    lesson.testRequired.forEach((card, index) => {
+      if (!card.h || !card.learn?.length || !card.write) throw new Error(`${key}: η κάρτα τεστ ${index + 1} θέλει h, learn και write`);
+    });
+  }
+  if (lesson.grammar) {
+    if (!lesson.grammar.length) throw new Error(`${key}: το grammar δεν μπορεί να είναι κενό`);
+    lesson.grammar.forEach((card, index) => {
+      for (const field of ["h", "t", "ex", "def"]) if (!card[field]) throw new Error(`${key}: η κάρτα γραμματικής ${index + 1} θέλει ${field}`);
+    });
+  }
+  lesson.quiz.forEach((question, index) => {
+    if (!question.q || !question.c || question.w?.length !== 3 || !question.why) throw new Error(`${key}: η ερώτηση ${index + 1} θέλει q, c, 3 λάθος απαντήσεις και why`);
+  });
+  lesson.ex.forEach((exercise, index) => {
+    if (!exercise.q || !exercise.ans || !exercise.steps?.length || ![1,2,3].includes(exercise.lvl)) throw new Error(`${key}: η άσκηση ${index + 1} δεν είναι πλήρης`);
+  });
+}
+const { validateCurriculum } = require("./scripts/validate-curriculum");
+validateCurriculum(curriculum);
 
 // Πίνακες γραμματικής (κλίσεις, συζυγίες). Στα κείμενα μια λέξη γίνεται «κουμπί» γραμματικής με {{τύπος|κλειδί}}.
 const G = JSON.parse(fs.readFileSync(path.join(dir, "_grammar.json"), "utf8"));
@@ -41,13 +92,23 @@ for (const f of fs.readdirSync(dir).filter(f => f.endsWith(".json") && !f.starts
 }
 
 const template = fs.readFileSync(path.join(__dirname, "src", "template.html"), "utf8");
-for (const mark of ["/*__DATA__*/", "/*__GRAMMAR__*/"]) {
+for (const mark of ["/*__DATA__*/", "/*__GRAMMAR__*/", "/*__CATALOGUE_JS__*/", "/*__CATALOGUE_CSS__*/"]) {
   if (!template.includes(mark)) throw new Error(`Το template δεν έχει το ${mark}`);
 }
-const html = template.replace("/*__DATA__*/", JSON.stringify(C)).replace("/*__GRAMMAR__*/", JSON.stringify(G));
+const json = value => JSON.stringify(value).replace(/</g, "\\u003c");
+const catalogueJS = fs.readFileSync(path.join(__dirname,"src","catalogue.js"),"utf8")
+  .replace("/*__CURRICULUM__*/", () => json(curriculum))
+  .replace("/*__OFFICIAL_CONTENT__*/", () => json(officialContent))
+  .replace("/*__EXPLANATIONS__*/", () => json(explanations));
+const html = template.replace("/*__DATA__*/", () => json(C)).replace("/*__GRAMMAR__*/", () => json(G))
+  .replace("/*__CATALOGUE_JS__*/", () => catalogueJS)
+  .replace("/*__CATALOGUE_CSS__*/", () => fs.readFileSync(path.join(__dirname,"src","catalogue.css"),"utf8"))
+  .replace("/*__APP_CSS__*/", () => fs.readFileSync(path.join(__dirname,"src","app.css"),"utf8"))
+  .replace("/*__APP_JS__*/", () => fs.readFileSync(path.join(__dirname,"src","app.js"),"utf8"));
 
 // Έλεγχος ότι κάθε <script> της σελίδας είναι συντακτικά σωστό
 for (const s of html.split("<script>").slice(1)) new Function(s.split("</script>")[0]);
 
 fs.writeFileSync(path.join(__dirname, "index.html"), html);
-console.log(`OK: ${Object.keys(C).length} ενότητες, ${Object.keys(G).length} πίνακες γραμματικής -> index.html (${html.length} bytes)`);
+require("./scripts/build-local-app")(html, __dirname);
+console.log(`OK: ${Object.keys(C).length} παλιές ενότητες, ${Object.keys(officialContent).length} νέα επίσημα μαθήματα, ${Object.keys(G).length} πίνακες γραμματικής -> index.html (${html.length} bytes)`);
