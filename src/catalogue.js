@@ -35,12 +35,23 @@ const linkedUnit = key => LINKED[key] && C[LINKED[key]] ? LINKED[key] : null;
 const lessonLevel = key => linkedUnit(key) || OFFICIAL_CONTENT[key] ? 'full' : EXPLANATIONS[key] ? 'expl' : 'guide';
 const LEVEL_CHIP = {full:'<span class="chip ok">Πλήρες</span>', expl:'<span class="chip expl">Εξήγηση</span>', guide:'<span class="chip">Οδηγός</span>'};
 const levelLegend = () => `<p class="level-legend">${LEVEL_CHIP.full} μελετάς από εδώ · ${LEVEL_CHIP.expl} σύντομη εξήγηση, εξάσκηση από το βιβλίο · ${LEVEL_CHIP.guide} μελετάς από το βιβλίο</p>`;
+/* Μαθήματα χωρίς κάρτες, κουίζ και λυμένες: μόνο σύνδεσμος στο βιβλίο και μια γενική περιγραφή.
+   Τα πρακτικά μαθήματα μαθαίνονται στην τάξη, και στις ξένες γλώσσες τα σχολεία χρησιμοποιούν συχνά δικά τους βιβλία. */
+const INFO_ONLY = {
+  art:'Στα Καλλιτεχνικά γνωρίζεις τα στοιχεία της εικόνας, όπως τη γραμμή, το χρώμα, το σχήμα και τη σύνθεση. Δουλεύεις με διάφορα υλικά και τεχνικές, π.χ. σχέδιο, ζωγραφική, κολάζ και κατασκευές, και μαθαίνεις να «διαβάζεις» έργα τέχνης από διάφορες εποχές. Το μάθημα είναι κυρίως πρακτικό: μετράει η συμμετοχή και η δημιουργική σου δουλειά στην τάξη.',
+  music:'Στη Μουσική ακούς μουσική από την Ελλάδα και τον κόσμο και γνωρίζεις βασικά στοιχεία της, όπως ο ρυθμός, η μελωδία, τα όργανα και τα μουσικά είδη. Τραγουδάς, παίζεις και δημιουργείς. Το μάθημα γίνεται κυρίως στην τάξη, με ακρόαση και πράξη.',
+  pe:'Στη Φυσική Αγωγή γυμνάζεσαι, μαθαίνεις ομαδικά και ατομικά αθλήματα και τους κανόνες τους, και καταλαβαίνεις πώς η άσκηση βοηθά την υγεία σου. Μετράει η συνεργασία και το ευ αγωνίζεσθαι. Το μάθημα γίνεται στο γήπεδο ή στο γυμναστήριο· χρειάζεσαι αθλητικά ρούχα και παπούτσια.',
+  english:'Στα Αγγλικά αναπτύσσεις τέσσερις δεξιότητες: κατανοείς και παράγεις προφορικό και γραπτό λόγο, με λεξιλόγιο και γραμματική για καθημερινές περιστάσεις. Πολλά σχολεία χρησιμοποιούν και άλλα βιβλία, ανάλογα με το επίπεδο του τμήματος· ακολούθησε το βιβλίο που ορίζει ο/η καθηγητής σου.',
+  french:'Στα Γαλλικά, ως δεύτερη ξένη γλώσσα, ξεκινάς από τα βασικά, όπως χαιρετισμούς, συστάσεις και καθημερινές φράσεις, και χτίζεις σιγά σιγά λεξιλόγιο και γραμματική. Πολλά σχολεία χρησιμοποιούν και άλλα βιβλία· ακολούθησε το βιβλίο του τμήματός σου.',
+  german:'Στα Γερμανικά, ως δεύτερη ξένη γλώσσα, ξεκινάς από τα βασικά, όπως χαιρετισμούς, συστάσεις και καθημερινές φράσεις, και χτίζεις σιγά σιγά λεξιλόγιο και γραμματική. Πολλά σχολεία χρησιμοποιούν και άλλα βιβλία· ακολούθησε το βιβλίο του τμήματός σου.',
+  italian:'Στα Ιταλικά, ως δεύτερη ξένη γλώσσα, ξεκινάς από τα βασικά, όπως χαιρετισμούς, συστάσεις και καθημερινές φράσεις, και χτίζεις σιγά σιγά λεξιλόγιο και γραμματική. Ακολούθησε το βιβλίο του τμήματός σου.'
+};
 function subjectCard(g,s){
   const indexed = s.books.reduce((n,b)=>n+b.sections.length,0);
   const keys = s.books.flatMap((b,bi)=>b.sections.map((_,si)=>`${g.id}/${s.id}/${bi}/${si}`));
   const full = keys.filter(key=>OFFICIAL_CONTENT[key]).length + (s.legacy ? readyKeys(s.legacy).length : 0);
   const expl = keys.filter(key=>lessonLevel(key)==='expl').length;
-  const status = full||expl ? [full?`${full} πλήρη`:'', expl?`${expl} εξηγήσεις`:'', `${indexed} στο βιβλίο`].filter(Boolean).join(' · ') : indexed ? `${indexed} οδηγοί μελέτης` : 'Υλικό ΙΕΠ';
+  const status = INFO_ONLY[s.id] ? (s.books.length ? 'Επίσημο βιβλίο και περιγραφή' : 'Περιγραφή μαθήματος') : full||expl ? [full?`${full} πλήρη`:'', expl?`${expl} εξηγήσεις`:'', `${indexed} στο βιβλίο`].filter(Boolean).join(' · ') : indexed ? `${indexed} οδηγοί μελέτης` : 'Υλικό ΙΕΠ';
   return `<a class="subject-card" href="${courseHref(g.id,s.id)}"><span class="subject-top"><span class="subject-mark" aria-hidden="true">${esc(subjectMark(s.id))}</span><span>${s.hours} ${s.hours===1?'ώρα':'ώρες'} / εβδ.</span></span><strong>${esc(s.name)}</strong><span class="subject-detail">${esc(s.description || (s.choice==='language'?'2η ξένη γλώσσα':s.id==='ethics'?'Εναλλακτικά των Θρησκευτικών':s.books.length?'Κάρτες, κουίζ & επίσημα βιβλία':'Οδηγίες & εκπαιδευτικό υλικό'))}</span><span class="subject-status">${status} <span aria-hidden="true">→</span></span></a>`;
 }
 function renderCatalogue(){
@@ -61,7 +72,7 @@ function renderCatalogue(){
     const cards=[], hits=[];
     for(const grade of grades) for(const s of grade.subjects){
       if(normalizeSearch(`${s.name} ${s.description} ${s.books.map(b=>b.title).join(' ')}`).includes(query)) cards.push({grade,s});
-      for(const [bi,b] of s.books.entries()) for(const [si,section] of b.sections.entries()){
+      if(!INFO_ONLY[s.id]) for(const [bi,b] of s.books.entries()) for(const [si,section] of b.sections.entries()){
         if(normalizeSearch(section.title).includes(query)) hits.push({grade,s,b,section,bi,si});
       }
     }
@@ -79,10 +90,11 @@ function renderCourse(grade,id){
   document.title=`${s.name} · ${g.label} | Διάβασμα`;
   const custom = s.legacy ? readyKeys(s.legacy) : [];
   el.innerHTML=`<a class="back" href="#class/${grade}">← ${g.label} · Όλα τα μαθήματα</a><div class="hero catalogue-hero"><span class="ref">${g.label} · ${CATALOGUE.schoolYear}</span><h2 class="ct">${esc(s.name)}</h2>${s.description?`<p>${esc(s.description)}</p>`:''}<div class="catalogue-meta"><span>${s.hours} ${s.hours===1?'ώρα':'ώρες'} / εβδομάδα</span>${s.choice?'<span>Επιλογή του τμήματος</span>':''}</div></div>
+    ${INFO_ONLY[s.id]?`<section class="book-card subject-about"><h3>Τι είναι αυτό το μάθημα</h3><p>${esc(INFO_ONLY[s.id])}</p></section>`:''}
     ${s.note?`<div class="catalogue-note">${esc(s.note)}</div>`:''}
     ${custom.length?`<section class="toc authored-lessons"><h3>Πλήρη μαθήματα · κάρτες, κουίζ και λυμένες</h3>${custom.map(key=>{const [k,unit]=key.split('/'),info=findSection(k,unit),best=bestOf(key);return `<a class="item" href="#${key}"><span class="num">${esc(info?.num||'')}</span><span class="tt">${esc(C[key].title)}</span><span class="chip ${best===undefined?'ok':best>=14?'ok':best>=10?'mid':'low'}">${best===undefined?'Πλήρες':best+'/20'}</span></a>`;}).join('')}</section>`:''}
     ${connectionNotice()}
-    ${s.books.length?'<div class="catalogue-search"><label for="lesson-query">Βρες μάθημα</label><div class="search-row"><input id="lesson-query" type="search" placeholder="Τίτλος ή λέξη-κλειδί" autocomplete="off"></div></div><p class="result-count" id="lesson-count" role="status"></p>':''}
+    ${s.books.length&&!INFO_ONLY[s.id]?'<div class="catalogue-search"><label for="lesson-query">Βρες μάθημα</label><div class="search-row"><input id="lesson-query" type="search" placeholder="Τίτλος ή λέξη-κλειδί" autocomplete="off"></div></div><p class="result-count" id="lesson-count" role="status"></p>':''}
     <div id="course-books"></div>
     ${s.resourceUrl?`<section class="book-card"><h3>${esc(s.resourceLabel)}</h3><p class="result-count">${s.books.length?'Πρόσθετες οδηγίες για το μάθημα.':'Το υλικό οργανώνεται μέσα από τις οδηγίες και τις δραστηριότητες του μαθήματος.'}</p><div class="book-actions">${external(s.resourceUrl,'Άνοιξε το επίσημο υλικό','primary')}</div></section>`:''}
     <div class="catalogue-note">Άνοιξε τα περιεχόμενα για να μεταβείς απευθείας σε μια ενότητα. Όπου διατίθεται μόνο PDF, όλες οι ενότητες βρίσκονται μέσα στο αρχείο. Η ύλη του τμήματός σου μπορεί να περιλαμβάνει επιλεγμένα κεφάλαια. ${external(CATALOGUE.guidanceUrl,'Οδηγίες διδασκαλίας ΙΕΠ')}.</div>`;
@@ -96,7 +108,7 @@ function renderCourse(grade,id){
       if(query&&!matchesTitle&&!sections.length) return '';
       count++; lessons+=sections.length;
       const formats=[...b.formats].sort((a,b)=>({html:0,pdf:1,audio:2}[a.kind]-{html:0,pdf:1,audio:2}[b.kind]));
-      return `<article class="book-card"><span class="book-ref">ΕΠΙΣΗΜΟ ΣΧΟΛΙΚΟ ΒΙΒΛΙΟ</span><h3>${esc(b.title)}</h3><div class="book-actions">${formats.map((f,i)=>external(f.url,f.kind==='html'?'Διάβασε online':f.kind==='pdf'?'Άνοιξε PDF':'Ηχητικό υλικό (ZIP)',i===0?'primary':'')).join('')}${external(b.source,'Στοιχεία βιβλίου')}</div>${sections.length?`${levelLegend()}<div class="lesson-list">${sections.map(section=>{const si=b.sections.indexOf(section),key=`${grade}/${id}/${bi}/${si}`,unit=linkedUnit(key),optional=EXPLANATIONS[key]?.status==='optional';return `<a class="item lesson-item" href="${unit?'#'+unit:lessonHref(grade,id,bi,si)}"><span class="num">${String(si+1).padStart(2,'0')}</span><span class="tt">${esc(section.title)}${optional?'<small class="opt-note">Προαιρετικό στην ύλη 2026–2027</small>':''}</span>${LEVEL_CHIP[lessonLevel(key)]}</a>`;}).join('')}</div>`:'<p class="result-count">Οι ενότητες και οι ασκήσεις περιλαμβάνονται στο πλήρες βιβλίο.</p>'}</article>`;
+      return `<article class="book-card"><span class="book-ref">ΕΠΙΣΗΜΟ ΣΧΟΛΙΚΟ ΒΙΒΛΙΟ</span><h3>${esc(b.title)}</h3><div class="book-actions">${formats.map((f,i)=>external(f.url,f.kind==='html'?'Διάβασε online':f.kind==='pdf'?'Άνοιξε PDF':'Ηχητικό υλικό (ZIP)',i===0?'primary':'')).join('')}${external(b.source,'Στοιχεία βιβλίου')}</div>${INFO_ONLY[s.id]?'':sections.length?`${levelLegend()}<div class="lesson-list">${sections.map(section=>{const si=b.sections.indexOf(section),key=`${grade}/${id}/${bi}/${si}`,unit=linkedUnit(key),optional=EXPLANATIONS[key]?.status==='optional';return `<a class="item lesson-item" href="${unit?'#'+unit:lessonHref(grade,id,bi,si)}"><span class="num">${String(si+1).padStart(2,'0')}</span><span class="tt">${esc(section.title)}${optional?'<small class="opt-note">Προαιρετικό στην ύλη 2026–2027</small>':''}</span>${LEVEL_CHIP[lessonLevel(key)]}</a>`;}).join('')}</div>`:'<p class="result-count">Οι ενότητες και οι ασκήσεις περιλαμβάνονται στο πλήρες βιβλίο.</p>'}</article>`;
     }).join('');
     $('#course-books').innerHTML=html|| (query?'<div class="empty-state"><h3>Δεν βρέθηκε ενότητα</h3><p>Δοκίμασε άλλη λέξη ή άνοιξε το πλήρες PDF.</p></div>':'');
     if($('#lesson-count')) $('#lesson-count').textContent=`${lessons} μαθήματα · ${count} βιβλία και βοηθητικοί πόροι`;
@@ -199,6 +211,7 @@ function renderOfficialLesson(grade,subjectId,bookIndex,sectionIndex){
   if(!lesson){el.innerHTML='<div class="empty-state"><h2>Το μάθημα δεν βρέθηκε</h2><a class="btn" href="#class/'+selectedGrade+'">Όλα τα μαθήματα</a></div>';return;}
   const {gradeData:g,subject:s,book:b,section,sectionIndex:si}=lesson,key=`${grade}/${subjectId}/${bookIndex}/${sectionIndex}`,content=OFFICIAL_CONTENT[key],explanation=EXPLANATIONS[key];
   if(linkedUnit(key)){ location.replace('#'+linkedUnit(key)); return; }
+  if(INFO_ONLY[subjectId]){ location.replace(courseHref(grade,subjectId)); return; }
   const st=officialState[key]||(officialState[key]={view:'sum',card:0,gi:0,vi:0,picked:{},done:false,open:new Set()});
   const words=officialWords(section.title),prev=b.sections[si-1],next=b.sections[si+1];
   const genericCards=[
