@@ -25,6 +25,7 @@ try { if(localStorage.getItem("diab-theme") === "light") document.documentElemen
   --nav:rgba(255,255,255,.84); --nav-text:#7A7490;
   --hero:radial-gradient(120% 140% at 100% 0%,#8B5CF6 0%,#5B21B6 48%,#2E1065 100%); --on-hero:#FFFFFF;
   --shadow:0 1px 0 rgba(21,17,31,.04);
+  --c-violet:#7C3AED; --c-cyan:#0E7490; --c-lime:#4D7C0F; --c-green:#047857; --c-amber:#B45309; --c-pink:#BE185D; --c-orange:#C2410C; --c-blue:#1D4ED8;
   color-scheme:light;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
@@ -39,6 +40,7 @@ try { if(localStorage.getItem("diab-theme") === "light") document.documentElemen
     --nav:rgba(11,10,18,.8); --nav-text:#7F7896;
     --hero:radial-gradient(120% 140% at 100% 0%,#7C3AED 0%,#4C1D95 45%,#1A0F33 100%); --on-hero:#FFFFFF;
     --shadow:none;
+    --c-violet:#C4B5FD; --c-cyan:#67E8F9; --c-lime:#BEF264; --c-green:#6EE7B7; --c-amber:#FCD34D; --c-pink:#F9A8D4; --c-orange:#FDBA74; --c-blue:#93C5FD;
     color-scheme:dark;
   }
 }
@@ -51,6 +53,7 @@ try { if(localStorage.getItem("diab-theme") === "light") document.documentElemen
   --nav:rgba(11,10,18,.8); --nav-text:#7F7896;
   --hero:radial-gradient(120% 140% at 100% 0%,#7C3AED 0%,#4C1D95 45%,#1A0F33 100%); --on-hero:#FFFFFF;
   --shadow:none;
+  --c-violet:#C4B5FD; --c-cyan:#67E8F9; --c-lime:#BEF264; --c-green:#6EE7B7; --c-amber:#FCD34D; --c-pink:#F9A8D4; --c-orange:#FDBA74; --c-blue:#93C5FD;
   color-scheme:dark;
 }
 html{scroll-padding-top:16px;background:var(--paper);-webkit-tap-highlight-color:transparent}
@@ -195,11 +198,15 @@ a.item::after{content:"";flex:0 0 auto;width:8px;height:8px;border-top:2px solid
 .why b.y{color:var(--ok)}.why b.n{color:var(--red)}
 @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 
-.grade{position:relative;width:210px;height:150px;margin:6px auto 4px}
-.grade svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.grade ellipse{fill:none;stroke:#EC4899;stroke-width:3.5;stroke-linecap:round;stroke-dasharray:560;stroke-dashoffset:560;animation:draw .9s .15s ease-out forwards}
-.grade .num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Inter Tight',sans-serif;font-weight:800;letter-spacing:-.05em;color:var(--text);font-size:72px;line-height:1}
-.grade .num small{font-size:24px;margin-left:4px;align-self:flex-end;margin-bottom:42px;color:var(--muted);letter-spacing:-.02em}
+.grade{position:relative;width:220px;height:160px;margin:6px auto 4px}
+.grade-deco{position:absolute;inset:0;width:100%;height:100%}
+.grade-ring{position:absolute;left:40px;top:10px;width:140px;height:140px}
+.grade-ring circle{fill:none;stroke-width:12}
+.grade-ring .track{stroke:var(--line)}
+.grade-ring .bar{stroke:url(#gradeGrad);stroke-linecap:round;stroke-dasharray:var(--fill) var(--len);animation:ring .9s .15s ease-out both}
+@keyframes ring{from{stroke-dasharray:0 var(--len)}}
+.grade .num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Inter Tight',sans-serif;font-weight:800;letter-spacing:-.05em;color:var(--text);font-size:46px}
+.grade .num small{font-size:16px;margin-left:3px;align-self:center;margin-top:18px;color:var(--muted);letter-spacing:-.02em}
 .cheer{display:inline-block;margin:4px 0 0;padding:4px 10px;border-radius:6px;background:var(--grad);color:#fff;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;animation:pop .5s .9s both cubic-bezier(.2,1.6,.4,1)}
 @keyframes draw{to{stroke-dashoffset:0}}
 @keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
@@ -352,6 +359,7 @@ dialog#gsheet[open]{animation:sheetUp .28s cubic-bezier(.2,.8,.2,1)}
 .gchip.sel{font-size:14px;text-align:left}
 .gchip.sel[aria-pressed="true"]{background:var(--grad);border-color:transparent;color:#fff}
 .glab .linkbtn{margin-left:6px;font-size:11.5px;text-transform:uppercase;letter-spacing:.07em}
+.empty-art svg{display:block;width:160px;height:110px;margin:0 auto 10px}
 .toc .pnote{margin:4px 0 8px;font-size:13px;color:var(--muted)}
 .toc .seg+.pnote{margin-top:14px}
 .toc .btn{margin-top:14px}
@@ -436,7 +444,6 @@ footer{margin-top:28px;font-size:12.5px;color:var(--muted);text-align:center}
 footer p{margin:0 0 6px}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
-  .grade ellipse{stroke-dashoffset:0}
 }
 @media (max-width:400px){ .tab{font-size:9.5px;letter-spacing:-.01em} nav.tabs{padding-left:2px;padding-right:2px} }
 @media (max-width:350px){ .tab .lb{font-size:8.5px} }
@@ -829,6 +836,11 @@ function quizScore(z){
 }
 const gradeOf = z => Math.round(quizScore(z).right / z.qs.length * 20);
 function unitName(key){ if(!C[key]){ const [g, sid] = key.split("/"); return esc(gradeSubject(g, sid)?.name || ""); } const [k, id] = key.split("/"), info = findSection(k, id); return `${BOOKS[k].name} ${info ? info.num : ""}`.trim(); }
+/* Ο βαθμός στα 20 ως δαχτυλίδι που γεμίζει, με μικρά διακοσμητικά σχήματα γύρω του */
+function gradeRing(g){
+  const len = (2 * Math.PI * 54).toFixed(1), fill = (Math.max(0, Math.min(20, g)) / 20 * len).toFixed(1);
+  return `<div class="grade" role="img" aria-label="Βαθμός ${g} στα 20"><svg class="grade-deco" viewBox="0 0 220 160" aria-hidden="true"><path d="M30 28l4 9 9 4-9 4-4 9-4-9-9-4 9-4z" style="fill:var(--c-amber)"/><path d="M190 22l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" style="fill:var(--c-pink)"/><path d="M196 118l3 6 6 3-6 3-3 6-3-6-6-3 6-3z" style="fill:var(--c-cyan)"/><circle cx="40" cy="122" r="4" style="fill:var(--c-lime)"/><circle cx="176" cy="66" r="3" style="fill:var(--c-violet)"/><rect x="18" y="76" width="9" height="9" rx="2" transform="rotate(20 22 80)" fill="none" stroke-width="2" style="stroke:var(--c-violet)"/><path d="M168 146l9-15 9 15z" fill="none" stroke-width="2" stroke-linejoin="round" style="stroke:var(--c-pink)"/></svg><svg class="grade-ring" viewBox="0 0 140 140" aria-hidden="true"><defs><linearGradient id="gradeGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8B5CF6"/><stop offset="1" stop-color="#EC4899"/></linearGradient></defs><circle cx="70" cy="70" r="54" class="track"/><circle cx="70" cy="70" r="54" class="bar" style="--len:${len};--fill:${fill}" transform="rotate(-90 70 70)"/></svg><div class="num">${g}<small>/20</small></div></div>`;
+}
 /* Η κάρτα του κουίζ (ενότητα, διαγώνισμα, λάθη). Επιστρέφει το HTML και τη συνάρτηση για επόμενη/προηγούμενη ερώτηση. */
 function quizView(z, rerender, extraDone){
   const n = z.qs.length, {right, wrong} = quizScore(z), answered = right + wrong, anim = z.anim;
@@ -838,7 +850,7 @@ function quizView(z, rerender, extraDone){
     const msg = g >= 18 ? "Άριστα! Είσαι έτοιμος για το μάθημα." : g >= 14 ? "Πολύ καλά. Ξαναδιάβασε όσα σου ξέφυγαν." : "Καλή αρχή. Ρίξε μια ματιά στην περίληψη και ξαναδοκίμασε.";
     return { go:null, body:`<div class="sheet center">
       <span class="cheer">${g >= 18 ? "Άριστα" : g >= 14 ? "Πολύ καλά" : "Συνέχισε"}</span>
-      <div class="grade" role="img" aria-label="Βαθμός ${g} στα 20"><svg viewBox="0 0 210 150" aria-hidden="true"><ellipse cx="105" cy="76" rx="92" ry="60" transform="rotate(-6 105 76)"/></svg><div class="num">${g}<small>/20</small></div></div>
+      ${gradeRing(g)}
       <p>Βρήκες σωστά ${right} από ${n} ερωτήσεις.${answered < n ? ` Αναπάντητες: ${n - answered}.` : ""} ${msg}</p>
       ${extraDone || ""}
       <div class="row"><button class="btn" data-qa="restart">Ξανά από την αρχή</button><button class="btn ghost" data-qa="review">Δες τις απαντήσεις</button></div></div>` };
@@ -962,7 +974,7 @@ function renderSection(k, id){
   keyNav = go;
   const views = (c.vocab ? [VIEWS[0], ["voc","Λέξεις"], VIEWS[1], VIEWS[2]] : [...VIEWS]).concat(BOOK_HELP[key] ? [["book","Βιβλίο"]] : []);
   el.innerHTML = `<a class="back" href="#${k}">← ${BOOKS[k].name}</a>
-    <div class="chap"><span class="ref">${info ? (k === "G" ? "Ενότητα " + info.num : info.ch.t) : ""}</span><h2 class="ct">${info && k !== "A" && k !== "G" ? info.num + " " : ""}${c.title}</h2></div>
+    <div class="chap"><span class="ref ref-icon">${subjectIcon(OLD_SUBJ[k], "small")}${info ? (k === "G" ? "Ενότητα " + info.num : info.ch.t) : ""}</span><h2 class="ct">${info && k !== "A" && k !== "G" ? info.num + " " : ""}${c.title}</h2></div>
     <div class="seg${views.length > 3 ? ["", " four", " five"][views.length - 3] : ""}">${views.map(([v,l]) => `<button data-go="${v}" aria-pressed="${s.view === v}">${l}</button>`).join("")}</div>${body}
     <a class="btn ghost sendlink" href="#send/${k}/${id}">Έχεις καλές σημειώσεις; Στείλ' τες</a>`;
 
@@ -1143,7 +1155,7 @@ function renderPractice(sub){
     body = `<div class="hero"><span class="ref">Εξάσκηση</span><h2 class="ct">Τα λάθη μου</h2><p>Οι ερωτήσεις που απάντησες λάθος. Μόλις απαντήσεις μια ερώτηση σωστά, φεύγει από εδώ.</p></div>
       ${all.length ? `<button class="btn" data-mk="*">Όλα τα λάθη μαζί (${all.length})</button>
         <section class="toc" style="margin-top:20px"><h3>Ανά ενότητα</h3><div class="brk">${Object.entries(by).map(([key, n]) => `<button data-mk="${key}"><span>${unitName(key)} · ${unitTitle(key)}</span><b class="low">${n}</b></button>`).join("")}</div></section>`
-        : `<div class="sheet center"><p style="margin:0">Δεν έχεις λάθη. Λύσε τις ερωτήσεις μιας ενότητας ή ένα δοκιμαστικό, και όσα σου ξεφύγουν θα έρθουν εδώ.</p></div>`}`;
+        : `<div class="sheet center empty-art"><svg viewBox="0 0 160 110" aria-hidden="true"><circle cx="80" cy="56" r="34" stroke-width="3" style="fill:color-mix(in srgb,var(--c-lime) 16%,transparent);stroke:var(--c-lime)"/><path d="M64 57l11 11 22-24" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--c-lime)"/><path d="M24 26l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" style="fill:var(--c-amber)"/><path d="M134 18l3 6 6 3-6 3-3 6-3-6-6-3 6-3z" style="fill:var(--c-pink)"/><circle cx="138" cy="84" r="4" style="fill:var(--c-cyan)"/><circle cx="22" cy="86" r="3" style="fill:var(--c-violet)"/></svg><p style="margin:0">Δεν έχεις λάθη. Λύσε τις ερωτήσεις μιας ενότητας ή ένα δοκιμαστικό, και όσα σου ξεφύγουν θα έρθουν εδώ.</p></div>`}`;
   }
   if(CALM.matches) body = body.replace(/ in-(next|prev)/g, "");
   el.innerHTML = nav + body;

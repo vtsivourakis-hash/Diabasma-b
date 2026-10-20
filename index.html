@@ -25,6 +25,7 @@ try { if(localStorage.getItem("diab-theme") === "light") document.documentElemen
   --nav:rgba(255,255,255,.84); --nav-text:#7A7490;
   --hero:radial-gradient(120% 140% at 100% 0%,#8B5CF6 0%,#5B21B6 48%,#2E1065 100%); --on-hero:#FFFFFF;
   --shadow:0 1px 0 rgba(21,17,31,.04);
+  --c-violet:#7C3AED; --c-cyan:#0E7490; --c-lime:#4D7C0F; --c-green:#047857; --c-amber:#B45309; --c-pink:#BE185D; --c-orange:#C2410C; --c-blue:#1D4ED8;
   color-scheme:light;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
@@ -39,6 +40,7 @@ try { if(localStorage.getItem("diab-theme") === "light") document.documentElemen
     --nav:rgba(11,10,18,.8); --nav-text:#7F7896;
     --hero:radial-gradient(120% 140% at 100% 0%,#7C3AED 0%,#4C1D95 45%,#1A0F33 100%); --on-hero:#FFFFFF;
     --shadow:none;
+    --c-violet:#C4B5FD; --c-cyan:#67E8F9; --c-lime:#BEF264; --c-green:#6EE7B7; --c-amber:#FCD34D; --c-pink:#F9A8D4; --c-orange:#FDBA74; --c-blue:#93C5FD;
     color-scheme:dark;
   }
 }
@@ -51,6 +53,7 @@ try { if(localStorage.getItem("diab-theme") === "light") document.documentElemen
   --nav:rgba(11,10,18,.8); --nav-text:#7F7896;
   --hero:radial-gradient(120% 140% at 100% 0%,#7C3AED 0%,#4C1D95 45%,#1A0F33 100%); --on-hero:#FFFFFF;
   --shadow:none;
+  --c-violet:#C4B5FD; --c-cyan:#67E8F9; --c-lime:#BEF264; --c-green:#6EE7B7; --c-amber:#FCD34D; --c-pink:#F9A8D4; --c-orange:#FDBA74; --c-blue:#93C5FD;
   color-scheme:dark;
 }
 html{scroll-padding-top:16px;background:var(--paper);-webkit-tap-highlight-color:transparent}
@@ -195,11 +198,15 @@ a.item::after{content:"";flex:0 0 auto;width:8px;height:8px;border-top:2px solid
 .why b.y{color:var(--ok)}.why b.n{color:var(--red)}
 @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 
-.grade{position:relative;width:210px;height:150px;margin:6px auto 4px}
-.grade svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.grade ellipse{fill:none;stroke:#EC4899;stroke-width:3.5;stroke-linecap:round;stroke-dasharray:560;stroke-dashoffset:560;animation:draw .9s .15s ease-out forwards}
-.grade .num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Inter Tight',sans-serif;font-weight:800;letter-spacing:-.05em;color:var(--text);font-size:72px;line-height:1}
-.grade .num small{font-size:24px;margin-left:4px;align-self:flex-end;margin-bottom:42px;color:var(--muted);letter-spacing:-.02em}
+.grade{position:relative;width:220px;height:160px;margin:6px auto 4px}
+.grade-deco{position:absolute;inset:0;width:100%;height:100%}
+.grade-ring{position:absolute;left:40px;top:10px;width:140px;height:140px}
+.grade-ring circle{fill:none;stroke-width:12}
+.grade-ring .track{stroke:var(--line)}
+.grade-ring .bar{stroke:url(#gradeGrad);stroke-linecap:round;stroke-dasharray:var(--fill) var(--len);animation:ring .9s .15s ease-out both}
+@keyframes ring{from{stroke-dasharray:0 var(--len)}}
+.grade .num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Inter Tight',sans-serif;font-weight:800;letter-spacing:-.05em;color:var(--text);font-size:46px}
+.grade .num small{font-size:16px;margin-left:3px;align-self:center;margin-top:18px;color:var(--muted);letter-spacing:-.02em}
 .cheer{display:inline-block;margin:4px 0 0;padding:4px 10px;border-radius:6px;background:var(--grad);color:#fff;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;animation:pop .5s .9s both cubic-bezier(.2,1.6,.4,1)}
 @keyframes draw{to{stroke-dashoffset:0}}
 @keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
@@ -352,6 +359,7 @@ dialog#gsheet[open]{animation:sheetUp .28s cubic-bezier(.2,.8,.2,1)}
 .gchip.sel{font-size:14px;text-align:left}
 .gchip.sel[aria-pressed="true"]{background:var(--grad);border-color:transparent;color:#fff}
 .glab .linkbtn{margin-left:6px;font-size:11.5px;text-transform:uppercase;letter-spacing:.07em}
+.empty-art svg{display:block;width:160px;height:110px;margin:0 auto 10px}
 .toc .pnote{margin:4px 0 8px;font-size:13px;color:var(--muted)}
 .toc .seg+.pnote{margin-top:14px}
 .toc .btn{margin-top:14px}
@@ -436,7 +444,6 @@ footer{margin-top:28px;font-size:12.5px;color:var(--muted);text-align:center}
 footer p{margin:0 0 6px}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
-  .grade ellipse{stroke-dashoffset:0}
 }
 @media (max-width:400px){ .tab{font-size:9.5px;letter-spacing:-.01em} nav.tabs{padding-left:2px;padding-right:2px} }
 @media (max-width:350px){ .tab .lb{font-size:8.5px} }
@@ -467,7 +474,18 @@ footer p{margin:0 0 6px}
 .subject-card{display:flex;flex-direction:column;gap:8px;min-height:152px;padding:16px;border:1px solid var(--line);border-radius:16px;background:var(--card);color:var(--text);text-decoration:none;transition:border-color .15s,transform .15s}
 .subject-card:hover{border-color:var(--hi);transform:translateY(-2px)}
 .subject-card .subject-top{display:flex;justify-content:space-between;gap:4px;align-items:center;font-size:11px;color:var(--muted)}
-.subject-card .subject-mark{font-size:17px;font-weight:800;color:var(--hi);line-height:1}
+.subject-icon{--sc:var(--c-violet);flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;background:color-mix(in srgb,var(--sc) 15%,transparent);color:var(--sc)}
+.subject-icon svg{width:22px;height:22px}
+.subject-icon.big{width:52px;height:52px;border-radius:15px;margin-bottom:12px;background:rgba(255,255,255,.14);color:#fff}
+.subject-icon.big svg{width:28px;height:28px}
+.subject-icon.small{width:22px;height:22px;border-radius:7px;margin-right:8px;vertical-align:-6px}
+.subject-icon.small svg{width:14px;height:14px}
+.ref-icon{display:inline-flex;align-items:center}
+.subject-card:hover .subject-icon{background:color-mix(in srgb,var(--sc) 24%,transparent)}
+.hero-art{position:absolute;right:-34px;top:-20px;width:190px;height:190px;pointer-events:none;opacity:.7}
+.catalogue-hero.has-art>:not(.hero-art){position:relative}
+.catalogue-hero.has-art h2{max-width:62%}
+@media(min-width:640px){.catalogue-hero.has-art h2{max-width:440px}.hero-art{right:10px;width:230px;height:230px}}
 .subject-card strong{font-size:16px;line-height:1.3}
 .subject-card .subject-detail{font-size:12px;color:var(--muted);line-height:1.45}
 .subject-card .subject-status{font-size:11px;color:var(--hi);margin-top:auto;padding-top:4px}
@@ -795,7 +813,35 @@ function connectionNotice(){
   return `<p class="connection-note${navigator.onLine?'':' offline'}" data-connection>${navigator.onLine?'Τα επίσημα βιβλία ανοίγουν σε νέα καρτέλα και χρειάζονται σύνδεση στο διαδίκτυο.':'Είσαι εκτός σύνδεσης. Ο κατάλογος και οι αποθηκευμένες σημειώσεις λειτουργούν. Για τα επίσημα βιβλία χρειάζεται διαδίκτυο ή ένα PDF που έχεις ήδη κατεβάσει.'}</p>`;
 }
 for(const event of ['online','offline']) window.addEventListener(event,()=>document.querySelectorAll('[data-connection]').forEach(el=>{el.outerHTML=connectionNotice();}));
-const subjectMark = id => ({math:'x²',physics:'F',chemistry:'H₂O',biology:'β',geography:'Γη',language:'Αα',ancient:'α',translated:'Ω',english:'En',french:'Fr',german:'De',italian:'It',computing:'</>',music:'♪',history:'Ι',literature:'Λ',economics:'€'}[id] || '•');
+/* Χρώμα και εικονίδιο για κάθε μάθημα. Τα χρώματα είναι μεταβλητές (--c-…) και στα τρία μπλοκ του template. */
+const SUBJECT_LOOK = {
+  math:['violet','<path d="M3 13h3l3 7 5-16h7"/>'],
+  physics:['cyan','<ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/>'],
+  chemistry:['lime','<path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.7 3h10.6a2 2 0 0 0 1.7-3l-5-9V3"/><path d="M7.5 15h9"/>'],
+  biology:['green','<path d="M5 20c0-9 6-15 15-15 0 9-6 15-15 15z"/><path d="M5 20l8-8"/>'],
+  geography:['blue','<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/>'],
+  history:['amber','<path d="M3 9l9-5 9 5"/><path d="M5 9h14M6 9v9M10 9v9M14 9v9M18 9v9M4 20h16"/>'],
+  ancient:['pink','<path d="M7 4h11v13a3 3 0 0 1-3 3H6"/><path d="M6 20a3 3 0 0 1-3-3h11a3 3 0 0 0 3 3"/><path d="M10 8h5M10 12h5"/>'],
+  translated:['pink','<path d="M20 4c-7 0-12 5-13 12l-3 4"/><path d="M7 16c4 0 9-3 11-8"/>'],
+  language:['orange','<path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/>'],
+  literature:['orange','<path d="M3 5c3-1 6-1 9 1 3-2 6-2 9-1v14c-3-1-6-1-9 1-3-2-6-2-9-1z"/><path d="M12 6v14"/>'],
+  religion:['amber','<path d="M12 3c1.6 2 1.6 3.6 0 5-1.6-1.4-1.6-3 0-5z"/><path d="M9 11h6v10H9z"/>'],
+  ethics:['amber','<path d="M12 4v16M6 20h12M5 8h14"/><path d="M5 8l-3 6h6zM19 8l-3 6h6z"/>'],
+  english:['blue','<path d="M4 6h9M8.5 4v2M6 6c0 4 2.5 6.5 6 7.5M11 6c0 4-2.5 6.5-6 7.5"/><path d="M13 20l4-9 4 9M14.5 17h5"/>'],
+  french:['blue','<path d="M4 6h9M8.5 4v2M6 6c0 4 2.5 6.5 6 7.5M11 6c0 4-2.5 6.5-6 7.5"/><path d="M13 20l4-9 4 9M14.5 17h5"/>'],
+  german:['blue','<path d="M4 6h9M8.5 4v2M6 6c0 4 2.5 6.5 6 7.5M11 6c0 4-2.5 6.5-6 7.5"/><path d="M13 20l4-9 4 9M14.5 17h5"/>'],
+  italian:['blue','<path d="M4 6h9M8.5 4v2M6 6c0 4 2.5 6.5 6 7.5M11 6c0 4-2.5 6.5-6 7.5"/><path d="M13 20l4-9 4 9M14.5 17h5"/>'],
+  computing:['cyan','<path d="M3 4h18v12H3z"/><path d="M8 20h8M12 16v4"/>'],
+  technology:['lime','<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"/>'],
+  music:['pink','<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>'],
+  art:['orange','<path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-.9 2-2s-1-1.6-1-2.6 1-1.4 2-1.4h2a4 4 0 0 0 4-4c0-4.4-4-8-9-8z"/><circle cx="7.5" cy="11" r="1" fill="currentColor"/><circle cx="10" cy="7" r="1" fill="currentColor"/><circle cx="15" cy="7.5" r="1" fill="currentColor"/>'],
+  pe:['green','<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3.5 3 3.5 15 0 18M12 3c-3.5 3-3.5 15 0 18"/>'],
+  skills:['violet','<path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6l-5.4 2.9 1.2-6-4.5-4.2 6.1-.7z"/>']
+};
+function subjectIcon(id,cls=''){
+  const [c,paths]=SUBJECT_LOOK[id]||['violet','<circle cx="12" cy="12" r="8"/>'];
+  return `<span class="subject-icon${cls?' '+cls:''}" style="--sc:var(--c-${c})" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${paths}</svg></span>`;
+}
 /* Τι θα βρει ο μαθητής σε κάθε ενότητα βιβλίου:
    full  = Πλήρες: περίληψη, λέξεις, ερωτήσεις και λυμένες, όλα γραμμένα για αυτή την ενότητα
    expl  = Εξήγηση: σύντομη εξήγηση· οι ερωτήσεις και οι δραστηριότητες είναι γενικές
@@ -823,11 +869,11 @@ function subjectCard(g,s){
   const full = keys.filter(key=>OFFICIAL_CONTENT[key]).length + (s.legacy ? readyKeys(s.legacy).length : 0);
   const expl = keys.filter(key=>lessonLevel(key)==='expl').length;
   const status = INFO_ONLY[s.id] ? (s.books.length ? 'Επίσημο βιβλίο και περιγραφή' : 'Περιγραφή μαθήματος') : full||expl ? [full?`${full} πλήρη`:'', expl?`${expl} εξηγήσεις`:'', `${indexed} στο βιβλίο`].filter(Boolean).join(' · ') : indexed ? `${indexed} οδηγοί μελέτης` : 'Υλικό ΙΕΠ';
-  return `<a class="subject-card" href="${courseHref(g.id,s.id)}"><span class="subject-top"><span class="subject-mark" aria-hidden="true">${esc(subjectMark(s.id))}</span><span>${s.hours} ${s.hours===1?'ώρα':'ώρες'} / εβδ.</span></span><strong>${esc(s.name)}</strong><span class="subject-detail">${esc(s.description || (s.choice==='language'?'2η ξένη γλώσσα':s.id==='ethics'?'Εναλλακτικά των Θρησκευτικών':s.books.length?'Κάρτες, κουίζ & επίσημα βιβλία':'Οδηγίες & εκπαιδευτικό υλικό'))}</span><span class="subject-status">${status} <span aria-hidden="true">→</span></span></a>`;
+  return `<a class="subject-card" href="${courseHref(g.id,s.id)}"><span class="subject-top">${subjectIcon(s.id)}<span>${s.hours} ${s.hours===1?'ώρα':'ώρες'} / εβδ.</span></span><strong>${esc(s.name)}</strong><span class="subject-detail">${esc(s.description || (s.choice==='language'?'2η ξένη γλώσσα':s.id==='ethics'?'Εναλλακτικά των Θρησκευτικών':s.books.length?'Κάρτες, κουίζ & επίσημα βιβλία':'Οδηγίες & εκπαιδευτικό υλικό'))}</span><span class="subject-status">${status} <span aria-hidden="true">→</span></span></a>`;
 }
 function renderCatalogue(){
   const g = getGrade(selectedGrade), el = $('#catalogue');
-  el.innerHTML = `<div class="hero catalogue-hero"><span class="ref">Δημόσιο ημερήσιο Γυμνάσιο · ${CATALOGUE.schoolYear}</span><h2 class="ct">Η τάξη σου.<br>Όλα τα μαθήματα.</h2><p>Βρες το μάθημά σου και άνοιξε το επίσημο βιβλίο, τις ενότητες και τις ασκήσεις του.</p><div class="catalogue-meta"><span>${g.label}</span><span>${g.hours} ώρες / εβδομάδα</span><span>${g.subjects.length} μαθήματα & επιλογές</span></div></div>
+  el.innerHTML = `<div class="hero catalogue-hero has-art"><svg class="hero-art" viewBox="0 0 190 190" aria-hidden="true"><circle cx="120" cy="70" r="46" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="2"/><circle cx="120" cy="70" r="3" fill="#FBCFE8"/><line x1="120" y1="70" x2="166" y2="70" stroke="#FBCFE8" stroke-width="2" stroke-dasharray="4 4"/><path d="M58 150 L98 92 L138 150 Z" fill="rgba(236,72,153,.22)" stroke="rgba(255,255,255,.45)" stroke-width="2"/><path d="M98 92 L98 150" stroke="rgba(255,255,255,.35)" stroke-width="1.5" stroke-dasharray="3 4"/><rect x="94" y="144" width="6" height="6" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="1.2"/><path d="M150 112h28v28h-28z M150 112l10-10h28l-10 10 M178 112l10-10v28l-10 10" fill="rgba(196,181,253,.16)" stroke="rgba(255,255,255,.4)" stroke-width="1.6" stroke-linejoin="round"/></svg><span class="ref">Δημόσιο ημερήσιο Γυμνάσιο · ${CATALOGUE.schoolYear}</span><h2 class="ct">Η τάξη σου.<br>Όλα τα μαθήματα.</h2><p>Βρες το μάθημά σου και άνοιξε το επίσημο βιβλίο, τις ενότητες και τις ασκήσεις του.</p><div class="catalogue-meta"><span>${g.label}</span><span>${g.hours} ώρες / εβδομάδα</span><span>${g.subjects.length} μαθήματα & επιλογές</span></div></div>
     <div class="catalogue-search"><label for="catalogue-query">Βρες μάθημα ή ενότητα</label><div class="search-row"><input id="catalogue-query" type="search" placeholder="π.χ. μαθηματικά, κλάσματα, Οδύσσεια" autocomplete="off"><button id="clear-query" type="button">Καθαρισμός</button></div><label class="search-scope"><input type="checkbox" id="all-grades"> Αναζήτηση και στις τρεις τάξεις</label></div>
     <p class="result-count" id="catalogue-count" role="status"></p><div id="catalogue-results"></div>
     <div class="catalogue-note"><p>Στις επιλογές θα βρεις Θρησκευτικά ή Ηθική και τις διαθέσιμες δεύτερες ξένες γλώσσες. Ακολουθείς όσα διδάσκονται στο τμήμα σου.</p><p>Ο κατάλογος περιλαμβάνει ολόκληρα τα βιβλία. Η διδακτέα ύλη καθορίζεται από τις ετήσιες οδηγίες και τον/την εκπαιδευτικό σου. <a href="#sources">Δες τις επίσημες πηγές</a>.</p></div>${connectionNotice()}`;
@@ -860,7 +906,7 @@ function renderCourse(grade,id){
   if(!s){ el.innerHTML=`<div class="empty-state"><h2>Το μάθημα δεν βρέθηκε</h2><p>Διάλεξε ένα μάθημα από την τάξη σου.</p><a class="btn" href="#class/${selectedGrade}">Όλα τα μαθήματα</a></div>`;return; }
   document.title=`${s.name} · ${g.label} | Διάβασμα`;
   const custom = s.legacy ? readyKeys(s.legacy) : [];
-  el.innerHTML=`<a class="back" href="#class/${grade}">← ${g.label} · Όλα τα μαθήματα</a><div class="hero catalogue-hero"><span class="ref">${g.label} · ${CATALOGUE.schoolYear}</span><h2 class="ct">${esc(s.name)}</h2>${s.description?`<p>${esc(s.description)}</p>`:''}<div class="catalogue-meta"><span>${s.hours} ${s.hours===1?'ώρα':'ώρες'} / εβδομάδα</span>${s.choice?'<span>Επιλογή του τμήματος</span>':''}</div></div>
+  el.innerHTML=`<a class="back" href="#class/${grade}">← ${g.label} · Όλα τα μαθήματα</a><div class="hero catalogue-hero course-hero">${subjectIcon(s.id,'big')}<span class="ref">${g.label} · ${CATALOGUE.schoolYear}</span><h2 class="ct">${esc(s.name)}</h2>${s.description?`<p>${esc(s.description)}</p>`:''}<div class="catalogue-meta"><span>${s.hours} ${s.hours===1?'ώρα':'ώρες'} / εβδομάδα</span>${s.choice?'<span>Επιλογή του τμήματος</span>':''}</div></div>
     ${INFO_ONLY[s.id]?`<section class="book-card subject-about"><h3>Τι είναι αυτό το μάθημα</h3><p>${esc(INFO_ONLY[s.id])}</p></section>`:''}
     ${s.note?`<div class="catalogue-note">${esc(s.note)}</div>`:''}
     ${custom.length?`<section class="toc authored-lessons"><h3>Πλήρη μαθήματα · κάρτες, κουίζ και λυμένες</h3>${custom.map(key=>{const [k,unit]=key.split('/'),info=findSection(k,unit),best=bestOf(key);return `<a class="item" href="#${key}"><span class="num">${esc(info?.num||'')}</span><span class="tt">${esc(C[key].title)}</span><span class="chip ${best===undefined?'ok':best>=14?'ok':best>=10?'mid':'low'}">${best===undefined?'Πλήρες':best+'/20'}</span></a>`;}).join('')}</section>`:''}
@@ -959,7 +1005,7 @@ function renderOfficialLesson(grade,subjectId,bookIndex,sectionIndex){
     const vocab=content?.vocab?.length?content.vocab:[...new Set([...words,'βασική έννοια','κεντρική ιδέα','παράδειγμα'])].slice(0,Math.max(3,words.length)).map(word=>[word,'Βρες τον ακριβή ορισμό μέσα στην ενότητα.','Χρησιμοποίησε τον όρο σε μία σωστή πρόταση.']),vi=Math.min(st.vi,vocab.length-1),[word,meaning,example]=vocab[vi];
     body=`<div class="prog"><div class="bar" role="img" aria-label="Λέξη ${vi+1} από ${vocab.length}"><i style="width:${Math.round((vi+1)/vocab.length*100)}%"></i></div><span>${vi+1}/${vocab.length}</span></div><div class="deck"><section class="blk slide"><span class="k">Λέξη ${vi+1}</span><h3>${esc(word)}</h3><p>${esc(meaning)}</p><div class="box exb"><b>Παράδειγμα</b><p>${esc(example)}</p></div><div class="box defb"><b>Στο διαγώνισμα γράφεις</b><p>Σύντομο ορισμό, ένα χαρακτηριστικό και ένα σωστό παράδειγμα.</p></div></section></div>${pager(vi>0,vi<vocab.length-1,vi===vocab.length-1?'<button class="btn gold" data-oview="quiz">Πάμε στο Quiz →</button>':'← σύρε →')}`;
   }else if(st.view==='quiz'){
-    if(st.done){const right=quiz.filter((q,i)=>st.picked[i]===q.c).length,score=Math.round(right/quiz.length*20);body=`<div class="sheet center"><span class="cheer">Κουίζ ενότητας</span><div class="grade" role="img" aria-label="Βαθμός ${score} στα 20"><svg viewBox="0 0 210 150" aria-hidden="true"><ellipse cx="105" cy="75" rx="91" ry="61"/></svg><div class="num">${score}<small>/20</small></div></div><p>Βρήκες σωστά ${right} από ${quiz.length}. ${content?'Οι ερωτήσεις ελέγχουν τις βασικές γνώσεις αυτού του μαθήματος.':'Το προσωρινό κουίζ ελέγχει τον προσανατολισμό σου στο επίσημο βιβλίο.'}</p><button class="btn" data-oqrestart>Ξανά</button></div>`;}
+    if(st.done){const right=quiz.filter((q,i)=>st.picked[i]===q.c).length,score=Math.round(right/quiz.length*20);body=`<div class="sheet center"><span class="cheer">Κουίζ ενότητας</span>${gradeRing(score)}<p>Βρήκες σωστά ${right} από ${quiz.length}. ${content?'Οι ερωτήσεις ελέγχουν τις βασικές γνώσεις αυτού του μαθήματος.':'Το προσωρινό κουίζ ελέγχει τον προσανατολισμό σου στο επίσημο βιβλίο.'}</p><button class="btn" data-oqrestart>Ξανά</button></div>`;}
     else {const qi=Object.keys(st.picked).length,q=quiz[qi];body=`<div class="prog"><div class="bar"><i style="width:${Math.round((qi+1)/quiz.length*100)}%"></i></div><span>${qi+1}/${quiz.length}</span></div><div class="sheet"><span class="n">Ερώτηση ${qi+1}</span><p class="q">${esc(q.q)}</p><div class="opts">${shuffle([q.c,...q.w]).map(answer=>`<button class="opt" data-oanswer="${esc(answer)}"><span class="l" aria-hidden="true">•</span><span>${esc(answer)}</span></button>`).join('')}</div></div>`;}
   }else if(st.view==='book'&&hasBook){
     body=bookHelpView(key,section.url,cards);
@@ -974,7 +1020,7 @@ function renderOfficialLesson(grade,subjectId,bookIndex,sectionIndex){
     body=`<h3 style="font-size:18px;margin-bottom:12px">${esc(content?.exTitle||'Δραστηριότητες μελέτης')}</h3>${tasks.map((task,i)=>`<div class="sheet ex"><div class="exh"><span class="n">Άσκηση ${i+1}</span><span class="lvl l${task.lvl||1}">${LEVELS[task.lvl||1]}</span></div><h3>${esc(task.h||'Εφάρμοσε όσα έμαθες')}</h3><p class="q">${esc(task.q)}</p><button class="btn ghost" data-otask="${i}" aria-expanded="${st.open.has(i)}">${st.open.has(i)?'Κρύψε τη λύση':'Δες τη λύση'}</button><div class="sol"${st.open.has(i)?'':' hidden'}>${task.steps?.length?`<ol>${task.steps.map(step=>`<li>${esc(step)}</li>`).join('')}</ol>`:''}<p class="ans">Απάντηση: <span>${esc(task.ans)}</span></p></div></div>`).join('')}`;
   }
   document.title=`${section.title} · ${g.label} | Διάβασμα`;
-  el.innerHTML=`<a class="back" href="${courseHref(grade,subjectId)}">← ${s.name}</a><div class="chap"><span class="ref">${g.label} · ${esc(b.title)}</span><h2 class="ct">${esc(content?.title||section.title)}</h2></div><div class="book-actions official-lesson-actions">${external(section.url,'Άνοιξε αυτό το μάθημα στο επίσημο βιβλίο','primary')}${external(CATALOGUE.guidanceUrl,'Ύλη και οδηγίες ΙΕΠ 2026–2027')}${external(b.source,'Στοιχεία βιβλίου')}</div><div class="catalogue-note">${content?`${LEVEL_CHIP.full} Όλα είναι γραμμένα για αυτή την ενότητα: περίληψη, ${hasGrammar?'γραμματική, ':''}λέξεις, Quiz και λυμένες ασκήσεις.`:explanation?`${LEVEL_CHIP.expl} Η περίληψη είναι σύντομη εξήγηση με δικά μας λόγια, ελεγμένη με το βιβλίο και τις οδηγίες ΙΕΠ. ${esc(explanation.syllabusNote)} Οι λέξεις, το Quiz και οι δραστηριότητες είναι ακόμη γενικές: για εξάσκηση, λύσε τις ασκήσεις του βιβλίου.`:`${LEVEL_CHIP.guide} Γενικές οδηγίες μελέτης. Η ενότητα δεν έχει ακόμη δικό μας περιεχόμενο· μελέτησε από το επίσημο βιβλίο. Το Quiz ελέγχει μόνο αν ξέρεις πού βρίσκεται η ενότητα, όχι την ύλη.`}</div><div class="seg ${['four','five','six'][tabs-4]}"><button data-oview="sum" aria-pressed="${st.view==='sum'}">Κείμενο</button>${hasGrammar?`<button data-oview="grammar" aria-pressed="${st.view==='grammar'}">Γραμματική</button>`:''}<button data-oview="voc" aria-pressed="${st.view==='voc'}">Λέξεις</button><button data-oview="quiz" aria-pressed="${st.view==='quiz'}">Quiz</button><button data-oview="ex" aria-pressed="${st.view==='ex'}">Λυμένες</button>${hasBook?`<button data-oview="book" aria-pressed="${st.view==='book'}">Βιβλίο</button>`:''}</div>${body}<div class="lesson-step"><a class="btn ghost${prev?'':' disabled'}" ${prev?`href="${lessonHref(grade,subjectId,bookIndex,si-1)}"`:'aria-disabled="true"'}>← Προηγούμενο</a><a class="btn${next?'':' disabled'}" ${next?`href="${lessonHref(grade,subjectId,bookIndex,si+1)}"`:'aria-disabled="true"'}>Επόμενο →</a></div>`;
+  el.innerHTML=`<a class="back" href="${courseHref(grade,subjectId)}">← ${s.name}</a><div class="chap"><span class="ref ref-icon">${subjectIcon(subjectId,'small')}${g.label} · ${esc(b.title)}</span><h2 class="ct">${esc(content?.title||section.title)}</h2></div><div class="book-actions official-lesson-actions">${external(section.url,'Άνοιξε αυτό το μάθημα στο επίσημο βιβλίο','primary')}${external(CATALOGUE.guidanceUrl,'Ύλη και οδηγίες ΙΕΠ 2026–2027')}${external(b.source,'Στοιχεία βιβλίου')}</div><div class="catalogue-note">${content?`${LEVEL_CHIP.full} Όλα είναι γραμμένα για αυτή την ενότητα: περίληψη, ${hasGrammar?'γραμματική, ':''}λέξεις, Quiz και λυμένες ασκήσεις.`:explanation?`${LEVEL_CHIP.expl} Η περίληψη είναι σύντομη εξήγηση με δικά μας λόγια, ελεγμένη με το βιβλίο και τις οδηγίες ΙΕΠ. ${esc(explanation.syllabusNote)} Οι λέξεις, το Quiz και οι δραστηριότητες είναι ακόμη γενικές: για εξάσκηση, λύσε τις ασκήσεις του βιβλίου.`:`${LEVEL_CHIP.guide} Γενικές οδηγίες μελέτης. Η ενότητα δεν έχει ακόμη δικό μας περιεχόμενο· μελέτησε από το επίσημο βιβλίο. Το Quiz ελέγχει μόνο αν ξέρεις πού βρίσκεται η ενότητα, όχι την ύλη.`}</div><div class="seg ${['four','five','six'][tabs-4]}"><button data-oview="sum" aria-pressed="${st.view==='sum'}">Κείμενο</button>${hasGrammar?`<button data-oview="grammar" aria-pressed="${st.view==='grammar'}">Γραμματική</button>`:''}<button data-oview="voc" aria-pressed="${st.view==='voc'}">Λέξεις</button><button data-oview="quiz" aria-pressed="${st.view==='quiz'}">Quiz</button><button data-oview="ex" aria-pressed="${st.view==='ex'}">Λυμένες</button>${hasBook?`<button data-oview="book" aria-pressed="${st.view==='book'}">Βιβλίο</button>`:''}</div>${body}<div class="lesson-step"><a class="btn ghost${prev?'':' disabled'}" ${prev?`href="${lessonHref(grade,subjectId,bookIndex,si-1)}"`:'aria-disabled="true"'}>← Προηγούμενο</a><a class="btn${next?'':' disabled'}" ${next?`href="${lessonHref(grade,subjectId,bookIndex,si+1)}"`:'aria-disabled="true"'}>Επόμενο →</a></div>`;
   const redraw=()=>renderOfficialLesson(grade,subjectId,bookIndex,sectionIndex);
   el.querySelectorAll('[data-oview]').forEach(x=>x.onclick=()=>{st.view=x.dataset.oview;st.fromBook=null;redraw();});
   /* Από την άσκηση του βιβλίου στη θεωρία και πίσω. Η εγγραφή στο ιστορικό κάνει το «πίσω» του κινητού να γυρίζει στην άσκηση. */
@@ -1137,6 +1183,11 @@ function quizScore(z){
 }
 const gradeOf = z => Math.round(quizScore(z).right / z.qs.length * 20);
 function unitName(key){ if(!C[key]){ const [g, sid] = key.split("/"); return esc(gradeSubject(g, sid)?.name || ""); } const [k, id] = key.split("/"), info = findSection(k, id); return `${BOOKS[k].name} ${info ? info.num : ""}`.trim(); }
+/* Ο βαθμός στα 20 ως δαχτυλίδι που γεμίζει, με μικρά διακοσμητικά σχήματα γύρω του */
+function gradeRing(g){
+  const len = (2 * Math.PI * 54).toFixed(1), fill = (Math.max(0, Math.min(20, g)) / 20 * len).toFixed(1);
+  return `<div class="grade" role="img" aria-label="Βαθμός ${g} στα 20"><svg class="grade-deco" viewBox="0 0 220 160" aria-hidden="true"><path d="M30 28l4 9 9 4-9 4-4 9-4-9-9-4 9-4z" style="fill:var(--c-amber)"/><path d="M190 22l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" style="fill:var(--c-pink)"/><path d="M196 118l3 6 6 3-6 3-3 6-3-6-6-3 6-3z" style="fill:var(--c-cyan)"/><circle cx="40" cy="122" r="4" style="fill:var(--c-lime)"/><circle cx="176" cy="66" r="3" style="fill:var(--c-violet)"/><rect x="18" y="76" width="9" height="9" rx="2" transform="rotate(20 22 80)" fill="none" stroke-width="2" style="stroke:var(--c-violet)"/><path d="M168 146l9-15 9 15z" fill="none" stroke-width="2" stroke-linejoin="round" style="stroke:var(--c-pink)"/></svg><svg class="grade-ring" viewBox="0 0 140 140" aria-hidden="true"><defs><linearGradient id="gradeGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8B5CF6"/><stop offset="1" stop-color="#EC4899"/></linearGradient></defs><circle cx="70" cy="70" r="54" class="track"/><circle cx="70" cy="70" r="54" class="bar" style="--len:${len};--fill:${fill}" transform="rotate(-90 70 70)"/></svg><div class="num">${g}<small>/20</small></div></div>`;
+}
 /* Η κάρτα του κουίζ (ενότητα, διαγώνισμα, λάθη). Επιστρέφει το HTML και τη συνάρτηση για επόμενη/προηγούμενη ερώτηση. */
 function quizView(z, rerender, extraDone){
   const n = z.qs.length, {right, wrong} = quizScore(z), answered = right + wrong, anim = z.anim;
@@ -1146,7 +1197,7 @@ function quizView(z, rerender, extraDone){
     const msg = g >= 18 ? "Άριστα! Είσαι έτοιμος για το μάθημα." : g >= 14 ? "Πολύ καλά. Ξαναδιάβασε όσα σου ξέφυγαν." : "Καλή αρχή. Ρίξε μια ματιά στην περίληψη και ξαναδοκίμασε.";
     return { go:null, body:`<div class="sheet center">
       <span class="cheer">${g >= 18 ? "Άριστα" : g >= 14 ? "Πολύ καλά" : "Συνέχισε"}</span>
-      <div class="grade" role="img" aria-label="Βαθμός ${g} στα 20"><svg viewBox="0 0 210 150" aria-hidden="true"><ellipse cx="105" cy="76" rx="92" ry="60" transform="rotate(-6 105 76)"/></svg><div class="num">${g}<small>/20</small></div></div>
+      ${gradeRing(g)}
       <p>Βρήκες σωστά ${right} από ${n} ερωτήσεις.${answered < n ? ` Αναπάντητες: ${n - answered}.` : ""} ${msg}</p>
       ${extraDone || ""}
       <div class="row"><button class="btn" data-qa="restart">Ξανά από την αρχή</button><button class="btn ghost" data-qa="review">Δες τις απαντήσεις</button></div></div>` };
@@ -1270,7 +1321,7 @@ function renderSection(k, id){
   keyNav = go;
   const views = (c.vocab ? [VIEWS[0], ["voc","Λέξεις"], VIEWS[1], VIEWS[2]] : [...VIEWS]).concat(BOOK_HELP[key] ? [["book","Βιβλίο"]] : []);
   el.innerHTML = `<a class="back" href="#${k}">← ${BOOKS[k].name}</a>
-    <div class="chap"><span class="ref">${info ? (k === "G" ? "Ενότητα " + info.num : info.ch.t) : ""}</span><h2 class="ct">${info && k !== "A" && k !== "G" ? info.num + " " : ""}${c.title}</h2></div>
+    <div class="chap"><span class="ref ref-icon">${subjectIcon(OLD_SUBJ[k], "small")}${info ? (k === "G" ? "Ενότητα " + info.num : info.ch.t) : ""}</span><h2 class="ct">${info && k !== "A" && k !== "G" ? info.num + " " : ""}${c.title}</h2></div>
     <div class="seg${views.length > 3 ? ["", " four", " five"][views.length - 3] : ""}">${views.map(([v,l]) => `<button data-go="${v}" aria-pressed="${s.view === v}">${l}</button>`).join("")}</div>${body}
     <a class="btn ghost sendlink" href="#send/${k}/${id}">Έχεις καλές σημειώσεις; Στείλ' τες</a>`;
 
@@ -1451,7 +1502,7 @@ function renderPractice(sub){
     body = `<div class="hero"><span class="ref">Εξάσκηση</span><h2 class="ct">Τα λάθη μου</h2><p>Οι ερωτήσεις που απάντησες λάθος. Μόλις απαντήσεις μια ερώτηση σωστά, φεύγει από εδώ.</p></div>
       ${all.length ? `<button class="btn" data-mk="*">Όλα τα λάθη μαζί (${all.length})</button>
         <section class="toc" style="margin-top:20px"><h3>Ανά ενότητα</h3><div class="brk">${Object.entries(by).map(([key, n]) => `<button data-mk="${key}"><span>${unitName(key)} · ${unitTitle(key)}</span><b class="low">${n}</b></button>`).join("")}</div></section>`
-        : `<div class="sheet center"><p style="margin:0">Δεν έχεις λάθη. Λύσε τις ερωτήσεις μιας ενότητας ή ένα δοκιμαστικό, και όσα σου ξεφύγουν θα έρθουν εδώ.</p></div>`}`;
+        : `<div class="sheet center empty-art"><svg viewBox="0 0 160 110" aria-hidden="true"><circle cx="80" cy="56" r="34" stroke-width="3" style="fill:color-mix(in srgb,var(--c-lime) 16%,transparent);stroke:var(--c-lime)"/><path d="M64 57l11 11 22-24" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--c-lime)"/><path d="M24 26l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" style="fill:var(--c-amber)"/><path d="M134 18l3 6 6 3-6 3-3 6-3-6-6-3 6-3z" style="fill:var(--c-pink)"/><circle cx="138" cy="84" r="4" style="fill:var(--c-cyan)"/><circle cx="22" cy="86" r="3" style="fill:var(--c-violet)"/></svg><p style="margin:0">Δεν έχεις λάθη. Λύσε τις ερωτήσεις μιας ενότητας ή ένα δοκιμαστικό, και όσα σου ξεφύγουν θα έρθουν εδώ.</p></div>`}`;
   }
   if(CALM.matches) body = body.replace(/ in-(next|prev)/g, "");
   el.innerHTML = nav + body;
