@@ -22,6 +22,22 @@ for (const file of fs.readdirSync(path.join(__dirname, "src")).filter(name => /^
     officialContent[key] = value;
   }
 }
+// Ενότητες που διδάσκονται σε άλλη τάξη (π.χ. το κεφ. 5-6 του βιβλίου Βιολογίας Α΄ στη Β΄): ίδιο περιεχόμενο, δύο διαδρομές.
+const sectionAt = key => {
+  const [gradeId, subjectId, bookText, sectionText] = key.split("/");
+  const book = curriculum.grades.find(item => item.id === gradeId)?.subjects.find(item => item.id === subjectId)?.books[Number(bookText)];
+  return book && book.sections[Number(sectionText)] ? { book, section: book.sections[Number(sectionText)] } : null;
+};
+const sharedFile = path.join(__dirname, "src", "shared-units.json");
+if (fs.existsSync(sharedFile)) {
+  for (const [key, from] of Object.entries(JSON.parse(fs.readFileSync(sharedFile, "utf8")).units)) {
+    const a = sectionAt(key), b = sectionAt(from);
+    if (!a || !b) throw new Error(`shared-units.json: άγνωστη διαδρομή ${!a ? key : from}`);
+    if (a.book.id !== b.book.id || a.section.url !== b.section.url) throw new Error(`shared-units.json: το ${key} και το ${from} δεν είναι η ίδια ενότητα του ίδιου βιβλίου`);
+    if (officialContent[key]) throw new Error(`shared-units.json: το ${key} έχει ήδη δικό του περιεχόμενο`);
+    if (officialContent[from]) officialContent[key] = officialContent[from];
+  }
+}
 for (const [key, lesson] of Object.entries(officialContent)) {
   const [gradeId, subjectId, bookText, sectionText] = key.split("/");
   const grade = curriculum.grades.find(item => item.id === gradeId);
