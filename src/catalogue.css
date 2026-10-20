@@ -57,3 +57,10 @@
 .source-list small{display:block;color:var(--muted);margin-top:4px}
 .practice-scope{font-size:12px;color:var(--muted);margin:0 0 12px}
 @media(max-width:360px){.subject-grid{grid-template-columns:1fr}.catalogue-hero h2{font-size:27px}.grade-nav a{font-size:12px}}
+
+/* Επίπεδα ενοτήτων: Πλήρες / Εξήγηση / Οδηγός */
+.chip.expl{background:var(--mid-soft);color:var(--mid)}
+.level-legend{margin:10px 0 8px;font-size:12.5px;line-height:2;color:var(--muted)}
+.level-legend .chip{margin-right:2px}
+.opt-note{display:block;margin-top:2px;font-size:12px;font-weight:600;color:var(--muted)}
+.catalogue-note .chip{margin-right:6px;vertical-align:1px}
