@@ -360,6 +360,22 @@ dialog#gsheet[open]{animation:sheetUp .28s cubic-bezier(.2,.8,.2,1)}
 .gchip.sel[aria-pressed="true"]{background:var(--grad);border-color:transparent;color:#fff}
 .glab .linkbtn{margin-left:6px;font-size:11.5px;text-transform:uppercase;letter-spacing:.07em}
 .empty-art svg{display:block;width:160px;height:110px;margin:0 auto 10px}
+.pseg.four a{font-size:12.5px;padding:10px 2px;letter-spacing:-.02em}
+.sch-days{margin-bottom:12px}
+.sch-days button{font-size:13.5px;padding:10px 2px}
+.sch-title{font-size:18px;font-weight:800;margin:0 0 10px}
+.sch-list{list-style:none;margin:0 0 16px;padding:0;display:grid;gap:8px}
+.sch-list li{display:flex;align-items:center;gap:12px;min-height:52px;padding:8px 12px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
+.sch-h{flex:0 0 30px;font-size:13px;font-weight:800;color:var(--muted)}
+.sch-link{display:flex;align-items:center;flex:1;min-height:40px;color:var(--text);text-decoration:none;font-weight:700}
+.sch-name{font-weight:700}
+.sch-free{color:var(--muted);font-size:14px}
+.sch-fields{flex:1;display:grid;gap:6px;min-width:0}
+.sch-edit select,.sch-edit input{width:100%;min-height:44px;padding:0 10px;border-radius:10px;border:1px solid var(--line);background:var(--paper);color:var(--text);font:inherit;font-size:15px}
+.sch-actions{display:flex;gap:8px}
+.sch-actions .btn{flex:1;margin-top:0}
+.sch-card{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px;margin:0 0 18px;padding:12px 16px;border-radius:16px;background:var(--card);border:1px solid var(--line);color:var(--text);text-decoration:none;font-weight:800}
+.sch-card span{color:var(--muted);font-weight:600;font-size:13px}
 .toc .pnote{margin:4px 0 8px;font-size:13px;color:var(--muted)}
 .toc .seg+.pnote{margin-top:14px}
 .toc .btn{margin-top:14px}
@@ -492,8 +508,9 @@ footer p{margin:0 0 6px}
     </section>
     <section class="panel" id="practice" hidden></section>
     <section class="panel" id="review" hidden></section>
+    <section class="panel" id="schedule" hidden></section>
     <section class="panel" id="timer" hidden>
-      <nav class="seg pseg" aria-label="Εξάσκηση"><a href="#practice">Διαγώνισμα</a><a href="#practice/mistakes">Τα λάθη μου</a><a href="#timer" aria-current="page">Χρονόμετρο</a></nav>
+      <nav class="seg pseg four" aria-label="Εξάσκηση"><a href="#practice">Διαγώνισμα</a><a href="#practice/mistakes">Τα λάθη μου</a><a href="#timer" aria-current="page">Χρονόμετρο</a><a href="#schedule">Πρόγραμμα</a></nav>
       <div class="hero"><span class="ref">Μελέτη με διαλείμματα</span><h2 class="ct">Χρονόμετρο</h2>
         <p>25 λεπτά διάβασμα, 5 λεπτά διάλειμμα. Κλείσε τις ειδοποιήσεις και ξεκίνα.</p></div>
       <div class="sheet timer" id="tbox">
@@ -695,7 +712,7 @@ function route(){
   let parts;
   try { parts = decodeURIComponent(location.hash.slice(1)).split("/").filter(Boolean); } catch(e){ parts = []; }
   let p = parts[0] || "class";
-  if(!["class","course","lesson","sources","F","M","G","A","practice","timer","send","school","review"].includes(p)) p = "class";
+  if(!["class","course","lesson","sources","F","M","G","A","practice","timer","schedule","send","school","review"].includes(p)) p = "class";
   if(p === "class" || p === "course" || p === "lesson") selectGrade(parts[1] || selectedGrade);
   if(["F","M","G","A","send"].includes(p)) selectGrade('B');
   const panel = p === "class" || p === "course" || p === "lesson" ? "catalogue" : p;
@@ -703,7 +720,7 @@ function route(){
   renderGradeNav();
   $('#grade-nav').hidden = false;
   document.title = `Διάβασμα · ${getGrade(selectedGrade).label}`;
-  const activeTab = ["F","M","G","A","course","lesson","class","send"].includes(p) ? "class" : p === "timer" ? "practice" : p;
+  const activeTab = ["F","M","G","A","course","lesson","class","send"].includes(p) ? "class" : p === "timer" || p === "schedule" ? "practice" : p;
   document.querySelectorAll(".tab").forEach(t => {
     if(t.dataset.p === activeTab) t.setAttribute("aria-current","page"); else t.removeAttribute("aria-current");
   });
@@ -716,6 +733,8 @@ function route(){
     if(id && C[p+"/"+id]) renderSection(p, id); else renderIndex(p);
   } else if(p === "send"){
     renderSend(parts[1], parts.slice(2).join("/"));
+  } else if(p === "schedule"){
+    renderSchedule(parts);
   } else if(p === "practice"){
     renderPractice(parts[1] === "mistakes" ? "mistakes" : "exam");
   } else if(p === "review"){
@@ -1118,7 +1137,7 @@ function reviewView(){
 function renderPractice(sub){
   P.sub = sub;
   const el = $("#practice"), grade = getGrade(selectedGrade), groups = scopeGroups(selectedGrade);
-  const nav = `<nav class="seg pseg" aria-label="Εξάσκηση"><a href="#practice"${sub === "exam" ? ' aria-current="page"' : ""}>Διαγώνισμα</a><a href="#practice/mistakes"${sub === "mistakes" ? ' aria-current="page"' : ""}>Τα λάθη μου</a><a href="#timer">Χρονόμετρο</a></nav>`;
+  const nav = `<nav class="seg pseg four" aria-label="Εξάσκηση"><a href="#practice"${sub === "exam" ? ' aria-current="page"' : ""}>Διαγώνισμα</a><a href="#practice/mistakes"${sub === "mistakes" ? ' aria-current="page"' : ""}>Τα λάθη μου</a><a href="#timer">Χρονόμετρο</a><a href="#schedule">Πρόγραμμα</a></nav>`;
   if(sub === "exam" && !groups.length){
     el.innerHTML = nav + `<div class="hero catalogue-hero"><span class="ref">${grade.label}</span><h2 class="ct">Εξάσκηση με το βιβλίο σου</h2><p>Για αυτή την τάξη δεν έχουμε ακόμη ενότητες με Quiz. Βρες τις ασκήσεις μέσα στα επίσημα σχολικά βιβλία.</p></div><div class="book-card"><a class="btn" href="#class/${selectedGrade}">Βιβλία ${grade.label}</a><a class="btn ghost" href="#timer">Άνοιξε το χρονόμετρο μελέτης</a></div>`;
     return;
@@ -1190,6 +1209,93 @@ function renderPractice(sub){
     P.mkey = b.dataset.mk === "*" ? null : b.dataset.mk;
     P.quiz = newQuiz(mistakeItems(P.mkey), "mist"); P.end = null;
     renderPractice(sub); top();
+  });
+}
+
+/* Εβδομαδιαίο πρόγραμμα (#schedule). Μένει μόνο σε αυτή τη συσκευή (diab-schedule).
+   Μοιράζεται με σύνδεσμο #schedule/import/<κωδικός>: ο κωδικός περιέχει το ίδιο το πρόγραμμα,
+   οπότε τίποτα δεν ανεβαίνει στη σελίδα ή σε server. Πριν αποθηκευτεί, ο μαθητής βλέπει προεπισκόπηση. */
+const DAYS = ["Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή"], HOURS = 7;
+const SCH = { day:null, edit:false, preview:null, msg:"" };
+const emptyWeek = () => DAYS.map(() => Array(HOURS).fill(""));
+/* Κάθε ώρα είναι κείμενο: κλειδί μαθήματος (π.χ. "math") ή «~» και ελεύθερο κείμενο (π.χ. "~Φιλαναγνωσία"). */
+function cleanSchedule(o){
+  if(!o || typeof o !== "object" || !getGrade(o.g) || !Array.isArray(o.d)) return null;
+  const subjects = new Set(getGrade(o.g).subjects.map(s => s.id));
+  const d = emptyWeek();
+  for(let i = 0; i < DAYS.length; i++) for(let h = 0; h < HOURS; h++){
+    const v = String((o.d[i] || [])[h] || "");
+    d[i][h] = v.startsWith("~") ? "~" + v.slice(1, 41).trim() : subjects.has(v) ? v : "";
+  }
+  return { g:o.g, d };
+}
+const loadSchedule = () => cleanSchedule(store.get("diab-schedule", null));
+function encodeSchedule(s){ const b = btoa(unescape(encodeURIComponent(JSON.stringify(s)))); return b.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); }
+function decodeSchedule(code){
+  try { const b = code.replace(/-/g, "+").replace(/_/g, "/"); return cleanSchedule(JSON.parse(decodeURIComponent(escape(atob(b))))); } catch(e){ return null; }
+}
+function slotView(g, v){
+  if(!v || v === "~") return `<span class="sch-free">Κενό</span>`;
+  if(v.startsWith("~")) return `<span class="sch-name">${esc(v.slice(1))}</span>`;
+  const s = gradeSubject(g, v);
+  return `<a class="sch-link" href="${courseHref(g, v)}">${subjectIcon(v, "small")}<span class="sch-name">${esc(s.name)}</span></a>`;
+}
+function weekView(s, day){
+  const tabs = `<nav class="seg sch-days" aria-label="Ημέρα">${DAYS.map((d, i) => `<button data-sday="${i}" aria-pressed="${i === day}">${d.slice(0, 3)}</button>`).join("")}</nav>`;
+  const rows = s.d[day].map((v, h) => `<li><span class="sch-h">${h + 1}η</span>${slotView(s.g, v)}</li>`).join("");
+  return tabs + `<h3 class="sch-title">${DAYS[day]}</h3><ol class="sch-list">${rows}</ol>`;
+}
+function renderSchedule(parts){
+  const el = $("#schedule");
+  const nav = `<nav class="seg pseg four" aria-label="Εξάσκηση"><a href="#practice">Διαγώνισμα</a><a href="#practice/mistakes">Τα λάθη μου</a><a href="#timer">Χρονόμετρο</a><a href="#schedule" aria-current="page">Πρόγραμμα</a></nav>`;
+  const today = new Date().getDay();
+  if(SCH.day === null) SCH.day = today >= 1 && today <= 5 ? today - 1 : 0;
+  const saved = loadSchedule();
+  let body;
+  if(parts[1] === "import"){
+    const s = decodeSchedule(parts.slice(2).join("/"));
+    SCH.preview = s;
+    body = s ? `<div class="hero"><span class="ref">Πρόγραμμα από σύνδεσμο</span><h2 class="ct">Θέλεις να το κρατήσεις;</h2><p>Κάποιος σου έστειλε αυτό το πρόγραμμα (${esc(getGrade(s.g).label)}). Δες το και, αν είναι το δικό σου, αποθήκευσέ το σε αυτή τη συσκευή.${saved ? " Θα αντικαταστήσει το πρόγραμμα που έχεις ήδη." : ""}</p></div>
+      ${weekView(s, SCH.day)}
+      <button class="btn" data-sch="keep">Αποθήκευση στη συσκευή μου</button><a class="btn ghost" href="#schedule">Όχι, άκυρο</a>`
+      : `<div class="sheet center"><p style="margin:0">Ο σύνδεσμος του προγράμματος δεν είναι σωστός. Ζήτα να σου τον ξαναστείλουν.</p></div><a class="btn ghost" href="#schedule">Το πρόγραμμά μου</a>`;
+  } else if(SCH.edit){
+    const s = saved || { g:selectedGrade, d:emptyWeek() }, g = getGrade(s.g);
+    const options = v => `<option value=""${v ? "" : " selected"}>—</option>${g.subjects.map(x => `<option value="${x.id}"${v === x.id ? " selected" : ""}>${esc(x.name)}</option>`).join("")}<option value="~"${v.startsWith("~") ? " selected" : ""}>Άλλο…</option>`;
+    body = `<div class="hero"><span class="ref">${esc(g.label)}</span><h2 class="ct">Γράψε το πρόγραμμά σου</h2><p>Διάλεξε μάθημα για κάθε ώρα. Με «Άλλο…» γράφεις κάτι που δεν είναι στη λίστα, π.χ. Φιλαναγνωσία.</p></div>
+      <nav class="seg sch-days" aria-label="Ημέρα">${DAYS.map((d, i) => `<button data-sday="${i}" aria-pressed="${i === SCH.day}">${d.slice(0, 3)}</button>`).join("")}</nav>
+      <h3 class="sch-title">${DAYS[SCH.day]}</h3>
+      <ol class="sch-list sch-edit">${s.d[SCH.day].map((v, h) => `<li><label class="sch-h" for="sch-${h}">${h + 1}η</label><span class="sch-fields"><select id="sch-${h}" data-sslot="${h}">${options(v)}</select>${v.startsWith("~") ? `<input type="text" maxlength="40" data-stext="${h}" value="${esc(v.slice(1))}" placeholder="Τι μάθημα;" aria-label="Μάθημα ${h + 1}ης ώρας">` : ""}</span></li>`).join("")}</ol>
+      <button class="btn" data-sch="done">Τέλος</button>`;
+  } else if(saved){
+    body = `<div class="hero"><span class="ref">${esc(getGrade(saved.g).label)} · Μόνο σε αυτή τη συσκευή</span><h2 class="ct">Το πρόγραμμά μου</h2><p>Πάτα ένα μάθημα για να ανοίξεις τα βιβλία και τις ενότητές του.</p></div>
+      ${weekView(saved, SCH.day)}
+      <div class="row sch-actions"><button class="btn ghost" data-sch="edit">Αλλαγές</button><button class="btn" data-sch="share">Στείλε το στην τάξη</button></div>
+      ${SCH.msg ? `<p class="pnote" role="status">${esc(SCH.msg)}</p>` : ""}
+      <p class="pnote">Ο σύνδεσμος περιέχει μόνο το πρόγραμμα. Δεν ανεβαίνει πουθενά: όποιος τον ανοίξει το βλέπει και διαλέγει αν θα το κρατήσει.</p>`;
+  } else {
+    body = `<div class="hero"><span class="ref">Εξάσκηση</span><h2 class="ct">Το πρόγραμμά μου</h2><p>Γράψε το εβδομαδιαίο πρόγραμμα της τάξης σου. Μένει μόνο σε αυτή τη συσκευή. Αν σου έστειλαν σύνδεσμο με το πρόγραμμα, άνοιξέ τον και θα το βρεις έτοιμο.</p></div>
+      <button class="btn" data-sch="edit">Γράψε το πρόγραμμα</button>`;
+  }
+  el.innerHTML = nav + body;
+  SCH.msg = "";
+  el.querySelectorAll("[data-sday]").forEach(b => b.onclick = () => { SCH.day = +b.dataset.sday; renderSchedule(parts); });
+  const edit = fn => { const s = loadSchedule() || { g:selectedGrade, d:emptyWeek() }; fn(s); store.set("diab-schedule", s); };
+  el.querySelectorAll("[data-sslot]").forEach(x => x.onchange = () => { edit(s => { s.d[SCH.day][+x.dataset.sslot] = x.value; }); renderSchedule(parts); if(x.value === "~"){ const t = el.querySelector(`[data-stext="${x.dataset.sslot}"]`); if(t) t.focus(); } });
+  el.querySelectorAll("[data-stext]").forEach(x => x.oninput = () => edit(s => { s.d[SCH.day][+x.dataset.stext] = "~" + x.value.slice(0, 40); }));
+  el.querySelectorAll("[data-sch]").forEach(b => b.onclick = async () => {
+    const a = b.dataset.sch;
+    if(a === "edit"){ SCH.edit = true; }
+    else if(a === "done"){ SCH.edit = false; }
+    else if(a === "keep" && SCH.preview){ store.set("diab-schedule", SCH.preview); SCH.edit = false; location.replace("#schedule"); return; }
+    else if(a === "share"){
+      const url = location.href.split("#")[0] + "#schedule/import/" + encodeSchedule(loadSchedule());
+      try {
+        if(navigator.share){ await navigator.share({ title:"Το πρόγραμμα της τάξης", url }); SCH.msg = "Έτοιμο."; }
+        else { await navigator.clipboard.writeText(url); SCH.msg = "Ο σύνδεσμος αντιγράφηκε. Στείλ' τον στην ομάδα της τάξης."; }
+      } catch(e){ if(e && e.name !== "AbortError") SCH.msg = "Δεν έγινε αντιγραφή. Αντέγραψε τον σύνδεσμο: " + url; }
+    }
+    renderSchedule(parts);
   });
 }
 
