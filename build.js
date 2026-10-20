@@ -85,8 +85,32 @@ for (const f of fs.readdirSync(dir).filter(f => f.endsWith(".json") && !f.starts
   C[key] = data;
 }
 
+// Βοήθεια για τις ασκήσεις του βιβλίου (src/book-help-*.json): κλειδί ενότητας -> λίστα ασκήσεων.
+// Κάθε άσκηση: ref (πού είναι στο βιβλίο), lvl, topic (θέμα της περίληψης), hints (βοήθειες {h,t} ή επιλογή {q,c,w[2],why}), result.
+const bookHelp = {};
+for (const file of fs.readdirSync(path.join(__dirname, "src")).filter(name => /^book-help-.+\.json$/.test(name)).sort()) {
+  for (const [key, items] of Object.entries(JSON.parse(fs.readFileSync(path.join(__dirname, "src", file), "utf8")))) {
+    const unit = C[key] || officialContent[key];
+    if (!unit) throw new Error(`${file}: άγνωστη ενότητα ${key}`);
+    if (bookHelp[key]) throw new Error(`${file}: διπλή ενότητα ${key}`);
+    if (!items.length) throw new Error(`${file}: ${key} χωρίς ασκήσεις`);
+    items.forEach((it, i) => {
+      const at = `${file}: ${key}, άσκηση ${i + 1}`;
+      if (!it.ref || !it.result) throw new Error(`${at} θέλει ref και result`);
+      if (![1, 2, 3].includes(it.lvl)) throw new Error(`${at} θέλει lvl 1, 2 ή 3`);
+      if (!(Number.isInteger(it.topic) && it.topic >= 0 && it.topic < unit.summary.length)) throw new Error(`${at}: το topic ${it.topic} δεν υπάρχει`);
+      if (!Array.isArray(it.hints) || it.hints.length < 3) throw new Error(`${at} θέλει τουλάχιστον 3 βοήθειες`);
+      if (!it.hints.some(h => h.q)) throw new Error(`${at} θέλει τουλάχιστον μία βοήθεια-επιλογή (q, c, w, why)`);
+      it.hints.forEach((h, j) => {
+        if (h.q ? !(h.c && h.why && Array.isArray(h.w) && h.w.length === 2 && !h.w.includes(h.c)) : !(h.h && h.t)) throw new Error(`${at}, βοήθεια ${j + 1}: θέλει h και t, ή q, c, 2 λάθος στο w και why`);
+      });
+    });
+    bookHelp[key] = items;
+  }
+}
+
 const template = fs.readFileSync(path.join(__dirname, "src", "template.html"), "utf8");
-for (const mark of ["/*__DATA__*/", "/*__GRAMMAR__*/", "/*__CATALOGUE_JS__*/", "/*__CATALOGUE_CSS__*/"]) {
+for (const mark of ["/*__DATA__*/", "/*__GRAMMAR__*/", "/*__BOOK_HELP__*/", "/*__CATALOGUE_JS__*/", "/*__CATALOGUE_CSS__*/"]) {
   if (!template.includes(mark)) throw new Error(`Το template δεν έχει το ${mark}`);
 }
 const json = value => JSON.stringify(value).replace(/</g, "\\u003c");
@@ -94,7 +118,7 @@ const catalogueJS = fs.readFileSync(path.join(__dirname,"src","catalogue.js"),"u
   .replace("/*__CURRICULUM__*/", () => json(curriculum))
   .replace("/*__OFFICIAL_CONTENT__*/", () => json(officialContent))
   .replace("/*__EXPLANATIONS__*/", () => json(explanations));
-const html = template.replace("/*__DATA__*/", () => json(C)).replace("/*__GRAMMAR__*/", () => json(G))
+const html = template.replace("/*__DATA__*/", () => json(C)).replace("/*__GRAMMAR__*/", () => json(G)).replace("/*__BOOK_HELP__*/", () => json(bookHelp))
   .replace("/*__CATALOGUE_JS__*/", () => catalogueJS)
   .replace("/*__CATALOGUE_CSS__*/", () => fs.readFileSync(path.join(__dirname,"src","catalogue.css"),"utf8"))
   .replace("/*__APP_CSS__*/", () => fs.readFileSync(path.join(__dirname,"src","app.css"),"utf8"))
