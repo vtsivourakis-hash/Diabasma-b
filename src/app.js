@@ -68,7 +68,7 @@ function currentReadingText(){
     if(node.nodeType !== Node.ELEMENT_NODE || node.hidden ||
        node.getAttribute('aria-hidden') === 'true' ||
        node.matches('script, style, svg, nav, .seg, .pager, .lesson-step, input, select, textarea') ||
-       (node.matches('button') && !node.matches('.vcard, .opt, [data-hub-answer], [data-oanswer], .gt')) ||
+       (node.matches('button') && !node.matches('.vcard, .opt, [data-oanswer], .gt')) ||
        getComputedStyle(node).display === 'none' || getComputedStyle(node).visibility === 'hidden') return;
     const block = /^(P|DIV|SECTION|H[1-6]|LI|TR|BR|BUTTON)$/.test(node.tagName);
     if(block) parts.push('\n');

@@ -34,12 +34,6 @@ for (const [key, lesson] of Object.entries(officialContent)) {
   lesson.summary.forEach((card, index) => {
     for (const field of ["h", "t", "ex", "def"]) if (!card[field]) throw new Error(`${key}: η κάρτα ${index + 1} θέλει ${field}`);
   });
-  if (lesson.testRequired) {
-    if (!lesson.testRequired.length) throw new Error(`${key}: το testRequired δεν μπορεί να είναι κενό`);
-    lesson.testRequired.forEach((card, index) => {
-      if (!card.h || !card.learn?.length || !card.write) throw new Error(`${key}: η κάρτα τεστ ${index + 1} θέλει h, learn και write`);
-    });
-  }
   if (lesson.grammar) {
     if (!lesson.grammar.length) throw new Error(`${key}: το grammar δεν μπορεί να είναι κενό`);
     lesson.grammar.forEach((card, index) => {

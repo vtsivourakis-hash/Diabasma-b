@@ -117,67 +117,6 @@ function renderCourse(grade,id){
   update();
 }
 
-const testHubState = {mode:'study',part:'5.1',card:0,solution:0,quiz:null,exam:null};
-function newTestHubAssessment(pool,count){
-  return {questions:shuffle(pool).slice(0,count).map(q=>({...q,options:shuffle([q.c,...q.w])})),index:0,answers:[],done:false};
-}
-function testHubAssessmentBody(kind,pool){
-  const isQuiz=kind==='quiz',count=isQuiz?12:20,label=isQuiz?'Quiz επανάληψης':'Διαγώνισμα προσομοίωσης';
-  const state=testHubState[kind]||(testHubState[kind]=newTestHubAssessment(pool,count));
-  if(state.done){
-    const right=state.questions.filter((q,i)=>state.answers[i]===q.c).length,score=Math.round(right/state.questions.length*20);
-    const misses=state.questions.map((q,i)=>({q,answer:state.answers[i]})).filter(item=>item.answer!==item.q.c);
-    return `<div class="sheet center test-result"><span class="cheer">${label}</span><div class="grade" role="img" aria-label="Βαθμός ${score} στα 20"><svg viewBox="0 0 210 150" aria-hidden="true"><ellipse cx="105" cy="75" rx="91" ry="61"/></svg><div class="num">${score}<small>/20</small></div></div><p>Σωστές απαντήσεις: ${right} από ${state.questions.length}.</p><button class="btn" data-hub-restart="${kind}">Νέο ${isQuiz?'Quiz':'Τεστ'}</button></div>${misses.length?`<section class="book-card test-review"><h3>Τι χρειάζεται επανάληψη</h3>${misses.map(({q,answer})=>`<div class="test-review-item"><span>${esc(q.lesson)}</span><b>${esc(q.q)}</b><p>Η απάντησή σου: ${esc(answer||'—')}<br>Σωστό: ${esc(q.c)}</p><small>${esc(q.why)}</small></div>`).join('')}</section>`:'<div class="catalogue-note">Δεν έκανες κανένα λάθος. Είσαι έτοιμος/η για το επόμενο βήμα.</div>'}`;
-  }
-  const i=state.index,q=state.questions[i],answered=state.answers[i],hasAnswer=answered!==undefined;
-  const options=q.options.map((answer,oi)=>{
-    const result=hasAnswer?(answer===q.c?' right':answer===answered?' wrong':' dim'):'';
-    return `<button class="opt${result}${answer===answered?' picked':''}" data-hub-answer="${oi}"${hasAnswer?' disabled':''}><span class="l" aria-hidden="true">${String.fromCharCode(65+oi)}</span><span>${esc(answer)}</span></button>`;
-  }).join('');
-  return `<div class="catalogue-note test-mode-note"><b>${label}</b><br>${isQuiz?'12 ανάμεικτες ερωτήσεις με εξήγηση μετά από κάθε απάντηση.':'20 ανάμεικτες ερωτήσεις χωρίς βοήθεια. Ο βαθμός και τα λάθη εμφανίζονται στο τέλος.'}</div><div class="prog"><div class="bar"><i style="width:${Math.round((i+1)/state.questions.length*100)}%"></i></div><span>${i+1}/${state.questions.length}</span></div><div class="sheet"><span class="n">${esc(q.lesson)} · Ερώτηση ${i+1}</span><p class="q">${esc(q.q)}</p><div class="opts">${options}</div>${isQuiz&&hasAnswer?`<div class="why"><b class="${answered===q.c?'y':'n'}">${answered===q.c?'Σωστά':'Χρειάζεται επανάληψη'}</b>${esc(q.why)}</div><button class="btn test-next-question" data-hub-next="quiz">${i===state.questions.length-1?'Δες βαθμό':'Επόμενη ερώτηση'} →</button>`:''}</div>`;
-}
-function testHubSolutionsBody(exercises,officialSources){
-  testHubState.solution=Math.max(0,Math.min(testHubState.solution,exercises.length-1));
-  const i=testHubState.solution,item=exercises[i];
-  const early=/ΑΣΚΗΣΗ [1-5]$|ΜΙΚΡΗ ΕΡΕΥΝΑ [1-4]$/.test(item.section||'');
-  const source=early?officialSources['5.3']:officialSources['5.4'];
-  return `<div class="catalogue-note test-mode-note"><b>Λυμένες ασκήσεις του επίσημου βιβλίου</b><br>Όλες οι ερωτήσεις, τα προβλήματα και οι δραστηριότητες του κεφαλαίου, με βήματα και ολοκληρωμένη απάντηση.</div><div class="prog"><div class="bar" role="img" aria-label="Λυμένη άσκηση ${i+1} από ${exercises.length}"><i style="width:${Math.round((i+1)/exercises.length*100)}%"></i></div><span>${i+1}/${exercises.length}</span></div><div class="deck"><section class="blk slide solved-book-exercise"><div class="test-card-heading"><span class="k">${esc(item.section)}</span><a class="test-source-link" href="${source}" target="_blank" rel="noopener">Άσκηση στο βιβλίο ↗</a></div><h3>${esc(item.h)}</h3><div class="exercise-question"><b>Εκφώνηση</b><p>${esc(item.q)}</p></div><h4 class="test-summary-title">Λύση βήμα προς βήμα</h4><ol class="solution-steps">${item.steps.map(step=>`<li>${esc(step)}</li>`).join('')}</ol><div class="solution-answer"><b>Τελική απάντηση</b><p>${esc(item.ans)}</p></div>${item.note?`<div class="solution-memory"><b>Θυμήσου:</b> ${esc(item.note)}</div>`:''}</section></div><div class="pager test-hub-pager"><button class="btn ghost" data-solution-nav="-1" aria-label="Προηγούμενη λυμένη άσκηση"${i>0?'':' disabled'}>←</button><span class="mid">Λυμένη ${i+1} από ${exercises.length}</span><button class="btn" data-solution-nav="1" aria-label="Επόμενη λυμένη άσκηση"${i<exercises.length-1?'':' disabled'}>→</button></div>`;
-}
-function renderTestRequired(){
-  const chapter=OFFICIAL_CONTENT['A/biology/0/17']||{},el=$('#test-required'),all=chapter.testRequired||[],bookExercises=chapter.bookExercises||[];
-  const lessonKeys=[['A/biology/0/17','5.1'],['A/biology/0/18','5.2'],['A/biology/0/19','5.3'],['A/biology/0/20','5.4']];
-  const questionPool=lessonKeys.flatMap(([key,lesson])=>(OFFICIAL_CONTENT[key]?.quiz||[]).map(q=>({...q,lesson})));
-  if(!all.length||!bookExercises.length||questionPool.length<20){
-    el.innerHTML='<div class="empty-state"><h2>Το υλικό του τεστ δεν βρέθηκε</h2><p>Άνοιξε ξανά τη σελίδα ή διάλεξε τα μαθήματα Βιολογίας.</p></div>';
-    return;
-  }
-  const parts=[['guide','Οδηγός'],['5.1','5.1'],['5.2','5.2'],['5.3','5.3'],['5.4','5.4']];
-  const officialSources={
-    '5.1':'https://ebooks.edu.gr/ebooks/v/html/8547/2250/Biologia_A-Gymnasiou_html-empl/index5_1.html',
-    '5.2':'https://ebooks.edu.gr/ebooks/v/html/8547/2250/Biologia_A-Gymnasiou_html-empl/index5_2.html',
-    '5.3':'https://ebooks.edu.gr/ebooks/v/html/8547/2250/Biologia_A-Gymnasiou_html-empl/index5_3.html',
-    '5.4':'https://ebooks.edu.gr/ebooks/v/html/8547/2250/Biologia_A-Gymnasiou_html-empl/index5_4.html'
-  };
-  let body='';
-  if(testHubState.mode==='study'){
-    const cards=all.filter(item=>testHubState.part==='guide'?!/^5\.[1-4]/.test(item.lesson||''):(item.lesson||'').startsWith(testHubState.part));
-    testHubState.card=Math.max(0,Math.min(testHubState.card,cards.length-1));
-    const i=testHubState.card,item=cards[i];
-    const source=officialSources[testHubState.part];
-    body=`<nav class="seg test-section-tabs five" aria-label="Μαθήματα του τεστ">${parts.map(([value,label])=>`<button data-test-part="${value}" aria-pressed="${testHubState.part===value}">${label}</button>`).join('')}</nav><div class="prog"><div class="bar" role="img" aria-label="Κάρτα ${i+1} από ${cards.length}"><i style="width:${Math.round((i+1)/cards.length*100)}%"></i></div><span>${i+1}/${cards.length}</span></div><div class="deck"><section class="blk slide test-required-card"><div class="test-card-heading"><span class="k">${esc(item.lesson||'ΤΕΣΤ ΚΕΦΑΛΑΙΟΥ 5')}</span>${source?`<a class="test-source-link" href="${source}" target="_blank" rel="noopener">Επίσημο βιβλίο ↗</a>`:''}</div><h3>${esc(item.h)}</h3>${item.simple?`<div class="test-simple"><b>Με απλά λόγια</b><p>${esc(item.simple)}</p></div>`:''}<h4 class="test-summary-title">Πλήρης περίληψη · σημείο προς σημείο</h4><ol class="test-required-list">${item.learn.map((point,index)=>`<li><span>Σημείο ${index+1}</span>${esc(point)}</li>`).join('')}</ol><div class="box defb"><b>Απάντηση για 20/20</b><p>${esc(item.write)}</p></div>${item.trap?`<div class="box test-trap"><b>Πρόσεξε</b><p>${esc(item.trap)}</p></div>`:''}</section></div><div class="pager test-hub-pager"><button class="btn ghost" data-test-nav="-1" aria-label="Προηγούμενη"${i>0?'':' disabled'}>←</button><span class="mid">Κάρτα ${i+1} από ${cards.length}</span><button class="btn" data-test-nav="1" aria-label="Επόμενη"${i<cards.length-1?'':' disabled'}>→</button></div><section class="book-card test-hub-footer"><h3>Πλήρη μαθήματα και εξάσκηση</h3><p class="result-count">Όταν τελειώσεις τις κάρτες, χρησιμοποίησε τα Quiz και τις λυμένες ερωτήσεις των μαθημάτων.</p><div class="book-actions"><a class="primary" href="#lesson/A/biology/0/17">5.1</a><a href="#lesson/A/biology/0/18">5.2</a><a href="#lesson/A/biology/0/19">5.3</a><a href="#lesson/A/biology/0/20">5.4</a></div></section>`;
-  }else if(testHubState.mode==='solutions') body=testHubSolutionsBody(bookExercises,officialSources);
-  else body=testHubAssessmentBody(testHubState.mode,questionPool);
-  document.title='Για το τεστ · Βιολογία Κεφάλαιο 5 | Διάβασμα';
-  el.innerHTML=`<div class="hero catalogue-hero test-hub-hero"><span class="ref">Ελεγμένο με το επίσημο σχολικό βιβλίο</span><h2 class="ct">Για το τεστ Βιολογίας</h2><p>Απλή εξήγηση, πλήρης περίληψη και λυμένες ασκήσεις για τις ενότητες 5.1–5.4.</p><div class="catalogue-meta"><span>20 κάρτες</span><span>${bookExercises.length} λυμένες</span><span>48 ερωτήσεις</span><span>Στόχος: 20/20</span></div></div><nav class="seg four test-mode-tabs" aria-label="Τρόπος μελέτης"><button data-test-mode="study" aria-pressed="${testHubState.mode==='study'}">Ύλη</button><button data-test-mode="solutions" aria-pressed="${testHubState.mode==='solutions'}">Λυμένες ασκήσεις</button><button data-test-mode="quiz" aria-pressed="${testHubState.mode==='quiz'}">Quiz</button><button data-test-mode="exam" aria-pressed="${testHubState.mode==='exam'}">Τεστ</button></nav>${body}`;
-  el.querySelectorAll('[data-test-mode]').forEach(button=>button.onclick=()=>{testHubState.mode=button.dataset.testMode;renderTestRequired();});
-  el.querySelectorAll('[data-test-part]').forEach(button=>button.onclick=()=>{testHubState.part=button.dataset.testPart;testHubState.card=0;renderTestRequired();});
-  el.querySelectorAll('[data-test-nav]').forEach(button=>button.onclick=()=>{const cards=all.filter(item=>testHubState.part==='guide'?!/^5\.[1-4]/.test(item.lesson||''):(item.lesson||'').startsWith(testHubState.part));testHubState.card=Math.max(0,Math.min(cards.length-1,testHubState.card+(+button.dataset.testNav)));renderTestRequired();});
-  el.querySelectorAll('[data-solution-nav]').forEach(button=>button.onclick=()=>{testHubState.solution=Math.max(0,Math.min(bookExercises.length-1,testHubState.solution+(+button.dataset.solutionNav)));renderTestRequired();});
-  el.querySelectorAll('[data-hub-answer]').forEach(button=>button.onclick=()=>{const state=testHubState[testHubState.mode],q=state.questions[state.index],answer=q.options[+button.dataset.hubAnswer];state.answers[state.index]=answer;if(testHubState.mode==='exam'){if(state.index===state.questions.length-1)state.done=true;else state.index++;}renderTestRequired();});
-  el.querySelectorAll('[data-hub-next]').forEach(button=>button.onclick=()=>{const state=testHubState[button.dataset.hubNext];if(state.index===state.questions.length-1)state.done=true;else state.index++;renderTestRequired();});
-  el.querySelectorAll('[data-hub-restart]').forEach(button=>button.onclick=()=>{testHubState[button.dataset.hubRestart]=null;renderTestRequired();});
-}
-
 const officialState = {};
 const officialWords = title => [...new Set(normalizeSearch(title).replace(/[^a-zα-ωάέήίόύώϊϋΐΰ0-9]+/gi,' ').split(' ').filter(w=>w.length>3 && !['στην','στον','τους','των','και','απο','προς','μιας','ενος','ενότητα','κεφάλαιο','εισαγωγη','περιεχομενα'].includes(w)))].slice(0,6);
 function officialLesson(grade,subjectId,bookIndex,sectionIndex){
