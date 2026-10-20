@@ -55,7 +55,6 @@
 .connection-note.offline{color:var(--mid);background:var(--mid-soft);padding:10px;border-radius:10px}
 .source-list{padding-left:20px}.source-list li{margin-bottom:16px}
 .source-list small{display:block;color:var(--muted);margin-top:4px}
-.practice-scope{font-size:12px;color:var(--muted);margin:0 0 12px}
 @media(max-width:360px){.subject-grid{grid-template-columns:1fr}.catalogue-hero h2{font-size:27px}.grade-nav a{font-size:12px}}
 
 /* Επίπεδα ενοτήτων: Πλήρες / Εξήγηση / Οδηγός */

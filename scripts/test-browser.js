@@ -127,6 +127,7 @@ async function main(){
       assert.equal(await page.locator('.panel:not([hidden]) .opt').count(),4);
     }
     await route('#practice');
+    await page.locator('[data-subj="physics"]').click();
     await page.locator('[data-sel="F/1.1"]').click();
     await page.locator('[data-px="start"]').click();
     assert.equal(await page.locator('#practice .opt').count(),4);

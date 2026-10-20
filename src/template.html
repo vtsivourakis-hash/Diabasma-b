@@ -352,6 +352,18 @@ dialog#gsheet[open]{animation:sheetUp .28s cubic-bezier(.2,.8,.2,1)}
 .gchip.sel{font-size:14px;text-align:left}
 .gchip.sel[aria-pressed="true"]{background:var(--grad);border-color:transparent;color:#fff}
 .glab .linkbtn{margin-left:6px;font-size:11.5px;text-transform:uppercase;letter-spacing:.07em}
+.toc .pnote{margin:4px 0 8px;font-size:13px;color:var(--muted)}
+.toc .seg+.pnote{margin-top:14px}
+.toc .btn{margin-top:14px}
+.ptitle{font-size:16px;font-weight:800;margin:22px 0 10px;text-align:left}
+.pnote{font-size:13px;color:var(--muted);margin:0 0 10px;text-align:left}
+.rvunit{margin:0 0 10px;font-size:13px;font-weight:700}
+.rvunit a{color:var(--hi);text-decoration:none}
+.wpart{text-align:left}
+.wpart .sheet{margin-bottom:10px}
+.wsol summary{display:flex;align-items:center;justify-content:center;min-height:46px;margin-top:10px;border-radius:14px;border:1px solid var(--line);background:var(--card2);color:var(--text);font-weight:800;cursor:pointer;list-style:none}
+.wsol summary::-webkit-details-marker{display:none}
+.wsol[open] summary{margin-bottom:0}
 .linkbtn{padding:0;border:0;background:none;color:var(--hi);font-weight:700;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .exbar{display:flex;align-items:center;justify-content:space-between;margin:0 0 12px}
 .clock{font-family:'Inter Tight','Inter',sans-serif;font-weight:800;font-size:20px;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
@@ -733,19 +745,24 @@ function markAnswer(key, oi, ok){
 }
 function mistakeItems(onlyKey){
   return Object.entries(store.get("diab-mistakes", {}))
-    .filter(([k]) => C[k] && (!onlyKey || k === onlyKey))
-    .flatMap(([k, list]) => list.filter(oi => C[k].quiz[oi]).map(oi => ({key:k, oi})));
+    .filter(([k]) => unitData(k) && (!onlyKey || k === onlyKey))
+    .flatMap(([k, list]) => list.filter(oi => unitData(k).quiz[oi]).map(oi => ({key:k, oi})));
 }
 /* Πρόοδος: ο καλύτερος βαθμός (στα 20) στις ερωτήσεις κάθε ενότητας */
 const bestOf = key => store.get("diab-best", {})[key];
 function saveBest(key, g){ const b = store.get("diab-best", {}); if(!(b[key] >= g)){ b[key] = g; store.set("diab-best", b); } }
 
-const unitItems = key => C[key].quiz.map((_, oi) => ({key, oi}));
+/* Μια ενότητα: παλιά (C, κείμενο με σήμανση) ή επίσημη (OFFICIAL_CONTENT, απλό κείμενο που θέλει escape) */
+const unitData = key => C[key] || OFFICIAL_CONTENT[key];
+const unitHref = key => C[key] ? "#" + key : "#lesson/" + key;
+const unitText = (key, t) => C[key] ? rich(t) : esc(t);
+const unitTitle = key => C[key] ? C[key].title : esc(unitData(key).title);
+const unitItems = key => unitData(key).quiz.map((_, oi) => ({key, oi}));
 /* Κάθε φορά οι ερωτήσεις και οι απαντήσεις τους έρχονται με άλλη σειρά */
 function newQuiz(items, mode){
   return { mode, qi:0, picked:{}, done:false, anim:"",
-    qs: shuffle(items).map(({key, oi}) => { const q = C[key].quiz[oi];
-      return {key, oi, q:q.q, why:q.why, opts:shuffle([{t:q.c, ok:true}, ...q.w.map(t => ({t, ok:false}))])}; }) };
+    qs: shuffle(items).map(({key, oi}) => { const q = unitData(key).quiz[oi], f = C[key] ? t => t : esc;
+      return {key, oi, q:f(q.q), why:f(q.why), opts:shuffle([{t:f(q.c), ok:true}, ...q.w.map(t => ({t:f(t), ok:false}))])}; }) };
 }
 function quizScore(z){
   let right = 0, wrong = 0;
@@ -753,7 +770,7 @@ function quizScore(z){
   return {right, wrong};
 }
 const gradeOf = z => Math.round(quizScore(z).right / z.qs.length * 20);
-function unitName(key){ const [k, id] = key.split("/"), info = findSection(k, id); return `${BOOKS[k].name} ${info ? info.num : ""}`.trim(); }
+function unitName(key){ if(!C[key]){ const [g, sid] = key.split("/"); return esc(gradeSubject(g, sid)?.name || ""); } const [k, id] = key.split("/"), info = findSection(k, id); return `${BOOKS[k].name} ${info ? info.num : ""}`.trim(); }
 /* Η κάρτα του κουίζ (ενότητα, διαγώνισμα, λάθη). Επιστρέφει το HTML και τη συνάρτηση για επόμενη/προηγούμενη ερώτηση. */
 function quizView(z, rerender, extraDone){
   const n = z.qs.length, {right, wrong} = quizScore(z), answered = right + wrong, anim = z.anim;
@@ -932,17 +949,55 @@ window.addEventListener("popstate", e => {
   if(s && s.from !== null && !(e.state && e.state.theory) && !$("#"+k).hidden) backToEx(k, id);
 });
 
-/* Εξάσκηση: διαγώνισμα από πολλές ενότητες και «Τα λάθη μου» */
-const P = { sub:"exam", quiz:null, mkey:null, sel:new Set(store.get("diab-exam-sel", [])), n:10, min:0, end:null, int:null };
-const SUBJ = ["F", "M", "G", "A"];
+/* Εξάσκηση: διάλεξε μάθημα και ύλη, κάνε «Επανάληψη» (όλη η θεωρία σε κάρτες) ή «Δοκιμαστικό»,
+   και «Τα λάθη μου». Μια ενότητα είναι παλιά (C, π.χ. "F/1.1") ή επίσημη (OFFICIAL_CONTENT, π.χ. "B/math/0/52"). */
+const P = { sub:"exam", quiz:null, rev:null, keys:[], grade:null, wex:[], mkey:null, sel:new Set(store.get("diab-exam-sel", [])), subj:store.get("diab-exam-subj", null), n:10, min:0, wx:2, end:null, int:null };
+const OLD_SUBJ = { F:"physics", M:"math", G:"ancient", A:"translated" };
 const readyKeys = k => BOOKS[k].chapters.flatMap(ch => ch.s.map(x => k + "/" + x[0])).filter(key => C[key]);
-function startExam(){
-  const keys = [...P.sel].filter(k => C[k]);
-  const pool = shuffle(keys.flatMap(unitItems));
+const PART = { A:"Α", B:"Β", "Α":"Α", "Β":"Β" };
+/* Τίτλος κεφαλαίου από τα περιεχόμενα του βιβλίου, π.χ. «ΜΕΡΟΣ Β - ΚΕΦΑΛΑΙΟ 4ο - …» → «Β4. …» */
+function chapterHead(title){
+  const m = title.match(/ΜΕΡΟΣ\s*([AΑBΒ])\s*-\s*ΚΕΦΑΛΑΙΟ\s*(\d+)ο?\s*-\s*(.+)/);
+  if(m) return `${PART[m[1]]}${m[2]}. ${m[3]}`;
+  return /^[ΑΒΓ]\d+\.\s/.test(title) || /ΚΕΦΑΛΑΙΟ/i.test(title) ? title : null;
+}
+/* Τα μαθήματα μιας τάξης με τις ενότητες που έχουν Quiz, ομαδοποιημένες ανά κεφάλαιο, με τη σειρά του βιβλίου */
+function scopeGroups(grade){
+  const linked = new Set(Object.values(LINKED));
+  return getGrade(grade).subjects.filter(s => !INFO_ONLY[s.id]).map(s => {
+    const chapters = [], seen = new Set();
+    const add = (name, key) => {
+      if(seen.has(key) || !unitData(key)?.quiz?.length) return;
+      seen.add(key);
+      const last = chapters[chapters.length - 1];
+      if(last && last.name === name) last.keys.push(key); else chapters.push({name, keys:[key]});
+    };
+    if(grade === "B") for(const [k, sid] of Object.entries(OLD_SUBJ)) if(sid === s.id)
+      BOOKS[k].chapters.forEach(ch => ch.s.forEach(x => { const key = k + "/" + x[0]; if(C[key] && !linked.has(key)) add(ch.t, key); }));
+    s.books.forEach((b, bi) => { let head = null; b.sections.forEach((sec, si) => {
+      const key = `${grade}/${s.id}/${bi}/${si}`, h = chapterHead(sec.title || "");
+      if(h && !OFFICIAL_CONTENT[key]){ head = h; return; }
+      const unit = LINKED[key] && C[LINKED[key]] ? LINKED[key] : OFFICIAL_CONTENT[key] ? key : null;
+      if(!unit) return;
+      const num = (unitData(unit).title || "").match(/^(\d+)\.\d+/);
+      add(head || (num ? `Κεφάλαιο ${num[1]}` : "Ενότητες"), unit);
+    }); });
+    return {id:s.id, name:s.name, chapters};
+  }).filter(s => s.chapters.length);
+}
+const quizPool = keys => keys.flatMap(key => unitData(key).quiz.map((_, oi) => ({key, oi})));
+function startExam(keys){
+  P.keys = keys; P.rev = null;
+  const pool = shuffle(quizPool(keys));
   P.quiz = newQuiz(P.n ? pool.slice(0, P.n) : pool, "exam");
+  P.wex = shuffle(keys.flatMap(key => (unitData(key).ex || []).map((e, i) => ({key, i})))).slice(0, P.wx).sort((a, b) => unitData(a.key).ex[a.i].lvl - unitData(b.key).ex[b.i].lvl);
   P.end = P.min ? Date.now() + P.min * 60000 : null;
   clearInterval(P.int);
   if(P.end) P.int = setInterval(tickExam, 1000);
+}
+function startReview(keys){
+  P.keys = keys; P.quiz = null; P.end = null; clearInterval(P.int);
+  P.rev = { i:0, anim:"", cards: keys.flatMap(key => unitData(key).summary.map((b, ti, all) => ({key, b, ti, n:all.length}))) };
 }
 function clockText(){ const left = Math.max(0, Math.round((P.end - Date.now()) / 1000)); return `${Math.floor(left / 60)}:${String(left % 60).padStart(2, "0")}`; }
 function tickExam(){
@@ -958,60 +1013,97 @@ function tickExam(){
 function breakdown(z){
   const by = {};
   z.qs.forEach((q, i) => { const b = by[q.key] || (by[q.key] = [0, 0]); b[1]++; if(z.picked[i] !== undefined && q.opts[z.picked[i]].ok) b[0]++; });
-  return `<div class="brk">${Object.entries(by).map(([key, [r, t]]) => `<a href="#${key}"><span>${unitName(key)} · ${C[key].title}</span><b class="${r === t ? "ok" : r * 2 >= t ? "mid" : "low"}">${r}/${t}</b></a>`).join("")}</div>`;
+  const rows = Object.entries(by).sort(([, a], [, b]) => a[0] / a[1] - b[0] / b[1]);
+  return `<h3 class="ptitle">Τι να ξαναδείς</h3><div class="brk">${rows.map(([key, [r, t]]) => `<a href="${unitHref(key)}"><span>${unitName(key)} · ${unitTitle(key)}</span><b class="${r === t ? "ok" : r * 2 >= t ? "mid" : "low"}">${r}/${t}</b></a>`).join("")}</div>`;
+}
+/* Μέρος Β του δοκιμαστικού: ασκήσεις για το τετράδιο. Η λύση ανοίγει μόνο όταν το ζητήσει ο μαθητής. */
+function writtenPart(){
+  if(!P.wex.length) return "";
+  return `<section class="wpart"><h3 class="ptitle">Μέρος Β: ασκήσεις για το τετράδιο</h3><p class="pnote">Λύσε τες στο τετράδιο χωρίς βοήθεια. Μετά άνοιξε τη λύση και έλεγξε τον εαυτό σου.</p>${P.wex.map(({key, i}, j) => {
+    const e = unitData(key).ex[i], T = s => unitText(key, s);
+    return `<div class="sheet ex"><div class="exh"><span class="n">Άσκηση ${j + 1} · ${unitName(key)}</span><span class="lvl l${e.lvl}">${LEVELS[e.lvl]}</span></div>
+      <p class="q">${T(e.q)}</p>
+      <details class="wsol"><summary>Δες τη λύση</summary><div class="sol"><ol>${e.steps.map(x => `<li>${T(x)}</li>`).join("")}</ol><p class="ans">Απάντηση: <span>${T(e.ans)}</span></p></div></details></div>`;
+  }).join("")}</section>`;
+}
+function reviewView(){
+  const r = P.rev, n = r.cards.length, i = Math.min(r.i, n - 1), {key, b, ti, n:tn} = r.cards[i], last = i === n - 1, anim = r.anim, T = s => unitText(key, s);
+  r.anim = "";
+  return { body:`<div class="prog"><div class="bar" role="img" aria-label="Κάρτα ${i + 1} από ${n}"><i style="width:${Math.round((i + 1) / n * 100)}%"></i></div><span>${i + 1}/${n}</span></div>
+      <p class="rvunit"><a href="${unitHref(key)}">${unitName(key)} · ${unitTitle(key)}</a></p>
+      <div class="deck"><section class="blk slide${b.warn ? " warn" : ""}${anim ? " " + anim : ""}" aria-live="polite"><span class="k">${b.warn ? "Προσοχή" : `Θέμα ${ti + 1} από ${tn}`}</span><h3>${T(b.h)}</h3>${b.quote ? `<p class="quote" lang="grc">${b.quote}</p>` : ""}<p>${T(b.t)}</p>${b.f ? `<p class="f formula">${b.f}</p>` : ""}${b.ex ? `<div class="box exb"><b>Παράδειγμα</b><p>${T(b.ex)}</p></div>` : ""}${b.def ? `<div class="box defb"><b>${esc(b.defLabel || "Στο διαγώνισμα γράφεις")}</b><p>${T(b.def)}</p></div>` : ""}</section></div>
+      ${pager(i > 0, !last, last ? `<button class="btn gold" data-px="exam">Τέλος! Κάνε δοκιμαστικό →</button>` : `← σύρε →`)}`,
+    go: d => { const j = i + d; if(j < 0 || j >= n) return false; r.i = j; r.anim = d > 0 ? "in-next" : "in-prev"; renderPractice("exam"); return true; } };
 }
 function renderPractice(sub){
   P.sub = sub;
-  const el = $("#practice");
+  const el = $("#practice"), grade = getGrade(selectedGrade), groups = scopeGroups(selectedGrade);
   const nav = `<nav class="seg pseg" aria-label="Εξάσκηση"><a href="#practice"${sub === "exam" ? ' aria-current="page"' : ""}>Διαγώνισμα</a><a href="#practice/mistakes"${sub === "mistakes" ? ' aria-current="page"' : ""}>Τα λάθη μου</a><a href="#timer">Χρονόμετρο</a></nav>`;
-  if(selectedGrade !== 'B'){
-    el.innerHTML = nav + `<div class="hero catalogue-hero"><span class="ref">${getGrade(selectedGrade).label}</span><h2 class="ct">Εξάσκηση με το βιβλίο σου</h2><p>Βρες τις ασκήσεις και τις δραστηριότητες μέσα στα επίσημα σχολικά βιβλία.</p></div><div class="book-card"><h3>Διάλεξε το μάθημά σου</h3><p>Τα κουίζ του Διαβάσματος διατίθενται προς το παρόν σε οκτώ ενότητες της Β΄ Γυμνασίου.</p><a class="btn" href="#class/${selectedGrade}">Βιβλία και ασκήσεις ${getGrade(selectedGrade).label}</a><a class="btn ghost" href="#timer">Άνοιξε το χρονόμετρο μελέτης</a></div>`;
+  if(sub === "exam" && !groups.length){
+    el.innerHTML = nav + `<div class="hero catalogue-hero"><span class="ref">${grade.label}</span><h2 class="ct">Εξάσκηση με το βιβλίο σου</h2><p>Για αυτή την τάξη δεν έχουμε ακόμη ενότητες με Quiz. Βρες τις ασκήσεις μέσα στα επίσημα σχολικά βιβλία.</p></div><div class="book-card"><a class="btn" href="#class/${selectedGrade}">Βιβλία ${grade.label}</a><a class="btn ghost" href="#timer">Άνοιξε το χρονόμετρο μελέτης</a></div>`;
     return;
   }
-  const running = P.quiz && (P.quiz.mode === "exam") === (sub === "exam");
+  /* Δοκιμαστικό ή επανάληψη άλλης τάξης δεν συνεχίζεται όταν αλλάζει η τάξη */
+  if(P.grade !== selectedGrade){ if(P.quiz && P.quiz.mode === "exam"){ P.quiz = null; P.end = null; clearInterval(P.int); } P.rev = null; P.grade = selectedGrade; }
+  const subj = groups.find(s => s.id === P.subj) || groups[0];
+  const keys = subj ? subj.chapters.flatMap(c => c.keys) : [], chosen = keys.filter(k => P.sel.has(k));
+  const running = sub === "exam" ? P.quiz && P.quiz.mode === "exam" : P.quiz && P.quiz.mode === "mist";
   let body = "", go = null;
-  if(running){
-    const z = P.quiz, extra = z.mode === "exam" ? breakdown(z) : "";
-    const head = `<div class="exbar">${z.mode === "exam" ? (P.end && !z.done ? `<span class="clock" id="exclock">${clockText()}</span>` : `<span class="clock">Διαγώνισμα</span>`) : `<span class="clock">Τα λάθη μου</span>`}<button class="linkbtn" data-px="quit">${z.done ? "Νέο" : "Έξοδος"}</button></div>`;
+  if(sub === "exam" && P.rev){
+    const v = reviewView();
+    body = `<div class="exbar"><span class="clock">Επανάληψη</span><button class="linkbtn" data-px="quit">Έξοδος</button></div>` + v.body; go = v.go;
+  } else if(running){
+    const z = P.quiz, extra = z.mode === "exam" ? breakdown(z) + writtenPart() : "";
+    const head = `<div class="exbar">${z.mode === "exam" ? (P.end && !z.done ? `<span class="clock" id="exclock">${clockText()}</span>` : `<span class="clock">Δοκιμαστικό</span>`) : `<span class="clock">Τα λάθη μου</span>`}<button class="linkbtn" data-px="quit">${z.done ? "Νέο" : "Έξοδος"}</button></div>`;
     const v = quizView(z, () => renderPractice(sub), extra);
     body = head + v.body; go = v.go;
   } else if(sub === "exam"){
-    const groups = SUBJ.map(k => [k, readyKeys(k)]).filter(([, keys]) => keys.length);
-    const avail = [...P.sel].filter(k => C[k]).reduce((a, k) => a + C[k].quiz.length, 0);
+    const nq = quizPool(chosen).length, ncards = chosen.reduce((a, k) => a + unitData(k).summary.length, 0);
     const opt = (name, val, list) => list.map(([v, l]) => `<button data-${name}="${v}" aria-pressed="${val === v}">${l}</button>`).join("");
-    body = `<div class="hero"><span class="ref">Εξάσκηση</span><h2 class="ct">Διαγώνισμα</h2><p>Διάλεξε ενότητες και λύσε ερωτήσεις ανακατεμένες, σαν σε διαγώνισμα. Στο τέλος παίρνεις βαθμό στα 20.</p></div>
-      <section class="toc"><h3>Ενότητες</h3>${groups.map(([k, keys]) => `<div class="gchips"><span class="glab">${BOOKS[k].name} <button class="linkbtn" data-selall="${k}">${keys.every(x => P.sel.has(x)) ? "καμία" : "όλες"}</button></span>${keys.map(key => { const info = findSection(k, key.split("/")[1]); return `<button class="gchip sel" data-sel="${key}" aria-pressed="${P.sel.has(key)}">${info.num} · ${C[key].title}</button>`; }).join("")}</div>`).join("")}</section>
-      <section class="toc"><h3>Ερωτήσεις</h3><div class="seg">${opt("pn", P.n, [[10, "10"], [20, "20"], [0, "Όλες"]])}</div></section>
-      <section class="toc"><h3>Χρόνος</h3><div class="seg">${opt("pm", P.min, [[0, "Χωρίς"], [10, "10΄"], [20, "20΄"]])}</div></section>
-      <button class="btn" data-px="start"${avail ? "" : " disabled"}>${avail ? `Ξεκίνα (${P.n ? Math.min(P.n, avail) : avail} ερωτήσεις)` : "Διάλεξε τουλάχιστον μία ενότητα"}</button>`;
+    body = `<div class="hero"><span class="ref">Εξάσκηση · ${grade.label}</span><h2 class="ct">Διαγώνισμα</h2><p>Διάλεξε μάθημα και την ύλη του διαγωνίσματος. Με την Επανάληψη ξαναδιαβάζεις όλη τη θεωρία. Με το Δοκιμαστικό γράφεις ένα τεστ για εξάσκηση.</p></div>
+      <section class="toc"><h3>Μάθημα</h3><div class="gchips">${groups.map(s => `<button class="gchip sel" data-subj="${s.id}" aria-pressed="${s === subj}">${esc(s.name)}</button>`).join("")}</div></section>
+      <section class="toc"><h3>Ύλη</h3>${subj.chapters.map((c, ci) => `<div class="gchips"><span class="glab">${esc(c.name)} <button class="linkbtn" data-chap="${ci}">${c.keys.every(x => P.sel.has(x)) ? "κανένα" : "όλο το κεφάλαιο"}</button></span>${c.keys.map(key => `<button class="gchip sel" data-sel="${key}" aria-pressed="${P.sel.has(key)}">${C[key] ? findSection(key.split("/")[0], key.split("/")[1]).num + " · " : ""}${unitTitle(key)}</button>`).join("")}</div>`).join("")}</section>
+      <section class="toc"><h3>Επανάληψη</h3><p class="pnote">Όλα τα θέματα της περίληψης των ενοτήτων που διάλεξες, ένα ένα.</p><button class="btn" data-px="rev"${chosen.length ? "" : " disabled"}>${chosen.length ? `Ξεκίνα την επανάληψη (${ncards} κάρτες)` : "Διάλεξε τουλάχιστον μία ενότητα"}</button></section>
+      <section class="toc"><h3>Δοκιμαστικό</h3>
+        <p class="pnote">Ερωτήσεις</p><div class="seg">${opt("pn", P.n, [[10, "10"], [20, "20"], [0, "Όλες"]])}</div>
+        <p class="pnote">Χρόνος</p><div class="seg">${opt("pm", P.min, [[0, "Χωρίς"], [15, "15΄"], [30, "30΄"], [45, "45΄"]])}</div>
+        <p class="pnote">Ασκήσεις για το τετράδιο</p><div class="seg">${opt("pw", P.wx, [[0, "Καμία"], [2, "2"], [3, "3"]])}</div>
+        <button class="btn" data-px="start"${nq ? "" : " disabled"}>${nq ? `Ξεκίνα το δοκιμαστικό (${P.n ? Math.min(P.n, nq) : nq} ερωτήσεις)` : "Διάλεξε τουλάχιστον μία ενότητα"}</button></section>`;
   } else {
     const all = mistakeItems(), by = {};
     all.forEach(({key}) => by[key] = (by[key] || 0) + 1);
     body = `<div class="hero"><span class="ref">Εξάσκηση</span><h2 class="ct">Τα λάθη μου</h2><p>Οι ερωτήσεις που απάντησες λάθος. Μόλις απαντήσεις μια ερώτηση σωστά, φεύγει από εδώ.</p></div>
       ${all.length ? `<button class="btn" data-mk="*">Όλα τα λάθη μαζί (${all.length})</button>
-        <section class="toc" style="margin-top:20px"><h3>Ανά ενότητα</h3><div class="brk">${Object.entries(by).map(([key, n]) => `<button data-mk="${key}"><span>${unitName(key)} · ${C[key].title}</span><b class="low">${n}</b></button>`).join("")}</div></section>`
-        : `<div class="sheet center"><p style="margin:0">Δεν έχεις λάθη. Λύσε τις ερωτήσεις μιας ενότητας ή ένα διαγώνισμα, και όσα σου ξεφύγουν θα έρθουν εδώ.</p></div>`}`;
+        <section class="toc" style="margin-top:20px"><h3>Ανά ενότητα</h3><div class="brk">${Object.entries(by).map(([key, n]) => `<button data-mk="${key}"><span>${unitName(key)} · ${unitTitle(key)}</span><b class="low">${n}</b></button>`).join("")}</div></section>`
+        : `<div class="sheet center"><p style="margin:0">Δεν έχεις λάθη. Λύσε τις ερωτήσεις μιας ενότητας ή ένα δοκιμαστικό, και όσα σου ξεφύγουν θα έρθουν εδώ.</p></div>`}`;
   }
   if(CALM.matches) body = body.replace(/ in-(next|prev)/g, "");
-  el.innerHTML = nav + '<p class="practice-scope">Κουίζ Διαβάσματος · Β΄ Γυμνασίου · 8 διαθέσιμες ενότητες</p>' + body;
+  el.innerHTML = nav + body;
   keyNav = go;
   const top = () => { const r = $(".pseg", el).getBoundingClientRect(); if(r.top < 0) window.scrollBy({top: r.top - 12}); };
+  const save = () => store.set("diab-exam-sel", [...P.sel]);
   const slide = $(".slide", el);
   if(slide && go) swipe(slide, go);
   el.querySelectorAll("[data-nav]").forEach(b => b.onclick = () => go && go(+b.dataset.nav));
-  if(running) bindQuiz(el, P.quiz, () => renderPractice(sub), {
+  if(running && !P.rev) bindQuiz(el, P.quiz, () => renderPractice(sub), {
     top,
-    restart: () => { if(P.quiz.mode === "exam") startExam(); else P.quiz = newQuiz(mistakeItems(P.mkey), "mist"); }
+    restart: () => { if(P.quiz.mode === "exam") startExam(P.keys); else P.quiz = newQuiz(mistakeItems(P.mkey), "mist"); }
   });
-  el.querySelectorAll("[data-sel]").forEach(b => b.onclick = () => { const k = b.dataset.sel; P.sel.has(k) ? P.sel.delete(k) : P.sel.add(k); store.set("diab-exam-sel", [...P.sel]); renderPractice(sub); });
-  el.querySelectorAll("[data-selall]").forEach(b => b.onclick = () => {
-    const keys = readyKeys(b.dataset.selall), on = !keys.every(x => P.sel.has(x));
-    keys.forEach(x => on ? P.sel.add(x) : P.sel.delete(x)); store.set("diab-exam-sel", [...P.sel]); renderPractice(sub);
+  el.querySelectorAll("[data-subj]").forEach(b => b.onclick = () => { P.subj = b.dataset.subj; store.set("diab-exam-subj", P.subj); renderPractice(sub); });
+  el.querySelectorAll("[data-sel]").forEach(b => b.onclick = () => { const k = b.dataset.sel; P.sel.has(k) ? P.sel.delete(k) : P.sel.add(k); save(); renderPractice(sub); });
+  el.querySelectorAll("[data-chap]").forEach(b => b.onclick = () => {
+    const ks = subj.chapters[+b.dataset.chap].keys, on = !ks.every(x => P.sel.has(x));
+    ks.forEach(x => on ? P.sel.add(x) : P.sel.delete(x)); save(); renderPractice(sub);
   });
   el.querySelectorAll("[data-pn]").forEach(b => b.onclick = () => { P.n = +b.dataset.pn; renderPractice(sub); });
   el.querySelectorAll("[data-pm]").forEach(b => b.onclick = () => { P.min = +b.dataset.pm; renderPractice(sub); });
+  el.querySelectorAll("[data-pw]").forEach(b => b.onclick = () => { P.wx = +b.dataset.pw; renderPractice(sub); });
   el.querySelectorAll("[data-px]").forEach(b => b.onclick = () => {
-    if(b.dataset.px === "start") startExam(); else { P.quiz = null; P.end = null; clearInterval(P.int); }
+    const a = b.dataset.px;
+    if(a === "start") startExam(chosen);
+    else if(a === "rev") startReview(chosen);
+    else if(a === "exam") startExam(P.keys);
+    else { P.quiz = null; P.rev = null; P.end = null; clearInterval(P.int); }
     renderPractice(sub); top();
   });
   el.querySelectorAll("[data-mk]").forEach(b => b.onclick = () => {
