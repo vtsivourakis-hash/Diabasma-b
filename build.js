@@ -38,6 +38,53 @@ if (fs.existsSync(sharedFile)) {
     if (officialContent[from]) officialContent[key] = officialContent[from];
   }
 }
+// Σχήμα κάρτας ("fig"): τύπος, alt, explain και τα δεδομένα κάθε τύπου (βλ. figure() στο src/catalogue.js)
+function checkFig(f, at) {
+    if (!f.alt) throw new Error(`${at} θέλει alt (περιγραφή για αναγνώστες οθόνης)`);
+    if (!f.explain) throw new Error(`${at} θέλει explain (πώς διαβάζεται το σχήμα, για το κουτί «Στο σχήμα»)`);
+    if (f.type === "balance") {
+      if (!(f.steps?.length >= 1 && f.steps.length <= 3) || f.steps.some(st => !st.eq || ![st.l, st.r].every(side => Array.isArray(side) && side.length === 2 && Number.isInteger(side[0]) && Number.isInteger(side[1]) && side[0] >= 0 && side[0] <= 3 && side[1] >= 0 && side[1] <= 12 && side[0] + side[1] > 0))) throw new Error(`${at}: θέλει 1–3 βήματα {eq, l:[x, n], r:[x, n]} με x ≤ 3 και n ≤ 12`);
+    } else if (f.type === "line") {
+      if (!(f.max > f.min)) throw new Error(`${at}: θέλει min < max`);
+      for (const v of [...(f.points || []).map(p => p.x), ...(f.arrows || []).flatMap(a => [a.from, a.to])]) if (!(v >= f.min && v <= f.max)) throw new Error(`${at}: το ${v} είναι έξω από τον άξονα`);
+    } else if (f.type === "forces") {
+      if (!f.forces?.length || f.forces.some(g => !["up", "down", "left", "right"].includes(g.dir) || !(g.len > 0) || !g.label)) throw new Error(`${at}: κάθε δύναμη θέλει dir, len, label`);
+    } else if (f.type === "compose") {
+      if (!(f.a?.len > 0 && f.b?.len > 0 && f.a.label && f.b.label && f.r)) throw new Error(`${at}: θέλει a, b (len, label) και r`);
+    } else if (f.type === "depth") {
+      if (!(f.h > 0) || (f.points || []).some(p => !(p.h >= 0 && p.h <= f.h) || !p.label)) throw new Error(`${at}: θέλει h και σημεία με βάθος από 0 έως h`);
+    } else if (f.type === "buoy") {
+      if (!f.air || !f.water) throw new Error(`${at}: θέλει air και water`);
+    } else if (f.type === "press") {
+      if (!f.f1 || !f.f2) throw new Error(`${at}: θέλει f1 και f2`);
+    } else if (f.type === "scales") {
+      if (!f.rows?.length || f.rows.some(r => typeof r.c !== "number" || !r.label)) throw new Error(`${at}: κάθε γραμμή θέλει c (°C) και label`);
+    } else if (f.type === "energy") {
+      if (!f.cols?.length || f.cols.some(c => !c.label || !(("u" in c) || ("k" in c)) || [c.u, c.k].some(v => v !== undefined && !(v >= 0)))) throw new Error(`${at}: κάθε στήλη θέλει label και u ή k (≥ 0)`);
+    } else if (f.type === "chain") {
+      if (!(f.steps?.length >= 2)) throw new Error(`${at}: θέλει τουλάχιστον 2 βήματα`);
+    } else if (f.type === "split") {
+      if (!f.total || !f.parts?.length || f.parts.some(p => !(p.v > 0) || !p.label)) throw new Error(`${at}: θέλει total και μέρη με v > 0 και label`);
+    } else if (f.type !== "vessels") throw new Error(`${at}: άγνωστος τύπος ${f.type}`);
+}
+// Τα πεδία της κάρτας για τη ροή «μία ιδέα σε κάθε κάρτα»: more (κι άλλα παραδείγματα), alt («Πες το μου αλλιώς»),
+// και "topic" στις λυμένες και στις ερωτήσεις (σε ποια κάρτα ανήκουν)
+function checkCards(name, lesson) {
+  const n = lesson.summary.length;
+  lesson.summary.forEach((card, i) => {
+    const at = `${name}: κάρτα ${i + 1}`;
+    if (card.fig) checkFig(card.fig, `${at}, σχήμα`);
+    if (card.more && (!Array.isArray(card.more) || card.more.some(t => typeof t !== "string" || !t))) throw new Error(`${at}: το more θέλει λίστα με κείμενα`);
+    const a = card.alt;
+    if (a) {
+      if (!a.t) throw new Error(`${at}: το alt θέλει t (η άλλη ματιά)`);
+      if (a.q && (!a.q.q || !a.q.c || a.q.w?.length !== 3 || !a.q.why || a.q.w.includes(a.q.c))) throw new Error(`${at}: η ερώτηση του alt θέλει q, c, 3 διαφορετικές λάθος απαντήσεις και why`);
+    }
+  });
+  for (const [list, what] of [[lesson.quiz, "ερώτηση"], [lesson.ex, "άσκηση"]]) list.forEach((x, i) => {
+    if (typeof x.topic === "number" && !(Number.isInteger(x.topic) && x.topic >= 0 && x.topic < n)) throw new Error(`${name}: η ${what} ${i + 1} δείχνει σε κάρτα ${x.topic} που δεν υπάρχει`);
+  });
+}
 for (const [key, lesson] of Object.entries(officialContent)) {
   const [gradeId, subjectId, bookText, sectionText] = key.split("/");
   const grade = curriculum.grades.find(item => item.id === gradeId);
@@ -49,34 +96,8 @@ for (const [key, lesson] of Object.entries(officialContent)) {
   }
   lesson.summary.forEach((card, index) => {
     for (const field of ["h", "t", "ex", "def"]) if (!card[field]) throw new Error(`${key}: η κάρτα ${index + 1} θέλει ${field}`);
-    const f = card.fig, at = `${key}: σχήμα της κάρτας ${index + 1}`;
-    if (f) {
-      if (!f.alt) throw new Error(`${at} θέλει alt (περιγραφή για αναγνώστες οθόνης)`);
-      if (!f.explain) throw new Error(`${at} θέλει explain (πώς διαβάζεται το σχήμα, για το κουτί «Στο σχήμα»)`);
-      if (f.type === "line") {
-        if (!(f.max > f.min)) throw new Error(`${at}: θέλει min < max`);
-        for (const v of [...(f.points || []).map(p => p.x), ...(f.arrows || []).flatMap(a => [a.from, a.to])]) if (!(v >= f.min && v <= f.max)) throw new Error(`${at}: το ${v} είναι έξω από τον άξονα`);
-      } else if (f.type === "forces") {
-        if (!f.forces?.length || f.forces.some(g => !["up", "down", "left", "right"].includes(g.dir) || !(g.len > 0) || !g.label)) throw new Error(`${at}: κάθε δύναμη θέλει dir, len, label`);
-      } else if (f.type === "compose") {
-        if (!(f.a?.len > 0 && f.b?.len > 0 && f.a.label && f.b.label && f.r)) throw new Error(`${at}: θέλει a, b (len, label) και r`);
-      } else if (f.type === "depth") {
-        if (!(f.h > 0) || (f.points || []).some(p => !(p.h >= 0 && p.h <= f.h) || !p.label)) throw new Error(`${at}: θέλει h και σημεία με βάθος από 0 έως h`);
-      } else if (f.type === "buoy") {
-        if (!f.air || !f.water) throw new Error(`${at}: θέλει air και water`);
-      } else if (f.type === "press") {
-        if (!f.f1 || !f.f2) throw new Error(`${at}: θέλει f1 και f2`);
-      } else if (f.type === "scales") {
-        if (!f.rows?.length || f.rows.some(r => typeof r.c !== "number" || !r.label)) throw new Error(`${at}: κάθε γραμμή θέλει c (°C) και label`);
-      } else if (f.type === "energy") {
-        if (!f.cols?.length || f.cols.some(c => !c.label || !(("u" in c) || ("k" in c)) || [c.u, c.k].some(v => v !== undefined && !(v >= 0)))) throw new Error(`${at}: κάθε στήλη θέλει label και u ή k (≥ 0)`);
-      } else if (f.type === "chain") {
-        if (!(f.steps?.length >= 2)) throw new Error(`${at}: θέλει τουλάχιστον 2 βήματα`);
-      } else if (f.type === "split") {
-        if (!f.total || !f.parts?.length || f.parts.some(p => !(p.v > 0) || !p.label)) throw new Error(`${at}: θέλει total και μέρη με v > 0 και label`);
-      } else if (f.type !== "vessels") throw new Error(`${at}: άγνωστος τύπος ${f.type}`);
-    }
   });
+  checkCards(key, lesson);
   if (lesson.grammar) {
     if (!lesson.grammar.length) throw new Error(`${key}: το grammar δεν μπορεί να είναι κενό`);
     lesson.grammar.forEach((card, index) => {
@@ -127,6 +148,7 @@ for (const f of fs.readdirSync(dir).filter(f => f.endsWith(".json") && !f.starts
     if ("topic" in e && !(e.topic >= 0 && e.topic < data.summary.length)) throw new Error(`${f}: η άσκηση ${i + 1} δείχνει σε θέμα ${e.topic} που δεν υπάρχει`);
     if (![1, 2, 3].includes(e.lvl)) throw new Error(`${f}: η άσκηση ${i + 1} θέλει "lvl": 1 (Εύκολη), 2 (Μέτρια) ή 3 (Δύσκολη)`);
   });
+  checkCards(f, data);
   for (const m of raw.matchAll(/\{\{[^|}]+\|([^}]+)\}\}/g)) {
     if (!G[m[1]]) throw new Error(`${f}: η λέξη γραμματικής "${m[0]}" δείχνει σε "${m[1]}", που δεν υπάρχει στο _grammar.json`);
   }

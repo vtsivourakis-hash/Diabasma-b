@@ -76,7 +76,8 @@ const LEVEL_CHIP = {full:'<span class="chip ok">Πλήρες</span>', expl:'<spa
    scales:  οι κλίμακες Κελσίου, Κέλβιν, Φαρενάιτ (από τους °C) {rows:[{c, label}]}
    energy:  στήλες δυναμικής (u) και κινητικής (k) ενέργειας  {unit, cols:[{label, u, k}]}
    chain:   αλυσίδα μετατροπών ενέργειας, από πάνω προς τα κάτω {steps:[…], via:[…]}
-   split:   μια ποσότητα μοιρασμένη σε μέρη (π.χ. απόδοση)    {total, parts:[{label, v}]} */
+   split:   μια ποσότητα μοιρασμένη σε μέρη (π.χ. απόδοση)    {total, parts:[{label, v}]}
+   balance: ζυγαριά σε ισορροπία, μία ή περισσότερες φορές     {steps:[{eq, l:[x, n], r:[x, n]}]} (x σακουλάκια, n βαρίδια του 1) */
 let figSeq = 0;
 const figText = (x, y, t, a = 'middle', cls = '') => `<text x="${x}" y="${y}" text-anchor="${a}"${cls ? ` class="${cls}"` : ''}>${esc(t)}</text>`;
 function figArrowDefs(id){
@@ -207,7 +208,35 @@ function figSplit(f){
   });
   return {box:`0 0 320 ${y + h + 22 + f.parts.length * 22}`, body:s};
 }
-const FIGS = {line:figLine, forces:figForces, compose:figCompose, depth:figDepth, vessels:figVessels, buoy:figBuoy, press:figPress, scales:figScales, energy:figEnergy, chain:figChain, split:figSplit};
+/* Ζυγαριά: τα σακουλάκια x και τα βαρίδια του 1 κάθονται πάνω στη δοκό, σε σειρές. Κάθε βήμα είναι μια ζυγαριά. */
+function figBalance(f){
+  let s = '', y0 = 0;
+  const pan = (cx, beam, [x = 0, n = 0]) => {
+    const items = [...Array(x).fill('x'), ...Array(n).fill('1')], rows = [[]];
+    let w = 0;
+    items.forEach(t => { const iw = t === 'x' ? 22 : 15; if(w + iw > 112){ rows.push([]); w = 0; } rows[rows.length - 1].push(t); w += iw; });
+    return rows.map((row, r) => {
+      const width = row.reduce((a, t) => a + (t === 'x' ? 22 : 15), 0) - 3;
+      let x0 = cx - width / 2, out = '';
+      const bottom = beam - 3 - r * 29;
+      row.forEach(t => {
+        if(t === 'x'){ out += `<rect x="${x0}" y="${bottom - 26}" width="19" height="26" rx="5" class="fig-x"/>` + figText(x0 + 9.5, bottom - 8, 'x', 'middle', 'fig-on'); x0 += 22; }
+        else { out += `<rect x="${x0}" y="${bottom - 12}" width="12" height="12" rx="3" class="fig-a-fill"/>`; x0 += 15; }
+      });
+      return out;
+    }).join('');
+  };
+  f.steps.forEach(st => {
+    const beam = y0 + 84;
+    s += figText(160, y0 + 16, st.eq, 'middle', 'fig-label fig-strong');
+    s += `<line x1="160" y1="${beam}" x2="160" y2="${beam + 30}" class="fig-axis"/><line x1="136" y1="${beam + 30}" x2="184" y2="${beam + 30}" class="fig-axis"/>`;
+    s += `<line x1="14" y1="${beam}" x2="306" y2="${beam}" class="fig-wall"/><circle cx="160" cy="${beam}" r="4" class="fig-dot"/>`;
+    s += pan(70, beam, st.l) + pan(250, beam, st.r);
+    y0 = beam + 46;
+  });
+  return {box:`0 0 320 ${y0 - 6}`, body:s};
+}
+const FIGS = {balance:figBalance, line:figLine, forces:figForces, compose:figCompose, depth:figDepth, vessels:figVessels, buoy:figBuoy, press:figPress, scales:figScales, energy:figEnergy, chain:figChain, split:figSplit};
 function figure(f){
   if(!f) return '';
   const id = 'fg' + (++figSeq) + '-', draw = FIGS[f.type], d = draw ? draw(f, id) : null;

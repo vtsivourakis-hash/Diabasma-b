@@ -61,7 +61,7 @@ function currentReadingText(){
   const dialog = document.querySelector('dialog[open]');
   const panel = dialog || document.querySelector('.panel:not([hidden])');
   if(!panel) return '';
-  const content = panel.querySelector('.qcard, .deck .slide, .sheet:has(.q)') || panel;
+  const content = panel.querySelector('.fc-read, .qcard, .deck .slide, .sheet:has(.q)') || panel;
   const parts = [];
   function collect(node){
     if(node.nodeType === Node.TEXT_NODE){parts.push(node.textContent);return;}

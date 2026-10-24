@@ -1159,7 +1159,7 @@ function rvItems(key){
   if(OFFICIAL_CONTENT[key]) return rvOfficial(key);
   const c = C[key], out = [];
   c.summary.forEach((b, i) => out.push({ id:`${key}#s${i}:${rvHash(b)}`, kind:"Περίληψη", label:`Θέμα ${i+1}: ${strip(b.h)}`,
-    html:`<h4>${b.h}</h4>${b.quote ? `<p class="quote" lang="grc">${b.quote}</p>` : ""}<p>${rich(b.t)}</p>${b.f ? `<p class="f formula">${b.f}</p>` : ""}${b.ex ? `<p><b>Παράδειγμα:</b> ${rich(b.ex)}</p>` : ""}${b.def ? `<p><b>${b.defLabel || "Στο διαγώνισμα γράφεις"}:</b> ${rich(b.def)}</p>` : ""}` }));
+    html:`<h4>${b.h}</h4>${b.quote ? `<p class="quote" lang="grc">${b.quote}</p>` : ""}<p>${rich(b.t)}</p>${b.f ? `<p class="f formula">${b.f}</p>` : ""}${b.ex ? `<p><b>Παράδειγμα:</b> ${rich(b.ex)}</p>` : ""}${b.def ? `<p><b>${b.defLabel || "Στο διαγώνισμα γράφεις"}:</b> ${rich(b.def)}</p>` : ""}${figure(b.fig)}${rvCardExtra(b, rich)}` }));
   (c.vocab || []).forEach((v, i) => out.push({ id:`${key}#v${i}:${rvHash(v)}`, kind:"Λέξεις", label:`Λέξη ${i+1}: ${v[0]}`,
     html:`<p><b lang="grc">${v[0]}</b> = ${v[1]}</p><p class="muted">Στα νέα ελληνικά: ${v[2]}</p>` }));
   c.quiz.forEach((q, i) => out.push({ id:`${key}#q${i}:${rvHash(q)}`, kind:"Ερωτήσεις", label:`Ερώτηση ${i+1}: ${strip(q.q)}`,
@@ -1167,6 +1167,12 @@ function rvItems(key){
   c.ex.forEach((e, i) => out.push({ id:`${key}#e${i}:${rvHash(e)}`, kind:"Λυμένες", label:`Άσκηση ${i+1} (${LEVELS[e.lvl]}): ${strip(e.q)}`,
     html:`<h4>${rich(e.q)}</h4><p><span class="lvl l${e.lvl}">${LEVELS[e.lvl]}</span> <span class="muted">Ταιριάζει η δυσκολία;</span></p>${e.learn ? `<p><b>Θυμήσου τη θεωρία:</b> ${rich(e.learn)}${"topic" in e ? ` <span class="muted">(δείχνει στο Θέμα ${e.topic + 1})</span>` : ""}</p>` : ""}<ol>${e.steps.map(x => `<li>${rich(x)}</li>`).join("")}</ol><p><b>Απάντηση:</b> ${rich(e.ans)}</p>` }));
   return out.concat(rvBook(key));
+}
+/* Τα πεδία της κάρτας για τη ροή με τις κάρτες: κι άλλα παραδείγματα (more) και «Πες το μου αλλιώς» (alt) */
+function rvCardExtra(b, T){
+  const a = b.alt;
+  return (b.more || []).map(t => `<p><b>Κι άλλο παράδειγμα:</b> ${T(t)}</p>`).join("")
+    + (a ? `<p><b>Πες το μου αλλιώς:</b> ${T(a.t)}</p>${a.mistake ? `<p><b>Το συχνό λάθος:</b> ${T(a.mistake)}</p>` : ""}${a.q ? `<p><b>Νέα ερώτηση:</b> ${T(a.q.q)}</p><ul class="rvopts"><li class="okk">✓ ${T(a.q.c)}</li>${a.q.w.map(w => `<li>✕ ${T(w)}</li>`).join("")}</ul><p><b>Εξήγηση:</b> ${T(a.q.why)}</p>` : ""}` : "");
 }
 /* Οι βοήθειες για τις ασκήσεις του βιβλίου, για έλεγχο από τον μαθητή που ελέγχει το περιεχόμενο */
 function rvBook(key){
@@ -1177,7 +1183,7 @@ function rvBook(key){
 function rvOfficial(key){
   const c = OFFICIAL_CONTENT[key], out = [];
   c.summary.forEach((b, i) => out.push({ id:`${key}#s${i}:${rvHash(b)}`, kind:"Περίληψη", label:`Θέμα ${i+1}: ${b.h}`,
-    html:`<h4>${esc(b.h)}</h4><p>${esc(b.t)}</p>${figure(b.fig)}<p><b>Παράδειγμα:</b> ${esc(b.ex)}</p><p><b>Στο διαγώνισμα γράφεις:</b> ${esc(b.def)}</p>` }));
+    html:`<h4>${esc(b.h)}</h4><p>${esc(b.t)}</p>${figure(b.fig)}<p><b>Παράδειγμα:</b> ${esc(b.ex)}</p><p><b>Στο διαγώνισμα γράφεις:</b> ${esc(b.def)}</p>${rvCardExtra(b, esc)}` }));
   (c.vocab || []).forEach((v, i) => out.push({ id:`${key}#v${i}:${rvHash(v)}`, kind:"Λέξεις", label:`Λέξη ${i+1}: ${v[0]}`,
     html:`<p><b>${esc(v[0])}</b> = ${esc(v[1])}</p><p class="muted">Παράδειγμα: ${esc(v[2])}</p>` }));
   c.quiz.forEach((q, i) => out.push({ id:`${key}#q${i}:${rvHash(q)}`, kind:"Ερωτήσεις", label:`Ερώτηση ${i+1}: ${q.q}`,

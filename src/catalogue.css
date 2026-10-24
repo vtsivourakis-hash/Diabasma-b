@@ -96,5 +96,7 @@
 .fig .fig-a-fill{fill:var(--c-cyan)}
 .fig .fig-b-fill{fill:var(--c-pink)}
 .fig .fig-c-fill{fill:var(--muted)}
+.fig .fig-x{fill:var(--accent)}
+.fig .fig-on{fill:#fff;font-weight:800}
 .figb{background:color-mix(in srgb,var(--c-cyan) 12%,var(--card2))}
 .figb b{color:var(--c-cyan)}

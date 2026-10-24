@@ -1,10 +1,10 @@
 /* «Αύριο» (#tomorrow): το διάβασμα της επόμενης σχολικής μέρας.
    Τα μαθήματα βγαίνουν από το πρόγραμμα (diab-schedule) και από τις δικές σου αλλαγές (diab-plan):
    διάβασμα ή διαγώνισμα σε μια μέρα, ή «δεν το έχουμε». Ο μαθητής διαλέγει ενότητες (#plan/<μάθημα>)
-   και κάθε ενότητα γίνεται ένα επίπεδο με 4 βήματα (#study/<κλειδί>/<βήμα>) και 3 αστέρια.
+   και κάθε ενότητα ανοίγει ως κάρτες (#study/<κλειδί>), μία ιδέα σε κάθε κάρτα, σε όλη την οθόνη (#study/<κλειδί>/c/<αριθμός>).
    Για διαγώνισμα υπάρχει ένας γύρος ερωτήσεων από όλες τις ενότητες (#prep/<μάθημα>).
    Όλα μένουν μόνο σε αυτή τη συσκευή. Χωρίς βαθμούς και χωρίς σύγκριση με άλλους. */
-const PL = { sel:{}, add:null, u:{}, quiz:{}, prep:null, queue:[] };
+const PL = { sel:{}, add:null, u:{}, prep:null, queue:[], fc:null, fromFeed:null };
 const WEEK = ["Κυριακή", "Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο"];
 const WEEK_ACC = ["την Κυριακή", "τη Δευτέρα", "την Τρίτη", "την Τετάρτη", "την Πέμπτη", "την Παρασκευή", "το Σάββατο"];
 const MONTHS = ["Ιανουαρίου", "Φεβρουαρίου", "Μαρτίου", "Απριλίου", "Μαΐου", "Ιουνίου", "Ιουλίου", "Αυγούστου", "Σεπτεμβρίου", "Οκτωβρίου", "Νοεμβρίου", "Δεκεμβρίου"];
@@ -41,27 +41,13 @@ function suggestUnit(sid){
   return i < 0 ? keys[0] : keys[i + 1] || keys[i];
 }
 
-/* Τα βήματα που έγιναν (diab-steps): l Μαθαίνω, s Βλέπω, t Δοκιμάζω. Ο έλεγχος μετράει από τον καλύτερο βαθμό. */
-const stepsOf = key => store.get("diab-steps", {})[key] || {};
-function markStep(key, k){ const all = store.get("diab-steps", {}), d = all[key] || (all[key] = {}); if(!d[k]){ d[k] = 1; store.set("diab-steps", all); } }
-/* Οι λυμένες χωρίζονται στα δύο: οι πιο εύκολες γίνονται παραδείγματα, οι υπόλοιπες εξάσκηση */
-function exSplit(key){
-  const ex = (unitData(key).ex || []).map((e, i) => ({e, i})).sort((a, b) => a.e.lvl - b.e.lvl || a.i - b.i), half = Math.ceil(ex.length / 2);
-  return { see:ex.slice(0, half).map(x => x.i), tr:ex.slice(half).map(x => x.i) };
-}
-function starsOf(key){
-  const d = stepsOf(key), {see, tr} = exSplit(key);
-  return (d.l ? 1 : 0) + ((see.length ? d.s : d.l) && (tr.length || BOOK_HELP[key] ? d.t : true) ? 1 : 0) + (bestOf(key) >= 16 ? 1 : 0);
-}
-const STAR = `<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>`;
-const starsView = (n, cls = "") => `<span class="pl-stars${cls ? " " + cls : ""}" role="img" aria-label="${n} από 3 αστέρια">${[0, 1, 2].map(i => `<svg viewBox="0 0 24 24" class="${i < n ? "on" : ""}" aria-hidden="true">${STAR}</svg>`).join("")}</span>`;
 const unitLabel = key => `${unitNum(key)}${unitTitle(key)}`;
 
 function renderPlanRoute(p, parts){
   keyNav = null;
   if(p === "tomorrow") renderTomorrow();
   else if(p === "plan") renderChooser(parts[1]);
-  else if(p === "study") renderStudy(parts.slice(1, 5).join("/"), parts[5]);
+  else if(p === "study") renderStudy(parts.slice(1, 5).join("/"), parts.slice(5));
   else if(p === "prep") renderPrep(parts[1]);
 }
 
@@ -131,7 +117,7 @@ function renderChooser(sid){
     <div class="pl-head">${subjectIcon(sid)}<div><h2 class="ct">${esc(g.name)}</h2><p class="pl-sub">${test ? `Διαγώνισμα ${dayName(test.date)} · ${whenText(test.date)}` : "Τι κάνατε στην τάξη;"}</p></div></div>
     <p class="pl-note">${note}</p>
     ${g.chapters.map(c => `<details class="pl-chap"${c.keys.some(k => sel.has(k) || k === sug) || g.chapters.length === 1 ? " open" : ""}><summary><span>${esc(c.name)}</span><small>${c.keys.length}</small></summary>
-      ${c.keys.map(k => { const on = sel.has(k), st = starsOf(k); return `<label class="pl-unit${on ? " on" : ""}"><input type="checkbox" data-pk="${k}"${on ? " checked" : ""}><span class="pl-ut">${unitLabel(k)}</span>${k === sug && !st ? `<span class="pl-sug">Πρόταση</span>` : st ? starsView(st, "small") : ""}</label>`; }).join("")}
+      ${c.keys.map(k => { const on = sel.has(k), pr = cardProgress(k); return `<label class="pl-unit${on ? " on" : ""}"><input type="checkbox" data-pk="${k}"${on ? " checked" : ""}><span class="pl-ut">${unitLabel(k)}</span>${k === sug && !pr.seen ? `<span class="pl-sug">Πρόταση</span>` : pr.seen ? `<span class="pl-prog${pr.ok === pr.n ? " all" : ""}" aria-label="Κατάλαβες ${pr.ok} από ${pr.n} κάρτες">✓ ${pr.ok}/${pr.n}</span>` : ""}</label>`; }).join("")}
     </details>`).join("")}
     <div class="pl-actions">${test ? prepBtn + studyBtn : studyBtn + prepBtn}<p class="pnote center" id="pl-count">${n ? "" : "Διάλεξε τουλάχιστον μία ενότητα."}</p></div>`;
   el.querySelectorAll("[data-pk]").forEach(x => x.onchange = () => {
@@ -147,167 +133,235 @@ function renderChooser(sid){
   $("[data-pl-prep]", el).onclick = () => { if(chosen().length){ PL.prep = null; location.hash = "#prep/" + sid; } };
 }
 
-/* Η ενότητα ως επίπεδο */
-function renderStudy(key, step){
-  if(ALIAS[key]){ location.replace("#study/" + ALIAS[key] + (step ? "/" + step : "")); return; }
+/* Η ενότητα ως κάρτες (#study/<κλειδί>): κάθε θέμα της περίληψης είναι μία ιδέα με τα δικά της μέρη.
+   Η ιδέα (t), Στη ζωή (ex και more), Στο σχήμα (fig), Δοκίμασε (οι λυμένες με "topic" σε αυτή την κάρτα),
+   Το κατάλαβες; (οι ερωτήσεις με "topic"), Για το διαγώνισμα (def). Μια κάρτα δείχνει μόνο τα μέρη που έχει.
+   Όταν μια ερώτηση βγει λάθος, το «Πες το μου αλλιώς» (alt) δίνει άλλη ματιά, το συχνό λάθος και μια νέα ερώτηση.
+   Λυμένες και ερωτήσεις χωρίς "topic" μπαίνουν σε μια τελευταία κάρτα «Όλη η ενότητα».
+   Κατάσταση ανά κάρτα (diab-cards): 1 = το κατάλαβες, 2 = θέλει μια ματιά ακόμα. */
+const PART_NAME = {idea:"Η ιδέα", life:"Στη ζωή", fig:"Στο σχήμα", try:"Δοκίμασε", check:"Το κατάλαβες;", def:"Για το διαγώνισμα", voc:"Λέξεις"};
+const deckCache = {};
+function deckOf(key){
+  if(deckCache[key]) return deckCache[key];
+  const u = unitData(key), n = u.summary.length, has = x => Number.isInteger(x.topic) && x.topic >= 0 && x.topic < n;
+  const byLvl = list => list.sort((a, b) => u.ex[a].lvl - u.ex[b].lvl || a - b);
+  const cards = u.summary.map((b, i) => {
+    const ex = byLvl(u.ex.map((e, j) => j).filter(j => has(u.ex[j]) && u.ex[j].topic === i)), qs = u.quiz.map((q, j) => j).filter(j => has(u.quiz[j]) && u.quiz[j].topic === i);
+    const parts = ["idea", (b.ex || b.more?.length) && "life", b.fig && "fig", ex.length && "try", qs.length && "check", b.def && "def"].filter(Boolean);
+    return {b, ex, qs, parts};
+  });
+  if(u.vocab?.length) cards.push({voc:true, ex:[], qs:[], parts:["voc"]});
+  const ex = byLvl(u.ex.map((e, j) => j).filter(j => !has(u.ex[j]))), qs = u.quiz.map((q, j) => j).filter(j => !has(u.quiz[j]));
+  if(ex.length || qs.length) cards.push({all:true, ex, qs, parts:[ex.length && "try", qs.length && "check"].filter(Boolean)});
+  return deckCache[key] = cards;
+}
+const cardTitle = (key, c) => c.b ? (C[key] ? c.b.h : esc(c.b.h)) : c.voc ? "Λέξεις" : "Όλη η ενότητα";
+const cardMarks = key => store.get("diab-cards", {})[key] || {};
+function markCard(key, i, v){ const all = store.get("diab-cards", {}), m = all[key] || (all[key] = {}); if(m[i] !== v){ m[i] = v; store.set("diab-cards", all); } }
+function cardProgress(key){ const m = cardMarks(key), n = deckOf(key).length; return { n, ok:Object.keys(m).filter(i => i < n && m[i] === 1).length, seen:Object.keys(m).filter(i => i < n).length }; }
+/* Η κατάσταση της ενότητας σε αυτή την επίσκεψη: μέρος ανά κάρτα, παραδείγματα και βοήθειες που άνοιξαν, απαντήσεις */
+const unitState = key => PL.u[key] || (PL.u[key] = { part:{}, life:{}, ti:{}, hints:{}, ans:{}, quiz:{}, alt:{}, review:null, anim:"" });
+
+function renderStudy(key, parts){
+  if(ALIAS[key]){ location.replace("#study/" + ALIAS[key]); return; }
   const u = unitData(key);
   if(!u || !u.quiz?.length || !SHOWN_GRADES.includes(key[0])){ location.replace("#tomorrow"); return; }
   const sid = key.split("/")[1], last = store.get("diab-last-unit", {});
   if(last[sid] !== key){ last[sid] = key; store.set("diab-last-unit", last); }
-  const s = PL.u[key] || (PL.u[key] = { li:0, si:0, sn:{}, ti:0, tn:{}, ta:{} });
-  if(step === "learn") studyLearn(key, s);
-  else if(step === "see") studySee(key, s);
-  else if(step === "try") studyTry(key, s);
-  else if(step === "check") studyCheck(key);
-  else if(step === "done") studyDone(key);
-  else studyLevel(key);
+  const n = deckOf(key).length;
+  if(parts[0] === "c" && +parts[1] >= 0 && +parts[1] < n) cardView(key, +parts[1]);
+  else if(parts[0] === "end") unitEnd(key);
+  else if(parts.length) location.replace("#study/" + key);
+  else unitFeed(key);
 }
-const iliadUnit = key => key.split("/")[1] === "translated";
-function studySteps(key){
-  const u = unitData(key), {see, tr} = exSplit(key), d = stepsOf(key), book = BOOK_HELP[key] ? BOOK_HELP[key].length : 0, il = iliadUnit(key);
-  const n = u.summary.length + (u.vocab || []).length;
-  return [
-    {id:"learn", name:"Μαθαίνω", sub:`${n} κάρτες · μία ιδέα σε κάθε κάρτα`, done:!!d.l},
-    see.length && {id:"see", name:il ? "Βλέπω πώς απαντάμε" : "Βλέπω πώς λύνεται", sub:`${see.length} ${see.length === 1 ? "παράδειγμα" : "παραδείγματα"} · ένα βήμα τη φορά`, done:!!d.s},
-    (tr.length || book) && {id:"try", name:il ? "Απαντώ μόνος/η μου" : "Δοκιμάζω μόνος/η μου", sub:`${tr.length + book} ${tr.length + book === 1 ? "άσκηση" : "ασκήσεις"} · βοήθεια όταν κολλήσεις`, done:!!d.t},
-    {id:"check", name:"Ελέγχω", sub:`${u.quiz.length} ερωτήσεις · δείχνει τι να ξαναδείς`, done:bestOf(key) != null}
-  ].filter(Boolean);
-}
-const nextStep = (key, after) => { const st = studySteps(key), i = st.findIndex(x => x.id === after); return st[i + 1]; };
-function studyLevel(key){
-  const el = $("#plan"), sid = key.split("/")[1], u = unitData(key), steps = studySteps(key), next = steps.find(x => !x.done), stars = starsOf(key);
-  const mins = Math.max(10, Math.round((u.summary.length * 1.5 + (u.ex || []).length * 3 + u.quiz.length * 0.5) / 5) * 5);
+
+/* Η ενότητα ως feed: οι κάρτες σε πλακίδια. Πάτημα = η κάρτα σε όλη την οθόνη. */
+function unitFeed(key){
+  const el = $("#plan"), sid = key.split("/")[1], deck = deckOf(key), m = cardMarks(key), p = cardProgress(key), s = unitState(key);
+  s.review = null;
+  const now = deck.findIndex((c, i) => m[i] !== 1), T = t => unitText(key, t);
+  const meta = c => [c.parts.includes("fig") && "Σχήμα", c.ex.length && (c.ex.length === 1 ? "1 άσκηση" : c.ex.length + " ασκήσεις"), c.qs.length && (c.qs.length === 1 ? "1 ερώτηση" : c.qs.length + " ερωτήσεις")].filter(Boolean).join(" · ");
   el.innerHTML = `<a class="back" href="${unitsOf(sid).length ? "#plan/" + sid : "#tomorrow"}">← ${unitName(key)}</a>
-    <div class="pl-title"><span class="ref">${unitName(key)}${unitNum(key) ? " · " + unitNum(key).replace(" · ", "") : ""}</span><h2 class="ct">${unitTitle(key)}</h2><p class="pl-sub">${steps.length} βήματα · περίπου ${mins} λεπτά</p></div>
-    <ol class="pl-steps">${steps.map((x, i) => `<li><a class="pl-step${x.done ? " done" : ""}${next && x.id === next.id ? " now" : ""}" href="#study/${key}/${x.id}"><span class="pl-dot" aria-hidden="true">${x.done ? "✓" : next && x.id === next.id ? "▶" : i + 1}</span><span class="pl-t"><b>${x.name}</b><small>${x.sub}</small></span><span class="pl-sr">${x.done ? " (έγινε)" : ""}</span></a></li>`).join("")}</ol>
-    <div class="sheet pl-starbox">${starsView(stars)}<p>Ένα αστέρι για τη θεωρία, ένα για την εξάσκηση, ένα για τον έλεγχο.</p></div>
-    <a class="btn" href="#study/${key}/${(next || steps[steps.length - 1]).id}">${next ? (next === steps[0] ? "Ξεκίνα: " : "Συνέχισε: ") + next.name : "Ξανά ο έλεγχος"}</a>
-    ${next && next.id !== "check" ? `<p class="pnote center">Το ξέρεις ήδη; <a href="#study/${key}/check">Πήγαινε κατευθείαν στον έλεγχο</a></p>` : ""}
-    <p class="pnote center"><a href="${unitHref(key)}">Όλη η ενότητα σε μία σελίδα</a></p>`;
+    <div class="pl-title"><span class="ref">${unitName(key)}${unitNum(key) ? " · " + unitNum(key).replace(" · ", "") : ""}</span><h2 class="ct">${unitTitle(key)}</h2></div>
+    <div class="fd-prog"><div class="bar" role="img" aria-label="${p.ok} από ${p.n} κάρτες"><i style="width:${Math.round(p.ok / p.n * 100)}%"></i></div><span>${p.ok} από ${p.n} τα κατάλαβες</span></div>
+    <div class="fd-grid">${deck.map((c, i) => {
+      const st = m[i] === 1 ? `<span class="fd-st ok" aria-label="Το κατάλαβες">✓</span>` : m[i] === 2 ? `<span class="fd-st again" aria-label="Θέλει μια ματιά ακόμα">↻</span>` : "";
+      const teaser = c.b ? (c.b.f ? `<span class="fd-f">${c.b.f}</span>` : `<span class="fd-t">${C[key] ? strip(c.b.t) : esc(c.b.t)}</span>`) : `<span class="fd-t">${c.voc ? "Οι λέξεις της ενότητας" : "Ασκήσεις και ερωτήσεις από όλη την ενότητα"}</span>`;
+      return `<a class="fd-tile${i === now ? " now" : ""}${c.b && c.b.warn ? " warn" : ""}" href="#study/${key}/c/${i}"><span class="fd-h"><span class="fd-n">${i + 1}${i === now ? " · Εδώ είσαι" : c.b && c.b.warn ? " · Προσοχή" : ""}</span>${st}</span>${teaser}<b>${cardTitle(key, c)}</b>${meta(c) ? `<small>${meta(c)}</small>` : ""}</a>`;
+    }).join("")}<a class="fd-tile fd-end" href="#study/${key}/end"><span class="fd-h"><span class="fd-n">Τέλος</span></span><b>Τι κατάλαβα και τι θέλει μια ματιά ακόμα</b></a></div>
+    <a class="btn" href="#study/${key}/c/${now < 0 ? 0 : now}">${now < 0 ? "Ξανά από την αρχή" : now === 0 && !p.seen ? "Ξεκίνα" : `Συνέχισε από την κάρτα ${now + 1}`}</a>
+    <p class="pnote center">Πάτα μια κάρτα για να ανοίξει σε όλη την οθόνη. <a href="${unitHref(key)}">Όλη η ενότητα σε μία σελίδα</a></p>`;
+  PL.fromFeed = key;
 }
-/* Η πάνω μπάρα των βημάτων: πρόοδος σε κομμάτια, πού είσαι, ανάγνωση και κλείσιμο */
-function stepBar(key, label, i, n){
-  return `<div class="pl-segs" style="--n:${n}" role="img" aria-label="${i + 1} από ${n}">${Array.from({length:n}, (_, j) => `<span class="${j <= i ? "on" : ""}"></span>`).join("")}</div>
-    <div class="pl-bar"><h2 class="pl-where">${unitNum(key)}${label} · ${i + 1}/${n}</h2><span class="pl-tools"><button class="pl-round" data-pl-voice aria-label="Διάβασέ το μου φωναχτά"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg></button><a class="pl-round" href="#study/${key}" aria-label="Κλείσιμο"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></a></span></div>`;
-}
-/* Κοινό δέσιμο για τα βήματα σε κάρτες: σύρσιμο, βελάκια, πάτημα αριστερά/δεξιά στην κάρτα */
-function bindDeck(el, go, tap){
+
+/* Μία κάρτα σε όλη την οθόνη. ← → τα μέρη της, ↑ ↓ η επόμενη ή η προηγούμενη κάρτα. */
+function cardView(key, i){
+  const el = $("#plan"), deck = deckOf(key), c = deck[i], s = unitState(key), u = unitData(key), T = t => unitText(key, t), H = t => C[key] ? t : esc(t);
+  const parts = c.parts, alt = s.alt[i] && s.alt[i].open, pi = Math.min(s.part[i] || 0, parts.length - 1), part = alt ? "alt" : parts[pi], last = pi === parts.length - 1;
+  const order = s.review || deck.map((x, j) => j), at = order.indexOf(i), nextCard = order[at + 1], prevCard = at > 0 ? order[at - 1] : null;
+  if(!alt && last && !c.qs.length && !cardMarks(key)[i]) markCard(key, i, 1);
+  let body = "", sec = "", prim = "";
+  const nextLabel = nextCard !== undefined ? "Επόμενη κάρτα ↑" : "Τέλος ενότητας ↑";
+  if(part === "idea"){
+    const b = c.b;
+    body = `<span class="fc-k k-idea${b.warn ? " warn" : ""}">${b.warn ? "Προσοχή" : PART_NAME.idea}</span><h2>${H(b.h)}</h2>${b.quote ? `<p class="quote" lang="grc">${b.quote}</p>` : ""}<p class="fc-big">${T(b.t)}</p>${b.f ? `<p class="f formula">${b.f}</p>` : ""}`;
+  } else if(part === "life"){
+    const list = [c.b.ex, ...(c.b.more || [])].filter(Boolean), shown = Math.min((s.life[i] || 0) + 1, list.length);
+    body = `<span class="fc-k k-life">${PART_NAME.life}${list.length > 1 ? ` · ${shown} από ${list.length}` : ""}</span><h2>${H(c.b.h)}</h2>${list.slice(0, shown).map((t, j) => `<div class="box exb fc-ex${j === shown - 1 && j ? " fc-new" : ""}"><b>Παράδειγμα${list.length > 1 ? " " + (j + 1) : ""}</b><p>${T(t)}</p></div>`).join("")}`;
+    if(shown < list.length) sec = `<button class="fc-sec" data-fc="more">Κι άλλο παράδειγμα</button>`;
+  } else if(part === "fig"){
+    body = `<span class="fc-k k-fig">${PART_NAME.fig}</span><h2>${H(c.b.h)}</h2>${figure(c.b.fig)}`;
+  } else if(part === "try"){
+    const k = Math.min(s.ti[i] || 0, c.ex.length - 1), e = u.ex[c.ex[k]], id = i + "/" + k, shown = s.hints[id] || 0, ans = s.ans[id], left = e.steps.length - shown;
+    body = `<span class="fc-k k-try">${PART_NAME.try}${c.ex.length > 1 ? ` · ${k + 1} από ${c.ex.length}` : ""}</span><span class="lvl l${e.lvl}">${LEVELS[e.lvl]}</span>
+      <p class="fc-q">${e.h && !C[key] ? `<b>${esc(e.h)}${/[;:;?.!]$/.test(e.h) ? "" : ":"}</b> ` : ""}${T(e.q)}</p>
+      <p class="pl-think">Λύσε την στο τετράδιο. Αν κολλήσεις, πάρε μια βοήθεια.</p>
+      ${shown ? `<ol class="pl-sol">${e.steps.slice(0, shown).map(x => `<li>${T(x)}</li>`).join("")}</ol>` : ""}
+      ${left && !ans ? `<button class="btn ghost" data-fc="hint">${shown ? "Κι άλλη βοήθεια" : "Χρειάζομαι βοήθεια"} (${left} ακόμη)</button>` : ""}
+      ${ans ? `<p class="ans">Απάντηση: <span>${T(e.ans)}</span></p>` : `<button class="btn ghost" data-fc="ans">Έλεγξε την απάντησή σου</button>`}`;
+    if(k < c.ex.length - 1) sec = `<button class="fc-sec" data-fc="nextex">Άλλη μία άσκηση</button>`;
+  } else if(part === "check"){
+    const z = s.quiz[i] || (s.quiz[i] = Object.assign(newQuiz(c.qs.map(oi => ({key, oi})), "card"), {wrong:0})), q = z.qs[z.qi], p = z.picked[z.qi], has = p !== undefined;
+    const done = Object.keys(z.picked).length === z.qs.length, a = c.b && c.b.alt;
+    body = `<span class="fc-k k-check">${PART_NAME.check}${z.qs.length > 1 ? ` · ${z.qi + 1} από ${z.qs.length}` : ""}</span><h2 class="fc-qh">${rich(q.q)}</h2>
+      ${q.opts.map((o, j) => `<button class="opt${!has ? "" : o.ok ? " right" + (j === p ? " picked" : "") : j === p ? " wrong picked" : " dim"}" data-fc-opt="${j}"${has ? " disabled" : ""}><span class="l" aria-hidden="true">${has && o.ok ? "✓" : has && j === p ? "✕" : LETTERS[j]}</span><span>${plain(o.t)}</span></button>`).join("")}
+      <div aria-live="polite">${has ? `<div class="why">${q.opts[p].ok ? `<b class="y">Σωστά</b>` : `<b class="n">Όχι ακριβώς</b>`}${rich(q.why)}</div>` : ""}</div>
+      ${done ? `<p class="fc-verdict">${z.wrong ? (cardMarks(key)[i] === 1 ? "Με τη δεύτερη ματιά το βρήκες!" : `Δεν πειράζει. Αυτή η κάρτα θα ξανάρθει στο τέλος.${a && !s.alt[i] ? " Ή δες το τώρα αλλιώς." : ""}`) : "Τα βρήκες όλα!"}</p>` : ""}`;
+    if(has && !q.opts[p].ok && a && !s.alt[i]) prim = `<button class="btn" data-fc="alt">Πες το μου αλλιώς</button>`;
+    if(has && z.qi < z.qs.length - 1){ const b = `<button class="${prim ? "fc-sec plain" : "btn"}" data-fc="nextq">Επόμενη ερώτηση</button>`; if(prim) sec = b; else prim = b; }
+    else if(!has) prim = `<span class="fc-wait">Διάλεξε μια απάντηση</span>`;
+    else if(prim) sec = `<button class="fc-sec plain" data-fc="${last ? "down" : "right"}">${last ? "Επόμενη κάρτα" : PART_NAME[parts[pi + 1]]}</button>`;
+  } else if(part === "def"){
+    body = `<span class="fc-k k-def">${PART_NAME.def}</span><h2>${H(c.b.h)}</h2><div class="box defb"><b>${esc(c.b.defLabel || "Στο διαγώνισμα γράφεις")}</b><p class="fc-big">${T(c.b.def)}</p></div>`;
+  } else if(part === "voc"){
+    body = `<span class="fc-k k-life">${PART_NAME.voc}</span><h2>Οι λέξεις της ενότητας</h2><dl class="fc-voc">${u.vocab.map(v => `<div><dt${C[key] ? ' lang="grc"' : ""}>${H(v[0])}</dt><dd>${H(v[1])}${v[2] ? `<small>${H(v[2])}</small>` : ""}</dd></div>`).join("")}</dl>`;
+  } else if(part === "alt"){
+    const a = c.b.alt, st = s.alt[i], f = C[key] ? t => t : esc;
+    const aq = a.q && (st.q || (st.q = {opts:shuffle([{t:f(a.q.c), ok:true}, ...a.q.w.map(t => ({t:f(t), ok:false}))])})), p = st.picked, has = p !== undefined;
+    body = `<span class="fc-k k-alt">Ας το πούμε αλλιώς</span><h2>${H(c.b.h)}</h2>
+      <div class="box fc-altb"><b>Μια άλλη ματιά</b><p>${T(a.t)}</p></div>
+      ${a.mistake ? `<div class="box fc-mist"><b>Το συχνό λάθος</b><p>${T(a.mistake)}</p></div>` : ""}
+      ${aq ? `<div class="fc-again"><span class="fc-k k-check">Δοκίμασε ξανά</span><h3 class="fc-qh">${T(a.q.q)}</h3>${aq.opts.map((o, j) => `<button class="opt${!has ? "" : o.ok ? " right" : j === p ? " wrong picked" : " dim"}" data-fc-aopt="${j}"${has ? " disabled" : ""}><span class="l" aria-hidden="true">${has && o.ok ? "✓" : has && j === p ? "✕" : LETTERS[j]}</span><span>${plain(o.t)}</span></button>`).join("")}<div aria-live="polite">${has ? `<div class="why">${aq.opts[p].ok ? `<b class="y">Σωστά</b>` : `<b class="n">Όχι ακριβώς</b>`}${T(a.q.why)}</div>${aq.opts[p].ok ? "" : `<p class="fc-verdict">Δεν πειράζει. Αυτή η κάρτα θα ξανάρθει στο τέλος.</p>`}` : ""}</div></div>` : ""}`;
+    prim = `<button class="btn" data-fc="back">Πίσω στην κάρτα</button>`;
+  }
+  if(!prim) prim = last ? `<button class="btn" data-fc="down">${nextLabel}</button>` : `<button class="btn" data-fc="right">${PART_NAME[parts[pi + 1]]} →</button>`;
+  if(!sec && !alt && c.b && part !== "check" && part !== "def" && (c.b.alt || (c.b.more || []).length)) sec = `<button class="fc-sec" data-fc="lost">Δεν το κατάλαβα</button>`;
+  const anim = CALM.matches ? "" : s.anim;
+  s.anim = "";
+  el.innerHTML = `<div class="fc" role="dialog" aria-modal="true" aria-label="${esc(strip(cardTitle(key, c)))}">
+    <div class="pl-segs" style="--n:${parts.length}" role="img" aria-label="Μέρος ${pi + 1} από ${parts.length}">${parts.map((x, j) => `<span class="${j <= pi ? "on" : ""}"></span>`).join("")}</div>
+    <div class="pl-bar"><h2 class="pl-where">Κάρτα ${i + 1} από ${deck.length}${s.review ? " · ξανά" : ""}</h2><span class="pl-tools"><button class="pl-round" data-pl-voice aria-label="Διάβασέ το μου φωναχτά"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg></button><button class="pl-round" data-fc="close" aria-label="Πίσω στις κάρτες"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></span></div>
+    <section class="fc-body fc-read p-${part}${anim ? " " + anim : ""}">${body}</section>
+    <div class="fc-actions">${sec}${prim}</div>
+    <p class="fc-hint">← → τα μέρη της κάρτας · ↑ η επόμενη κάρτα</p>
+  </div>`;
+
+  const go = (d, a = d > 0 ? "in-next" : "in-prev") => { const j = pi + d; if(alt || j < 0 || j >= parts.length) return false; s.part[i] = j; s.anim = a; cardView(key, i); return true; };
+  const card = d => {
+    const j = d > 0 ? nextCard : prevCard;
+    if(d > 0 && j === undefined){ location.replace("#study/" + key + "/end"); return true; }
+    if(j === null || j === undefined) return false;
+    s.anim = d > 0 ? "in-up" : "in-down";
+    if(s.alt[i]) s.alt[i].open = false;
+    location.replace("#study/" + key + "/c/" + j);
+    return true;
+  };
+  PL.fc = { go, card };
   keyNav = go;
-  el.querySelectorAll("[data-nav]").forEach(b => b.onclick = () => go(+b.dataset.nav));
+  const act = {
+    right:() => go(1), down:() => card(1),
+    more:() => { s.life[i] = (s.life[i] || 0) + 1; cardView(key, i); const n = $(".fc-new", el); if(n) n.scrollIntoView({block:"nearest"}); },
+    nextex:() => { s.ti[i] = (s.ti[i] || 0) + 1; s.anim = "in-next"; cardView(key, i); },
+    hint:() => { const id = i + "/" + Math.min(s.ti[i] || 0, c.ex.length - 1); s.hints[id] = (s.hints[id] || 0) + 1; cardView(key, i); const li = $(".pl-sol li:last-child", el); if(li) li.scrollIntoView({block:"nearest"}); },
+    ans:() => { s.ans[i + "/" + Math.min(s.ti[i] || 0, c.ex.length - 1)] = 1; cardView(key, i); const a = $(".ans", el); if(a) a.scrollIntoView({block:"nearest"}); },
+    nextq:() => { s.quiz[i].qi++; s.anim = "in-next"; cardView(key, i); },
+    alt:() => { s.alt[i] = { open:true }; s.anim = "in-next"; cardView(key, i); },
+    back:() => { s.alt[i].open = false; s.anim = "in-prev"; cardView(key, i); },
+    /* «Δεν το κατάλαβα»: η άλλη ματιά, αν υπάρχει· αλλιώς ένα ακόμα παράδειγμα */
+    lost:() => {
+      if(c.b.alt){ s.alt[i] = Object.assign(s.alt[i] || {}, { open:true }); s.anim = "in-next"; cardView(key, i); return; }
+      s.life[i] = (s.life[i] || 0) + 1; s.part[i] = parts.indexOf("life"); s.anim = "in-next"; cardView(key, i);
+    },
+    close:() => { if(PL.fromFeed === key) history.back(); else location.replace("#study/" + key); }
+  };
+  el.querySelectorAll("[data-fc]").forEach(b => b.onclick = () => act[b.dataset.fc]());
   el.querySelectorAll("[data-pl-voice]").forEach(b => b.onclick = () => $("#app-voice").click());
-  const slide = $(".slide", el);
-  if(!slide) return;
-  swipe(slide, go);
-  if(tap) slide.addEventListener("click", e => {
-    if(e.target.closest("button,a,summary,input,select,label")) return;
-    const r = slide.getBoundingClientRect();
-    go(e.clientX - r.left < r.width / 3 ? -1 : 1);
+  el.querySelectorAll("[data-fc-opt]").forEach(b => b.onclick = () => {
+    const z = s.quiz[i], q = z.qs[z.qi], j = +b.dataset.fcOpt, ok = q.opts[j].ok;
+    z.picked[z.qi] = j; markAnswer(q.key, q.oi, ok);
+    if(!ok){ z.wrong++; markCard(key, i, 2); }
+    else if(Object.keys(z.picked).length === z.qs.length && !z.wrong) markCard(key, i, 1);
+    if(c.all && Object.keys(z.picked).length === z.qs.length) saveBest(key, gradeOf(z));
+    try { navigator.vibrate && navigator.vibrate(ok ? 30 : [40, 60, 40]); } catch(e){}
+    cardView(key, i);
+    const w = $(".why", el); if(w) w.scrollIntoView({block:"nearest"});
+  });
+  el.querySelectorAll("[data-fc-aopt]").forEach(b => b.onclick = () => {
+    const st = s.alt[i], j = +b.dataset.fcAopt;
+    st.picked = j; markCard(key, i, st.q.opts[j].ok ? 1 : 2);
+    cardView(key, i);
+    const w = $(".fc-again .why", el); if(w) w.scrollIntoView({block:"nearest"});
+  });
+  if(c.b && c.b.fig) el.querySelectorAll(".fig").forEach(f => f.classList.add("fc-fig"));
+  bindCardGestures($(".fc", el));
+}
+/* Σύρσιμο στην κάρτα: οριζόντια τα μέρη, κάθετα οι κάρτες. Το κάθετο σύρσιμο αλλάζει κάρτα μόνο
+   όταν το κείμενο της κάρτας έχει φτάσει στο τέλος (ή στην αρχή), αλλιώς απλώς κυλάει το κείμενο. */
+function bindCardGestures(fc){
+  const body = $(".fc-body", fc);
+  let x0 = null, y0 = 0, atTop = true, atEnd = true;
+  fc.addEventListener("touchstart", e => {
+    if(e.touches.length !== 1){ x0 = null; return; }
+    x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+    atTop = body.scrollTop <= 2; atEnd = body.scrollTop + body.clientHeight >= body.scrollHeight - 2;
+  }, {passive:true});
+  fc.addEventListener("touchend", e => {
+    if(x0 === null) return;
+    const t = e.changedTouches[0], dx = t.clientX - x0, dy = t.clientY - y0;
+    x0 = null;
+    if(Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.3) PL.fc.go(dx < 0 ? 1 : -1);
+    else if(Math.abs(dy) > 60 && Math.abs(dy) > Math.abs(dx) * 1.3){
+      if(dy < 0 && atEnd) PL.fc.card(1);
+      else if(dy > 0 && atTop) PL.fc.card(-1);
+    }
   });
 }
-const anim = d => CALM.matches ? "" : d > 0 ? " in-next" : d < 0 ? " in-prev" : "";
-const nextLink = (key, after, text) => { const x = nextStep(key, after); return `<a class="btn gold" href="#study/${key}/${x ? x.id : ""}">${text || (x ? x.name + " →" : "Τέλος →")}</a>`; };
+/* ↑ ↓ στο πληκτρολόγιο: η προηγούμενη και η επόμενη κάρτα */
+document.addEventListener("keydown", e => {
+  if(!PL.fc || !$("#plan .fc") || $("#plan").hidden || (e.target.closest && e.target.closest("input,textarea,select"))) return;
+  if(e.key === "ArrowDown"){ e.preventDefault(); PL.fc.card(1); }
+  else if(e.key === "ArrowUp"){ e.preventDefault(); PL.fc.card(-1); }
+});
 
-function studyLearn(key, s){
-  const el = $("#plan"), u = unitData(key), T = t => unitText(key, t), H = t => C[key] ? t : esc(t);
-  const cards = [...u.summary.map(b => ({b})), ...(u.vocab || []).map(v => ({v}))], n = cards.length, i = Math.min(s.li, n - 1), c = cards[i], last = i === n - 1;
-  if(last) markStep(key, "l");
-  const greek = C[key] ? ' lang="grc"' : "";
-  const card = c.b ? `<span class="k">${c.b.warn ? "Προσοχή" : "Σκέψου"}</span><h3>${H(c.b.h)}</h3>${c.b.quote ? `<p class="quote" lang="grc">${c.b.quote}</p>` : ""}<p>${T(c.b.t)}</p>${c.b.f ? `<p class="f formula">${c.b.f}</p>` : ""}${figure(c.b.fig)}${c.b.ex ? `<div class="box exb"><b>Παράδειγμα</b><p>${T(c.b.ex)}</p></div>` : ""}${c.b.def ? `<div class="box defb"><b>${esc(c.b.defLabel || "Στο διαγώνισμα γράφεις")}</b><p>${T(c.b.def)}</p></div>` : ""}`
-    : `<span class="k">Λέξη</span><h3 class="pl-word"${greek}>${H(c.v[0])}</h3><p><b>${H(c.v[1])}</b></p>${c.v[2] ? `<div class="box exb"><b>${C[key] ? "Στα νέα ελληνικά" : "Παράδειγμα"}</b><p>${H(c.v[2])}</p></div>` : ""}`;
-  el.innerHTML = stepBar(key, "Μαθαίνω", i, n) + `<div class="deck"><section class="blk slide pl-story${c.b && c.b.warn ? " warn" : ""}${anim(s.ld)}" aria-live="polite">${card}</section></div>
-    ${pager(i > 0, !last, last ? nextLink(key, "learn", "Τέλος θεωρίας ★") : `<span class="pl-hint">πάτα δεξιά για συνέχεια</span>`)}`;
-  s.ld = 0;
-  bindDeck(el, d => { const j = i + d; if(j < 0 || j >= n) return false; s.li = j; s.ld = d; studyLearn(key, s); return true; }, true);
-}
-
-/* Παραδείγματα: η λύση ανοίγει ένα βήμα τη φορά, για να σκεφτεί πρώτα ο μαθητής το επόμενο */
-function exCard(key, e, i, n, label){
-  const T = t => unitText(key, t);
-  return `<div class="exh"><span class="n">${label} ${i + 1} από ${n}</span><span class="lvl l${e.lvl}">${LEVELS[e.lvl]}</span></div><p class="q">${e.h && !C[key] ? `<b>${esc(e.h)}${/[;:;?.!]$/.test(e.h) ? "" : ":"}</b> ` : ""}${T(e.q)}</p>`;
-}
-function studySee(key, s){
-  const el = $("#plan"), u = unitData(key), list = exSplit(key).see, n = list.length;
-  if(!n){ location.replace("#study/" + key); return; }
-  const i = Math.min(s.si, n - 1), e = u.ex[list[i]], shown = s.sn[i] || 0, all = shown >= e.steps.length, last = i === n - 1, T = t => unitText(key, t);
-  if(last && all) markStep(key, "s");
-  el.innerHTML = stepBar(key, iliadUnit(key) ? "Βλέπω πώς απαντάμε" : "Βλέπω πώς λύνεται", i, n) + `<div class="deck"><div class="sheet ex slide${anim(s.sd)}">${exCard(key, e, i, n, "Παράδειγμα")}
-      ${shown ? `<ol class="pl-sol">${e.steps.slice(0, shown).map(x => `<li>${T(x)}</li>`).join("")}</ol>` : ""}
-      ${all ? `<p class="ans">Απάντηση: <span>${T(e.ans)}</span></p>${e.learn ? `<div class="learn"><b>Όπως μάθαμε</b><p>${T(e.learn)}</p></div>` : ""}`
-        : `<p class="pl-think">${shown ? "Ποιο είναι το επόμενο βήμα; Σκέψου το και μετά πάτα." : "Πώς θα το ξεκινούσες; Σκέψου το και μετά πάτα."}</p><button class="btn ghost" data-pl-step>${shown ? "Επόμενο βήμα" : "Δείξε το πρώτο βήμα"} (${shown + 1} από ${e.steps.length})</button>`}
-    </div></div>
-    ${pager(i > 0, !last, last && all ? nextLink(key, "see") : `<span class="pl-hint">← σύρε →</span>`)}`;
-  s.sd = 0;
-  const go = d => { const j = i + d; if(j < 0 || j >= n) return false; s.si = j; s.sd = d; studySee(key, s); return true; };
-  bindDeck(el, go, false);
-  el.querySelectorAll("[data-pl-step]").forEach(b => b.onclick = () => { s.sn[i] = shown + 1; studySee(key, s); const li = $(".pl-sol li:last-child", el) || $(".ans", el); if(li) li.scrollIntoView({block:"nearest"}); });
-}
-
-/* Εξάσκηση: ο μαθητής λύνει στο τετράδιο. Τα βήματα της λύσης γίνονται βοήθειες, η απάντηση είναι για έλεγχο. */
-function studyTry(key, s){
-  const el = $("#plan"), u = unitData(key), list = exSplit(key).tr, book = !!BOOK_HELP[key], n = list.length + (book ? 1 : 0);
-  if(!n){ location.replace("#study/" + key); return; }
-  const i = Math.min(s.ti, n - 1), last = i === n - 1, T = t => unitText(key, t);
-  if(last) markStep(key, "t");
-  let card;
-  if(i < list.length){
-    const e = u.ex[list[i]], shown = s.tn[i] || 0, left = e.steps.length - shown, ans = s.ta[i];
-    card = `<div class="sheet ex slide${anim(s.td)}">${exCard(key, e, i, list.length, iliadUnit(key) ? "Ερώτηση" : "Άσκηση")}
-      <p class="pl-think">${iliadUnit(key) ? "Απάντησε με δικά σου λόγια, στο τετράδιο ή φωναχτά." : "Λύσε την στο τετράδιο."} Αν κολλήσεις, πάρε μια βοήθεια.</p>
-      ${shown && e.learn ? `<div class="learn"><b>Θυμήσου τη θεωρία</b><p>${T(e.learn)}</p>${"topic" in e ? `<button class="go" data-pl-topic="${e.topic}">Δες την κάρτα →</button>` : ""}</div>` : ""}
-      ${shown ? `<ol class="pl-sol">${e.steps.slice(0, shown).map(x => `<li>${T(x)}</li>`).join("")}</ol>` : ""}
-      ${left && !ans ? `<button class="btn ghost" data-pl-hint>${shown ? "Κι άλλη βοήθεια" : "Χρειάζομαι βοήθεια"} (${left} ακόμη)</button>` : ""}
-      ${ans ? `<p class="ans">Απάντηση: <span>${T(e.ans)}</span></p>` : `<button class="btn ghost" data-pl-ans>Έλεγξε την απάντησή σου</button>`}
-    </div>`;
-  } else card = `<div class="slide pl-book">${bookHelpView(key, bookUrlFor(key), u.summary)}</div>`;
-  el.innerHTML = stepBar(key, iliadUnit(key) ? "Απαντώ μόνος/η μου" : "Δοκιμάζω μόνος/η μου", i, n) + `<div class="deck">${card}</div>
-    ${pager(i > 0, !last, last ? nextLink(key, "try") : `<span class="pl-hint">← σύρε →</span>`)}`;
-  s.td = 0;
-  const go = d => { const j = i + d; if(j < 0 || j >= n) return false; s.ti = j; s.td = d; studyTry(key, s); return true; };
-  bindDeck(el, go, false);
-  el.querySelectorAll("[data-pl-hint]").forEach(b => b.onclick = () => { s.tn[i] = (s.tn[i] || 0) + 1; studyTry(key, s); const li = $(".pl-sol li:last-child", el); if(li) li.scrollIntoView({block:"nearest"}); });
-  el.querySelectorAll("[data-pl-ans]").forEach(b => b.onclick = () => { s.ta[i] = 1; studyTry(key, s); const a = $(".ans", el); if(a) a.scrollIntoView({block:"nearest"}); });
-  const toCard = t => { s.li = t; location.hash = "#study/" + key + "/learn"; };
-  el.querySelectorAll("[data-pl-topic]").forEach(b => b.onclick = () => toCard(+b.dataset.plTopic));
-  if(book) bindBookHelp(el, key, () => studyTry(key, s), t => toCard(t));
-}
-
-/* Έλεγχος: οι ερωτήσεις της ενότητας. Στο τέλος πάμε στην οθόνη «Μπράβο». */
-function studyCheck(key){
-  const el = $("#plan");
-  let z = PL.quiz[key];
-  if(!z || z.done) z = PL.quiz[key] = newQuiz(unitItems(key), "unit");
-  const rr = () => { if(!z.done) studyCheck(key); };
-  const v = quizView(z, rr);
-  el.innerHTML = `<div class="pl-bar"><h2 class="pl-where">${unitNum(key)}Ελέγχω</h2><span class="pl-tools"><a class="pl-round" href="#study/${key}" aria-label="Κλείσιμο"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></a></span></div>` + v.body;
-  keyNav = v.go;
-  el.querySelectorAll("[data-nav]").forEach(b => b.onclick = () => v.go && v.go(+b.dataset.nav));
-  const slide = $(".slide", el);
-  if(slide && v.go) swipe(slide, v.go);
-  bindQuiz(el, z, rr, { finish:() => { saveBest(key, gradeOf(z)); location.hash = "#study/" + key + "/done"; } });
-}
-
-function studyDone(key){
-  const el = $("#plan"), z = PL.quiz[key];
-  if(!z || !z.done){ location.replace("#study/" + key); return; }
-  const {right} = quizScore(z), n = z.qs.length, stars = starsOf(key), u = unitData(key), sid = key.split("/")[1];
-  const wrong = z.qs.filter((q, i) => z.picked[i] === undefined || !q.opts[z.picked[i]].ok);
+/* Τέλος ενότητας: τι κατάλαβες, τι θέλει μια ματιά ακόμα, και όλοι οι ορισμοί για το διαγώνισμα */
+function unitEnd(key){
+  const el = $("#plan"), deck = deckOf(key), m = cardMarks(key), p = cardProgress(key), sid = key.split("/")[1], s = unitState(key), T = t => unitText(key, t);
+  PL.fromFeed = null;
+  const again = deck.map((c, i) => i).filter(i => m[i] === 2), unseen = deck.map((c, i) => i).filter(i => !m[i]);
   const qi = PL.queue.indexOf(key), nextUnit = qi >= 0 ? PL.queue[qi + 1] : null;
-  const ids = dayPlan(nextSchoolDay()).ids.filter(id => unitsOf(id).length), at = ids.indexOf(sid), nextSid = ids.filter(id => id !== sid)[Math.max(0, at)] || ids.find(id => id !== sid);
-  const learned = u.summary.slice(0, 5).map(b => `<li><span aria-hidden="true">✓</span>${esc(strip(b.h))}</li>`).join("");
+  const ids = dayPlan(nextSchoolDay()).ids.filter(id => unitsOf(id).length), nextSid = ids.find(id => id !== sid);
+  const row = i => `<a class="fd-row" href="#study/${key}/c/${i}"><span class="fd-num">${i + 1}</span><span class="pl-t"><b>${cardTitle(key, deck[i])}</b></span><span aria-hidden="true">›</span></a>`;
+  const defs = deck.filter(c => c.b && c.b.def);
   el.innerHTML = `<div class="pl-done">
-      <svg class="pl-confetti" viewBox="0 0 260 120" aria-hidden="true"><path d="M22 30l4 9 9 4-9 4-4 9-4-9-9-4 9-4z" style="fill:var(--c-pink)"/><circle cx="236" cy="24" r="5" style="fill:var(--c-cyan)"/><rect x="214" y="78" width="10" height="10" rx="2" transform="rotate(20 219 83)" style="fill:var(--c-amber)"/><circle cx="40" cy="96" r="4" style="fill:var(--c-lime)"/><path d="M240 98l3 6 6 3-6 3-3 6-3-6-6-3 6-3z" style="fill:var(--c-violet)"/>
-        ${[[78, 38, .9], [130, 30, 1.25], [182, 38, .9]].map(([x, y, k], i) => `<g transform="translate(${x - 12 * k * 2} ${y - 12 * k * 2 + 20}) scale(${k * 2})"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z" class="${i < stars ? "on" : "off"}"/></g>`).join("")}</svg>
-      <h2 class="ct">${right * 5 >= n * 4 ? "Μπράβο!" : "Καλή προσπάθεια!"}</h2>
-      <p class="pl-sub">${unitLabel(key)}${stars ? ` · ${stars === 1 ? "1 αστέρι" : stars + " αστέρια"}` : ""}</p>
-      <p>Βρήκες σωστά ${right} από ${n}.${bestOf(key) < 16 ? " Το αστέρι του ελέγχου έρχεται με 8 στις 10 σωστές. Ξαναδοκίμασε όποτε θες." : ""}</p></div>
-    <div class="sheet pl-learned"><h3 class="pl-h">Σήμερα έμαθες</h3><ul>${learned}</ul></div>
-    ${wrong.length ? `<details class="sheet pl-again"><summary><span class="pl-again-ic" aria-hidden="true">↻</span><span class="pl-t"><b>Μια ματιά ακόμα</b><small>${wrong.length === 1 ? "1 ερώτηση" : wrong.length + " ερωτήσεις"} που σου ξέφυγαν</small></span></summary>
-      ${wrong.map(q => `<div class="pl-miss"><p><b>${plain(q.q)}</b></p><p class="ans">Σωστή απάντηση: <span>${plain(q.opts.find(o => o.ok).t)}</span></p><p>${rich(q.why)}</p></div>`).join("")}</details>` : ""}
+      <svg class="pl-confetti" viewBox="0 0 260 90" aria-hidden="true"><path d="M22 20l4 9 9 4-9 4-4 9-4-9-9-4 9-4z" style="fill:var(--c-pink)"/><circle cx="236" cy="18" r="5" style="fill:var(--c-cyan)"/><rect x="214" y="62" width="10" height="10" rx="2" transform="rotate(20 219 67)" style="fill:var(--c-amber)"/><circle cx="40" cy="76" r="4" style="fill:var(--c-lime)"/><circle cx="130" cy="45" r="36" stroke-width="3" style="fill:color-mix(in srgb,var(--c-lime) 16%,transparent);stroke:var(--c-lime)"/><path d="M114 46l11 11 22-24" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--c-lime)"/></svg>
+      <h2 class="ct">${p.ok === p.n ? "Τα κατάλαβες όλα!" : p.ok ? `${p.ok} από ${p.n} τα κατάλαβες!` : "Τέλος ενότητας"}</h2>
+      <p class="pl-sub">${unitLabel(key)}</p></div>
+    <div class="fd-strip" style="--n:${p.n}">${deck.map((c, i) => `<a href="#study/${key}/c/${i}" class="${m[i] === 1 ? "ok" : m[i] === 2 ? "again" : ""}" aria-label="Κάρτα ${i + 1}: ${m[i] === 1 ? "την κατάλαβες" : m[i] === 2 ? "θέλει μια ματιά ακόμα" : "δεν την έκανες ακόμα"}"></a>`).join("")}</div>
+    ${again.length ? `<div class="sheet fd-list"><h3 class="pl-h">Ας τα ξαναδούμε</h3>${again.map(row).join("")}</div>` : ""}
+    ${unseen.length ? `<div class="sheet fd-list"><h3 class="pl-h">Δεν τις έκανες ακόμα</h3>${unseen.map(row).join("")}</div>` : ""}
+    ${defs.length ? `<details class="sheet pl-again"><summary><span class="pl-again-ic" aria-hidden="true">✎</span><span class="pl-t"><b>Για το διαγώνισμα</b><small>${defs.length === 1 ? "1 ορισμός ή κανόνας" : defs.length + " ορισμοί και κανόνες"}, όλοι μαζί</small></span></summary>${defs.map(c => `<div class="pl-miss"><p><b>${C[key] ? c.b.h : esc(c.b.h)}</b></p><p>${T(c.b.def)}</p></div>`).join("")}</details>` : ""}
     <div class="pl-actions">
-      ${nextUnit ? `<a class="btn" href="#study/${nextUnit}">Επόμενη ενότητα: ${unitLabel(nextUnit)}</a>` : nextSid ? `<a class="btn" href="#plan/${nextSid}">Επόμενο για αύριο: ${esc(gradeSubject(selectedGrade, nextSid).name)}</a>` : ""}
+      ${again.length ? `<button class="btn" data-fd-again>Ξανά ${again.length === 1 ? "αυτή την κάρτα" : `αυτές τις ${again.length} κάρτες`}</button>` : ""}
+      ${nextUnit ? `<a class="btn${again.length ? " ghost" : ""}" href="#study/${nextUnit}">Επόμενη ενότητα: ${unitLabel(nextUnit)}</a>` : nextSid ? `<a class="btn${again.length ? " ghost" : ""}" href="#plan/${nextSid}">Επόμενο για αύριο: ${esc(gradeSubject(selectedGrade, nextSid).name)}</a>` : ""}
       <a class="btn ghost" href="#tomorrow">Φτάνει για σήμερα</a>
-      <p class="pnote center"><a href="#study/${key}/check">Ξανά ο έλεγχος</a> · <a href="#study/${key}">Τα βήματα της ενότητας</a></p>
+      <p class="pnote center"><a href="#study/${key}">Όλες οι κάρτες</a></p>
     </div>`;
+  const b = $("[data-fd-again]", el);
+  /* Ξανά: οι κάρτες ξεκινούν από την αρχή, με το επόμενο παράδειγμα και νέα σειρά στις ερωτήσεις */
+  if(b) b.onclick = () => {
+    again.forEach(i => { s.part[i] = 0; s.life[i] = (s.life[i] || 0) + 1; delete s.quiz[i]; delete s.alt[i]; });
+    s.review = again; location.hash = "#study/" + key + "/c/" + again[0];
+  };
 }
 
 /* Προετοιμασία για διαγώνισμα: 10 ερωτήσεις από τις ενότητες που διάλεξες, ανακατεμένες.
