@@ -57,11 +57,11 @@ function subjectIcon(id,cls=''){
    full  = Πλήρες: περίληψη, λέξεις, ερωτήσεις και λυμένες, όλα γραμμένα για αυτή την ενότητα
    expl  = Εξήγηση: σύντομη εξήγηση· οι ερωτήσεις και οι δραστηριότητες είναι γενικές
    guide = Οδηγός: γενικές οδηγίες μελέτης· το περιεχόμενο είναι στο επίσημο βιβλίο
-   Το LINKED δείχνει ενότητες του βιβλίου που καλύπτονται από δικές μας πλήρεις ενότητες στο content/. */
-const LINKED = {'B/math/0/2':'M/A1.1','B/math/0/3':'M/A1.2','B/ancient/0/1':'G/u1','B/ancient/0/2':'G/u2','B/translated/0/2':'A/r1','B/translated/0/3':'A/r1','B/translated/0/4':'A/r1','B/translated/0/6':'A/r3'};
-const linkedUnit = key => LINKED[key] && C[LINKED[key]] ? LINKED[key] : null;
-const lessonLevel = key => linkedUnit(key) || OFFICIAL_CONTENT[key] ? 'full' : EXPLANATIONS[key] ? 'expl' : 'guide';
+   Πλήρες περιεχόμενο έρχεται από τα official-lessons ή από το content/ (C), και μέσω του ALIAS για ενότητες που καλύπτει άλλη ενότητα. */
+const lessonLevel = key => unitData(ALIAS[key] || key) ? 'full' : EXPLANATIONS[key] ? 'expl' : 'guide';
 const LEVEL_CHIP = {full:'<span class="chip ok">Πλήρες</span>', expl:'<span class="chip expl">Εξήγηση</span>', guide:'<span class="chip">Οδηγός</span>'};
+/* Αν ο μαθητής έχει λύσει το Quiz της ενότητας, δείχνουμε τον καλύτερο βαθμό του αντί για «Πλήρες» */
+const lessonChip = key => { const u = ALIAS[key] || key, best = unitData(u) ? bestOf(u) : undefined; return best === undefined ? LEVEL_CHIP[lessonLevel(key)] : `<span class="chip score ${best >= 14 ? 'ok' : best >= 10 ? 'mid' : 'low'}" title="Ο καλύτερος βαθμός σου στις ερωτήσεις">${best}/20</span>`; };
 const levelLegend = () => `<p class="level-legend">${LEVEL_CHIP.full} μελετάς από εδώ · ${LEVEL_CHIP.expl} σύντομη εξήγηση, εξάσκηση από το βιβλίο · ${LEVEL_CHIP.guide} μελετάς από το βιβλίο</p>`;
 /* Μαθήματα χωρίς κάρτες, κουίζ και λυμένες: μόνο σύνδεσμος στο βιβλίο και μια γενική περιγραφή.
    Τα πρακτικά μαθήματα μαθαίνονται στην τάξη, και στις ξένες γλώσσες τα σχολεία χρησιμοποιούν συχνά δικά τους βιβλία. */
@@ -77,7 +77,7 @@ const INFO_ONLY = {
 function subjectCard(g,s){
   const indexed = s.books.reduce((n,b)=>n+b.sections.length,0);
   const keys = s.books.flatMap((b,bi)=>b.sections.map((_,si)=>`${g.id}/${s.id}/${bi}/${si}`));
-  const full = keys.filter(key=>OFFICIAL_CONTENT[key]).length + (s.legacy ? readyKeys(s.legacy).length : 0);
+  const full = keys.filter(key=>unitData(ALIAS[key] || key)).length;
   const expl = keys.filter(key=>lessonLevel(key)==='expl').length;
   const status = INFO_ONLY[s.id] ? (s.books.length ? 'Επίσημο βιβλίο και περιγραφή' : 'Περιγραφή μαθήματος') : full||expl ? [full?`${full} πλήρη`:'', expl?`${expl} εξηγήσεις`:'', `${indexed} στο βιβλίο`].filter(Boolean).join(' · ') : indexed ? `${indexed} οδηγοί μελέτης` : 'Υλικό ΙΕΠ';
   return `<a class="subject-card" href="${courseHref(g.id,s.id)}"><span class="subject-top">${subjectIcon(s.id)}<span>${s.hours} ${s.hours===1?'ώρα':'ώρες'} / εβδ.</span></span><strong>${esc(s.name)}</strong><span class="subject-detail">${esc(s.description || (s.choice==='language'?'2η ξένη γλώσσα':s.id==='ethics'?'Εναλλακτικά των Θρησκευτικών':s.books.length?'Κάρτες, κουίζ & επίσημα βιβλία':'Οδηγίες & εκπαιδευτικό υλικό'))}</span><span class="subject-status">${status} <span aria-hidden="true">→</span></span></a>`;
@@ -117,11 +117,10 @@ function renderCourse(grade,id){
   const g=getGrade(grade), s=gradeSubject(grade,id), el=$('#catalogue');
   if(!s){ el.innerHTML=`<div class="empty-state"><h2>Το μάθημα δεν βρέθηκε</h2><p>Διάλεξε ένα μάθημα από την τάξη σου.</p><a class="btn" href="#class/${selectedGrade}">Όλα τα μαθήματα</a></div>`;return; }
   document.title=`${s.name} · ${g.label} | Διάβασμα`;
-  const custom = s.legacy ? readyKeys(s.legacy) : [];
   el.innerHTML=`<a class="back" href="#class/${grade}">← ${g.label} · Όλα τα μαθήματα</a><div class="hero catalogue-hero course-hero">${subjectIcon(s.id,'big')}<span class="ref">${g.label} · ${CATALOGUE.schoolYear}</span><h2 class="ct">${esc(s.name)}</h2>${s.description?`<p>${esc(s.description)}</p>`:''}<div class="catalogue-meta"><span>${s.hours} ${s.hours===1?'ώρα':'ώρες'} / εβδομάδα</span>${s.choice?'<span>Επιλογή του τμήματος</span>':''}</div></div>
     ${INFO_ONLY[s.id]?`<section class="book-card subject-about"><h3>Τι είναι αυτό το μάθημα</h3><p>${esc(INFO_ONLY[s.id])}</p></section>`:''}
     ${s.note?`<div class="catalogue-note">${esc(s.note)}</div>`:''}
-    ${custom.length?`<section class="toc authored-lessons"><h3>Πλήρη μαθήματα · κάρτες, κουίζ και λυμένες</h3>${custom.map(key=>{const [k,unit]=key.split('/'),info=findSection(k,unit),best=bestOf(key);return `<a class="item" href="#${key}"><span class="num">${esc(info?.num||'')}</span><span class="tt">${esc(C[key].title)}</span><span class="chip ${best===undefined?'ok':best>=14?'ok':best>=10?'mid':'low'}">${best===undefined?'Πλήρες':best+'/20'}</span></a>`;}).join('')}</section>`:''}
+    ${grade==='B'&&s.id==='ancient'?grammarIndex():''}
     ${connectionNotice()}
     ${s.books.length&&!INFO_ONLY[s.id]?'<div class="catalogue-search"><label for="lesson-query">Βρες μάθημα</label><div class="search-row"><input id="lesson-query" type="search" placeholder="Τίτλος ή λέξη-κλειδί" autocomplete="off"></div></div><p class="result-count" id="lesson-count" role="status"></p>':''}
     <div id="course-books"></div>
@@ -137,7 +136,7 @@ function renderCourse(grade,id){
       if(query&&!matchesTitle&&!sections.length) return '';
       count++; lessons+=sections.length;
       const formats=[...b.formats].sort((a,b)=>({html:0,pdf:1,audio:2}[a.kind]-{html:0,pdf:1,audio:2}[b.kind]));
-      return `<article class="book-card"><span class="book-ref">ΕΠΙΣΗΜΟ ΣΧΟΛΙΚΟ ΒΙΒΛΙΟ</span><h3>${esc(b.title)}</h3><div class="book-actions">${formats.map((f,i)=>external(f.url,f.kind==='html'?'Διάβασε online':f.kind==='pdf'?'Άνοιξε PDF':'Ηχητικό υλικό (ZIP)',i===0?'primary':'')).join('')}${external(b.source,'Στοιχεία βιβλίου')}</div>${INFO_ONLY[s.id]?'':sections.length?`${levelLegend()}<div class="lesson-list">${sections.map(section=>{const si=b.sections.indexOf(section),key=`${grade}/${id}/${bi}/${si}`,unit=linkedUnit(key),optional=EXPLANATIONS[key]?.status==='optional';return `<a class="item lesson-item" href="${unit?'#'+unit:lessonHref(grade,id,bi,si)}"><span class="num">${String(si+1).padStart(2,'0')}</span><span class="tt">${esc(OFFICIAL_CONTENT[key]?.title||section.title)}${optional?'<small class="opt-note">Προαιρετικό στην ύλη 2026–2027</small>':''}</span>${LEVEL_CHIP[lessonLevel(key)]}</a>`;}).join('')}</div>`:'<p class="result-count">Οι ενότητες και οι ασκήσεις περιλαμβάνονται στο πλήρες βιβλίο.</p>'}</article>`;
+      return `<article class="book-card"><span class="book-ref">ΕΠΙΣΗΜΟ ΣΧΟΛΙΚΟ ΒΙΒΛΙΟ</span><h3>${esc(b.title)}</h3><div class="book-actions">${formats.map((f,i)=>external(f.url,f.kind==='html'?'Διάβασε online':f.kind==='pdf'?'Άνοιξε PDF':'Ηχητικό υλικό (ZIP)',i===0?'primary':'')).join('')}${external(b.source,'Στοιχεία βιβλίου')}</div>${INFO_ONLY[s.id]?'':sections.length?`${levelLegend()}<div class="lesson-list">${sections.map(section=>{const si=b.sections.indexOf(section),key=`${grade}/${id}/${bi}/${si}`,unit=ALIAS[key],optional=EXPLANATIONS[key]?.status==='optional';return `<a class="item lesson-item" href="${unit?'#lesson/'+unit:lessonHref(grade,id,bi,si)}"><span class="num">${String(si+1).padStart(2,'0')}</span><span class="tt">${esc(OFFICIAL_CONTENT[key]?.title||section.title)}${optional?'<small class="opt-note">Προαιρετικό στην ύλη 2026–2027</small>':''}</span>${lessonChip(key)}</a>`;}).join('')}</div>`:'<p class="result-count">Οι ενότητες και οι ασκήσεις περιλαμβάνονται στο πλήρες βιβλίο.</p>'}</article>`;
     }).join('');
     $('#course-books').innerHTML=html|| (query?'<div class="empty-state"><h3>Δεν βρέθηκε ενότητα</h3><p>Δοκίμασε άλλη λέξη ή άνοιξε το πλήρες PDF.</p></div>':'');
     if($('#lesson-count')) $('#lesson-count').textContent=`${lessons} μαθήματα · ${count} βιβλία και βοηθητικοί πόροι`;
@@ -188,7 +187,8 @@ function renderOfficialLesson(grade,subjectId,bookIndex,sectionIndex){
   const lesson=officialLesson(grade,subjectId,bookIndex,sectionIndex),el=$('#catalogue');
   if(!lesson){el.innerHTML='<div class="empty-state"><h2>Το μάθημα δεν βρέθηκε</h2><a class="btn" href="#class/'+selectedGrade+'">Όλα τα μαθήματα</a></div>';return;}
   const {gradeData:g,subject:s,book:b,section,sectionIndex:si}=lesson,key=`${grade}/${subjectId}/${bookIndex}/${sectionIndex}`,content=OFFICIAL_CONTENT[key],explanation=EXPLANATIONS[key];
-  if(linkedUnit(key)){ location.replace('#'+linkedUnit(key)); return; }
+  if(ALIAS[key]){ location.replace('#lesson/'+ALIAS[key]); return; }
+  if(C[key]){ renderUnit(key); return; }
   if(INFO_ONLY[subjectId]){ location.replace(courseHref(grade,subjectId)); return; }
   const st=officialState[key]||(officialState[key]={view:'sum',card:0,gi:0,vi:0,picked:{},done:false,open:new Set()});
   const words=officialWords(section.title),prev=b.sections[si-1],next=b.sections[si+1];
@@ -244,5 +244,5 @@ function renderOfficialLesson(grade,subjectId,bookIndex,sectionIndex){
   el.querySelectorAll('[data-otask]').forEach(x=>x.onclick=()=>{const i=+x.dataset.otask;st.open.has(i)?st.open.delete(i):st.open.add(i);redraw();});
 }
 function renderSources(){
-  $('#sources').innerHTML=`<div class="hero catalogue-hero"><span class="ref">Επίσημη τεκμηρίωση</span><h2 class="ct">Από πού προέρχεται η ύλη;</h2><p>Τα μαθήματα ακολουθούν το ωρολόγιο πρόγραμμα του δημόσιου ημερήσιου Γυμνασίου για το ${CATALOGUE.schoolYear}.</p></div><section class="book-card"><h3>Μαθήματα και διδασκαλία</h3><ul class="source-list"><li>${external(CATALOGUE.timetableUrl,'ΥΠΑΙΘΑ · Ωρολόγιο πρόγραμμα')}<small>44257/Δ2/08-04-2026 · ΦΕΚ Β΄ 2132. Περιλαμβάνει τις ώρες ανά τάξη και τις προϋποθέσεις για Ηθική και Ιταλικά.</small></li><li>${external(CATALOGUE.guidanceUrl,'ΙΕΠ · Ύλη και οδηγίες Γυμνασίου')}<small>Για την κατανομή της διδακτέας ύλης και τις οδηγίες ανά μάθημα.</small></li></ul></section><section class="book-card"><h3>Διαδραστικά Σχολικά Βιβλία</h3><p>Τα βιβλία, τα τετράδια και τα περιεχόμενα συνδέονται με το επίσημο αποθετήριο ebooks.edu.gr του ΙΤΥΕ «Διόφαντος».</p><ul class="source-list">${CATALOGUE.grades.map(g=>`<li>${external(g.catalogueUrl,g.label)}<small>Κωδικός τάξης στο αποθετήριο: ${g.code}</small></li>`).join('')}</ul><p class="result-count">Έλεγχος καταλόγου: 12 Οκτωβρίου 2026.</p></section><div class="catalogue-note"><p>Τα πλήρη βιβλία περιέχουν περισσότερα κεφάλαια από όσα μπορεί να διδαχθούν μέσα στη χρονιά. Ακολούθησε τις οδηγίες του/της εκπαιδευτικού σου.</p><p>Οι περιλήψεις και τα κουίζ του Διαβάσματος είναι ανεξάρτητο συμπληρωματικό υλικό. Διατίθενται προς το παρόν σε οκτώ ενότητες της Β΄ Γυμνασίου.</p><p>Ο κατάλογος και οι ενσωματωμένες σημειώσεις μπορούν να λειτουργούν εκτός σύνδεσης μετά την πρώτη επίσκεψη. Τα εξωτερικά βιβλία χρειάζονται σύνδεση ή προηγούμενη λήψη PDF.</p></div>`;
+  $('#sources').innerHTML=`<div class="hero catalogue-hero"><span class="ref">Επίσημη τεκμηρίωση</span><h2 class="ct">Από πού προέρχεται η ύλη;</h2><p>Τα μαθήματα ακολουθούν το ωρολόγιο πρόγραμμα του δημόσιου ημερήσιου Γυμνασίου για το ${CATALOGUE.schoolYear}.</p></div><section class="book-card"><h3>Μαθήματα και διδασκαλία</h3><ul class="source-list"><li>${external(CATALOGUE.timetableUrl,'ΥΠΑΙΘΑ · Ωρολόγιο πρόγραμμα')}<small>44257/Δ2/08-04-2026 · ΦΕΚ Β΄ 2132. Περιλαμβάνει τις ώρες ανά τάξη και τις προϋποθέσεις για Ηθική και Ιταλικά.</small></li><li>${external(CATALOGUE.guidanceUrl,'ΙΕΠ · Ύλη και οδηγίες Γυμνασίου')}<small>Για την κατανομή της διδακτέας ύλης και τις οδηγίες ανά μάθημα.</small></li></ul></section><section class="book-card"><h3>Διαδραστικά Σχολικά Βιβλία</h3><p>Τα βιβλία, τα τετράδια και τα περιεχόμενα συνδέονται με το επίσημο αποθετήριο ebooks.edu.gr του ΙΤΥΕ «Διόφαντος».</p><ul class="source-list">${CATALOGUE.grades.map(g=>`<li>${external(g.catalogueUrl,g.label)}<small>Κωδικός τάξης στο αποθετήριο: ${g.code}</small></li>`).join('')}</ul><p class="result-count">Έλεγχος καταλόγου: 12 Οκτωβρίου 2026.</p></section><div class="catalogue-note"><p>Τα πλήρη βιβλία περιέχουν περισσότερα κεφάλαια από όσα μπορεί να διδαχθούν μέσα στη χρονιά. Ακολούθησε τις οδηγίες του/της εκπαιδευτικού σου.</p><p>Οι περιλήψεις και τα κουίζ του Διαβάσματος είναι ανεξάρτητο συμπληρωματικό υλικό. Διατίθενται στις ενότητες με την ετικέτα «Πλήρες».</p><p>Ο κατάλογος και οι ενσωματωμένες σημειώσεις μπορούν να λειτουργούν εκτός σύνδεσης μετά την πρώτη επίσκεψη. Τα εξωτερικά βιβλία χρειάζονται σύνδεση ή προηγούμενη λήψη PDF.</p></div>`;
 }

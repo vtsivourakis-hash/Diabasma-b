@@ -77,10 +77,15 @@ for (const [k, g] of Object.entries(G)) {
 
 const C = {};
 for (const f of fs.readdirSync(dir).filter(f => f.endsWith(".json") && !f.startsWith("_")).sort()) {
-  // F-1.1.json -> "F/1.1", M-A1.2.json -> "M/A1.2", A-r3.json -> "A/r3"
-  const key = f.replace(/\.json$/, "").replace("-", "/");
+  // Το όνομα του αρχείου είναι η ενότητα του βιβλίου: B-math-0-2.json -> "B/math/0/2"
+  const key = f.replace(/\.json$/, "").split("-").join("/");
   const raw = fs.readFileSync(path.join(dir, f), "utf8");
   const data = JSON.parse(raw);
+  // "also": άλλες ενότητες του ίδιου βιβλίου που καλύπτει η ίδια ενότητα (π.χ. η ραψωδία Α σε τρία κομμάτια)
+  for (const k of [key, ...(data.also || [])]) {
+    if (!sectionAt(k)) throw new Error(`${f}: άγνωστη ενότητα βιβλίου ${k}`);
+    if (officialContent[k]) throw new Error(`${f}: το ${k} έχει ήδη περιεχόμενο στα official-lessons`);
+  }
   for (const field of ["title", "exTitle", "summary", "quiz", "ex"]) {
     if (!(field in data)) throw new Error(`${f}: λείπει το πεδίο "${field}"`);
   }
@@ -145,4 +150,4 @@ for (const s of html.split("<script>").slice(1)) new Function(s.split("</script>
 
 fs.writeFileSync(path.join(__dirname, "index.html"), html);
 require("./scripts/build-local-app")(html, __dirname);
-console.log(`OK: ${Object.keys(C).length} παλιές ενότητες, ${Object.keys(officialContent).length} νέα επίσημα μαθήματα, ${Object.keys(G).length} πίνακες γραμματικής -> index.html (${html.length} bytes)`);
+console.log(`OK: ${Object.keys(officialContent).length + Object.keys(C).length} μαθήματα (${Object.keys(C).length} με κάρτες από το content/), ${Object.keys(G).length} πίνακες γραμματικής -> index.html (${html.length} bytes)`);

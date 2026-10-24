@@ -34,10 +34,10 @@ function updateAppNavigation(){
   document.querySelector('#app-back').disabled = appTrail.length < 2;
   const heading = document.querySelector('.panel:not([hidden]) h2');
   document.querySelector('#app-location').textContent = heading ? heading.textContent : getGrade(selectedGrade).label;
-  const isLesson = /^#(?:lesson\/|[FMGA]\/.+)/.test(hash);
+  const isLesson = /^#lesson\//.test(hash);
   if(isLesson && heading) store.set('diab-last-lesson', {hash,title:heading.textContent});
   const last = store.get('diab-last-lesson', null), resume = document.querySelector('#app-resume');
-  const valid = last && typeof last.hash === 'string' && /^#(?:lesson\/[ABC]\/[a-z-]+\/\d+\/\d+|[FMGA]\/[-\w.]+)$/.test(last.hash) && typeof last.title === 'string';
+  const valid = last && typeof last.hash === 'string' && /^#lesson\/[ABC]\/[a-z-]+\/\d+\/\d+$/.test(last.hash) && typeof last.title === 'string';
   resume.hidden = !valid || last.hash === hash;
   if(valid){resume.href = last.hash;resume.textContent = 'Συνέχισε: ' + last.title;}
 }

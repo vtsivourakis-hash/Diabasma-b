@@ -57,8 +57,8 @@ async function main() {
         if (!book.formats.some(f => f.url === url)) book.formats.push({kind,url,id:meta(item.metadata,'manifestation.dc.identifier.uri'),label:meta(item.metadata,'expression.dc.title')});
         books.set(id,book);
       }
-      const {match, hours, descriptions, legacy, ...fields} = subject;
-      return {...fields, hours:hours[index], description:descriptions?.[index] || '', legacy:grade.id === 'B' ? legacy || null : null, books:[...books.values()].sort((a,b)=>a.title.localeCompare(b.title,'el'))};
+      const {match, hours, descriptions, ...fields} = subject;
+      return {...fields, hours:hours[index], description:descriptions?.[index] || '', books:[...books.values()].sort((a,b)=>a.title.localeCompare(b.title,'el'))};
     });
     return {...grade, catalogueUrl:`${ORIGIN}/ebooks/v2/class-main.jsp?classcode=${grade.code}`, subjects};
   });

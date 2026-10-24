@@ -17,7 +17,6 @@
           "group": "Γλώσσα & ανθρωπιστικές επιστήμες",
           "hours": 3,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/292",
@@ -692,7 +691,6 @@
           "group": "Γλώσσα & ανθρωπιστικές επιστήμες",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/287",
@@ -1357,7 +1355,6 @@
           "group": "Γλώσσα & ανθρωπιστικές επιστήμες",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/280",
@@ -2480,7 +2477,6 @@
           "group": "Γλώσσα & ανθρωπιστικές επιστήμες",
           "hours": 2,
           "description": "Οδύσσεια · Ηροδότου Ιστορίες",
-          "legacy": null,
           "books": [
             {
               "id": "8547/288",
@@ -2780,7 +2776,6 @@
           "group": "Γλώσσα & ανθρωπιστικές επιστήμες",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/276",
@@ -3063,7 +3058,6 @@
           "group": "Μαθηματικά & φυσικές επιστήμες",
           "hours": 4,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/271",
@@ -3434,7 +3428,6 @@
           "group": "Μαθηματικά & φυσικές επιστήμες",
           "hours": 1,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/279",
@@ -3522,7 +3515,6 @@
           "note": "Η κατανομή των κεφαλαίων ανά τάξη ακολουθεί τις ετήσιες οδηγίες διδασκαλίας. Συμβουλέψου τον/την εκπαιδευτικό σου.",
           "hours": 1,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/306",
@@ -3701,7 +3693,6 @@
           "group": "Μαθηματικά & φυσικές επιστήμες",
           "hours": 1,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/272",
@@ -3939,7 +3930,6 @@
           "choice": "religion",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/5211",
@@ -3967,7 +3957,6 @@
           "resourceLabel": "Ύλη και οδηγίες διδασκαλίας ΙΕΠ",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": []
         },
         {
@@ -3976,7 +3965,6 @@
           "group": "Κοινωνία & καθημερινή ζωή",
           "hours": 1,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/295",
@@ -4457,7 +4445,6 @@
           "note": "Όπου υπάρχουν διαφορετικά επίπεδα, διάλεξε το βιβλίο που χρησιμοποιεί το τμήμα σου.",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/4730",
@@ -4794,7 +4781,6 @@
           "choice": "language",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/353",
@@ -4864,7 +4850,6 @@
           "choice": "language",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/354",
@@ -4927,7 +4912,6 @@
           "resourceLabel": "Οδηγίες διδασκαλίας ξένων γλωσσών",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": []
         },
         {
@@ -4936,7 +4920,6 @@
           "group": "Τεχνολογία, τέχνες & άθληση",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/5585",
@@ -4962,7 +4945,6 @@
           "resourceLabel": "Οδηγίες και εκπαιδευτικό υλικό Τεχνολογίας",
           "hours": 1,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/294",
@@ -5025,7 +5007,6 @@
           "group": "Τεχνολογία, τέχνες & άθληση",
           "hours": 1,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/301",
@@ -5182,7 +5163,6 @@
           "group": "Τεχνολογία, τέχνες & άθληση",
           "hours": 1,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/274",
@@ -5279,7 +5259,6 @@
           "group": "Τεχνολογία, τέχνες & άθληση",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/278",
@@ -5341,7 +5320,6 @@
           "resourceLabel": "Εκπαιδευτικό υλικό Εργαστηρίων Δεξιοτήτων",
           "hours": 1,
           "description": "",
-          "legacy": null,
           "books": []
         }
       ]
@@ -5359,7 +5337,6 @@
           "group": "Γλώσσα & ανθρωπιστικές επιστήμες",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/292",
@@ -6022,7 +5999,6 @@
           "group": "Γλώσσα & ανθρωπιστικές επιστήμες",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/287",
@@ -6699,7 +6675,6 @@
           "group": "Γλώσσα & ανθρωπιστικές επιστήμες",
           "hours": 2,
           "description": "",
-          "legacy": "G",
           "books": [
             {
               "id": "8547/319",
@@ -7810,7 +7785,6 @@
           "group": "Γλώσσα & ανθρωπιστικές επιστήμες",
           "hours": 2,
           "description": "Ιλιάδα · Αρχαία Ελλάδα, ο τόπος και οι άνθρωποι",
-          "legacy": "A",
           "books": [
             {
               "id": "8547/321",
@@ -8026,7 +8000,6 @@
           "group": "Γλώσσα & ανθρωπιστικές επιστήμες",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/313",
@@ -8261,7 +8234,6 @@
           "group": "Μαθηματικά & φυσικές επιστήμες",
           "hours": 4,
           "description": "",
-          "legacy": "M",
           "books": [
             {
               "id": "8547/308",
@@ -8544,7 +8516,6 @@
           "group": "Μαθηματικά & φυσικές επιστήμες",
           "hours": 2,
           "description": "",
-          "legacy": "F",
           "books": [
             {
               "id": "8547/315",
@@ -8749,7 +8720,6 @@
           "group": "Μαθηματικά & φυσικές επιστήμες",
           "hours": 1,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/318",
@@ -8929,7 +8899,6 @@
           "note": "Η κατανομή των κεφαλαίων ανά τάξη ακολουθεί τις ετήσιες οδηγίες διδασκαλίας. Συμβουλέψου τον/την εκπαιδευτικό σου.",
           "hours": 1,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/328",
@@ -9261,7 +9230,6 @@
           "group": "Μαθηματικά & φυσικές επιστήμες",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/309",
@@ -9523,7 +9491,6 @@
           "choice": "religion",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/5212",
@@ -9551,7 +9518,6 @@
           "resourceLabel": "Ύλη και οδηγίες διδασκαλίας ΙΕΠ",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": []
         },
         {
@@ -9561,7 +9527,6 @@
           "note": "Όπου υπάρχουν διαφορετικά επίπεδα, διάλεξε το βιβλίο που χρησιμοποιεί το τμήμα σου.",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/4732",
@@ -9950,7 +9915,6 @@
           "choice": "language",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/361",
@@ -10020,7 +9984,6 @@
           "choice": "language",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/362",
@@ -10079,7 +10042,6 @@
           "resourceLabel": "Οδηγίες διδασκαλίας ξένων γλωσσών",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": []
         },
         {
@@ -10088,7 +10050,6 @@
           "group": "Τεχνολογία, τέχνες & άθληση",
           "hours": 1,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/5586",
@@ -10114,7 +10075,6 @@
           "resourceLabel": "Οδηγίες και εκπαιδευτικό υλικό Τεχνολογίας",
           "hours": 1,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/325",
@@ -10189,7 +10149,6 @@
           "group": "Τεχνολογία, τέχνες & άθληση",
           "hours": 1,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/326",
@@ -10270,7 +10229,6 @@
           "group": "Τεχνολογία, τέχνες & άθληση",
           "hours": 1,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/311",
@@ -10363,7 +10321,6 @@
           "group": "Τεχνολογία, τέχνες & άθληση",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/278",
@@ -10425,7 +10382,6 @@
           "resourceLabel": "Εκπαιδευτικό υλικό Εργαστηρίων Δεξιοτήτων",
           "hours": 1,
           "description": "",
-          "legacy": null,
           "books": []
         }
       ]
@@ -10443,7 +10399,6 @@
           "group": "Γλώσσα & ανθρωπιστικές επιστήμες",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/292",
@@ -11054,7 +11009,6 @@
           "group": "Γλώσσα & ανθρωπιστικές επιστήμες",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/287",
@@ -11719,7 +11673,6 @@
           "group": "Γλώσσα & ανθρωπιστικές επιστήμες",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/338",
@@ -12947,7 +12900,6 @@
           "group": "Γλώσσα & ανθρωπιστικές επιστήμες",
           "hours": 2,
           "description": "Ελένη · Ανθολόγιο φιλοσοφικών κειμένων",
-          "legacy": null,
           "books": [
             {
               "id": "8547/342",
@@ -13383,7 +13335,6 @@
           "group": "Γλώσσα & ανθρωπιστικές επιστήμες",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/331",
@@ -13686,7 +13637,6 @@
           "group": "Μαθηματικά & φυσικές επιστήμες",
           "hours": 4,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/329",
@@ -13861,7 +13811,6 @@
           "group": "Μαθηματικά & φυσικές επιστήμες",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/334",
@@ -13968,7 +13917,6 @@
           "group": "Μαθηματικά & φυσικές επιστήμες",
           "hours": 1,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/336",
@@ -14100,7 +14048,6 @@
           "note": "Η κατανομή των κεφαλαίων ανά τάξη ακολουθεί τις ετήσιες οδηγίες διδασκαλίας. Συμβουλέψου τον/την εκπαιδευτικό σου.",
           "hours": 1,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/328",
@@ -14264,7 +14211,6 @@
           "choice": "religion",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/5213",
@@ -14292,7 +14238,6 @@
           "resourceLabel": "Ύλη και οδηγίες διδασκαλίας ΙΕΠ",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": []
         },
         {
@@ -14301,7 +14246,6 @@
           "group": "Κοινωνία & καθημερινή ζωή",
           "hours": 3,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/333",
@@ -14404,7 +14348,6 @@
           "group": "Κοινωνία & καθημερινή ζωή",
           "hours": 1,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/5582",
@@ -14429,7 +14372,6 @@
           "note": "Όπου υπάρχουν διαφορετικά επίπεδα, διάλεξε το βιβλίο που χρησιμοποιεί το τμήμα σου.",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/365",
@@ -14635,7 +14577,6 @@
           "choice": "language",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/366",
@@ -14660,7 +14601,6 @@
           "choice": "language",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/367",
@@ -14719,7 +14659,6 @@
           "resourceLabel": "Οδηγίες διδασκαλίας ξένων γλωσσών",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": []
         },
         {
@@ -14728,7 +14667,6 @@
           "group": "Τεχνολογία, τέχνες & άθληση",
           "hours": 1,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/5587",
@@ -14754,7 +14692,6 @@
           "resourceLabel": "Οδηγίες και εκπαιδευτικό υλικό Τεχνολογίας",
           "hours": 1,
           "description": "",
-          "legacy": null,
           "books": []
         },
         {
@@ -14763,7 +14700,6 @@
           "group": "Τεχνολογία, τέχνες & άθληση",
           "hours": 1,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/345",
@@ -14900,7 +14836,6 @@
           "group": "Τεχνολογία, τέχνες & άθληση",
           "hours": 1,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/330",
@@ -15005,7 +14940,6 @@
           "group": "Τεχνολογία, τέχνες & άθληση",
           "hours": 2,
           "description": "",
-          "legacy": null,
           "books": [
             {
               "id": "8547/278",
@@ -15067,7 +15001,6 @@
           "resourceLabel": "Εκπαιδευτικό υλικό Εργαστηρίων Δεξιοτήτων",
           "hours": 1,
           "description": "",
-          "legacy": null,
           "books": []
         }
       ]

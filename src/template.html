@@ -494,10 +494,6 @@ footer p{margin:0 0 6px}
   <p id="app-voice-status" class="voice-status" role="status" aria-live="polite"></p><main id="main-content" tabindex="-1">
     <section class="panel" id="catalogue"></section>
     <section class="panel" id="sources" hidden></section>
-    <section class="panel" id="F" hidden></section>
-    <section class="panel" id="M" hidden></section>
-    <section class="panel" id="A" hidden></section>
-    <section class="panel" id="G" hidden></section>
     <section class="panel" id="send" hidden></section>
     <section class="panel faq" id="school" hidden>
       <div class="hero catalogue-hero"><span class="ref">Για όλες τις τάξεις του Γυμνασίου</span><h2 class="ct">Η καθημερινότητα στο σχολείο</h2><p>Μικρές συνήθειες που βοηθούν στο διάβασμα και στη συνεργασία.</p></div>
@@ -546,147 +542,9 @@ footer p{margin:0 0 6px}
    Όσο είναι κενές, η σελίδα δείχνει ότι η αποστολή έρχεται σύντομα. */
 const UPLOAD = { endpoint: "", sitekey: "" };
 
-const BOOKS = {
- F: { name:"Φυσική", book:"Φυσική Β΄ Γυμνασίου", chapters:[
-  {t:"Κεφάλαιο 1: Βασικές έννοιες Κινηματικής και Δυναμικής", s:[
-    ["1.1","1.1","Η κίνηση των σωμάτων"],
-    ["1.2","1.2","Η δύναμη και τα χαρακτηριστικά της"],
-    ["1.3","1.3","Κάθε δράση έχει αντίδραση. Θεμελιώδεις αλληλεπιδράσεις"]]},
-  {t:"Κεφάλαιο 2: Η ισορροπία δυνάμεων. Ομαλή κίνηση", s:[
-    ["2.1","2.1","Δράση περισσότερων από μία δυνάμεων σε ένα σώμα"],
-    ["2.2","2.2","Ισορροπία σώματος"],
-    ["2.3","2.3","Ομαλή κίνηση"]]},
-  {t:"Κεφάλαιο 3: Δυνάμεις στην καθημερινή ζωή", s:[
-    ["3.1","3.1","Βαρυτική δύναμη"],
-    ["3.2.1","3.2.1","Η κάθετη δράση και αντίδραση"],
-    ["3.2.2","3.2.2","Τριβή"],
-    ["3.3.1","3.3.1","Η πίεση"],
-    ["3.3.2","3.3.2","Υδροστατική πίεση"],
-    ["3.3.3","3.3.3","Αρχή του Pascal"],
-    ["3.3.4","3.3.4","Πίεση και άνωση. Αρχή του Αρχιμήδη. Πλεύση"],
-    ["3.3.5","3.3.5","Ατμοσφαιρική πίεση. Αερόστατα"]]},
-  {t:"Κεφάλαιο 4: Η δύναμη μπορεί να αλλάξει την κίνηση", s:[
-    ["4.1","4.1","Η δύναμη επηρεάζει την κίνηση των σωμάτων"],
-    ["4.2","4.2","Επιτάχυνση"],
-    ["4.3","4.3","2ος νόμος του Newton"],
-    ["4.4","4.4","Ελεύθερη πτώση"],
-    ["4.5","4.5","Ομαλή κυκλική κίνηση"]]},
-  {t:"Κεφάλαιο 5: Ενέργεια και διατήρηση της ενέργειας", s:[
-    ["5.1","5.1","Κινητική και δυναμική ενέργεια"],
-    ["5.2","5.2","Διατήρηση της ενέργειας σε μηχανικό σύστημα"]]},
-  {t:"Κεφάλαιο 6: Κύματα. Η περίπτωση του ήχου", s:[
-    ["6.1","6.1","Από την ταλάντωση στο κύμα"],
-    ["6.2","6.2","Ηχητικά κύματα και ταχύτητα του ήχου"],
-    ["6.3","6.3","Ανάκλαση, απορρόφηση και διάθλαση του ήχου"]]}
- ]},
- M: { name:"Μαθηματικά", book:"Μαθηματικά Β΄ Γυμνασίου", note:"Το βιβλίο έχει δύο μέρη: Άλγεβρα (Α) και Γεωμετρία (Β).", chapters:[
-  {t:"Α. Κεφάλαιο 1: Εξισώσεις και ανισώσεις", s:[
-    ["A1.1","Α.1.1","Η έννοια της μεταβλητής. Αλγεβρικές παραστάσεις (με επανάληψη ρητών)"],
-    ["A1.2","Α.1.2","Εξισώσεις α΄ βαθμού"],
-    ["A1.3","Α.1.3","Επίλυση τύπων"],
-    ["A1.4","Α.1.4","Επίλυση προβλημάτων με εξισώσεις"],
-    ["A1.5","Α.1.5","Ανισώσεις α΄ βαθμού"]]},
-  {t:"Α. Κεφάλαιο 2: Πραγματικοί αριθμοί", s:[
-    ["A2.1","Α.2.1","Τετραγωνική ρίζα θετικού αριθμού"],
-    ["A2.2","Α.2.2","Άρρητοι αριθμοί. Πραγματικοί αριθμοί"],
-    ["A2.3","Α.2.3","Προβλήματα"]]},
-  {t:"Α. Κεφάλαιο 3: Συναρτήσεις", s:[
-    ["A3.1","Α.3.1","Η έννοια της συνάρτησης"],
-    ["A3.2","Α.3.2","Καρτεσιανές συντεταγμένες. Γραφική παράσταση συνάρτησης"],
-    ["A3.3","Α.3.3","Η συνάρτηση y = αx"],
-    ["A3.4","Α.3.4","Η συνάρτηση y = αx + β"],
-    ["A3.5","Α.3.5","Η συνάρτηση y = α/x. Η υπερβολή"]]},
-  {t:"Α. Κεφάλαιο 4: Περιγραφική Στατιστική", s:[
-    ["A4.1","Α.4.1","Πληθυσμός και δείγμα"],
-    ["A4.2","Α.4.2","Γραφικές παραστάσεις"],
-    ["A4.3","Α.4.3","Κατανομή συχνοτήτων και σχετικών συχνοτήτων"],
-    ["A4.4","Α.4.4","Ομαδοποίηση παρατηρήσεων"],
-    ["A4.5","Α.4.5","Μέση τιμή και διάμεσος"]]},
-  {t:"Β. Κεφάλαιο 1: Εμβαδά. Πυθαγόρειο θεώρημα", s:[
-    ["B1.1","Β.1.1","Εμβαδόν επίπεδης επιφάνειας"],
-    ["B1.2","Β.1.2","Μονάδες μέτρησης επιφανειών"],
-    ["B1.3","Β.1.3","Εμβαδά επίπεδων σχημάτων"],
-    ["B1.4","Β.1.4","Πυθαγόρειο θεώρημα"]]},
-  {t:"Β. Κεφάλαιο 2: Τριγωνομετρία. Διανύσματα", s:[
-    ["B2.1","Β.2.1","Εφαπτομένη οξείας γωνίας"],
-    ["B2.2","Β.2.2","Ημίτονο και συνημίτονο οξείας γωνίας"],
-    ["B2.3","Β.2.3","Μεταβολές των τριγωνομετρικών αριθμών"],
-    ["B2.4","Β.2.4","Οι γωνίες 30°, 45° και 60°"],
-    ["B2.5","Β.2.5","Η έννοια του διανύσματος"],
-    ["B2.6","Β.2.6","Άθροισμα και διαφορά διανυσμάτων"],
-    ["B2.7","Β.2.7","Ανάλυση διανύσματος σε κάθετες συνιστώσες"]]},
-  {t:"Β. Κεφάλαιο 3: Μέτρηση κύκλου", s:[
-    ["B3.1","Β.3.1","Εγγεγραμμένες γωνίες"],
-    ["B3.2","Β.3.2","Κανονικά πολύγωνα"],
-    ["B3.3","Β.3.3","Μήκος κύκλου"],
-    ["B3.4","Β.3.4","Μήκος τόξου"],
-    ["B3.5","Β.3.5","Εμβαδόν κυκλικού δίσκου"],
-    ["B3.6","Β.3.6","Εμβαδόν κυκλικού τομέα"]]},
-  {t:"Β. Κεφάλαιο 4: Γεωμετρικά στερεά", s:[
-    ["B4.1","Β.4.1","Ευθείες και επίπεδα στον χώρο"],
-    ["B4.2","Β.4.2","Πρίσμα και κύλινδρος: στοιχεία και εμβαδόν"],
-    ["B4.3","Β.4.3","Όγκος πρίσματος και κυλίνδρου"],
-    ["B4.4","Β.4.4","Η πυραμίδα"],
-    ["B4.5","Β.4.5","Ο κώνος"],
-    ["B4.6","Β.4.6","Η σφαίρα"],
-    ["B4.7","Β.4.7","Γεωγραφικές συντεταγμένες"]]}
- ]},
- G: { name:"Αρχαία", book:"Αρχαία Ελληνική Γλώσσα Β΄ Γυμνασίου", note:"Κάθε ενότητα έχει ένα αρχαίο κείμενο, λεξιλόγιο, ετυμολογία και γραμματική ή σύνταξη.", chapters:[
-  {t:"Ενότητες 1–6", s:[
-    ["u1","1","Πατρική δικαιοσύνη"],
-    ["u2","2","Το τέχνασμα του Θεμιστοκλή"],
-    ["u3","3","Το χρέος του ιστορικού"],
-    ["u4","4","Οι Σεληνίτες"],
-    ["u5","5","Η ελεημοσύνη βασίλισσα των αρετών"],
-    ["u6","6","Η ευθύνη για την παιδεία των νέων"]]},
-  {t:"Ενότητες 7–12", s:[
-    ["u7","7","Ένας στοργικός ηγέτης"],
-    ["u8","8","Η γένεση της θρησκείας και της δικαιοσύνης"],
-    ["u9","9","Η Καλλιπάτειρα"],
-    ["u10","10","Ένας δύσκολος αντίπαλος"],
-    ["u11","11","Ο σεβασμός προς τους γονείς μέλημα του νόμου"],
-    ["u12","12","Τα φαινόμενα απατούν"]]},
-  {t:"Ενότητες 13–18", s:[
-    ["u13","13","Η σωστή στάση στο θέμα της τροφής"],
-    ["u14","14","Απρόσκλητοι βοηθοί"],
-    ["u15","15","Η Αθήνα προπύργιο της Ευρώπης"],
-    ["u16","16","Μεγαλόψυχη στάση"],
-    ["u17","17","Το πάθημα των ερωδιών"],
-    ["u18","18","Τα μειονεκτήματα του γραπτού λόγου σε σχέση με τον προφορικό"]]}
- ]},
- A: { name:"Ιλιάδα", book:"Ομηρικά Έπη: Ιλιάδα (από μετάφραση)", note:"Στην τάξη διαβάζονται επιλεγμένα αποσπάσματα από κάθε ραψωδία. Ποια ακριβώς, το ορίζει ο καθηγητής σας.", chapters:[
-  {t:"Εισαγωγή και ραψωδίες Α–Ζ", s:[
-    ["r1","Α","Εισαγωγή. Λοιμός, Μήνις"],
-    ["r2","Β","Όνειρος. Κατάλογος των πλοίων"],
-    ["r3","Γ","Όρκοι. Τειχοσκοπία. Μονομαχία Αλεξάνδρου και Μενελάου"],
-    ["r4","Δ","Η διάσπαση της ανακωχής"],
-    ["r5","Ε","Η αριστεία του Διομήδη"],
-    ["r6","Ζ","Έκτορας και Ανδρομάχη"]]},
-  {t:"Ραψωδίες Η–Μ", s:[
-    ["r7","Η","Μονομαχία Έκτορα και Αίαντα"],
-    ["r8","Θ","Η κολοβή μάχη"],
-    ["r9","Ι","Η πρεσβεία προς τον Αχιλλέα"],
-    ["r10","Κ","Δολώνεια"],
-    ["r11","Λ","Η αριστεία του Αγαμέμνονα"],
-    ["r12","Μ","Τειχομαχία"]]},
-  {t:"Ραψωδίες Ν–Σ", s:[
-    ["r13","Ν","Η μάχη στα πλοία"],
-    ["r14","Ξ","Η απάτη του Δία"],
-    ["r15","Ο","Η αντεπίθεση από τα πλοία"],
-    ["r16","Π","Πατρόκλεια"],
-    ["r17","Ρ","Η αριστεία του Μενελάου"],
-    ["r18","Σ","Οπλοποιία"]]},
-  {t:"Ραψωδίες Τ–Ω", s:[
-    ["r19","Τ","Ο Αχιλλέας αφήνει την οργή"],
-    ["r20","Υ","Θεομαχία"],
-    ["r21","Φ","Η μάχη στο ποτάμι"],
-    ["r22","Χ","Ο θάνατος του Έκτορα"],
-    ["r23","Ψ","Οι αγώνες προς τιμήν του Πατρόκλου"],
-    ["r24","Ω","Τα λύτρα του Έκτορα"]]}
- ]}
-};
-
 const C = /*__DATA__*/;
+/* Μια ενότητα του content/ μπορεί να καλύπτει κι άλλες ενότητες του ίδιου βιβλίου ("also"): ενότητα → κύρια ενότητα */
+const ALIAS = Object.fromEntries(Object.entries(C).flatMap(([k, c]) => (c.also || []).map(a => [a, k])));
 const GR = /*__GRAMMAR__*/;
 /* Βοήθεια για τις ασκήσεις του βιβλίου που προτείνει η ύλη. Η εκφώνηση δεν αντιγράφεται: δείχνουμε πού είναι στο βιβλίο,
    δίνουμε βοήθειες μία μία (κάποιες είναι επιλογή του μαθητή) και, όταν το ζητήσει, μόνο το τελικό αποτέλεσμα για έλεγχο. */
@@ -699,10 +557,6 @@ const plain = t => String(t).replace(/\{\{([^|}]+)\|[^}]+\}\}/g, "$1");
 const $ = (s, r=document) => r.querySelector(s);
 function shuffle(arr){ const a = arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 function esc(s){ return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
-function findSection(k, id){
-  for(const ch of BOOKS[k].chapters) for(const s of ch.s) if(s[0] === id) return {ch, num:s[1], title:s[2]};
-  return null;
-}
 
 /*__CATALOGUE_JS__*/
 
@@ -712,15 +566,15 @@ function route(){
   let parts;
   try { parts = decodeURIComponent(location.hash.slice(1)).split("/").filter(Boolean); } catch(e){ parts = []; }
   let p = parts[0] || "class";
-  if(!["class","course","lesson","sources","F","M","G","A","practice","timer","schedule","send","school","review"].includes(p)) p = "class";
+  if(!["class","course","lesson","sources","practice","timer","schedule","send","school","review"].includes(p)) p = "class";
   if(p === "class" || p === "course" || p === "lesson") selectGrade(parts[1] || selectedGrade);
-  if(["F","M","G","A","send"].includes(p)) selectGrade('B');
+  if(p === "send") selectGrade('B');
   const panel = p === "class" || p === "course" || p === "lesson" ? "catalogue" : p;
   document.querySelectorAll(".panel").forEach(el => el.hidden = el.id !== panel);
   renderGradeNav();
   $('#grade-nav').hidden = false;
   document.title = `Διάβασμα · ${getGrade(selectedGrade).label}`;
-  const activeTab = ["F","M","G","A","course","lesson","class","send"].includes(p) ? "class" : p === "timer" || p === "schedule" ? "practice" : p;
+  const activeTab = ["course","lesson","class","send"].includes(p) ? "class" : p === "timer" || p === "schedule" ? "practice" : p;
   document.querySelectorAll(".tab").forEach(t => {
     if(t.dataset.p === activeTab) t.setAttribute("aria-current","page"); else t.removeAttribute("aria-current");
   });
@@ -728,11 +582,8 @@ function route(){
   else if(p === "course") renderCourse(parts[1], parts[2]);
   else if(p === "lesson") renderOfficialLesson(parts[1], parts[2], +parts[3], +parts[4]);
   else if(p === "sources") renderSources();
-  else if(p === "F" || p === "M" || p === "G" || p === "A"){
-    const id = parts.slice(1).join("/");
-    if(id && C[p+"/"+id]) renderSection(p, id); else renderIndex(p);
-  } else if(p === "send"){
-    renderSend(parts[1], parts.slice(2).join("/"));
+  else if(p === "send"){
+    renderSend(parts.slice(1).join("/"));
   } else if(p === "schedule"){
     renderSchedule(parts);
   } else if(p === "practice"){
@@ -744,27 +595,6 @@ function route(){
 }
 window.addEventListener("hashchange", route);
 $('.skip-link').addEventListener('click', e=>{e.preventDefault();$('#main-content').focus();});
-
-/* Table of contents */
-function renderIndex(k){
-  const b = BOOKS[k];
-  const subject = getGrade('B').subjects.find(s=>s.legacy === k);
-  let total = 0, ready = 0, solved = 0;
-  const html = b.chapters.filter(ch=>ch.s.some(s=>C[k+'/'+s[0]])).map(ch => `<section class="toc"><h3>${ch.t}</h3>${ch.s.filter(s=>C[k+'/'+s[0]]).map(([id,num,title]) => {
-    total++;
-    if(C[k+"/"+id]){
-      ready++;
-      const best = bestOf(k+"/"+id);
-      if(best !== undefined) solved++;
-      const chip = best === undefined ? `<span class="chip ok">Πλήρες</span>` : `<span class="chip score ${best >= 14 ? "ok" : best >= 10 ? "mid" : "low"}" title="Ο καλύτερος βαθμός σου στις ερωτήσεις">${best}/20</span>`;
-      return `<a class="item" href="#${k}/${id}"><span class="num">${num}</span><span class="tt">${title}</span>${chip}</a>`;
-    }
-    return `<div class="item off"><span class="num">${num}</span><span class="tt">${title}</span><span class="chip">Σύντομα</span></div>`;
-  }).join("")}</section>`).join("");
-  $("#"+k).innerHTML = `<a class="back" href="${courseHref('B',subject.id)}">← ${subject.name} · Επίσημα βιβλία</a><div class="hero"><span class="ref">Β΄ Γυμνασίου · Συμπληρωματικές σημειώσεις</span><h2 class="ct">${b.name}</h2>
-    <p>${ready} ενότητες με περίληψη, ερωτήσεις και λυμένες ασκήσεις.</p>
-    <small>${solved ? `Έλυσες τις ερωτήσεις σε ${solved} ενότητες` : 'Διάλεξε μια ενότητα για να ξεκινήσεις.'}</small></div><div class="catalogue-note">Οι σημειώσεις έχουν δική τους αρίθμηση και δεν καλύπτουν όλη τη διδακτέα ύλη. <a href="${courseHref('B',subject.id)}">Δες όλα τα κεφάλαια στο επίσημο βιβλίο.</a></div>${k === "G" ? grammarIndex() : ""}${html}`;
-}
 
 /* Η καρτέλα «Βιβλίο» μιας ενότητας (παλιάς ή επίσημης). topics: τα θέματα της περίληψης, για τον σύνδεσμο «Θεωρία». */
 const bhState = {};
@@ -797,12 +627,8 @@ function bindBookHelp(el, key, redraw, onTopic){
   el.querySelectorAll("[data-bh-res]").forEach(b => b.onclick = () => { s.res.add(+b.dataset.bhRes); redraw(); });
   el.querySelectorAll("[data-bh-topic]").forEach(b => b.onclick = () => onTopic(+b.dataset.bhTopic, +b.dataset.bhFrom));
 }
-/* Ο σύνδεσμος του βιβλίου για μια ενότητα. Οι παλιές ενότητες τον παίρνουν από την επίσημη ενότητα που αντιστοιχούν. */
-function bookUrlFor(key){
-  if(!C[key]){ const [g, sid, b, i] = key.split("/"); return officialLesson(g, sid, b, i)?.section.url || ""; }
-  const k = Object.keys(LINKED).find(x => LINKED[x] === key);
-  return k ? bookUrlFor(k) : "";
-}
+/* Ο σύνδεσμος του βιβλίου για μια ενότητα */
+function bookUrlFor(key){ const [g, sid, b, i] = key.split("/"); return officialLesson(g, sid, b, i)?.section.url || ""; }
 function bhScroll(i){ const c = document.getElementById("bh-" + i); if(c) c.scrollIntoView({block:"start"}); }
 
 /* Section */
@@ -820,6 +646,19 @@ const store = {
   get(k, d){ try { const v = JSON.parse(localStorage.getItem(k)); return v === null ? d : v; } catch(e){ return d; } },
   set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
 };
+/* Οι ενότητες του content/ είχαν παλιά δικά τους κλειδιά (π.χ. "M/A1.1"). Μεταφέρει μία φορά την πρόοδο στο κλειδί του βιβλίου.
+   Οι παλιές ενότητες Φυσικής ("F/…") δεν υπάρχουν πια, οπότε η πρόοδός τους σβήνεται. */
+(() => {
+  const NEW = {"M/A1.1":"B/math/0/2", "M/A1.2":"B/math/0/3", "G/u1":"B/ancient/0/1", "G/u2":"B/ancient/0/2", "A/r1":"B/translated/0/2", "A/r3":"B/translated/0/6"};
+  const move = id => { const [k, rest] = [id.split("#")[0], id.slice(id.split("#")[0].length)]; return /^[FMGA]\//.test(k) ? (NEW[k] ? NEW[k] + rest : null) : id; };
+  for(const name of ["diab-best", "diab-mistakes", "diab-review"]){
+    const o = store.get(name, null);
+    if(!o || !Object.keys(o).some(k => /^[FMGA]\//.test(k))) continue;
+    store.set(name, Object.fromEntries(Object.entries(o).map(([k, v]) => [move(k), v]).filter(([k]) => k)));
+  }
+  const sel = store.get("diab-exam-sel", null);
+  if(Array.isArray(sel) && sel.some(k => /^[FMGA]\//.test(k))) store.set("diab-exam-sel", sel.map(move).filter(Boolean));
+})();
 /* «Τα λάθη μου»: για κάθε ενότητα, ποιες ερωτήσεις απαντήθηκαν λάθος. Φεύγουν όταν απαντηθούν σωστά. */
 function markAnswer(key, oi, ok){
   const m = store.get("diab-mistakes", {}), set = new Set(m[key] || []);
@@ -836,11 +675,14 @@ function mistakeItems(onlyKey){
 const bestOf = key => store.get("diab-best", {})[key];
 function saveBest(key, g){ const b = store.get("diab-best", {}); if(!(b[key] >= g)){ b[key] = g; store.set("diab-best", b); } }
 
-/* Μια ενότητα: παλιά (C, κείμενο με σήμανση) ή επίσημη (OFFICIAL_CONTENT, απλό κείμενο που θέλει escape) */
+/* Μια ενότητα του βιβλίου έχει περιεχόμενο είτε από το content/ (C, κείμενο με σήμανση, κάρτες με τύπους, λέξεις, γραμματική)
+   είτε από τα official-lessons (OFFICIAL_CONTENT, απλό κείμενο που θέλει escape). Το κλειδί είναι πάντα της ενότητας, π.χ. "B/math/0/2". */
 const unitData = key => C[key] || OFFICIAL_CONTENT[key];
-const unitHref = key => C[key] ? "#" + key : "#lesson/" + key;
+const unitHref = key => "#lesson/" + key;
 const unitText = (key, t) => C[key] ? rich(t) : esc(t);
 const unitTitle = key => C[key] ? C[key].title : esc(unitData(key).title);
+/* Οι τίτλοι του content/ δεν έχουν αριθμό· τον παίρνουμε από την ενότητα του βιβλίου, π.χ. «Α1.1: …» → «Α1.1 · » */
+const unitNum = key => { if(!C[key]) return ""; const [g, sid, b, i] = key.split("/"), m = (officialLesson(g, sid, +b, +i)?.section.title || "").match(/^([ΑΒΓ]?\d+(?:\.\d+)+)/); return m ? m[1] + " · " : ""; };
 const unitItems = key => unitData(key).quiz.map((_, oi) => ({key, oi}));
 /* Κάθε φορά οι ερωτήσεις και οι απαντήσεις τους έρχονται με άλλη σειρά */
 function newQuiz(items, mode){
@@ -854,7 +696,7 @@ function quizScore(z){
   return {right, wrong};
 }
 const gradeOf = z => Math.round(quizScore(z).right / z.qs.length * 20);
-function unitName(key){ if(!C[key]){ const [g, sid] = key.split("/"); return esc(gradeSubject(g, sid)?.name || ""); } const [k, id] = key.split("/"), info = findSection(k, id); return `${BOOKS[k].name} ${info ? info.num : ""}`.trim(); }
+function unitName(key){ const [g, sid] = key.split("/"); return esc(gradeSubject(g, sid)?.name || ""); }
 /* Ο βαθμός στα 20 ως δαχτυλίδι που γεμίζει, με μικρά διακοσμητικά σχήματα γύρω του */
 function gradeRing(g){
   const len = (2 * Math.PI * 54).toFixed(1), fill = (Math.max(0, Math.min(20, g)) / 20 * len).toFixed(1);
@@ -953,15 +795,15 @@ function pager(prevOk, nextOk, mid){
     <div class="mid">${mid}</div>
     <button class="btn" data-nav="1" aria-label="Επόμενη"${nextOk ? "" : " disabled"}>→</button></div>`;
 }
-function renderSection(k, id){
-  const key = k+"/"+id, c = C[key], s = st(key), info = findSection(k, id), el = $("#"+k);
+function renderUnit(key){
+  const c = C[key], s = st(key), [g, sid, bi, si] = key.split("/"), lesson = officialLesson(g, sid, +bi, +si), el = $("#catalogue"), iliad = sid === "translated";
   let body = "", go = null;
   if(s.view === "sum"){
     const n = c.summary.length, i = Math.min(s.idx, n - 1), b = c.summary[i], last = i === n - 1;
-    body = `${s.fromBook != null ? `<button class="retex" data-ret>← Πίσω στην άσκηση του βιβλίου</button>` : ""}${s.from !== null ? `<button class="retex" data-ret>← Πίσω στην ${k === "A" ? "ερώτηση" : "άσκηση"} ${s.from + 1}</button>` : ""}<div class="prog"><div class="bar" role="img" aria-label="Θέμα ${i+1} από ${n}"><i style="width:${Math.round((i+1) / n * 100)}%"></i></div><span>${i+1}/${n}</span></div>
+    body = `${s.fromBook != null ? `<button class="retex" data-ret>← Πίσω στην άσκηση του βιβλίου</button>` : ""}${s.from !== null ? `<button class="retex" data-ret>← Πίσω στην ${iliad ? "ερώτηση" : "άσκηση"} ${s.from + 1}</button>` : ""}<div class="prog"><div class="bar" role="img" aria-label="Θέμα ${i+1} από ${n}"><i style="width:${Math.round((i+1) / n * 100)}%"></i></div><span>${i+1}/${n}</span></div>
       <div class="deck"><section class="blk slide${b.warn ? " warn" : ""}${s.anim ? " " + s.anim : ""}" aria-live="polite"><span class="k">${b.warn ? "Προσοχή" : "Θέμα " + (i+1)}</span><h3>${b.h}</h3>${b.quote ? `<p class="quote" lang="grc">${b.quote}</p>` : ""}<p>${rich(b.t)}</p>${b.f ? `<p class="f formula">${b.f}</p>` : ""}${b.ex ? `<div class="box exb"><b>Παράδειγμα</b><p>${rich(b.ex)}</p></div>` : ""}${b.def ? `<div class="box defb"><b>${b.defLabel || "Στο διαγώνισμα γράφεις"}</b><p>${rich(b.def)}</p></div>` : ""}</section></div>
       ${pager(i > 0, !last, last ? `<button class="btn gold" data-go="quiz">Πάμε στο Quiz →</button>` : `← σύρε →`)}`;
-    go = d => { const j = i + d; if(j < 0 || j >= n) return false; s.idx = j; s.anim = d > 0 ? "in-next" : "in-prev"; renderSection(k, id); return true; };
+    go = d => { const j = i + d; if(j < 0 || j >= n) return false; s.idx = j; s.anim = d > 0 ? "in-next" : "in-prev"; renderUnit(key); return true; };
   } else if(s.view === "voc"){
     const n = c.vocab.length, i = Math.min(s.vi, n - 1), [w, m, d] = c.vocab[i], last = i === n - 1;
     body = `<div class="prog"><div class="bar" role="img" aria-label="Λέξη ${i+1} από ${n}"><i style="width:${Math.round((i+1) / n * 100)}%"></i></div><span>${i+1}/${n}</span></div>
@@ -969,54 +811,56 @@ function renderSection(k, id){
         ? `<span class="tag">Σημαίνει</span><span class="vw" lang="grc">${w}</span><strong>${m}</strong>${d ? `<span class="vd"><b>Στα νέα ελληνικά</b>${d}</span>` : ""}`
         : `<span class="tag">Λέξη ${i+1} από ${n}</span><strong class="vw big" lang="grc">${w}</strong><span class="tap">Πάτα για τη σημασία</span>`}</button></div>
       ${pager(i > 0, !last, last ? `<button class="btn gold" data-go="quiz">Πάμε στο Quiz →</button>` : `← σύρε →`)}`;
-    go = d => { const j = i + d; if(j < 0 || j >= n) return false; s.vi = j; s.vflip = false; s.anim = d > 0 ? "in-next" : "in-prev"; renderSection(k, id); return true; };
+    go = d => { const j = i + d; if(j < 0 || j >= n) return false; s.vi = j; s.vflip = false; s.anim = d > 0 ? "in-next" : "in-prev"; renderUnit(key); return true; };
   } else if(s.view === "quiz"){
     const z = s.quiz, nm = mistakeItems(key).length;
     const extra = nm ? `<button class="btn gold" data-qa="mist" style="margin-bottom:10px">Ξανά μόνο τα λάθη (${nm})</button>` : "";
     const head = z.mode === "mist" && !z.done ? `<p class="qmode">Μόνο οι ερωτήσεις που είχες κάνει λάθος. <button class="linkbtn" data-qa="restart">Όλες οι ερωτήσεις</button></p>` : "";
-    const v = quizView(z, () => renderSection(k, id), extra);
+    const v = quizView(z, () => renderUnit(key), extra);
     body = head + v.body; go = v.go;
   } else if(s.view === "book" && BOOK_HELP[key]){
     body = bookHelpView(key, bookUrlFor(key), c.summary);
   } else {
     const lv = s.lvl || 0, shown = c.ex.map((e, i) => [e, i]).filter(([e]) => !lv || e.lvl === lv);
     body = `<h3 style="font-size:18px;font-weight:800;margin:0 0 10px">${c.exTitle}</h3>
-      <div class="lvls" role="group" aria-label="Δυσκολία">${LEVELS.map((l, j) => `<button data-lvl="${j}" aria-pressed="${lv === j}"${j ? ` class="l${j}"` : ""}>${j ? l : "Όλες"} <small>${j ? c.ex.filter(e => e.lvl === j).length : c.ex.length}</small></button>`).join("")}</div>` + shown.map(([e,i]) => `<div class="sheet ex" id="ex-${k}-${i}">
-      <div class="exh"><span class="n">${k === "A" ? "Ερώτηση" : "Άσκηση"} ${i+1}</span><span class="lvl l${e.lvl}">${LEVELS[e.lvl]}</span></div>
+      <div class="lvls" role="group" aria-label="Δυσκολία">${LEVELS.map((l, j) => `<button data-lvl="${j}" aria-pressed="${lv === j}"${j ? ` class="l${j}"` : ""}>${j ? l : "Όλες"} <small>${j ? c.ex.filter(e => e.lvl === j).length : c.ex.length}</small></button>`).join("")}</div>` + shown.map(([e,i]) => `<div class="sheet ex" id="ex-${i}">
+      <div class="exh"><span class="n">${iliad ? "Ερώτηση" : "Άσκηση"} ${i+1}</span><span class="lvl l${e.lvl}">${LEVELS[e.lvl]}</span></div>
       <p class="q">${rich(e.q)}</p>
       <button class="btn ghost" data-sol="${i}" aria-expanded="${s.open.has(i)}">${s.open.has(i) ? "Κρύψε τη λύση" : "Δες τη λύση"}</button>
-      <div class="sol" id="sol-${k}-${i}"${s.open.has(i) ? "" : " hidden"}>${e.learn ? `<div class="learn"><b>Θυμήσου τη θεωρία</b><p>${rich(e.learn)}</p>${"topic" in e ? `<button class="go" data-topic="${e.topic}" data-from="${i}">Δες τη θεωρία →</button>` : ""}</div>` : ""}<ol>${e.steps.map(x => `<li>${rich(x)}</li>`).join("")}</ol><p class="ans">Απάντηση: <span>${rich(e.ans)}</span></p></div>
+      <div class="sol" id="sol-${i}"${s.open.has(i) ? "" : " hidden"}>${e.learn ? `<div class="learn"><b>Θυμήσου τη θεωρία</b><p>${rich(e.learn)}</p>${"topic" in e ? `<button class="go" data-topic="${e.topic}" data-from="${i}">Δες τη θεωρία →</button>` : ""}</div>` : ""}<ol>${e.steps.map(x => `<li>${rich(x)}</li>`).join("")}</ol><p class="ans">Απάντηση: <span>${rich(e.ans)}</span></p></div>
     </div>`).join("") + `<p class="hint center">Δοκίμασε πρώτα μόνος σου και μετά δες τη λύση.</p>`;
   }
   s.anim = "";
   if(CALM.matches) body = body.replace(/ in-(next|prev)/g, "");
   keyNav = go;
   const views = (c.vocab ? [VIEWS[0], ["voc","Λέξεις"], VIEWS[1], VIEWS[2]] : [...VIEWS]).concat(BOOK_HELP[key] ? [["book","Βιβλίο"]] : []);
-  el.innerHTML = `<a class="back" href="#${k}">← ${BOOKS[k].name}</a>
-    <div class="chap"><span class="ref ref-icon">${subjectIcon(OLD_SUBJ[k], "small")}${info ? (k === "G" ? "Ενότητα " + info.num : info.ch.t) : ""}</span><h2 class="ct">${info && k !== "A" && k !== "G" ? info.num + " " : ""}${c.title}</h2></div>
+  document.title = `${lesson.section.title} · ${lesson.gradeData.label} | Διάβασμα`;
+  el.innerHTML = `<a class="back" href="${courseHref(g, sid)}">← ${esc(lesson.subject.name)}</a>
+    <div class="chap"><span class="ref ref-icon">${subjectIcon(sid, "small")}${lesson.gradeData.label} · ${esc(lesson.book.title)}</span><h2 class="ct">${c.title}</h2></div>
+    <div class="book-actions official-lesson-actions">${external(lesson.section.url, "Άνοιξε αυτό το μάθημα στο επίσημο βιβλίο", "primary")}${external(CATALOGUE.guidanceUrl, "Ύλη και οδηγίες ΙΕΠ 2026–2027")}</div>
     <div class="seg${views.length > 3 ? ["", " four", " five"][views.length - 3] : ""}">${views.map(([v,l]) => `<button data-go="${v}" aria-pressed="${s.view === v}">${l}</button>`).join("")}</div>${body}
-    <a class="btn ghost sendlink" href="#send/${k}/${id}">Έχεις καλές σημειώσεις; Στείλ' τες</a>`;
+    <a class="btn ghost sendlink" href="#send/${key}">Έχεις καλές σημειώσεις; Στείλ' τες</a>`;
 
   const top = () => { const r = $(".seg", el).getBoundingClientRect(); if(r.top < 0) window.scrollBy({top: r.top - 12}); };
-  el.querySelectorAll("[data-go]").forEach(b => b.onclick = () => { s.view = b.dataset.go; s.fromBook = null; renderSection(k, id); top(); });
-  bindBookHelp(el, key, () => renderSection(k, id), (t, from) => {
+  el.querySelectorAll("[data-go]").forEach(b => b.onclick = () => { s.view = b.dataset.go; s.fromBook = null; renderUnit(key); top(); });
+  bindBookHelp(el, key, () => renderUnit(key), (t, from) => {
     s.view = "sum"; s.idx = t; s.anim = "in-next"; s.from = null; s.fromBook = from;
     history.pushState({theory:key}, "");
-    renderSection(k, id); top();
+    renderUnit(key); top();
   });
   el.querySelectorAll("[data-nav]").forEach(b => b.onclick = () => go && go(+b.dataset.nav));
   const slide = $(".slide", el);
   if(slide && go) swipe(slide, go);
-  if(s.view === "quiz") bindQuiz(el, s.quiz, () => renderSection(k, id), {
+  if(s.view === "quiz") bindQuiz(el, s.quiz, () => renderUnit(key), {
     top,
     restart: () => { s.quiz = newQuiz(unitItems(key), "unit"); },
     mist: () => { s.quiz = newQuiz(mistakeItems(key), "mist"); },
     finish: () => { if(s.quiz.mode === "unit") saveBest(key, gradeOf(s.quiz)); }
   });
-  el.querySelectorAll("[data-vflip]").forEach(b => b.onclick = () => { s.vflip = !s.vflip; renderSection(k, id); });
-  el.querySelectorAll("[data-lvl]").forEach(b => b.onclick = () => { s.lvl = +b.dataset.lvl; renderSection(k, id); });
+  el.querySelectorAll("[data-vflip]").forEach(b => b.onclick = () => { s.vflip = !s.vflip; renderUnit(key); });
+  el.querySelectorAll("[data-lvl]").forEach(b => b.onclick = () => { s.lvl = +b.dataset.lvl; renderUnit(key); });
   el.querySelectorAll("[data-sol]").forEach(b => b.onclick = () => {
-    const sol = $("#sol-"+k+"-"+b.dataset.sol);
+    const sol = $("#sol-"+b.dataset.sol);
     sol.hidden = !sol.hidden;
     if(sol.hidden) s.open.delete(+b.dataset.sol); else s.open.add(+b.dataset.sol);
     b.setAttribute("aria-expanded", String(!sol.hidden));
@@ -1026,33 +870,32 @@ function renderSection(k, id){
   el.querySelectorAll("[data-topic]").forEach(b => b.onclick = () => {
     s.view = "sum"; s.idx = +b.dataset.topic; s.anim = "in-next"; s.from = +b.dataset.from;
     history.pushState({theory:key}, "");
-    renderSection(k, id); top();
+    renderUnit(key); top();
   });
   el.querySelectorAll("[data-ret]").forEach(b => b.onclick = () => {
-    if(history.state && history.state.theory === key) history.back(); else backToEx(k, id);
+    if(history.state && history.state.theory === key) history.back(); else backToEx(key);
   });
 }
-function backToEx(k, id){
-  const s = state[k+"/"+id];
-  if(s.fromBook != null){ const b = s.fromBook; s.view = "book"; s.fromBook = null; renderSection(k, id); bhScroll(b); return; }
+function backToEx(key){
+  const s = state[key];
+  if(s.fromBook != null){ const b = s.fromBook; s.view = "book"; s.fromBook = null; renderUnit(key); bhScroll(b); return; }
   const i = s.from;
   s.view = "ex"; s.from = null; s.open.add(i); s.lvl = 0;
-  renderSection(k, id);
-  const card = document.getElementById("ex-"+k+"-"+i);
+  renderUnit(key);
+  const card = document.getElementById("ex-"+i);
   if(card) card.scrollIntoView({block:"start"});
 }
 window.addEventListener("popstate", e => {
   let parts;
   try { parts = decodeURIComponent(location.hash.slice(1)).split("/").filter(Boolean); } catch(e){ return; }
-  const k = parts[0], id = parts.slice(1).join("/"), s = state[k+"/"+id];
-  if(s && (s.from !== null || s.fromBook != null) && !(e.state && e.state.theory) && !$("#"+k).hidden) backToEx(k, id);
+  if(parts[0] !== "lesson") return;
+  const key = parts.slice(1, 5).join("/"), s = C[key] && state[key];
+  if(s && (s.from !== null || s.fromBook != null) && !(e.state && e.state.theory) && !$("#catalogue").hidden) backToEx(key);
 });
 
 /* Εξάσκηση: διάλεξε μάθημα και ύλη, κάνε «Επανάληψη» (όλη η θεωρία σε κάρτες) ή «Δοκιμαστικό»,
-   και «Τα λάθη μου». Μια ενότητα είναι παλιά (C, π.χ. "F/1.1") ή επίσημη (OFFICIAL_CONTENT, π.χ. "B/math/0/52"). */
+   και «Τα λάθη μου». Κάθε ενότητα έχει το κλειδί της ενότητας του βιβλίου, π.χ. "B/math/0/52". */
 const P = { sub:"exam", quiz:null, rev:null, keys:[], grade:null, wex:[], mkey:null, sel:new Set(store.get("diab-exam-sel", [])), subj:store.get("diab-exam-subj", null), n:10, min:0, wx:2, end:null, int:null };
-const OLD_SUBJ = { F:"physics", M:"math", G:"ancient", A:"translated" };
-const readyKeys = k => BOOKS[k].chapters.flatMap(ch => ch.s.map(x => k + "/" + x[0])).filter(key => C[key]);
 const PART = { A:"Α", B:"Β", "Α":"Α", "Β":"Β" };
 /* Τίτλος κεφαλαίου από τα περιεχόμενα του βιβλίου, π.χ. «ΜΕΡΟΣ Β - ΚΕΦΑΛΑΙΟ 4ο - …» → «Β4. …» */
 function chapterHead(title){
@@ -1062,7 +905,6 @@ function chapterHead(title){
 }
 /* Τα μαθήματα μιας τάξης με τις ενότητες που έχουν Quiz, ομαδοποιημένες ανά κεφάλαιο, με τη σειρά του βιβλίου */
 function scopeGroups(grade){
-  const linked = new Set(Object.values(LINKED));
   return getGrade(grade).subjects.filter(s => !INFO_ONLY[s.id]).map(s => {
     const chapters = [], seen = new Set();
     const add = (name, key) => {
@@ -1071,12 +913,10 @@ function scopeGroups(grade){
       const last = chapters[chapters.length - 1];
       if(last && last.name === name) last.keys.push(key); else chapters.push({name, keys:[key]});
     };
-    if(grade === "B") for(const [k, sid] of Object.entries(OLD_SUBJ)) if(sid === s.id)
-      BOOKS[k].chapters.forEach(ch => ch.s.forEach(x => { const key = k + "/" + x[0]; if(C[key] && !linked.has(key)) add(ch.t, key); }));
     s.books.forEach((b, bi) => { let head = null; b.sections.forEach((sec, si) => {
       const key = `${grade}/${s.id}/${bi}/${si}`, h = chapterHead(sec.title || "");
-      if(h && !OFFICIAL_CONTENT[key]){ head = h; return; }
-      const unit = LINKED[key] && C[LINKED[key]] ? LINKED[key] : OFFICIAL_CONTENT[key] ? key : null;
+      if(h && !unitData(key)){ head = h; return; }
+      const unit = ALIAS[key] || (unitData(key) ? key : null);
       if(!unit) return;
       const num = (unitData(unit).title || "").match(/^(\d+)\.\d+/);
       add(head || (num ? `Κεφάλαιο ${num[1]}` : "Ενότητες"), unit);
@@ -1161,7 +1001,7 @@ function renderPractice(sub){
     const opt = (name, val, list) => list.map(([v, l]) => `<button data-${name}="${v}" aria-pressed="${val === v}">${l}</button>`).join("");
     body = `<div class="hero"><span class="ref">Εξάσκηση · ${grade.label}</span><h2 class="ct">Διαγώνισμα</h2><p>Διάλεξε μάθημα και την ύλη του διαγωνίσματος. Με την Επανάληψη ξαναδιαβάζεις όλη τη θεωρία. Με το Δοκιμαστικό γράφεις ένα τεστ για εξάσκηση.</p></div>
       <section class="toc"><h3>Μάθημα</h3><div class="gchips">${groups.map(s => `<button class="gchip sel" data-subj="${s.id}" aria-pressed="${s === subj}">${esc(s.name)}</button>`).join("")}</div></section>
-      <section class="toc"><h3>Ύλη</h3>${subj.chapters.map((c, ci) => `<div class="gchips"><span class="glab">${esc(c.name)} <button class="linkbtn" data-chap="${ci}">${c.keys.every(x => P.sel.has(x)) ? "κανένα" : "όλο το κεφάλαιο"}</button></span>${c.keys.map(key => `<button class="gchip sel" data-sel="${key}" aria-pressed="${P.sel.has(key)}">${C[key] ? findSection(key.split("/")[0], key.split("/")[1]).num + " · " : ""}${unitTitle(key)}</button>`).join("")}</div>`).join("")}</section>
+      <section class="toc"><h3>Ύλη</h3>${subj.chapters.map((c, ci) => `<div class="gchips"><span class="glab">${esc(c.name)} <button class="linkbtn" data-chap="${ci}">${c.keys.every(x => P.sel.has(x)) ? "κανένα" : "όλο το κεφάλαιο"}</button></span>${c.keys.map(key => `<button class="gchip sel" data-sel="${key}" aria-pressed="${P.sel.has(key)}">${unitNum(key)}${unitTitle(key)}</button>`).join("")}</div>`).join("")}</section>
       <section class="toc"><h3>Επανάληψη</h3><p class="pnote">Όλα τα θέματα της περίληψης των ενοτήτων που διάλεξες, ένα ένα.</p><button class="btn" data-px="rev"${chosen.length ? "" : " disabled"}>${chosen.length ? `Ξεκίνα την επανάληψη (${ncards} κάρτες)` : "Διάλεξε τουλάχιστον μία ενότητα"}</button></section>
       <section class="toc"><h3>Δοκιμαστικό</h3>
         <p class="pnote">Ερωτήσεις</p><div class="seg">${opt("pn", P.n, [[10, "10"], [20, "20"], [0, "Όλες"]])}</div>
@@ -1305,8 +1145,8 @@ function renderSchedule(parts){
 const RV = { filter:"all" };
 function rvHash(o){ let h = 5381; for(const ch of JSON.stringify(o)) h = (h * 33 + ch.codePointAt(0)) >>> 0; return h.toString(36); }
 const rvAll = () => store.get("diab-review", {});
-/* Οι δικές μας ενότητες (content/) και τα επίσημα μαθήματα της Β΄ που γράψαμε (src/official-lessons-b-*.json) */
-const rvUnits = () => [...Object.keys(C).sort(), ...Object.keys(OFFICIAL_CONTENT).filter(k => k.startsWith("B/")).sort((a, b) => a.localeCompare(b, "el", {numeric:true}))];
+/* Τα μαθήματα της Β΄ που γράψαμε (content/ και src/official-lessons-b-*.json) */
+const rvUnits = () => [...Object.keys(C), ...Object.keys(OFFICIAL_CONTENT)].filter(k => k.startsWith("B/")).sort((a, b) => a.localeCompare(b, "el", {numeric:true}));
 const strip = t => plain(String(t || "")).replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
 function rvItems(key){
   if(key === "grammar") return Object.entries(GR).map(([g, d]) => ({ id:`grammar#${g}:${rvHash(d)}`, kind:"Πίνακας", label:d.lemma, html:rvGrammar(d) }));
@@ -1351,7 +1191,7 @@ function rvStats(key){
   for(const it of items){ const m = all[it.id]; if(m && m.s === "ok") ok++; else if(m && m.s === "bad") bad++; }
   return { n:items.length, ok, bad, items };
 }
-const rvName = key => key === "grammar" ? "Πίνακες γραμματικής" : OFFICIAL_CONTENT[key] ? `${getGrade(key[0]).label} · ${OFFICIAL_CONTENT[key].title}` : `${unitName(key)} · ${C[key].title}`;
+const rvName = key => key === "grammar" ? "Πίνακες γραμματικής" : OFFICIAL_CONTENT[key] ? `${getGrade(key[0]).label} · ${OFFICIAL_CONTENT[key].title}` : `${getGrade(key[0]).label} · ${unitName(key)} · ${strip(C[key].title)}`;
 function rvReport(keys){
   const all = rvAll(), today = new Date().toLocaleDateString("el-GR");
   return keys.map(key => {
@@ -1455,12 +1295,16 @@ window.addEventListener("popstate", () => { const d = $("#gsheet"); if(d.open) d
 
 /* Notes upload */
 let tsWidget = null, tsToken = "", photoBlob = null;
-function sectionOptions(k, sel){
-  return BOOKS[k].chapters.map(ch => `<optgroup label="${esc(ch.t)}">${ch.s.map(([id,num,title]) => `<option value="${id}"${id === sel ? " selected" : ""}>${esc(num)} ${esc(title)}</option>`).join("")}</optgroup>`).join("");
+/* Τα μαθήματα της Β΄ με βιβλίο, και οι ενότητες του βιβλίου τους. Η τιμή κάθε ενότητας είναι το κλειδί της, π.χ. "B/math/0/2". */
+const sendSubjects = () => getGrade("B").subjects.filter(s => s.books.length && !INFO_ONLY[s.id]);
+function sectionOptions(sid, sel){
+  const s = gradeSubject("B", sid);
+  return s.books.map((b, bi) => `<optgroup label="${esc(b.title)}">${b.sections.map((x, si) => { const key = `B/${sid}/${bi}/${si}`; return `<option value="${key}"${key === sel ? " selected" : ""}>${esc(x.title)}</option>`; }).join("")}</optgroup>`).join("");
 }
-function renderSend(k, id){
-  const el = $("#send");
-  if(!["F","M","G","A"].includes(k)) k = "F";
+function renderSend(key){
+  const el = $("#send"), subjects = sendSubjects();
+  let sid = key.split("/")[1];
+  if(!subjects.some(s => s.id === sid)) sid = subjects[0].id;
   const intro = `<div class="chap"><span class="ref">Βοήθησε να γίνει η σελίδα καλύτερη</span><h2 class="ct">Στείλε τις σημειώσεις σου</h2>
     <p class="muted">Έχεις γράψει καλές σημειώσεις ή έχεις λύσει μια άσκηση με έξυπνο τρόπο; Βγάλε φωτογραφία και στείλ' την. Θα τη δει ο εκπρόσωπος της τάξης και θα τη χρησιμοποιήσει για να βελτιώσει τις περιλήψεις και τις κάρτες. Οι φωτογραφίες δεν δημοσιεύονται.</p></div>`;
   if(!UPLOAD.endpoint || !UPLOAD.sitekey){
@@ -1473,9 +1317,9 @@ function renderSend(k, id){
       <p>Να μη φαίνονται πρόσωπα, ονόματα ή άλλα προσωπικά στοιχεία.</p>
       <p>Δεν χρειάζεται να γράψεις το όνομά σου.</p></div>
     <label for="sub">Μάθημα</label>
-    <select id="sub">${["F","M","G","A"].map(x => `<option value="${x}"${x === k ? " selected" : ""}>${BOOKS[x].name}</option>`).join("")}</select>
+    <select id="sub">${subjects.map(x => `<option value="${x.id}"${x.id === sid ? " selected" : ""}>${esc(x.name)}</option>`).join("")}</select>
     <label for="sec">Ενότητα</label>
-    <select id="sec">${sectionOptions(k, id)}</select>
+    <select id="sec">${sectionOptions(sid, key)}</select>
     <label for="note">Σχόλιο (προαιρετικό)</label>
     <textarea id="note" maxlength="140" placeholder="π.χ. «Έτσι το καταλαβαίνω εγώ το Hooke»"></textarea>
     <label>Φωτογραφία</label>

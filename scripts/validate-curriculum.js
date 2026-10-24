@@ -18,7 +18,6 @@ function validateCurriculum(catalogue) {
       assert.equal(s.hours,config.subjects.find(c=>c.id===s.id).hours[i]);
       assert.ok(s.books.length || s.resourceUrl,`Missing resources: ${g.id}/${s.id}`);
       if(s.resourceUrl) safeUrl(s.resourceUrl);
-      if(s.legacy) assert.equal(g.id,'B');
       assert.equal(new Set(s.books.map(b=>b.id)).size,s.books.length);
       for(const b of s.books) {
         assert.ok(b.title && /^8547\/\d+$/.test(b.id));
