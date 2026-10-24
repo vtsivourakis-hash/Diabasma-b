@@ -18,7 +18,7 @@ document.querySelector('#app-open').onclick = () => {updateInstall();appDialog.s
 document.querySelector('#app-close').onclick = () => appDialog.close();
 appDialog.addEventListener('click', e => {if(e.target === appDialog) appDialog.close();});
 document.querySelector('#app-back').onclick = () => {
-  if(appTrail.length > 1) history.back();else location.hash = 'class/' + selectedGrade;
+  if(appTrail.length > 1) history.back();else location.hash = 'tomorrow';
 };
 document.querySelector('#app-search').onclick = () => {
   const focus = () => {const input = document.querySelector('#catalogue-query');if(input){input.focus();input.scrollIntoView({block:'center'});}};
@@ -30,7 +30,7 @@ function updateAppNavigation(){
   const hash = location.hash || '#class/' + selectedGrade;
   if(appTrail[appTrail.length-2] === hash) appTrail.pop();
   else if(appTrail[appTrail.length-1] !== hash) appTrail.push(hash);
-  document.querySelector('#app-home').href = '#class/' + selectedGrade;
+  document.querySelector('#app-home').href = '#tomorrow';
   document.querySelector('#app-back').disabled = appTrail.length < 2;
   const heading = document.querySelector('.panel:not([hidden]) h2');
   document.querySelector('#app-location').textContent = heading ? heading.textContent : getGrade(selectedGrade).label;

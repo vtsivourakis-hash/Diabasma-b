@@ -466,6 +466,7 @@ footer p{margin:0 0 6px}
 @media (min-width:640px){ .wrap{padding-top:24px} }
 /*__CATALOGUE_CSS__*/
 /*__APP_CSS__*/
+/*__PLAN_CSS__*/
 </style>
 </head>
 <body>
@@ -479,19 +480,21 @@ footer p{margin:0 0 6px}
   </header>
 
   <nav class="tabs" aria-label="Κύρια πλοήγηση">
+    <a class="tab" href="#tomorrow" data-p="tomorrow"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M9.5 15l2 2 3.5-3.5"/></svg></span><span class="lb">Αύριο</span></a>
     <a class="tab" id="classes-tab" href="#class/B" data-p="class"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h7l2 2 2-2h7v15h-7l-2 2-2-2H3zM12 6v15"/></svg></span><span class="lb">Μαθήματα</span></a>
     <a class="tab" href="#practice" data-p="practice"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/></svg></span><span class="lb">Εξάσκηση</span></a>
     <a class="tab" href="#school" data-p="school"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V10l7-5 7 5v11M10 21v-5h4v5"/></svg></span><span class="lb">Σχολείο</span></a>
     <a class="tab" href="#sources" data-p="sources"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7v1"/></svg></span><span class="lb">Πηγές</span></a>
   </nav>
 
-<nav class="app-toolbar" aria-label="Γρήγορη πλοήγηση"><button class="app-tool" id="app-back" type="button" aria-label="Πίσω">←</button><a class="app-tool" id="app-home" href="#class/B">Αρχική</a><span class="app-location" id="app-location"></span><button class="app-tool" id="app-voice" type="button" aria-pressed="false" aria-label="Διάβασε το τρέχον περιεχόμενο δυνατά">🔊 Άκουσε</button><button class="app-tool" id="app-search" type="button">Αναζήτηση</button><a class="app-tool" href="#timer" aria-label="Χρονόμετρο μελέτης">25΄</a></nav>
+<nav class="app-toolbar" aria-label="Γρήγορη πλοήγηση"><button class="app-tool" id="app-back" type="button" aria-label="Πίσω">←</button><a class="app-tool" id="app-home" href="#tomorrow">Αρχική</a><span class="app-location" id="app-location"></span><button class="app-tool" id="app-voice" type="button" aria-pressed="false" aria-label="Διάβασε το τρέχον περιεχόμενο δυνατά">🔊 Άκουσε</button><button class="app-tool" id="app-search" type="button">Αναζήτηση</button><a class="app-tool" href="#timer" aria-label="Χρονόμετρο μελέτης">25΄</a></nav>
   <a id="app-resume" class="app-resume" hidden></a>
   <div class="app-download"><div><strong>Το Διάβασμα ως εφαρμογή</strong><p>Δοκιμαστική έκδοση · δικό της παράθυρο, εύκολη πλοήγηση.</p></div><button class="app-tool" id="app-open" type="button">Λήψη app</button></div>
   <dialog class="app-dialog" id="app-download" aria-labelledby="app-dialog-title"><button class="app-tool app-dialog-close" id="app-close" type="button" aria-label="Κλείσιμο">✕</button><span class="ref" id="app-mode">Δοκιμαστική έκδοση</span><h2 id="app-dialog-title">Το διάβασμά σου, σε δικό του παράθυρο.</h2><p>Αρχική, πίσω, αναζήτηση και χρονόμετρο με ένα πάτημα. Συνέχισε από την τελευταία ενότητα που άνοιξες.</p><a class="btn" href="downloads/Diabasma-test-windows.zip" download>Λήψη για Windows · δοκιμαστική</a><ol><li>Κατέβασε και αποσυμπίεσε το ZIP σε έναν φάκελο.</li><li>Άνοιξε το <b>Start-Diabasma.cmd</b>. Χρειάζεται Microsoft Edge ή Google Chrome και ανοίγει σε ξεχωριστό παράθυρο.</li><li>Οι ενσωματωμένες ενότητες δουλεύουν χωρίς internet. Τα εξωτερικά βιβλία χρειάζονται σύνδεση ή δικό σου PDF.</li></ol><button class="btn ghost" id="app-install" type="button" hidden>Εγκατάσταση σε αυτή τη συσκευή</button><p id="app-install-status" role="status"></p><details><summary>Κινητό ή άλλος υπολογιστής</summary><p>Άνοιξε το site και διάλεξε «Εγκατάσταση εφαρμογής» από το μενού του browser. Σε iPhone/iPad: Safari → Κοινή χρήση → Προσθήκη στην οθόνη Αφετηρίας.</p></details><p>Η τοπική έκδοση είναι ένα δοκιμαστικό στιγμιότυπο. Για νέο υλικό κατέβασε ξανά το ZIP. Η πρόοδος μένει στη συσκευή και δεν μεταφέρεται αυτόματα από το site.</p></dialog>
 
   <nav class="seg grade-nav" id="grade-nav" aria-label="Επιλογή τάξης"></nav>
   <p id="app-voice-status" class="voice-status" role="status" aria-live="polite"></p><main id="main-content" tabindex="-1">
+    <section class="panel" id="plan" hidden></section>
     <section class="panel" id="catalogue"></section>
     <section class="panel" id="sources" hidden></section>
     <section class="panel" id="send" hidden></section>
@@ -565,22 +568,23 @@ function route(){
   keyNav = null;
   let parts;
   try { parts = decodeURIComponent(location.hash.slice(1)).split("/").filter(Boolean); } catch(e){ parts = []; }
-  let p = parts[0] || "class";
-  if(!["class","course","lesson","sources","practice","timer","schedule","send","school","review"].includes(p)) p = "class";
+  let p = parts[0] || "tomorrow";
+  if(!["tomorrow","plan","study","prep","class","course","lesson","sources","practice","timer","schedule","send","school","review"].includes(p)) p = "class";
   /* Κρυφές τάξεις (βλ. SHOWN_GRADES): οι διαδρομές τους οδηγούν στη Β΄ */
   if((p === "class" || p === "course" || p === "lesson") && parts[1] && !SHOWN_GRADES.includes(parts[1])){ location.replace("#class/" + selectedGrade); return; }
   if(p === "class" || p === "course" || p === "lesson") selectGrade(parts[1] || selectedGrade);
   if(p === "send") selectGrade('B');
-  const panel = p === "class" || p === "course" || p === "lesson" ? "catalogue" : p;
+  const panel = p === "class" || p === "course" || p === "lesson" ? "catalogue" : ["tomorrow","plan","study","prep"].includes(p) ? "plan" : p;
   document.querySelectorAll(".panel").forEach(el => el.hidden = el.id !== panel);
   renderGradeNav();
   $('#grade-nav').hidden = shownGrades().length < 2;
   document.title = `Διάβασμα · ${getGrade(selectedGrade).label}`;
-  const activeTab = ["course","lesson","class","send"].includes(p) ? "class" : p === "timer" || p === "schedule" ? "practice" : p;
+  const activeTab = ["course","lesson","class","send"].includes(p) ? "class" : p === "timer" || p === "schedule" ? "practice" : panel === "plan" ? "tomorrow" : p;
   document.querySelectorAll(".tab").forEach(t => {
     if(t.dataset.p === activeTab) t.setAttribute("aria-current","page"); else t.removeAttribute("aria-current");
   });
-  if(p === "class") renderCatalogue();
+  if(panel === "plan") renderPlanRoute(p, parts);
+  else if(p === "class") renderCatalogue();
   else if(p === "course") renderCourse(parts[1], parts[2]);
   else if(p === "lesson") renderOfficialLesson(parts[1], parts[2], +parts[3], +parts[4]);
   else if(p === "sources") renderSources();
@@ -1476,6 +1480,7 @@ if("serviceWorker" in navigator && (location.protocol === "https:" || location.h
 }
 
 /*__APP_JS__*/
+/*__PLAN_JS__*/
 route();
 updateAppNavigation();
 </script>

@@ -14,6 +14,7 @@
 
 - `src/curriculum-config.json`: επίσημα μαθήματα και ώρες. `scripts/import-curriculum.js`: εισαγωγή δημόσιων μεταδεδομένων στο `src/curriculum.json`.
 - `src/catalogue.js` και `src/catalogue.css`: τάξεις, βιβλία, αναζήτηση, πηγές. Ενσωματώνονται στο αυτόνομο `index.html` από το build.
+- `src/plan.js` και `src/plan.css`: η αρχική «Αύριο» (`#tomorrow`), επιλογή ενοτήτων (`#plan/physics`), η ενότητα σε 4 βήματα (`#study/B/physics/0/9/learn|see|try|check|done`) και η προετοιμασία για διαγώνισμα (`#prep/physics`). Χρησιμοποιούν το υπάρχον περιεχόμενο.
 - Διαδρομές καταλόγου: `#class/A`, `#class/B`, `#class/C`, `#course/A/math`, `#lesson/B/math/0/2`, `#sources`. Δεν υπάρχουν πια διαδρομές έξω από τη δομή του βιβλίου (οι παλιές `#F`, `#M`, `#G`, `#A` αφαιρέθηκαν).
 - Τα πλήρη βιβλία μένουν στο επίσημο αποθετήριο. Μην εμφανίζεις συνδέσμους ως έτοιμες δικές μας ενότητες/κουίζ. Η διδακτέα ύλη δεν ταυτίζεται αυτόματα με ολόκληρο το βιβλίο.
 - `src/template.html`: HTML, CSS και JS της σελίδας, η σελίδα ενότητας για το `content/` (`renderUnit`), η καρτέλα FAQ (`#school`) και οι ρυθμίσεις `UPLOAD`. Το `/*__DATA__*/` αντικαθίσταται από το build.
@@ -38,7 +39,7 @@
 - Μένει ένα αυτόνομο `index.html`, μαζί με `sw.js` (λειτουργία χωρίς internet), `manifest.webmanifest` και `icons/` (προσθήκη στην αρχική οθόνη). Δεν προστίθενται framework, analytics, cookies ή εξωτερικά scripts. Το μόνο εξωτερικό είναι τα Google Fonts, και το Turnstile μόνο όταν είναι ενεργή η αποστολή. Οι χρήστες είναι ανήλικοι: δεν συλλέγουμε τίποτα.
 - Mobile-first: έλεγχος σε πλάτος 390px, σε light και σε dark mode.
 - Τα χρώματα είναι CSS variables σε τρία μπλοκ στην αρχή του template (light, dark μέσω `prefers-color-scheme`, dark μέσω `data-theme`). Κάθε αλλαγή γίνεται και στα τρία.
-- Η πλοήγηση γίνεται με hash: `#class/B`, `#course/B/physics`, `#lesson/B/physics/0/5`, `#practice`, `#practice/mistakes`, `#school`, `#timer`, `#send/B/math/0/2`. Τα links προς ενότητες πρέπει να συνεχίσουν να δουλεύουν.
+- Η πλοήγηση γίνεται με hash: `#tomorrow` (αρχική), `#plan/math`, `#study/B/math/0/2`, `#prep/math`, `#class/B`, `#course/B/physics`, `#lesson/B/physics/0/5`, `#practice`, `#practice/mistakes`, `#school`, `#timer`, `#send/B/math/0/2`. Τα links προς ενότητες πρέπει να συνεχίσουν να δουλεύουν.
 - Το κουμπί «πίσω» του κινητού πρέπει να δουλεύει. Τα στοιχεία που πατιούνται είναι `button` ή `a`, όχι `div`.
 
 ## Ανοιχτά θέματα
