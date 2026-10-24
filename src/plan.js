@@ -190,10 +190,26 @@ function unitFeed(key){
       return `<a class="fd-tile${i === now ? " now" : ""}${c.b && c.b.warn ? " warn" : ""}" href="#study/${key}/c/${i}"><span class="fd-h"><span class="fd-n">${i + 1}${i === now ? " · Εδώ είσαι" : c.b && c.b.warn ? " · Προσοχή" : ""}</span>${st}</span>${teaser}<b>${cardTitle(key, c)}</b>${meta(c) ? `<small>${meta(c)}</small>` : ""}</a>`;
     }).join("")}<a class="fd-tile fd-end" href="#study/${key}/end"><span class="fd-h"><span class="fd-n">Τέλος</span></span><b>Τι κατάλαβα και τι θέλει μια ματιά ακόμα</b></a></div>
     <a class="btn" href="#study/${key}/c/${now < 0 ? 0 : now}">${now < 0 ? "Ξανά από την αρχή" : now === 0 && !p.seen ? "Ξεκίνα" : `Συνέχισε από την κάρτα ${now + 1}`}</a>
+    ${bookButton(key)}
     <p class="pnote center">Πάτα μια κάρτα για να ανοίξει σε όλη την οθόνη. <a href="${unitHref(key)}">Όλη η ενότητα σε μία σελίδα</a></p>`;
+  bindBookButton(el, key);
   PL.fromFeed = key;
 }
 
+/* «Ασκήσεις του βιβλίου»: ανοίγει την καρτέλα «Βιβλίο» στη σελίδα της ενότητας. Εκεί ο μαθητής διαβάζει
+   την εκφώνηση στο βιβλίο και παίρνει βοήθειες μία μία. Στις κάρτες δεν μπαίνουν, γιατί δεν έχουμε την εκφώνηση. */
+function bookButton(key){
+  const n = (BOOK_HELP[key] || []).length;
+  return n ? `<button class="btn ghost" data-fd-book>Ασκήσεις του βιβλίου (${n}) με βοήθειες</button>` : "";
+}
+function bindBookButton(el, key){
+  const b = $("[data-fd-book]", el);
+  if(b) b.onclick = () => {
+    if(C[key]) Object.assign(st(key), { view:"book", fromBook:null });
+    else officialState[key] = Object.assign(officialState[key] || { view:"sum", card:0, gi:0, vi:0, picked:{}, done:false, open:new Set() }, { view:"book", fromBook:null });
+    location.hash = unitHref(key);
+  };
+}
 /* Μία κάρτα σε όλη την οθόνη. ← → τα μέρη της, ↑ ↓ η επόμενη ή η προηγούμενη κάρτα. */
 function cardView(key, i){
   const el = $("#plan"), deck = deckOf(key), c = deck[i], s = unitState(key), u = unitData(key), T = t => unitText(key, t), H = t => C[key] ? t : esc(t);
@@ -353,9 +369,11 @@ function unitEnd(key){
     <div class="pl-actions">
       ${again.length ? `<button class="btn" data-fd-again>Ξανά ${again.length === 1 ? "αυτή την κάρτα" : `αυτές τις ${again.length} κάρτες`}</button>` : ""}
       ${nextUnit ? `<a class="btn${again.length ? " ghost" : ""}" href="#study/${nextUnit}">Επόμενη ενότητα: ${unitLabel(nextUnit)}</a>` : nextSid ? `<a class="btn${again.length ? " ghost" : ""}" href="#plan/${nextSid}">Επόμενο για αύριο: ${esc(gradeSubject(selectedGrade, nextSid).name)}</a>` : ""}
+      ${bookButton(key)}
       <a class="btn ghost" href="#tomorrow">Φτάνει για σήμερα</a>
       <p class="pnote center"><a href="#study/${key}">Όλες οι κάρτες</a></p>
     </div>`;
+  bindBookButton(el, key);
   const b = $("[data-fd-again]", el);
   /* Ξανά: οι κάρτες ξεκινούν από την αρχή, με το επόμενο παράδειγμα και νέα σειρά στις ερωτήσεις */
   if(b) b.onclick = () => {
