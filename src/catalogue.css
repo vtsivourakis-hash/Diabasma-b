@@ -88,3 +88,11 @@
 .fig .fig-dot{fill:var(--text);stroke:var(--card2);stroke-width:2}
 .fig .fig-body{fill:color-mix(in srgb,var(--c-cyan) 14%,transparent);stroke:var(--c-cyan);stroke-width:1.5}
 .fig figcaption{margin:6px 4px 0;font-size:12.5px;color:var(--muted);text-align:center}
+.fig .fig-water{fill:color-mix(in srgb,var(--c-blue) 22%,transparent)}
+.fig .fig-surface{stroke:var(--c-blue);stroke-width:2}
+.fig .fig-wall{stroke:var(--text);stroke-width:2;fill:none;stroke-linejoin:round}
+.fig .fig-block{fill:var(--muted);stroke:var(--text);stroke-width:1.2}
+.fig .fig-piston{fill:var(--text)}
+.fig .fig-a-fill{fill:var(--c-cyan)}
+.fig .fig-b-fill{fill:var(--c-pink)}
+.fig .fig-c-fill{fill:var(--muted)}

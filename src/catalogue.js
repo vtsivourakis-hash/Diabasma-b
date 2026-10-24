@@ -64,7 +64,15 @@ const LEVEL_CHIP = {full:'<span class="chip ok">Πλήρες</span>', expl:'<spa
    Τα χρώματα έρχονται από τα tokens, οπότε δουλεύουν σε light και dark. Το "alt" περιγράφει το σχήμα για αναγνώστες οθόνης.
    line:    άξονας με σημεία και βέλη (θέση, μετατόπιση)       {min, max, step, unit, points:[{x, label}], arrows:[{from, to, label}]}
    forces:  σώμα με δυνάμεις από το κέντρο του                 {body, ground, forces:[{dir:up|down|left|right, len, label}]}
-   compose: δύο κάθετες δυνάμεις και η συνισταμένη τους        {a:{len, label}, b:{len, label}, r} */
+   compose: δύο κάθετες δυνάμεις και η συνισταμένη τους        {a:{len, label}, b:{len, label}, r}
+   depth:   δοχείο με νερό και σημεία σε βάθη                  {h, step, unit, points:[{h, label}]}
+   vessels: συγκοινωνούντα δοχεία με ίδια στάθμη               {label}
+   buoy:    δυναμόμετρο στον αέρα και στο νερό                 {air, water}
+   press:   υδραυλικό πιεστήριο                                {f1, f2, a1, a2}
+   scales:  οι κλίμακες Κελσίου, Κέλβιν, Φαρενάιτ (από τους °C) {rows:[{c, label}]}
+   energy:  στήλες δυναμικής (u) και κινητικής (k) ενέργειας  {unit, cols:[{label, u, k}]}
+   chain:   αλυσίδα μετατροπών ενέργειας, από πάνω προς τα κάτω {steps:[…], via:[…]}
+   split:   μια ποσότητα μοιρασμένη σε μέρη (π.χ. απόδοση)    {total, parts:[{label, v}]} */
 let figSeq = 0;
 const figText = (x, y, t, a = 'middle', cls = '') => `<text x="${x}" y="${y}" text-anchor="${a}"${cls ? ` class="${cls}"` : ''}>${esc(t)}</text>`;
 function figArrowDefs(id){
@@ -112,9 +120,93 @@ function figCompose(f, id){
   const w = Math.max(ax + 90, 220);
   return {box:`${(w - 320) / 2} ${by - 20} 320 ${oy + 30 - (by - 20)}`, body:s};
 }
+function figDepth(f){
+  const L = 110, R = 230, top = 34, bot = 184, sc = (bot - top) / f.h, Y = h => top + h * sc;
+  let s = `<rect x="${L}" y="${top}" width="${R - L}" height="${bot - top}" class="fig-water"/><path d="M${L} ${top - 18}V${bot}H${R}V${top - 18}" class="fig-wall"/><line x1="${L}" y1="${top}" x2="${R}" y2="${top}" class="fig-surface"/>`;
+  for(let h = 0; h <= f.h + 1e-9; h += f.step || 1) s += `<line x1="${L - 6}" y1="${Y(h)}" x2="${L}" y2="${Y(h)}" class="fig-axis"/>` + figText(L - 10, Y(h) + 4, `${String(h).replace('.', ',')} ${f.unit || 'm'}`, 'end', 'fig-small');
+  (f.points || []).forEach((p, i) => { const x = L + 30 + i * 30, y = Y(p.h); s += `<line x1="${x}" y1="${y}" x2="${R + 6}" y2="${y}" class="fig-guide"/><circle cx="${x}" cy="${y}" r="5" class="fig-dot"/>` + figText(R + 10, y + 4, p.label, 'start', 'fig-label'); });
+  return {box:'0 6 360 192', body:s};
+}
+function figVessels(f){
+  const lvl = 62, base = 160, t = 30, tube = 14;
+  const wl = 250 + 12 * (lvl - t) / (base - t), wr = 302 - 12 * (lvl - t) / (base - t);
+  const water = `M40 ${lvl}H60V${base}H130V${lvl}H210V${base}H262L${wl} ${lvl}H${wr}L290 ${base}V${base + tube}H40Z`;
+  const walls = `M40 ${t}V${base + tube}H290V${base}L302 ${t}M250 ${t}L262 ${base}H210V${t}M130 ${t}V${base}H60V${t}`;
+  const s = `<path d="${water}" class="fig-water"/><path d="${walls}" class="fig-wall"/><line x1="24" y1="${lvl}" x2="318" y2="${lvl}" class="fig-guide"/>` + figText(171, t - 10, f.label || 'ίδια στάθμη', 'middle', 'fig-label');
+  return {box:'0 0 330 192', body:s};
+}
+function figBuoy(f, id){
+  const scene = (cx, reading, inWater) => {
+    let s = `<line x1="${cx - 20}" y1="10" x2="${cx + 20}" y2="10" class="fig-axis"/><rect x="${cx - 9}" y="14" width="18" height="52" rx="4" class="fig-body"/>`
+      + `<path d="M${cx} 18${Array.from({length:6}, (_, i) => `l${i % 2 ? -6 : 6} 7`).join('')}" class="fig-axis"/>` + figText(cx + 16, 44, reading, 'start', 'fig-label fig-strong')
+      + `<line x1="${cx}" y1="66" x2="${cx}" y2="${inWater ? 108 : 96}" class="fig-axis"/>`;
+    const by = inWater ? 108 : 96;
+    if(inWater) s = `<rect x="${cx - 46}" y="84" width="92" height="82" class="fig-water"/><path d="M${cx - 46} 74V166H${cx + 46}V74" class="fig-wall"/><line x1="${cx - 46}" y1="84" x2="${cx + 46}" y2="84" class="fig-surface"/>` + s;
+    s += `<rect x="${cx - 16}" y="${by}" width="32" height="28" rx="4" class="fig-block"/>`;
+    if(inWater) s += `<line x1="${cx}" y1="${by + 54}" x2="${cx}" y2="${by + 32}" class="fig-a fig-vec" marker-end="url(#${id}a)"/>` + figText(cx - 8, by + 52, 'άνωση', 'end', 'fig-small');
+    return s + figText(cx, 186, inWater ? 'στο νερό' : 'στον αέρα', 'middle', 'fig-small');
+  };
+  return {box:'0 0 320 194', body: scene(90, f.air, false) + scene(220, f.water, true)};
+}
+function figPress(f, id){
+  const s = `<path d="M50 70H82V140H190V70H290V176H50Z" class="fig-water"/><path d="M50 30V176H290V30M82 30V140H190V30" class="fig-wall"/>`
+    + `<rect x="50" y="62" width="32" height="8" class="fig-piston"/><rect x="190" y="62" width="100" height="8" class="fig-piston"/>`
+    + `<line x1="66" y1="16" x2="66" y2="56" class="fig-a fig-vec" marker-end="url(#${id}a)"/>` + figText(76, 26, f.f1, 'start', 'fig-label')
+    + `<line x1="240" y1="58" x2="240" y2="14" class="fig-b fig-vec" marker-end="url(#${id}b)"/>` + figText(240, 4, f.f2, 'middle', 'fig-label fig-strong')
+    + figText(66, 96, f.a1 || 'A₁', 'middle', 'fig-small') + figText(240, 96, f.a2 || 'A₂', 'middle', 'fig-small');
+  return {box:'0 -12 340 198', body:s};
+}
+function figScales(f){
+  const cols = [[150, '°C', c => c], [215, 'K', c => c + 273], [280, '°F', c => 32 + 1.8 * c]], cs = f.rows.map(r => r.c);
+  const hi = Math.max(...cs), lo = Math.min(...cs), Y = c => 40 + (hi - c) / ((hi - lo) || 1) * 140;
+  let s = cols.map(([x, u]) => `<rect x="${x - 7}" y="28" width="14" height="164" rx="7" class="fig-body"/>` + figText(x, 18, u, 'middle', 'fig-strong')).join('');
+  f.rows.forEach(r => {
+    const y = Y(r.c);
+    s += `<line x1="8" y1="${y}" x2="300" y2="${y}" class="fig-guide"/>` + figText(8, y - 5, r.label, 'start', 'fig-small');
+    cols.forEach(([x, , conv]) => { s += `<circle cx="${x}" cy="${y}" r="4" class="fig-dot"/>` + figText(x + 10, y - 5, String(+conv(r.c).toFixed(1)).replace('.', ','), 'start', 'fig-label'); });
+  });
+  return {box:'0 0 330 200', body:s};
+}
+function figEnergy(f){
+  const cols = f.cols, n = cols.length, both = cols.some(c => 'k' in c) && cols.some(c => 'u' in c), top = both ? 46 : 22, base = top + 130;
+  const max = Math.max(...cols.flatMap(c => [c.u || 0, c.k || 0])), H = v => (v / max) * (base - top), cw = 300 / n, bw = both ? 26 : 40, num = v => String(v).replace('.', ',');
+  let s = `<line x1="10" y1="${base}" x2="310" y2="${base}" class="fig-axis"/>`;
+  if(both) s += `<rect x="16" y="8" width="12" height="12" class="fig-a-fill"/>` + figText(34, 18, 'U δυναμική', 'start', 'fig-small') + `<rect x="130" y="8" width="12" height="12" class="fig-b-fill"/>` + figText(148, 18, 'K κινητική', 'start', 'fig-small');
+  cols.forEach((c, i) => {
+    const cx = 10 + cw * (i + .5), bars = [['u', 'a'], ['k', 'b']].filter(([key]) => key in c);
+    bars.forEach(([key, k], j) => {
+      const x = cx + (bars.length === 2 ? (j ? 3 : -bw - 3) : -bw / 2), h = H(c[key]);
+      s += `<rect x="${x}" y="${base - h}" width="${bw}" height="${h}" rx="3" class="fig-${k}-fill"/>` + figText(x + bw / 2, base - h - 5, `${num(c[key])}${f.unit ? ' ' + f.unit : ''}`, 'middle', 'fig-small');
+    });
+    s += figText(cx, base + 18, c.label, 'middle', 'fig-label');
+  });
+  return {box:`0 0 320 ${base + 28}`, body:s};
+}
+function figChain(f, id){
+  const bw = 230, bh = 30, gap = 26, x = (320 - bw) / 2;
+  let s = '';
+  f.steps.forEach((t, i) => {
+    const y = 6 + i * (bh + gap);
+    s += `<rect x="${x}" y="${y}" width="${bw}" height="${bh}" rx="10" class="fig-body"/>` + figText(160, y + 20, t, 'middle', 'fig-label');
+    if(i < f.steps.length - 1) s += `<line x1="160" y1="${y + bh + 2}" x2="160" y2="${y + bh + gap - 4}" class="fig-a fig-vec" marker-end="url(#${id}a)"/>` + (f.via?.[i] ? figText(172, y + bh + 17, f.via[i], 'start', 'fig-small') : '');
+  });
+  return {box:`0 0 320 ${12 + f.steps.length * bh + (f.steps.length - 1) * gap}`, body:s};
+}
+function figSplit(f){
+  const L = 16, R = 304, y = 34, h = 30, total = f.parts.reduce((a, p) => a + p.v, 0);
+  let s = figText(L, 22, f.total, 'start', 'fig-label fig-strong'), x = L;
+  f.parts.forEach((p, i) => {
+    const w = (R - L) * p.v / total, k = ['a', 'b', 'c'][i % 3];
+    s += `<rect x="${x}" y="${y}" width="${Math.max(w, 2)}" height="${h}" class="fig-${k}-fill"/>`;
+    s += `<rect x="${L}" y="${y + h + 16 + i * 22}" width="12" height="12" class="fig-${k}-fill"/>` + figText(L + 18, y + h + 26 + i * 22, p.label, 'start', 'fig-label');
+    x += w;
+  });
+  return {box:`0 0 320 ${y + h + 22 + f.parts.length * 22}`, body:s};
+}
+const FIGS = {line:figLine, forces:figForces, compose:figCompose, depth:figDepth, vessels:figVessels, buoy:figBuoy, press:figPress, scales:figScales, energy:figEnergy, chain:figChain, split:figSplit};
 function figure(f){
   if(!f) return '';
-  const id = 'fg' + (++figSeq) + '-', d = f.type === 'line' ? figLine(f, id) : f.type === 'forces' ? figForces(f, id) : f.type === 'compose' ? figCompose(f, id) : null;
+  const id = 'fg' + (++figSeq) + '-', draw = FIGS[f.type], d = draw ? draw(f, id) : null;
   return d ? `<figure class="fig"><svg viewBox="${d.box}" role="img" aria-label="${esc(f.alt)}">${figArrowDefs(id)}${d.body}</svg>${f.caption ? `<figcaption>${esc(f.caption)}</figcaption>` : ''}</figure>` : '';
 }
 /* Αν ο μαθητής έχει λύσει το Quiz της ενότητας, δείχνουμε τον καλύτερο βαθμό του αντί για «Πλήρες» */

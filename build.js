@@ -59,7 +59,21 @@ for (const [key, lesson] of Object.entries(officialContent)) {
         if (!f.forces?.length || f.forces.some(g => !["up", "down", "left", "right"].includes(g.dir) || !(g.len > 0) || !g.label)) throw new Error(`${at}: κάθε δύναμη θέλει dir, len, label`);
       } else if (f.type === "compose") {
         if (!(f.a?.len > 0 && f.b?.len > 0 && f.a.label && f.b.label && f.r)) throw new Error(`${at}: θέλει a, b (len, label) και r`);
-      } else throw new Error(`${at}: άγνωστος τύπος ${f.type}`);
+      } else if (f.type === "depth") {
+        if (!(f.h > 0) || (f.points || []).some(p => !(p.h >= 0 && p.h <= f.h) || !p.label)) throw new Error(`${at}: θέλει h και σημεία με βάθος από 0 έως h`);
+      } else if (f.type === "buoy") {
+        if (!f.air || !f.water) throw new Error(`${at}: θέλει air και water`);
+      } else if (f.type === "press") {
+        if (!f.f1 || !f.f2) throw new Error(`${at}: θέλει f1 και f2`);
+      } else if (f.type === "scales") {
+        if (!f.rows?.length || f.rows.some(r => typeof r.c !== "number" || !r.label)) throw new Error(`${at}: κάθε γραμμή θέλει c (°C) και label`);
+      } else if (f.type === "energy") {
+        if (!f.cols?.length || f.cols.some(c => !c.label || !(("u" in c) || ("k" in c)) || [c.u, c.k].some(v => v !== undefined && !(v >= 0)))) throw new Error(`${at}: κάθε στήλη θέλει label και u ή k (≥ 0)`);
+      } else if (f.type === "chain") {
+        if (!(f.steps?.length >= 2)) throw new Error(`${at}: θέλει τουλάχιστον 2 βήματα`);
+      } else if (f.type === "split") {
+        if (!f.total || !f.parts?.length || f.parts.some(p => !(p.v > 0) || !p.label)) throw new Error(`${at}: θέλει total και μέρη με v > 0 και label`);
+      } else if (f.type !== "vessels") throw new Error(`${at}: άγνωστος τύπος ${f.type}`);
     }
   });
   if (lesson.grammar) {
