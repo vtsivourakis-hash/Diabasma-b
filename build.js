@@ -52,6 +52,7 @@ for (const [key, lesson] of Object.entries(officialContent)) {
     const f = card.fig, at = `${key}: σχήμα της κάρτας ${index + 1}`;
     if (f) {
       if (!f.alt) throw new Error(`${at} θέλει alt (περιγραφή για αναγνώστες οθόνης)`);
+      if (!f.explain) throw new Error(`${at} θέλει explain (πώς διαβάζεται το σχήμα, για το κουτί «Στο σχήμα»)`);
       if (f.type === "line") {
         if (!(f.max > f.min)) throw new Error(`${at}: θέλει min < max`);
         for (const v of [...(f.points || []).map(p => p.x), ...(f.arrows || []).flatMap(a => [a.from, a.to])]) if (!(v >= f.min && v <= f.max)) throw new Error(`${at}: το ${v} είναι έξω από τον άξονα`);

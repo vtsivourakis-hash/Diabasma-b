@@ -61,7 +61,8 @@ function subjectIcon(id,cls=''){
 const lessonLevel = key => unitData(ALIAS[key] || key) ? 'full' : EXPLANATIONS[key] ? 'expl' : 'guide';
 const LEVEL_CHIP = {full:'<span class="chip ok">Πλήρες</span>', expl:'<span class="chip expl">Εξήγηση</span>', guide:'<span class="chip">Οδηγός</span>'};
 /* Σχήματα στις κάρτες της περίληψης ("fig"): απλά διαγράμματα από δεδομένα, ως inline SVG.
-   Τα χρώματα έρχονται από τα tokens, οπότε δουλεύουν σε light και dark. Το "alt" περιγράφει το σχήμα για αναγνώστες οθόνης.
+   Τα χρώματα έρχονται από τα tokens, οπότε δουλεύουν σε light και dark. Το "alt" περιγράφει το σχήμα για αναγνώστες οθόνης·
+   το "explain" εξηγεί στον μαθητή πώς διαβάζεται, σαν δεύτερο παράδειγμα (κουτί «Στο σχήμα»).
    line:    άξονας με σημεία και βέλη (θέση, μετατόπιση)       {min, max, step, unit, points:[{x, label}], arrows:[{from, to, label}]}
    forces:  σώμα με δυνάμεις από το κέντρο του                 {body, ground, forces:[{dir:up|down|left|right, len, label}]}
    compose: δύο κάθετες δυνάμεις και η συνισταμένη τους        {a:{len, label}, b:{len, label}, r}
@@ -207,7 +208,8 @@ const FIGS = {line:figLine, forces:figForces, compose:figCompose, depth:figDepth
 function figure(f){
   if(!f) return '';
   const id = 'fg' + (++figSeq) + '-', draw = FIGS[f.type], d = draw ? draw(f, id) : null;
-  return d ? `<figure class="fig"><svg viewBox="${d.box}" role="img" aria-label="${esc(f.alt)}">${figArrowDefs(id)}${d.body}</svg>${f.caption ? `<figcaption>${esc(f.caption)}</figcaption>` : ''}</figure>` : '';
+  return d ? `<figure class="fig"><svg viewBox="${d.box}" role="img" aria-label="${esc(f.alt)}">${figArrowDefs(id)}${d.body}</svg>${f.caption ? `<figcaption>${esc(f.caption)}</figcaption>` : ''}</figure>`
+    + (f.explain ? `<div class="box figb"><b>Στο σχήμα</b><p>${esc(f.explain).replace(/(\d) (?=(N|J|m|Pa|kg|K|W|cm|m\/s|°C|°F)(?![\p{L}]))/gu, '$1\u00a0')}</p></div>` : '') : '';
 }
 /* Αν ο μαθητής έχει λύσει το Quiz της ενότητας, δείχνουμε τον καλύτερο βαθμό του αντί για «Πλήρες» */
 const lessonChip = key => { const u = ALIAS[key] || key, best = unitData(u) ? bestOf(u) : undefined; return best === undefined ? LEVEL_CHIP[lessonLevel(key)] : `<span class="chip score ${best >= 14 ? 'ok' : best >= 10 ? 'mid' : 'low'}" title="Ο καλύτερος βαθμός σου στις ερωτήσεις">${best}/20</span>`; };
