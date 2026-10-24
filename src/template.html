@@ -1171,7 +1171,7 @@ function rvBook(key){
 function rvOfficial(key){
   const c = OFFICIAL_CONTENT[key], out = [];
   c.summary.forEach((b, i) => out.push({ id:`${key}#s${i}:${rvHash(b)}`, kind:"Περίληψη", label:`Θέμα ${i+1}: ${b.h}`,
-    html:`<h4>${esc(b.h)}</h4><p>${esc(b.t)}</p><p><b>Παράδειγμα:</b> ${esc(b.ex)}</p><p><b>Στο διαγώνισμα γράφεις:</b> ${esc(b.def)}</p>` }));
+    html:`<h4>${esc(b.h)}</h4><p>${esc(b.t)}</p>${figure(b.fig)}<p><b>Παράδειγμα:</b> ${esc(b.ex)}</p><p><b>Στο διαγώνισμα γράφεις:</b> ${esc(b.def)}</p>` }));
   (c.vocab || []).forEach((v, i) => out.push({ id:`${key}#v${i}:${rvHash(v)}`, kind:"Λέξεις", label:`Λέξη ${i+1}: ${v[0]}`,
     html:`<p><b>${esc(v[0])}</b> = ${esc(v[1])}</p><p class="muted">Παράδειγμα: ${esc(v[2])}</p>` }));
   c.quiz.forEach((q, i) => out.push({ id:`${key}#q${i}:${rvHash(q)}`, kind:"Ερωτήσεις", label:`Ερώτηση ${i+1}: ${q.q}`,

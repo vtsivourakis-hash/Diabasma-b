@@ -73,3 +73,18 @@
 .level-legend .chip{margin-right:2px}
 .opt-note{display:block;margin-top:2px;font-size:12px;font-weight:600;color:var(--muted)}
 .catalogue-note .chip{margin-right:6px;vertical-align:1px}
+/* Σχήματα στις κάρτες (figure() στο catalogue.js) */
+.fig{margin:12px 0 4px;padding:8px 6px;border:1px solid var(--line);border-radius:14px;background:var(--card2)}
+.fig svg{display:block;width:100%;height:auto;max-height:240px;overflow:visible}
+.fig text{font:600 12.5px/1 inherit;fill:var(--text)}
+.fig .fig-small{font-size:11px;font-weight:500;fill:var(--muted)}
+.fig .fig-strong{font-weight:800}
+.fig .fig-axis{stroke:var(--muted);stroke-width:1.6;fill:none}
+.fig .fig-guide{stroke:var(--muted);stroke-width:1.2;stroke-dasharray:4 4;fill:none}
+.fig .fig-vec{stroke-width:3;stroke-linecap:round}
+.fig line.fig-a{stroke:var(--c-cyan)}.fig path.fig-a{fill:var(--c-cyan)}
+.fig line.fig-b{stroke:var(--c-pink)}.fig path.fig-b{fill:var(--c-pink)}
+.fig path.fig-c{fill:var(--muted)}
+.fig .fig-dot{fill:var(--text);stroke:var(--card2);stroke-width:2}
+.fig .fig-body{fill:color-mix(in srgb,var(--c-cyan) 14%,transparent);stroke:var(--c-cyan);stroke-width:1.5}
+.fig figcaption{margin:6px 4px 0;font-size:12.5px;color:var(--muted);text-align:center}

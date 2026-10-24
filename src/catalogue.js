@@ -60,6 +60,63 @@ function subjectIcon(id,cls=''){
    Πλήρες περιεχόμενο έρχεται από τα official-lessons ή από το content/ (C), και μέσω του ALIAS για ενότητες που καλύπτει άλλη ενότητα. */
 const lessonLevel = key => unitData(ALIAS[key] || key) ? 'full' : EXPLANATIONS[key] ? 'expl' : 'guide';
 const LEVEL_CHIP = {full:'<span class="chip ok">Πλήρες</span>', expl:'<span class="chip expl">Εξήγηση</span>', guide:'<span class="chip">Οδηγός</span>'};
+/* Σχήματα στις κάρτες της περίληψης ("fig"): απλά διαγράμματα από δεδομένα, ως inline SVG.
+   Τα χρώματα έρχονται από τα tokens, οπότε δουλεύουν σε light και dark. Το "alt" περιγράφει το σχήμα για αναγνώστες οθόνης.
+   line:    άξονας με σημεία και βέλη (θέση, μετατόπιση)       {min, max, step, unit, points:[{x, label}], arrows:[{from, to, label}]}
+   forces:  σώμα με δυνάμεις από το κέντρο του                 {body, ground, forces:[{dir:up|down|left|right, len, label}]}
+   compose: δύο κάθετες δυνάμεις και η συνισταμένη τους        {a:{len, label}, b:{len, label}, r} */
+let figSeq = 0;
+const figText = (x, y, t, a = 'middle', cls = '') => `<text x="${x}" y="${y}" text-anchor="${a}"${cls ? ` class="${cls}"` : ''}>${esc(t)}</text>`;
+function figArrowDefs(id){
+  return `<defs>${['a','b','c'].map(k => `<marker id="${id}${k}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="fig-${k}"/></marker>`).join('')}</defs>`;
+}
+function figLine(f, id){
+  const W = 320, L = 24, R = 300, ax = 92, step = f.step || 1, span = f.max - f.min, X = v => L + (v - f.min) / span * (R - L);
+  let s = `<line x1="${L - 10}" y1="${ax}" x2="${R + 12}" y2="${ax}" class="fig-axis" marker-end="url(#${id}c)"/>`;
+  for(let v = f.min; v <= f.max + 1e-9; v += step){
+    const x = X(v).toFixed(1), zero = Math.abs(v) < 1e-9;
+    s += `<line x1="${x}" y1="${ax - (zero ? 7 : 4)}" x2="${x}" y2="${ax + (zero ? 7 : 4)}" class="fig-axis"/>` + figText(x, ax + 20, String(+v.toFixed(2)).replace('.', ','), 'middle', zero ? 'fig-strong' : 'fig-small');
+  }
+  if(f.unit) s += figText(R + 12, ax - 9, `x (${f.unit})`, 'end', 'fig-small');
+  (f.arrows || []).forEach((a, i) => {
+    const y = ax - 26 - i * 26, x1 = X(a.from), x2 = X(a.to), k = i % 2 ? 'b' : 'a';
+    s += `<line x1="${x1.toFixed(1)}" y1="${y}" x2="${x2.toFixed(1)}" y2="${y}" class="fig-${k} fig-vec" marker-end="url(#${id}${k})"/>` + figText(((x1 + x2) / 2).toFixed(1), y - 7, a.label, 'middle', 'fig-label');
+  });
+  (f.points || []).forEach(p => { const x = X(p.x).toFixed(1); s += `<circle cx="${x}" cy="${ax}" r="5" class="fig-dot"/>` + figText(x, ax + 38, p.label, 'middle', 'fig-label'); });
+  const n = (f.arrows || []).length, top = n ? ax - 26 - (n - 1) * 26 - 24 : ax - 26;
+  return {box: `0 ${top} ${W} ${ax + 46 - top}`, body: s};
+}
+function figForces(f, id){
+  const cx = 160, cy = 96, u = 18, V = {up:[0,-1], down:[0,1], left:[-1,0], right:[1,0]};
+  let s = f.ground ? `<line x1="70" y1="${cy + 20}" x2="250" y2="${cy + 20}" class="fig-axis"/><path d="M70 ${cy + 20}${Array.from({length:9}, (_, i) => `M${80 + i * 20} ${cy + 20}l-8 8`).join('')}" class="fig-axis"/>` : '';
+  s += `<rect x="${cx - 26}" y="${cy - 20}" width="52" height="40" rx="6" class="fig-body"/>` + (f.body ? figText(cx + 32, cy - 26, f.body, 'start', 'fig-small') : '');
+  let top = cy - 40, bottom = cy + (f.ground ? 34 : 26), left = 0, right = 320;
+  f.forces.forEach(g => {
+    const [dx, dy] = V[g.dir], len = 26 + g.len * u, x2 = cx + dx * len, y2 = cy + dy * len, k = g.dir === 'down' ? 'b' : 'a';
+    const lx = x2 + dx * 8 + (dy ? 8 : 0), ly = y2 + dy * 14 + (dx ? -8 : 0) + 4;
+    const tw = g.label.length * 7.4;
+    top = Math.min(top, ly - 16); bottom = Math.max(bottom, ly + 8);
+    if(dx < 0) left = Math.min(left, lx - tw - 6); else right = Math.max(right, lx + tw + 6);
+    s += `<line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y2}" class="fig-${k} fig-vec" marker-end="url(#${id}${k})"/>` + figText(lx, ly, g.label, dx < 0 ? 'end' : 'start', 'fig-label');
+  });
+  const side = Math.max(-left, right - 320);
+  return {box:`${-side} ${top} ${320 + 2 * side} ${bottom - top}`, body:s};
+}
+function figCompose(f, id){
+  const ox = 60, oy = 160, u = 26, ax = ox + f.a.len * u, by = oy - f.b.len * u;
+  const s = `<path d="M${ax} ${oy}V${by}H${ox}" class="fig-guide"/>`
+    + `<line x1="${ox}" y1="${oy}" x2="${ax}" y2="${oy}" class="fig-a fig-vec" marker-end="url(#${id}a)"/>` + figText((ox + ax) / 2, oy + 20, f.a.label, 'middle', 'fig-label')
+    + `<line x1="${ox}" y1="${oy}" x2="${ox}" y2="${by}" class="fig-a fig-vec" marker-end="url(#${id}a)"/>` + figText(ox - 8, (oy + by) / 2, f.b.label, 'end', 'fig-label')
+    + `<line x1="${ox}" y1="${oy}" x2="${ax}" y2="${by}" class="fig-b fig-vec" marker-end="url(#${id}b)"/>` + figText(ax + 10, by + 4, f.r, 'start', 'fig-label fig-strong')
+    + `<path d="M${ox + 12} ${oy}V${oy - 12}H${ox}" class="fig-guide"/>`;
+  const w = Math.max(ax + 90, 220);
+  return {box:`${(w - 320) / 2} ${by - 20} 320 ${oy + 30 - (by - 20)}`, body:s};
+}
+function figure(f){
+  if(!f) return '';
+  const id = 'fg' + (++figSeq) + '-', d = f.type === 'line' ? figLine(f, id) : f.type === 'forces' ? figForces(f, id) : f.type === 'compose' ? figCompose(f, id) : null;
+  return d ? `<figure class="fig"><svg viewBox="${d.box}" role="img" aria-label="${esc(f.alt)}">${figArrowDefs(id)}${d.body}</svg>${f.caption ? `<figcaption>${esc(f.caption)}</figcaption>` : ''}</figure>` : '';
+}
 /* Αν ο μαθητής έχει λύσει το Quiz της ενότητας, δείχνουμε τον καλύτερο βαθμό του αντί για «Πλήρες» */
 const lessonChip = key => { const u = ALIAS[key] || key, best = unitData(u) ? bestOf(u) : undefined; return best === undefined ? LEVEL_CHIP[lessonLevel(key)] : `<span class="chip score ${best >= 14 ? 'ok' : best >= 10 ? 'mid' : 'low'}" title="Ο καλύτερος βαθμός σου στις ερωτήσεις">${best}/20</span>`; };
 const levelLegend = () => `<p class="level-legend">${LEVEL_CHIP.full} μελετάς από εδώ · ${LEVEL_CHIP.expl} σύντομη εξήγηση, εξάσκηση από το βιβλίο · ${LEVEL_CHIP.guide} μελετάς από το βιβλίο</p>`;
@@ -209,7 +266,7 @@ function renderOfficialLesson(grade,subjectId,bookIndex,sectionIndex){
   const hasBook=!!BOOK_HELP[key],tabs=4+(hasGrammar?1:0)+(hasBook?1:0);
   if(st.view==='sum'){
     const c=cards[Math.min(st.card,cards.length-1)];
-    body=`${st.fromBook!=null?'<button class="retex" data-oback>← Πίσω στην άσκηση του βιβλίου</button>':''}<div class="prog"><div class="bar"><i style="width:${Math.round((st.card+1)/cards.length*100)}%"></i></div><span>${st.card+1}/${cards.length}</span></div><div class="deck"><section class="blk slide"><span class="k">Θέμα ${st.card+1}</span><h3>${esc(c.h)}</h3><p>${esc(c.t)}</p><div class="box exb"><b>Παράδειγμα</b><p>${esc(c.ex)}</p></div><div class="box defb"><b>${esc(c.defLabel||'Στο διαγώνισμα γράφεις')}</b><p>${esc(c.def)}</p></div></section></div>${pager(st.card>0,st.card<cards.length-1,st.card===cards.length-1?`<button class="btn gold" data-oview="${hasGrammar?'grammar':'quiz'}">${hasGrammar?'Πάμε στη Γραμματική':'Πάμε στο Quiz'} →</button>`:'← σύρε →')}`;
+    body=`${st.fromBook!=null?'<button class="retex" data-oback>← Πίσω στην άσκηση του βιβλίου</button>':''}<div class="prog"><div class="bar"><i style="width:${Math.round((st.card+1)/cards.length*100)}%"></i></div><span>${st.card+1}/${cards.length}</span></div><div class="deck"><section class="blk slide"><span class="k">Θέμα ${st.card+1}</span><h3>${esc(c.h)}</h3><p>${esc(c.t)}</p>${figure(c.fig)}<div class="box exb"><b>Παράδειγμα</b><p>${esc(c.ex)}</p></div><div class="box defb"><b>${esc(c.defLabel||'Στο διαγώνισμα γράφεις')}</b><p>${esc(c.def)}</p></div></section></div>${pager(st.card>0,st.card<cards.length-1,st.card===cards.length-1?`<button class="btn gold" data-oview="${hasGrammar?'grammar':'quiz'}">${hasGrammar?'Πάμε στη Γραμματική':'Πάμε στο Quiz'} →</button>`:'← σύρε →')}`;
   }else if(st.view==='grammar'&&hasGrammar){
     const gi=Math.min(st.gi,grammar.length-1),c=grammar[gi];
     body=`<div class="prog"><div class="bar" role="img" aria-label="Γραμματική ${gi+1} από ${grammar.length}"><i style="width:${Math.round((gi+1)/grammar.length*100)}%"></i></div><span>${gi+1}/${grammar.length}</span></div><div class="deck"><section class="blk slide"><span class="k">Γραμματική ${gi+1}</span><h3>${esc(c.h)}</h3><p>${esc(c.t)}</p><div class="box exb"><b>Παράδειγμα</b><p>${esc(c.ex)}</p></div><div class="box defb"><b>Κανόνας</b><p>${esc(c.def)}</p></div></section></div>${pager(gi>0,gi<grammar.length-1,gi===grammar.length-1?'<button class="btn gold" data-oview="voc">Πάμε στις Λέξεις →</button>':'← σύρε →')}`;

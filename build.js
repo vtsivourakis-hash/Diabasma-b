@@ -49,6 +49,18 @@ for (const [key, lesson] of Object.entries(officialContent)) {
   }
   lesson.summary.forEach((card, index) => {
     for (const field of ["h", "t", "ex", "def"]) if (!card[field]) throw new Error(`${key}: η κάρτα ${index + 1} θέλει ${field}`);
+    const f = card.fig, at = `${key}: σχήμα της κάρτας ${index + 1}`;
+    if (f) {
+      if (!f.alt) throw new Error(`${at} θέλει alt (περιγραφή για αναγνώστες οθόνης)`);
+      if (f.type === "line") {
+        if (!(f.max > f.min)) throw new Error(`${at}: θέλει min < max`);
+        for (const v of [...(f.points || []).map(p => p.x), ...(f.arrows || []).flatMap(a => [a.from, a.to])]) if (!(v >= f.min && v <= f.max)) throw new Error(`${at}: το ${v} είναι έξω από τον άξονα`);
+      } else if (f.type === "forces") {
+        if (!f.forces?.length || f.forces.some(g => !["up", "down", "left", "right"].includes(g.dir) || !(g.len > 0) || !g.label)) throw new Error(`${at}: κάθε δύναμη θέλει dir, len, label`);
+      } else if (f.type === "compose") {
+        if (!(f.a?.len > 0 && f.b?.len > 0 && f.a.label && f.b.label && f.r)) throw new Error(`${at}: θέλει a, b (len, label) και r`);
+      } else throw new Error(`${at}: άγνωστος τύπος ${f.type}`);
+    }
   });
   if (lesson.grammar) {
     if (!lesson.grammar.length) throw new Error(`${key}: το grammar δεν μπορεί να είναι κενό`);
