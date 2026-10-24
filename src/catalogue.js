@@ -3,20 +3,23 @@ const CATALOGUE = /*__CURRICULUM__*/;
 const OFFICIAL_CONTENT = /*__OFFICIAL_CONTENT__*/;
 const EXPLANATIONS = /*__EXPLANATIONS__*/;
 const getGrade = id => CATALOGUE.grades.find(g => g.id === id);
+/* Τάξεις που φαίνονται στη σελίδα. Τα δεδομένα της Α΄ και της Γ΄ μένουν, αλλά προς το παρόν εστιάζουμε στη Β΄. */
+const SHOWN_GRADES = ['B'];
+const shownGrades = () => CATALOGUE.grades.filter(g => SHOWN_GRADES.includes(g.id));
 let selectedGrade = 'B';
-try { const saved = JSON.parse(localStorage.getItem('diab-grade')); if(getGrade(saved)) selectedGrade = saved; } catch(e){}
+try { const saved = JSON.parse(localStorage.getItem('diab-grade')); if(SHOWN_GRADES.includes(saved)) selectedGrade = saved; } catch(e){}
 const normalizeSearch = value => String(value).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('el').replace(/ς/g,'σ');
 const gradeSubject = (grade, id) => getGrade(grade)?.subjects.find(s => s.id === id);
 const courseHref = (grade, id) => `#course/${grade}/${id}`;
 const lessonHref = (grade, subject, book, section) => `#lesson/${grade}/${subject}/${book}/${section}`;
 const external = (url, label, cls='') => `<a class="${cls}" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${label} <span aria-hidden="true">↗</span><span class="sr-only"> (νέα καρτέλα)</span></a>`;
 function selectGrade(id){
-  if(!getGrade(id)) return;
+  if(!SHOWN_GRADES.includes(id)) return;
   selectedGrade = id;
   store.set('diab-grade', id);
 }
 function renderGradeNav(){
-  $('#grade-nav').innerHTML = CATALOGUE.grades.map(g=>`<a href="#class/${g.id}"${g.id===selectedGrade?' aria-current="page"':''}>${g.label}</a>`).join('');
+  $('#grade-nav').innerHTML = shownGrades().map(g=>`<a href="#class/${g.id}"${g.id===selectedGrade?' aria-current="page"':''}>${g.label}</a>`).join('');
   $('#classes-tab').href = `#class/${selectedGrade}`;
   $('.logo').textContent = getGrade(selectedGrade).label.split(' ')[0];
 }
@@ -237,12 +240,12 @@ function renderCatalogue(){
   const g = getGrade(selectedGrade), el = $('#catalogue');
   el.innerHTML = `<div class="hero catalogue-hero has-art"><svg class="hero-art" viewBox="0 0 190 190" aria-hidden="true"><circle cx="120" cy="70" r="46" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="2"/><circle cx="120" cy="70" r="3" fill="#FBCFE8"/><line x1="120" y1="70" x2="166" y2="70" stroke="#FBCFE8" stroke-width="2" stroke-dasharray="4 4"/><path d="M58 150 L98 92 L138 150 Z" fill="rgba(236,72,153,.22)" stroke="rgba(255,255,255,.45)" stroke-width="2"/><path d="M98 92 L98 150" stroke="rgba(255,255,255,.35)" stroke-width="1.5" stroke-dasharray="3 4"/><rect x="94" y="144" width="6" height="6" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="1.2"/><path d="M150 112h28v28h-28z M150 112l10-10h28l-10 10 M178 112l10-10v28l-10 10" fill="rgba(196,181,253,.16)" stroke="rgba(255,255,255,.4)" stroke-width="1.6" stroke-linejoin="round"/></svg><span class="ref">Δημόσιο ημερήσιο Γυμνάσιο · ${CATALOGUE.schoolYear}</span><h2 class="ct">Η τάξη σου.<br>Όλα τα μαθήματα.</h2><p>Βρες το μάθημά σου και άνοιξε το επίσημο βιβλίο, τις ενότητες και τις ασκήσεις του.</p><div class="catalogue-meta"><span>${g.label}</span><span>${g.hours} ώρες / εβδομάδα</span><span>${g.subjects.length} μαθήματα & επιλογές</span></div></div>
     <a class="sch-card" href="#schedule">Το πρόγραμμα της εβδομάδας <span>Μόνο στη συσκευή σου →</span></a>
-    <div class="catalogue-search"><label for="catalogue-query">Βρες μάθημα ή ενότητα</label><div class="search-row"><input id="catalogue-query" type="search" placeholder="π.χ. μαθηματικά, κλάσματα, Οδύσσεια" autocomplete="off"><button id="clear-query" type="button">Καθαρισμός</button></div><label class="search-scope"><input type="checkbox" id="all-grades"> Αναζήτηση και στις τρεις τάξεις</label></div>
+    <div class="catalogue-search"><label for="catalogue-query">Βρες μάθημα ή ενότητα</label><div class="search-row"><input id="catalogue-query" type="search" placeholder="π.χ. μαθηματικά, κλάσματα, Οδύσσεια" autocomplete="off"><button id="clear-query" type="button">Καθαρισμός</button></div><label class="search-scope"${shownGrades().length < 2 ? " hidden" : ""}><input type="checkbox" id="all-grades"> Αναζήτηση και στις τρεις τάξεις</label></div>
     <p class="result-count" id="catalogue-count" role="status"></p><div id="catalogue-results"></div>
     <div class="catalogue-note"><p>Στις επιλογές θα βρεις Θρησκευτικά ή Ηθική και τις διαθέσιμες δεύτερες ξένες γλώσσες. Ακολουθείς όσα διδάσκονται στο τμήμα σου.</p><p>Ο κατάλογος περιλαμβάνει ολόκληρα τα βιβλία. Η διδακτέα ύλη καθορίζεται από τις ετήσιες οδηγίες και τον/την εκπαιδευτικό σου. <a href="#sources">Δες τις επίσημες πηγές</a>.</p></div>${connectionNotice()}`;
   const update = () => {
     const query = normalizeSearch($('#catalogue-query').value.trim());
-    const grades = $('#all-grades').checked ? CATALOGUE.grades : [g];
+    const grades = $('#all-grades').checked ? shownGrades() : [g];
     const results = $('#catalogue-results');
     if(!query){
       results.innerHTML = grades.map(grade=>`${grades.length>1?`<h2 class="ct">${grade.label}</h2>`:''}${[...new Set(grade.subjects.map(s=>s.group))].map(group=>`<section class="subject-group"><h3>${esc(group)}</h3><div class="subject-grid">${grade.subjects.filter(s=>s.group===group).map(s=>subjectCard(grade,s)).join('')}</div></section>`).join('')}`).join('');

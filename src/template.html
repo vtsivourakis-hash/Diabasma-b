@@ -567,12 +567,14 @@ function route(){
   try { parts = decodeURIComponent(location.hash.slice(1)).split("/").filter(Boolean); } catch(e){ parts = []; }
   let p = parts[0] || "class";
   if(!["class","course","lesson","sources","practice","timer","schedule","send","school","review"].includes(p)) p = "class";
+  /* Κρυφές τάξεις (βλ. SHOWN_GRADES): οι διαδρομές τους οδηγούν στη Β΄ */
+  if((p === "class" || p === "course" || p === "lesson") && parts[1] && !SHOWN_GRADES.includes(parts[1])){ location.replace("#class/" + selectedGrade); return; }
   if(p === "class" || p === "course" || p === "lesson") selectGrade(parts[1] || selectedGrade);
   if(p === "send") selectGrade('B');
   const panel = p === "class" || p === "course" || p === "lesson" ? "catalogue" : p;
   document.querySelectorAll(".panel").forEach(el => el.hidden = el.id !== panel);
   renderGradeNav();
-  $('#grade-nav').hidden = false;
+  $('#grade-nav').hidden = shownGrades().length < 2;
   document.title = `Διάβασμα · ${getGrade(selectedGrade).label}`;
   const activeTab = ["course","lesson","class","send"].includes(p) ? "class" : p === "timer" || p === "schedule" ? "practice" : p;
   document.querySelectorAll(".tab").forEach(t => {
