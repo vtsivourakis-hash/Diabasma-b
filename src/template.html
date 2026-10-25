@@ -552,6 +552,8 @@ const GR = /*__GRAMMAR__*/;
 /* Βοήθεια για τις ασκήσεις του βιβλίου που προτείνει η ύλη. Η εκφώνηση δεν αντιγράφεται: δείχνουμε πού είναι στο βιβλίο,
    δίνουμε βοήθειες μία μία (κάποιες είναι επιλογή του μαθητή) και, όταν το ζητήσει, μόνο το τελικό αποτέλεσμα για έλεγχο. */
 const BOOK_HELP = /*__BOOK_HELP__*/;
+/* Ο τίτλος της βοήθειας: στη Φυσική έχουμε και τις «Ερωτήσεις» του τέλους του κεφαλαίου */
+const bookHelpTitle = items => items.some(it => /Ερώτηση/.test(it.ref)) ? "Ασκήσεις και ερωτήσεις του βιβλίου" : "Ασκήσεις του βιβλίου";
 const GRBOOK = "https://ebooks.edu.gr/ebooks/v/html/8547/2340/Grammatiki-Archaias-Ellinikis_Gymnasiou-Lykeiou_html-apli/";
 /* {{τύπος|κλειδί}} στο περιεχόμενο: κουμπί που ανοίγει τον πίνακα γραμματικής. Μέσα σε κουμπιά μένει απλό κείμενο. */
 const rich = t => String(t).replace(/\{\{([^|}]+)\|([^}]+)\}\}/g, (m, w, g) => `<button class="gw" data-g="${g}">${w}</button>`);
@@ -569,12 +571,12 @@ function route(){
   let parts;
   try { parts = decodeURIComponent(location.hash.slice(1)).split("/").filter(Boolean); } catch(e){ parts = []; }
   let p = parts[0] || "tomorrow";
-  if(!["tomorrow","plan","study","prep","class","course","lesson","sources","practice","timer","schedule","send","school","review"].includes(p)) p = "class";
+  if(!["tomorrow","plan","study","prep","mock","class","course","lesson","sources","practice","timer","schedule","send","school","review"].includes(p)) p = "class";
   /* Κρυφές τάξεις (βλ. SHOWN_GRADES): οι διαδρομές τους οδηγούν στη Β΄ */
   if((p === "class" || p === "course" || p === "lesson") && parts[1] && !SHOWN_GRADES.includes(parts[1])){ location.replace("#class/" + selectedGrade); return; }
   if(p === "class" || p === "course" || p === "lesson") selectGrade(parts[1] || selectedGrade);
   if(p === "send") selectGrade('B');
-  const panel = p === "class" || p === "course" || p === "lesson" ? "catalogue" : ["tomorrow","plan","study","prep"].includes(p) ? "plan" : p;
+  const panel = p === "class" || p === "course" || p === "lesson" ? "catalogue" : ["tomorrow","plan","study","prep","mock"].includes(p) ? "plan" : p;
   document.querySelectorAll(".panel").forEach(el => el.hidden = el.id !== panel);
   renderGradeNav();
   $('#grade-nav').hidden = shownGrades().length < 2;
@@ -607,7 +609,7 @@ const bhState = {};
 function bookHelpView(key, url, topics){
   const s = bhState[key] || (bhState[key] = {shown:{}, pick:{}, res:new Set(), order:{}});
   const items = BOOK_HELP[key];
-  return `<h3 class="bh-title">Ασκήσεις του βιβλίου</h3><p class="pnote">Αυτές οι ασκήσεις του βιβλίου είναι μέσα στην ύλη 2026–2027. Διάβασε την εκφώνηση στο βιβλίο και λύσε την στο τετράδιο. Άνοιξε βοήθεια μόνο όταν κολλήσεις.</p>${url ? `<a class="bh-book" href="${esc(url)}" target="_blank" rel="noopener">Άνοιξε την ενότητα στο βιβλίο ↗</a>` : ""}` + items.map((it, i) => {
+  return `<h3 class="bh-title">${bookHelpTitle(items)}</h3><p class="pnote">Αυτές οι ${bookHelpTitle(items).toLowerCase()} είναι μέσα στην ύλη 2026–2027. Διάβασε την εκφώνηση στο βιβλίο και λύσε την στο τετράδιο. Άνοιξε βοήθεια μόνο όταν κολλήσεις.</p>${url ? `<a class="bh-book" href="${esc(url)}" target="_blank" rel="noopener">Άνοιξε την ενότητα στο βιβλίο ↗</a>` : ""}` + items.map((it, i) => {
     const shown = s.shown[i] || 0, left = it.hints.length - shown, t = topics[it.topic];
     const steps = it.hints.slice(0, shown).map((h, j) => {
       if(!h.q) return `<li><b>${esc(h.h)}</b><span>${esc(h.t)}</span></li>`;
@@ -692,7 +694,7 @@ const unitNum = key => { if(!C[key]) return ""; const [g, sid, b, i] = key.split
 const unitItems = key => unitData(key).quiz.map((_, oi) => ({key, oi}));
 /* Κάθε φορά οι ερωτήσεις και οι απαντήσεις τους έρχονται με άλλη σειρά */
 function newQuiz(items, mode){
-  return { mode, qi:0, picked:{}, done:false, anim:"",
+  return { mode, qi:0, picked:{}, done:false, anim:"", t0:Date.now(), t1:null,
     qs: shuffle(items).map(({key, oi}) => { const q = unitData(key).quiz[oi], f = C[key] ? t => t : esc;
       return {key, oi, q:f(q.q), why:f(q.why), opts:shuffle([{t:f(q.c), ok:true}, ...q.w.map(t => ({t:f(t), ok:false}))])}; }) };
 }
@@ -702,11 +704,13 @@ function quizScore(z){
   return {right, wrong};
 }
 const gradeOf = z => Math.round(quizScore(z).right / z.qs.length * 20);
+/* Πόσο κράτησε ένα δοκιμαστικό, π.χ. «6΄ 20΄΄» ή «45΄΄» */
+function elapsedText(ms){ const s = Math.max(1, Math.round(ms / 1000)), m = Math.floor(s / 60); return m ? `${m}΄ ${String(s % 60).padStart(2, "0")}΄΄` : `${s}΄΄`; }
 function unitName(key){ const [g, sid] = key.split("/"); return esc(gradeSubject(g, sid)?.name || ""); }
-/* Ο βαθμός στα 20 ως δαχτυλίδι που γεμίζει, με μικρά διακοσμητικά σχήματα γύρω του */
-function gradeRing(g){
-  const len = (2 * Math.PI * 54).toFixed(1), fill = (Math.max(0, Math.min(20, g)) / 20 * len).toFixed(1);
-  return `<div class="grade" role="img" aria-label="Βαθμός ${g} στα 20"><svg class="grade-deco" viewBox="0 0 220 160" aria-hidden="true"><path d="M30 28l4 9 9 4-9 4-4 9-4-9-9-4 9-4z" style="fill:var(--c-amber)"/><path d="M190 22l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" style="fill:var(--c-pink)"/><path d="M196 118l3 6 6 3-6 3-3 6-3-6-6-3 6-3z" style="fill:var(--c-cyan)"/><circle cx="40" cy="122" r="4" style="fill:var(--c-lime)"/><circle cx="176" cy="66" r="3" style="fill:var(--c-violet)"/><rect x="18" y="76" width="9" height="9" rx="2" transform="rotate(20 22 80)" fill="none" stroke-width="2" style="stroke:var(--c-violet)"/><path d="M168 146l9-15 9 15z" fill="none" stroke-width="2" stroke-linejoin="round" style="stroke:var(--c-pink)"/></svg><svg class="grade-ring" viewBox="0 0 140 140" aria-hidden="true"><defs><linearGradient id="gradeGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8B5CF6"/><stop offset="1" stop-color="#EC4899"/></linearGradient></defs><circle cx="70" cy="70" r="54" class="track"/><circle cx="70" cy="70" r="54" class="bar" style="--len:${len};--fill:${fill}" transform="rotate(-90 70 70)"/></svg><div class="num">${g}<small>/20</small></div></div>`;
+/* Πόσες σωστές από πόσες, ως δαχτυλίδι που γεμίζει, με μικρά διακοσμητικά σχήματα γύρω του (χωρίς βαθμό στα 20) */
+function gradeRing(right, n){
+  const len = (2 * Math.PI * 54).toFixed(1), fill = (n ? Math.max(0, Math.min(n, right)) / n * len : 0).toFixed(1);
+  return `<div class="grade" role="img" aria-label="${right} σωστές από ${n}"><svg class="grade-deco" viewBox="0 0 220 160" aria-hidden="true"><path d="M30 28l4 9 9 4-9 4-4 9-4-9-9-4 9-4z" style="fill:var(--c-amber)"/><path d="M190 22l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" style="fill:var(--c-pink)"/><path d="M196 118l3 6 6 3-6 3-3 6-3-6-6-3 6-3z" style="fill:var(--c-cyan)"/><circle cx="40" cy="122" r="4" style="fill:var(--c-lime)"/><circle cx="176" cy="66" r="3" style="fill:var(--c-violet)"/><rect x="18" y="76" width="9" height="9" rx="2" transform="rotate(20 22 80)" fill="none" stroke-width="2" style="stroke:var(--c-violet)"/><path d="M168 146l9-15 9 15z" fill="none" stroke-width="2" stroke-linejoin="round" style="stroke:var(--c-pink)"/></svg><svg class="grade-ring" viewBox="0 0 140 140" aria-hidden="true"><defs><linearGradient id="gradeGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8B5CF6"/><stop offset="1" stop-color="#EC4899"/></linearGradient></defs><circle cx="70" cy="70" r="54" class="track"/><circle cx="70" cy="70" r="54" class="bar" style="--len:${len};--fill:${fill}" transform="rotate(-90 70 70)"/></svg><div class="num">${right}<small>/${n}</small></div></div>`;
 }
 /* Η κάρτα του κουίζ (ενότητα, διαγώνισμα, λάθη). Επιστρέφει το HTML και τη συνάρτηση για επόμενη/προηγούμενη ερώτηση. */
 function quizView(z, rerender, extraDone){
@@ -717,8 +721,9 @@ function quizView(z, rerender, extraDone){
     const msg = g >= 18 ? "Άριστα! Είσαι έτοιμος για το μάθημα." : g >= 14 ? "Πολύ καλά. Ξαναδιάβασε όσα σου ξέφυγαν." : "Καλή αρχή. Ρίξε μια ματιά στην περίληψη και ξαναδοκίμασε.";
     return { go:null, body:`<div class="sheet center">
       <span class="cheer">${g >= 18 ? "Άριστα" : g >= 14 ? "Πολύ καλά" : "Συνέχισε"}</span>
-      ${gradeRing(g)}
+      ${gradeRing(right, n)}
       <p>Βρήκες σωστά ${right} από ${n} ερωτήσεις.${answered < n ? ` Αναπάντητες: ${n - answered}.` : ""} ${msg}</p>
+      ${z.mode === "exam" && z.t1 ? `<p class="took">Το τελείωσες σε <b>${elapsedText(z.t1 - z.t0)}</b>.</p>` : ""}
       ${extraDone || ""}
       <div class="row"><button class="btn" data-qa="restart">Ξανά από την αρχή</button><button class="btn ghost" data-qa="review">Δες τις απαντήσεις</button></div></div>` };
   }
@@ -728,7 +733,7 @@ function quizView(z, rerender, extraDone){
     return `<button class="opt${cls}" data-opt="${j}"${has ? " disabled" : ""}><span class="l" aria-hidden="true">${has && o.ok ? "✓" : has && j === p ? "✕" : LETTERS[j]}</span><span>${plain(o.t)}</span></button>`;
   }).join("");
   const verdict = has ? (q.opts[p].ok ? `<b class="y">Σωστά</b>` : `<b class="n">Όχι ακριβώς</b>`) : "";
-  const mid = answered === n ? `<button class="btn gold" data-qa="finish">Δες τον βαθμό σου</button>`
+  const mid = answered === n ? `<button class="btn gold" data-qa="finish">Δες πόσα βρήκες</button>`
     : z.mode === "exam" && last ? `<button class="btn ghost" data-qa="finish">Παράδοση (${n - answered} αναπάντητες)</button>`
     : (has && last ? `Έμειναν ${n - answered} αναπάντητες` : `← σύρε →`);
   return { body:`<div class="prog"><div class="bar" role="img" aria-label="Απάντησες ${answered} από ${n}"><i style="width:${Math.round(answered / n * 100)}%"></i></div><span class="sc"><span>✓ ${right}</span><span>✕ ${wrong}</span></span></div>
@@ -752,7 +757,7 @@ function bindQuiz(el, z, rerender, hooks){
   });
   el.querySelectorAll("[data-qa]").forEach(b => b.onclick = () => {
     const a = b.dataset.qa;
-    if(a === "finish"){ z.done = true; hooks.finish && hooks.finish(); }
+    if(a === "finish"){ z.done = true; z.t1 = z.t1 || Date.now(); hooks.finish && hooks.finish(); }
     else if(a === "review"){ z.done = false; z.qi = 0; }
     else if(hooks[a]) hooks[a]();
     rerender(); hooks.top && hooks.top();
@@ -901,7 +906,7 @@ window.addEventListener("popstate", e => {
 
 /* Εξάσκηση: διάλεξε μάθημα και ύλη, κάνε «Επανάληψη» (όλη η θεωρία σε κάρτες) ή «Δοκιμαστικό»,
    και «Τα λάθη μου». Κάθε ενότητα έχει το κλειδί της ενότητας του βιβλίου, π.χ. "B/math/0/52". */
-const P = { sub:"exam", quiz:null, rev:null, keys:[], grade:null, wex:[], mkey:null, sel:new Set(store.get("diab-exam-sel", [])), subj:store.get("diab-exam-subj", null), n:10, min:0, wx:2, end:null, int:null };
+const P = { sub:"exam", quiz:null, rev:null, keys:[], grade:null, wex:[], mkey:null, sel:new Set(store.get("diab-exam-sel", [])), subj:store.get("diab-exam-subj", null), n:10, wx:2 };
 const PART = { A:"Α", B:"Β", "Α":"Α", "Β":"Β" };
 /* Τίτλος κεφαλαίου από τα περιεχόμενα του βιβλίου, π.χ. «ΜΕΡΟΣ Β - ΚΕΦΑΛΑΙΟ 4ο - …» → «Β4. …» */
 function chapterHead(title){
@@ -936,24 +941,10 @@ function startExam(keys){
   const pool = shuffle(quizPool(keys));
   P.quiz = newQuiz(P.n ? pool.slice(0, P.n) : pool, "exam");
   P.wex = shuffle(keys.flatMap(key => (unitData(key).ex || []).map((e, i) => ({key, i})))).slice(0, P.wx).sort((a, b) => unitData(a.key).ex[a.i].lvl - unitData(b.key).ex[b.i].lvl);
-  P.end = P.min ? Date.now() + P.min * 60000 : null;
-  clearInterval(P.int);
-  if(P.end) P.int = setInterval(tickExam, 1000);
 }
 function startReview(keys){
-  P.keys = keys; P.quiz = null; P.end = null; clearInterval(P.int);
+  P.keys = keys; P.quiz = null;
   P.rev = { i:0, anim:"", cards: keys.flatMap(key => unitData(key).summary.map((b, ti, all) => ({key, b, ti, n:all.length}))) };
-}
-function clockText(){ const left = Math.max(0, Math.round((P.end - Date.now()) / 1000)); return `${Math.floor(left / 60)}:${String(left % 60).padStart(2, "0")}`; }
-function tickExam(){
-  if(!P.quiz || P.quiz.done || !P.end){ clearInterval(P.int); return; }
-  const c = $("#exclock");
-  if(c) c.textContent = clockText();
-  if(Date.now() >= P.end){
-    P.quiz.done = true; clearInterval(P.int);
-    try { navigator.vibrate && navigator.vibrate([200,100,200]); } catch(e){}
-    if(!$("#practice").hidden) renderPractice(P.sub);
-  }
 }
 function breakdown(z){
   const by = {};
@@ -989,7 +980,7 @@ function renderPractice(sub){
     return;
   }
   /* Δοκιμαστικό ή επανάληψη άλλης τάξης δεν συνεχίζεται όταν αλλάζει η τάξη */
-  if(P.grade !== selectedGrade){ if(P.quiz && P.quiz.mode === "exam"){ P.quiz = null; P.end = null; clearInterval(P.int); } P.rev = null; P.grade = selectedGrade; }
+  if(P.grade !== selectedGrade){ if(P.quiz && P.quiz.mode === "exam") P.quiz = null; P.rev = null; P.grade = selectedGrade; }
   const subj = groups.find(s => s.id === P.subj) || groups[0];
   const keys = subj ? subj.chapters.flatMap(c => c.keys) : [], chosen = keys.filter(k => P.sel.has(k));
   const running = sub === "exam" ? P.quiz && P.quiz.mode === "exam" : P.quiz && P.quiz.mode === "mist";
@@ -999,7 +990,7 @@ function renderPractice(sub){
     body = `<div class="exbar"><span class="clock">Επανάληψη</span><button class="linkbtn" data-px="quit">Έξοδος</button></div>` + v.body; go = v.go;
   } else if(running){
     const z = P.quiz, extra = z.mode === "exam" ? breakdown(z) + writtenPart() : "";
-    const head = `<div class="exbar">${z.mode === "exam" ? (P.end && !z.done ? `<span class="clock" id="exclock">${clockText()}</span>` : `<span class="clock">Δοκιμαστικό</span>`) : `<span class="clock">Τα λάθη μου</span>`}<button class="linkbtn" data-px="quit">${z.done ? "Νέο" : "Έξοδος"}</button></div>`;
+    const head = `<div class="exbar">${z.mode === "exam" ? `<span class="clock">Δοκιμαστικό</span>` : `<span class="clock">Τα λάθη μου</span>`}<button class="linkbtn" data-px="quit">${z.done ? "Νέο" : "Έξοδος"}</button></div>`;
     const v = quizView(z, () => renderPractice(sub), extra);
     body = head + v.body; go = v.go;
   } else if(sub === "exam"){
@@ -1011,7 +1002,6 @@ function renderPractice(sub){
       <section class="toc"><h3>Επανάληψη</h3><p class="pnote">Όλα τα θέματα της περίληψης των ενοτήτων που διάλεξες, ένα ένα.</p><button class="btn" data-px="rev"${chosen.length ? "" : " disabled"}>${chosen.length ? `Ξεκίνα την επανάληψη (${ncards} κάρτες)` : "Διάλεξε τουλάχιστον μία ενότητα"}</button></section>
       <section class="toc"><h3>Δοκιμαστικό</h3>
         <p class="pnote">Ερωτήσεις</p><div class="seg">${opt("pn", P.n, [[10, "10"], [20, "20"], [0, "Όλες"]])}</div>
-        <p class="pnote">Χρόνος</p><div class="seg">${opt("pm", P.min, [[0, "Χωρίς"], [15, "15΄"], [30, "30΄"], [45, "45΄"]])}</div>
         <p class="pnote">Ασκήσεις για το τετράδιο</p><div class="seg">${opt("pw", P.wx, [[0, "Καμία"], [2, "2"], [3, "3"]])}</div>
         <button class="btn" data-px="start"${nq ? "" : " disabled"}>${nq ? `Ξεκίνα το δοκιμαστικό (${P.n ? Math.min(P.n, nq) : nq} ερωτήσεις)` : "Διάλεξε τουλάχιστον μία ενότητα"}</button></section>`;
   } else {
@@ -1041,19 +1031,18 @@ function renderPractice(sub){
     ks.forEach(x => on ? P.sel.add(x) : P.sel.delete(x)); save(); renderPractice(sub);
   });
   el.querySelectorAll("[data-pn]").forEach(b => b.onclick = () => { P.n = +b.dataset.pn; renderPractice(sub); });
-  el.querySelectorAll("[data-pm]").forEach(b => b.onclick = () => { P.min = +b.dataset.pm; renderPractice(sub); });
   el.querySelectorAll("[data-pw]").forEach(b => b.onclick = () => { P.wx = +b.dataset.pw; renderPractice(sub); });
   el.querySelectorAll("[data-px]").forEach(b => b.onclick = () => {
     const a = b.dataset.px;
     if(a === "start") startExam(chosen);
     else if(a === "rev") startReview(chosen);
     else if(a === "exam") startExam(P.keys);
-    else { P.quiz = null; P.rev = null; P.end = null; clearInterval(P.int); }
+    else { P.quiz = null; P.rev = null; }
     renderPractice(sub); top();
   });
   el.querySelectorAll("[data-mk]").forEach(b => b.onclick = () => {
     P.mkey = b.dataset.mk === "*" ? null : b.dataset.mk;
-    P.quiz = newQuiz(mistakeItems(P.mkey), "mist"); P.end = null;
+    P.quiz = newQuiz(mistakeItems(P.mkey), "mist");
     renderPractice(sub); top();
   });
 }

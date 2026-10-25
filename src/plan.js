@@ -4,7 +4,7 @@
    και κάθε ενότητα ανοίγει ως κάρτες (#study/<κλειδί>), μία ιδέα σε κάθε κάρτα, σε όλη την οθόνη (#study/<κλειδί>/c/<αριθμός>).
    Για διαγώνισμα υπάρχει ένας γύρος ερωτήσεων από όλες τις ενότητες (#prep/<μάθημα>).
    Όλα μένουν μόνο σε αυτή τη συσκευή. Χωρίς βαθμούς και χωρίς σύγκριση με άλλους. */
-const PL = { sel:{}, add:null, u:{}, prep:null, queue:[], fc:null, fromFeed:null };
+const PL = { sel:{}, add:null, u:{}, prep:null, mock:null, queue:[], fc:null, fromFeed:null };
 const WEEK = ["Κυριακή", "Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο"];
 const WEEK_ACC = ["την Κυριακή", "τη Δευτέρα", "την Τρίτη", "την Τετάρτη", "την Πέμπτη", "την Παρασκευή", "το Σάββατο"];
 const MONTHS = ["Ιανουαρίου", "Φεβρουαρίου", "Μαρτίου", "Απριλίου", "Μαΐου", "Ιουνίου", "Ιουλίου", "Αυγούστου", "Σεπτεμβρίου", "Οκτωβρίου", "Νοεμβρίου", "Δεκεμβρίου"];
@@ -49,6 +49,7 @@ function renderPlanRoute(p, parts){
   else if(p === "plan") renderChooser(parts[1]);
   else if(p === "study") renderStudy(parts.slice(1, 5).join("/"), parts.slice(5));
   else if(p === "prep") renderPrep(parts[1]);
+  else if(p === "mock") renderMock(parts[1]);
 }
 
 /* Η αρχική: τι έχεις την επόμενη σχολική μέρα και ποια διαγωνίσματα έρχονται */
@@ -119,18 +120,19 @@ function renderChooser(sid){
     ${g.chapters.map(c => `<details class="pl-chap"${c.keys.some(k => sel.has(k) || k === sug) || g.chapters.length === 1 ? " open" : ""}><summary><span>${esc(c.name)}</span><small>${c.keys.length}</small></summary>
       ${c.keys.map(k => { const on = sel.has(k), pr = cardProgress(k); return `<label class="pl-unit${on ? " on" : ""}"><input type="checkbox" data-pk="${k}"${on ? " checked" : ""}><span class="pl-ut">${unitLabel(k)}</span>${k === sug && !pr.seen ? `<span class="pl-sug">Πρόταση</span>` : pr.seen ? `<span class="pl-prog${pr.ok === pr.n ? " all" : ""}" aria-label="Κατάλαβες ${pr.ok} από ${pr.n} κάρτες">✓ ${pr.ok}/${pr.n}</span>` : ""}</label>`; }).join("")}
     </details>`).join("")}
-    <div class="pl-actions">${test ? prepBtn + studyBtn : studyBtn + prepBtn}<p class="pnote center" id="pl-count">${n ? "" : "Διάλεξε τουλάχιστον μία ενότητα."}</p></div>`;
+    <div class="pl-actions">${test ? prepBtn + studyBtn : studyBtn + prepBtn}<button class="btn ghost" data-pl-mock${n ? "" : " disabled"}>Δοκιμαστικό διαγώνισμα</button><p class="pnote center" id="pl-count">${n ? "" : "Διάλεξε τουλάχιστον μία ενότητα."}</p></div>`;
   el.querySelectorAll("[data-pk]").forEach(x => x.onchange = () => {
     x.checked ? sel.add(x.dataset.pk) : sel.delete(x.dataset.pk);
     x.closest(".pl-unit").classList.toggle("on", x.checked);
     const m = sel.size, sb = $("[data-pl-study]", el), pb = $("[data-pl-prep]", el);
-    sb.disabled = pb.disabled = !m;
+    sb.disabled = pb.disabled = $("[data-pl-mock]", el).disabled = !m;
     sb.textContent = m > 1 ? `Διάβασμα για αύριο (${m} ενότητες)` : "Διάβασμα για αύριο";
     $("#pl-count", el).textContent = m ? "" : "Διάλεξε τουλάχιστον μία ενότητα.";
   });
   const chosen = () => keys.filter(k => sel.has(k));
   $("[data-pl-study]", el).onclick = () => { PL.queue = chosen(); if(PL.queue.length) location.hash = "#study/" + PL.queue[0]; };
   $("[data-pl-prep]", el).onclick = () => { if(chosen().length){ PL.prep = null; location.hash = "#prep/" + sid; } };
+  $("[data-pl-mock]", el).onclick = () => { if(chosen().length){ PL.mock = null; location.hash = "#mock/" + sid; } };
 }
 
 /* Η ενότητα ως κάρτες (#study/<κλειδί>): κάθε θέμα της περίληψης είναι μία ιδέα με τα δικά της μέρη.
@@ -199,8 +201,8 @@ function unitFeed(key){
 /* «Ασκήσεις του βιβλίου»: ανοίγει την καρτέλα «Βιβλίο» στη σελίδα της ενότητας. Εκεί ο μαθητής διαβάζει
    την εκφώνηση στο βιβλίο και παίρνει βοήθειες μία μία. Στις κάρτες δεν μπαίνουν, γιατί δεν έχουμε την εκφώνηση. */
 function bookButton(key){
-  const n = (BOOK_HELP[key] || []).length;
-  return n ? `<button class="btn ghost" data-fd-book>Ασκήσεις του βιβλίου (${n}) με βοήθειες</button>` : "";
+  const items = BOOK_HELP[key] || [];
+  return items.length ? `<button class="btn ghost" data-fd-book>${bookHelpTitle(items)} (${items.length}) με βοήθειες</button>` : "";
 }
 function bindBookButton(el, key){
   const b = $("[data-fd-book]", el);
@@ -409,4 +411,67 @@ function renderPrep(sid){
   const slide = $(".slide", el);
   if(slide && v.go) swipe(slide, v.go);
   bindQuiz(el, z, rr, { top:() => window.scrollTo({top:0}) });
+}
+
+/* Δοκιμαστικό διαγώνισμα (#mock/<μάθημα>): σαν αληθινό διαγώνισμα, από τις ενότητες που διάλεξες.
+   Μέρος Α: 6 ερωτήσεις πολλαπλής επιλογής, χωρίς να φαίνεται αν είναι σωστές. Μέρος Β: 3 θέματα για το τετράδιο
+   (Εύκολο, Μέτριο, Δύσκολο). Με την «Παράδοση» φαίνονται οι απαντήσεις, η μέθοδος και το αποτέλεσμα. Χωρίς βαθμό. */
+function mockExercises(keys){
+  const pool = keys.flatMap(key => unitData(key).ex.map((e, ei) => ({key, ei, lvl:e.lvl}))), used = new Set(), out = [];
+  for(const lvl of [1, 2, 3]){
+    const list = shuffle(pool.filter(x => x.lvl === lvl && !out.includes(x)));
+    const pick = list.find(x => !used.has(x.key)) || list[0] || shuffle(pool.filter(x => !out.includes(x)))[0];
+    if(pick){ out.push(pick); used.add(pick.key); }
+  }
+  return out;
+}
+function renderMock(sid){
+  const el = $("#plan"), g = subjectGroup(sid), sel = PL.sel[sid];
+  const keys = g ? unitsOf(sid).filter(k => sel && sel.has(k)) : [];
+  if(!keys.length){ location.replace(g ? "#plan/" + sid : "#tomorrow"); return; }
+  const id = keys.join(",");
+  if(!PL.mock || PL.mock.id !== id) PL.mock = { id, z:newQuiz(shuffle(quizPool(keys)).slice(0, 6), "mock"), ex:mockExercises(keys), done:false, t0:Date.now(), t1:null };
+  const m = PL.mock, z = m.z, T = (key, t) => unitText(key, t), rr = () => renderMock(sid);
+  const head = `<div class="pl-bar"><div><span class="ref">Δοκιμαστικό · ${esc(g.name)}</span><h2 class="pl-where">${keys.length === 1 ? unitLabel(keys[0]) : keys.length + " ενότητες"}</h2></div><span class="pl-tools"><a class="pl-round" href="#plan/${sid}" aria-label="Κλείσιμο"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></a></span></div>`;
+  const cardOf = (key, topic) => Number.isInteger(topic) ? `<a class="mk-theory" href="#study/${key}/c/${topic}">Θεωρία: ${C[key] ? unitData(key).summary[topic].h : esc(unitData(key).summary[topic].h)} →</a>` : "";
+  const partA = z.qs.map((q, i) => {
+    const p = z.picked[i], has = p !== undefined, oq = unitData(q.key).quiz[q.oi];
+    const opts = q.opts.map((o, j) => {
+      const cls = !m.done ? (j === p ? " sel" : "") : o.ok ? " right" : j === p ? " wrong" : " dim";
+      return `<button class="opt${cls}" data-mk-opt="${i}/${j}"${m.done ? " disabled" : ""} aria-pressed="${j === p}"><span class="l" aria-hidden="true">${m.done && o.ok ? "✓" : m.done && j === p ? "✕" : LETTERS[j]}</span><span>${plain(o.t)}</span></button>`;
+    }).join("");
+    return `<div class="sheet mk-q"><span class="tag">${i + 1} · ${unitName(q.key)}</span><h3>${rich(q.q)}</h3>${opts}
+      ${m.done ? `<div class="why">${!has ? `<b class="n">Δεν απάντησες</b>` : q.opts[p].ok ? `<b class="y">Σωστά</b>` : `<b class="n">Όχι ακριβώς</b>`}${rich(q.why)}</div>${cardOf(q.key, oq.topic)}` : ""}</div>`;
+  }).join("");
+  const partB = m.ex.map(({key, ei}, i) => {
+    const e = unitData(key).ex[ei];
+    return `<div class="sheet mk-q"><span class="tag">Θέμα ${i + 1} · ${unitName(key)}</span><span class="lvl l${e.lvl}">${LEVELS[e.lvl]}</span>
+      <p class="fc-q">${e.h && !C[key] ? `<b>${esc(e.h)}${/[;:;?.!]$/.test(e.h) ? "" : ":"}</b> ` : ""}${T(key, e.q)}</p>
+      ${m.done ? `<p class="pl-h mk-sub">Η μέθοδος</p><ol class="pl-sol">${e.steps.map(x => `<li>${T(key, x)}</li>`).join("")}</ol><p class="ans">Απάντηση: <span>${T(key, e.ans)}</span></p>${cardOf(key, e.topic)}` : ""}</div>`;
+  }).join("");
+  const answered = Object.keys(z.picked).length, right = quizScore(z).right;
+  if(m.done){
+    const by = {};
+    z.qs.forEach((q, i) => { const b = by[q.key] || (by[q.key] = [0, 0]); b[1]++; if(z.picked[i] !== undefined && q.opts[z.picked[i]].ok) b[0]++; });
+    const weak = keys.filter(k => by[k] && by[k][0] < by[k][1]);
+    el.innerHTML = head + `<div class="pl-done"><h2 class="ct">Παρέδωσες!</h2><p>Στο Μέρος Α βρήκες σωστά ${right} από ${z.qs.length}. Στο Μέρος Β σύγκρινε τις λύσεις σου με τη μέθοδο και την απάντηση.</p><p class="took">Το τελείωσες σε <b>${elapsedText(m.t1 - m.t0)}</b>.</p></div>
+      ${weak.length ? `<h3 class="pl-h">Τι να ξαναδείς</h3><div class="brk">${weak.map(k => `<a href="#study/${k}"><span>${unitLabel(k)}</span><b class="${by[k][0] * 2 >= by[k][1] ? "mid" : "low"}">${by[k][0]}/${by[k][1]}</b></a>`).join("")}</div>` : ""}
+      <h3 class="pl-h">Μέρος Α · Οι απαντήσεις</h3>${partA}
+      ${partB ? `<h3 class="pl-h">Μέρος Β · Οι λύσεις</h3>${partB}` : ""}
+      <div class="pl-actions"><button class="btn" data-mk-new>Νέο δοκιμαστικό</button><a class="btn ghost" href="#plan/${sid}">Πίσω στις ενότητες</a></div>`;
+    $("[data-mk-new]", el).onclick = () => { PL.mock = null; renderMock(sid); window.scrollTo({top:0}); };
+    return;
+  }
+  el.innerHTML = head + `<p class="pnote">Σαν αληθινό διαγώνισμα: απάντησε όσα μπορείς και μετά πάτα «Παράδοση». Τότε θα δεις τις απαντήσεις και τις λύσεις. Χωρίς βαθμό.</p>
+    <h3 class="pl-h">Μέρος Α · Διάλεξε τη σωστή απάντηση</h3>${partA}
+    ${partB ? `<h3 class="pl-h">Μέρος Β · Λύσε στο τετράδιο</h3><p class="pnote">Γράψε τις λύσεις σου στο τετράδιο. Στο τέλος θα δεις τη μέθοδο και την απάντηση.</p>${partB}` : ""}
+    <div class="pl-actions"><button class="btn" data-mk-done>Παράδοση${answered < z.qs.length ? ` (${z.qs.length - answered} αναπάντητες στο Μέρος Α)` : ""}</button></div>`;
+  el.querySelectorAll("[data-mk-opt]").forEach(b => b.onclick = () => {
+    const [i, j] = b.dataset.mkOpt.split("/").map(Number), y = window.scrollY;
+    z.picked[i] = j; rr(); window.scrollTo({top:y});
+  });
+  $("[data-mk-done]", el).onclick = () => {
+    z.qs.forEach((q, i) => { if(z.picked[i] !== undefined) markAnswer(q.key, q.oi, q.opts[z.picked[i]].ok); });
+    m.done = true; m.t1 = Date.now(); rr(); window.scrollTo({top:0});
+  };
 }
