@@ -607,7 +607,7 @@ const bhState = {};
 function bookHelpView(key, url, topics){
   const s = bhState[key] || (bhState[key] = {shown:{}, pick:{}, res:new Set(), order:{}});
   const items = BOOK_HELP[key];
-  return `<h3 class="bh-title">Ασκήσεις του βιβλίου</h3><p class="pnote">Αυτές τις ασκήσεις προτείνει η ύλη 2026–2027. Διάβασε την εκφώνηση στο βιβλίο και λύσε την στο τετράδιο. Άνοιξε βοήθεια μόνο όταν κολλήσεις.</p>${url ? `<a class="bh-book" href="${esc(url)}" target="_blank" rel="noopener">Άνοιξε την ενότητα στο βιβλίο ↗</a>` : ""}` + items.map((it, i) => {
+  return `<h3 class="bh-title">Ασκήσεις του βιβλίου</h3><p class="pnote">Αυτές οι ασκήσεις του βιβλίου είναι μέσα στην ύλη 2026–2027. Διάβασε την εκφώνηση στο βιβλίο και λύσε την στο τετράδιο. Άνοιξε βοήθεια μόνο όταν κολλήσεις.</p>${url ? `<a class="bh-book" href="${esc(url)}" target="_blank" rel="noopener">Άνοιξε την ενότητα στο βιβλίο ↗</a>` : ""}` + items.map((it, i) => {
     const shown = s.shown[i] || 0, left = it.hints.length - shown, t = topics[it.topic];
     const steps = it.hints.slice(0, shown).map((h, j) => {
       if(!h.q) return `<li><b>${esc(h.h)}</b><span>${esc(h.t)}</span></li>`;
