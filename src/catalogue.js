@@ -313,7 +313,7 @@ function renderCourse(grade,id){
     const query=normalizeSearch($('#lesson-query')?.value.trim()||'');
     let count=0;
     let lessons=0;
-    const html=s.books.map((b,bi)=>{
+    const html=(s.bookOrder||s.books.map((_,i)=>i)).map(bi=>[s.books[bi],bi]).map(([b,bi])=>{
       const matchesTitle=normalizeSearch(b.title).includes(query);
       const sections=b.sections.filter(section=>!query||matchesTitle||normalizeSearch(section.title).includes(query));
       if(query&&!matchesTitle&&!sections.length) return '';

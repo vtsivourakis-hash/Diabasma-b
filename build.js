@@ -113,6 +113,24 @@ for (const [key, lesson] of Object.entries(officialContent)) {
 }
 const { validateCurriculum } = require("./scripts/validate-curriculum");
 validateCurriculum(curriculum);
+// Τίτλοι και σειρά βιβλίων μόνο για την προβολή (shared-units.json → books). Οι δείκτες των βιβλίων μένουν ίδιοι.
+if (fs.existsSync(sharedFile)) {
+  for (const [scope, o] of Object.entries(JSON.parse(fs.readFileSync(sharedFile, "utf8")).books || {})) {
+    if (scope.startsWith("_")) continue;
+    const [gradeId, subjectId] = scope.split("/");
+    const subject = curriculum.grades.find(item => item.id === gradeId)?.subjects.find(item => item.id === subjectId);
+    if (!subject) throw new Error(`shared-units.json: άγνωστο μάθημα ${scope}`);
+    for (const [id, title] of Object.entries(o.titles || {})) {
+      const book = subject.books.find(item => item.id === id);
+      if (!book) throw new Error(`shared-units.json: το ${scope} δεν έχει βιβλίο ${id}`);
+      book.title = title;
+    }
+    if (o.order) {
+      const first = o.order.map(id => { const i = subject.books.findIndex(item => item.id === id); if (i < 0) throw new Error(`shared-units.json: το ${scope} δεν έχει βιβλίο ${id}`); return i; });
+      subject.bookOrder = [...first, ...subject.books.map((_, i) => i).filter(i => !first.includes(i))];
+    }
+  }
+}
 
 // Πίνακες γραμματικής (κλίσεις, συζυγίες). Στα κείμενα μια λέξη γίνεται «κουμπί» γραμματικής με {{τύπος|κλειδί}}.
 const G = JSON.parse(fs.readFileSync(path.join(dir, "_grammar.json"), "utf8"));
