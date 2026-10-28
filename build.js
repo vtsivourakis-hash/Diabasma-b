@@ -75,6 +75,8 @@ function checkCards(name, lesson) {
     const at = `${name}: κάρτα ${i + 1}`;
     if (card.fig) checkFig(card.fig, `${at}, σχήμα`);
     if (card.hooks && (!Array.isArray(card.hooks) || !card.hooks.length || card.hooks.length > 3 || card.hooks.some(t => typeof t !== "string" || !t))) throw new Error(`${at}: το hooks θέλει 1-3 κείμενα (κόλπα για να θυμάσαι)`);
+    if (card.check !== undefined && (typeof card.check !== "string" || !card.check)) throw new Error(`${at}: το check θέλει ένα κείμενο (τι να ρωτήσει τον καθηγητή)`);
+    if (card.check && !card.def) throw new Error(`${at}: το check εμφανίζεται δίπλα στο def, άρα η κάρτα θέλει def`);
     if (card.hooks && !card.def) throw new Error(`${at}: τα hooks εμφανίζονται δίπλα στο def, άρα η κάρτα θέλει def`);
     if (card.more && (!Array.isArray(card.more) || card.more.some(t => typeof t !== "string" || !t))) throw new Error(`${at}: το more θέλει λίστα με κείμενα`);
     const a = card.alt;

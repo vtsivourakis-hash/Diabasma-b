@@ -1161,6 +1161,7 @@ function rvItems(key){
 function rvCardExtra(b, T){
   const a = b.alt;
   return (b.more || []).map(t => `<p><b>Κι άλλο παράδειγμα:</b> ${T(t)}</p>`).join("")
+    + (b.check ? `<p><b>Ρώτα τον καθηγητή:</b> ${T(b.check)}</p>` : "")
     + (a ? `<p><b>Πες το μου αλλιώς:</b> ${T(a.t)}</p>${a.mistake ? `<p><b>Το συχνό λάθος:</b> ${T(a.mistake)}</p>` : ""}${a.q ? `<p><b>Νέα ερώτηση:</b> ${T(a.q.q)}</p><ul class="rvopts"><li class="okk">✓ ${T(a.q.c)}</li>${a.q.w.map(w => `<li>✕ ${T(w)}</li>`).join("")}</ul><p><b>Εξήγηση:</b> ${T(a.q.why)}</p>` : ""}` : "");
 }
 /* Οι βοήθειες για τις ασκήσεις του βιβλίου, για έλεγχο από τον μαθητή που ελέγχει το περιεχόμενο */

@@ -151,6 +151,12 @@
 .opt.sel .l{background:var(--accent);border-color:var(--accent);color:var(--paper)}
 .mk-sub{margin:14px 0 0}
 .mk-theory{display:inline-flex;align-items:center;min-height:40px;margin:6px 0 0;color:var(--hi);font-size:14px;font-weight:700;text-decoration:none}
+/* Ρώτα τον καθηγητή: σημεία όπου το βιβλίο μάλλον έχει λάθος ή διαφέρει από τη σημερινή γνώση */
+.fc-teach{margin-top:14px;padding:12px 14px;border-radius:12px;background:color-mix(in srgb,var(--c-blue) 10%,transparent);box-shadow:inset 3px 0 0 var(--c-blue)}
+.fc-teach p{margin:6px 0 0;font-size:15.5px;line-height:1.45}
+.k-teach{color:var(--c-blue)}
+.teach-mini{margin:6px 0 0;font-size:14.5px}
+.teach-mini b{color:var(--c-blue)}
 /* Κόλπο για να θυμάσαι */
 .fc-hooks{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
 .k-hook{color:var(--c-amber)}
