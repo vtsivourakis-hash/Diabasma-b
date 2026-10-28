@@ -151,3 +151,24 @@
 .opt.sel .l{background:var(--accent);border-color:var(--accent);color:var(--paper)}
 .mk-sub{margin:14px 0 0}
 .mk-theory{display:inline-flex;align-items:center;min-height:40px;margin:6px 0 0;color:var(--hi);font-size:14px;font-weight:700;text-decoration:none}
+/* Κόλπο για να θυμάσαι */
+.fc-hooks{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.k-hook{color:var(--c-amber)}
+.hook{display:flex;align-items:flex-start;gap:8px;margin-top:10px;padding:10px 10px 10px 14px;border-radius:12px;background:var(--mid-soft)}
+.hook p{flex:1;margin:0;font-size:16px;line-height:1.45}
+.hook small{color:var(--muted);font-size:12px;white-space:nowrap}
+.hook.pinned{box-shadow:inset 3px 0 0 var(--c-amber)}
+.hook-b{flex:0 0 40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--muted);display:grid;place-items:center;cursor:pointer;font-size:15px}
+.hook-b svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round}
+.hook-b[aria-pressed="true"]{color:var(--c-amber);border-color:var(--c-amber)}
+.hook-b[aria-pressed="true"] svg{fill:currentColor}
+.hook-add{margin-top:10px;width:100%;min-height:46px;border-radius:12px;border:1px dashed var(--line);background:none;color:var(--c-amber);font-weight:700;font-size:14.5px;cursor:pointer}
+.hook-form{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+.hook-form label{font-weight:700;font-size:14px}
+.hook-form textarea{font:inherit;font-size:16px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);resize:vertical}
+.hook-row{display:flex;gap:10px}
+.hook-row .btn{flex:1;margin:0;min-height:46px}
+.hook-note{margin:10px 0 0;font-size:12.5px;color:var(--muted)}
+.hook-mini{display:flex;gap:6px;align-items:flex-start;margin:6px 0 0;color:var(--c-amber);font-size:14.5px}
+.hook-mini svg{flex:0 0 16px;width:16px;height:16px;margin-top:2px;fill:currentColor}
+.hook-mini span{color:var(--text)}

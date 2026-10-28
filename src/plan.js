@@ -157,6 +157,21 @@ function deckOf(key){
   if(ex.length || qs.length) cards.push({all:true, ex, qs, parts:[ex.length && "try", qs.length && "check"].filter(Boolean)});
   return deckCache[key] = cards;
 }
+/* «Κόλπο για να θυμάσαι»: τα έτοιμα κόλπα της κάρτας (hooks) και όσα γράφει ο μαθητής. Καρφιτσώνει όσα τον βοηθούν.
+   Μένουν μόνο σε αυτή τη συσκευή (diab-hooks), ανά ενότητα και τίτλο κάρτας: { pin:[θέσεις έτοιμων], own:[{t, pin}] }. */
+const PIN_SVG = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6l-1 6 3 3v2h-4v6l-1 1-1-1v-6H7v-2l3-3z"/></svg>`;
+const hookSaved = (key, h) => (store.get("diab-hooks", {})[key] || {})[h] || { pin:[], own:[] };
+function saveHooks(key, h, v){
+  const all = store.get("diab-hooks", {}), u = all[key] || (all[key] = {});
+  if(v.pin.length || v.own.length) u[h] = v; else delete u[h];
+  if(!Object.keys(u).length) delete all[key];
+  store.set("diab-hooks", all);
+}
+function hookList(key, b){
+  const v = hookSaved(key, b.h);
+  const list = [...(b.hooks || []).map((t, j) => ({t, id:"b" + j, pin:v.pin.includes(j)})), ...v.own.map((o, j) => ({t:esc(o.t), own:true, id:"o" + j, pin:!!o.pin}))];
+  return [...list.filter(x => x.pin), ...list.filter(x => !x.pin)];
+}
 const cardTitle = (key, c) => c.b ? (C[key] ? c.b.h : esc(c.b.h)) : c.voc ? "Λέξεις" : "Όλη η ενότητα";
 const cardMarks = key => store.get("diab-cards", {})[key] || {};
 function markCard(key, i, v){ const all = store.get("diab-cards", {}), m = all[key] || (all[key] = {}); if(m[i] !== v){ m[i] = v; store.set("diab-cards", all); } }
@@ -250,7 +265,12 @@ function cardView(key, i){
     else if(!has) prim = `<span class="fc-wait">Διάλεξε μια απάντηση</span>`;
     else if(prim) sec = `<button class="fc-sec plain" data-fc="${last ? "down" : "right"}">${last ? "Επόμενη κάρτα" : PART_NAME[parts[pi + 1]]}</button>`;
   } else if(part === "def"){
-    body = `<span class="fc-k k-def">${PART_NAME.def}</span><h2>${H(c.b.h)}</h2><div class="box defb"><b>${esc(c.b.defLabel || "Στο διαγώνισμα γράφεις")}</b><p class="fc-big">${T(c.b.def)}</p></div>`;
+    const hooks = hookList(key, c.b), edit = s.hookEdit === i;
+    body = `<span class="fc-k k-def">${PART_NAME.def}</span><h2>${H(c.b.h)}</h2><div class="box defb"><b>${esc(c.b.defLabel || "Στο διαγώνισμα γράφεις")}</b><p class="fc-big">${T(c.b.def)}</p></div>
+      <div class="fc-hooks"><span class="fc-k k-hook">Κόλπο για να θυμάσαι</span>
+      ${hooks.map(x => `<div class="hook${x.pin ? " pinned" : ""}"><p>${x.own ? x.t : T(x.t)}${x.own ? ` <small>δικό σου</small>` : ""}</p><button class="hook-b" data-hook-pin="${x.id}" aria-pressed="${x.pin}" aria-label="${x.pin ? "Ξεκαρφίτσωσε" : "Καρφίτσωσε"} αυτό το κόλπο">${PIN_SVG}</button>${x.own ? `<button class="hook-b del" data-hook-del="${x.id}" aria-label="Σβήσε το κόλπο σου">✕</button>` : ""}</div>`).join("")}
+      ${edit ? `<form class="hook-form" data-hook-form><label for="hook-new">Το δικό σου κόλπο</label><textarea id="hook-new" maxlength="200" rows="2" placeholder="Πώς το θυμάσαι εσύ;"></textarea><div class="hook-row"><button class="btn" type="submit">Αποθήκευση</button><button class="fc-sec plain" type="button" data-hook-cancel>Άκυρο</button></div></form>` : `<button class="hook-add" data-hook-add>+ ${hooks.length ? "Πρόσθεσε δικό σου" : "Έχεις δικό σου τρόπο να το θυμάσαι; Γράψ' τον"}</button>`}
+      ${hooks.length ? `<p class="hook-note">Καρφίτσωσε όσα σε βοηθούν: μπαίνουν πρώτα και στο τέλος της ενότητας. Μένουν μόνο σε αυτή τη συσκευή.</p>` : ""}</div>`;
   } else if(part === "voc"){
     body = `<span class="fc-k k-life">${PART_NAME.voc}</span><h2>Οι λέξεις της ενότητας</h2><dl class="fc-voc">${u.vocab.map(v => `<div><dt${C[key] ? ' lang="grc"' : ""}>${H(v[0])}</dt><dd>${H(v[1])}${v[2] ? `<small>${H(v[2])}</small>` : ""}</dd></div>`).join("")}</dl>`;
   } else if(part === "alt"){
@@ -320,6 +340,24 @@ function cardView(key, i){
     cardView(key, i);
     const w = $(".fc-again .why", el); if(w) w.scrollIntoView({block:"nearest"});
   });
+  if(part === "def"){
+    const keep = () => { const b = $(".fc-body", el), top = b ? b.scrollTop : 0; cardView(key, i); const n = $(".fc-body", el); if(n) n.scrollTop = top; };
+    const edit = fn => { const v = hookSaved(key, c.b.h); fn(v); saveHooks(key, c.b.h, v); keep(); };
+    el.querySelectorAll("[data-hook-pin]").forEach(b => b.onclick = () => edit(v => {
+      const id = b.dataset.hookPin, j = +id.slice(1);
+      if(id[0] === "b") v.pin = v.pin.includes(j) ? v.pin.filter(x => x !== j) : [...v.pin, j];
+      else if(v.own[j]) v.own[j].pin = !v.own[j].pin;
+    }));
+    el.querySelectorAll("[data-hook-del]").forEach(b => b.onclick = () => edit(v => { v.own.splice(+b.dataset.hookDel.slice(1), 1); }));
+    const add = $("[data-hook-add]", el); if(add) add.onclick = () => { s.hookEdit = i; keep(); const t = $("#hook-new", el); if(t){ t.focus(); t.scrollIntoView({block:"nearest"}); } };
+    const cancel = $("[data-hook-cancel]", el); if(cancel) cancel.onclick = () => { s.hookEdit = null; keep(); };
+    const form = $("[data-hook-form]", el); if(form) form.onsubmit = e => {
+      e.preventDefault();
+      const t = $("#hook-new", el).value.replace(/\s+/g, " ").trim().slice(0, 200);
+      s.hookEdit = null;
+      if(t) edit(v => { v.own.push({t, pin:true}); }); else keep();
+    };
+  }
   if(c.b && c.b.fig) el.querySelectorAll(".fig").forEach(f => f.classList.add("fc-fig"));
   bindCardGestures($(".fc", el));
 }
@@ -367,7 +405,7 @@ function unitEnd(key){
     <div class="fd-strip" style="--n:${p.n}">${deck.map((c, i) => `<a href="#study/${key}/c/${i}" class="${m[i] === 1 ? "ok" : m[i] === 2 ? "again" : ""}" aria-label="Κάρτα ${i + 1}: ${m[i] === 1 ? "την κατάλαβες" : m[i] === 2 ? "θέλει μια ματιά ακόμα" : "δεν την έκανες ακόμα"}"></a>`).join("")}</div>
     ${again.length ? `<div class="sheet fd-list"><h3 class="pl-h">Ας τα ξαναδούμε</h3>${again.map(row).join("")}</div>` : ""}
     ${unseen.length ? `<div class="sheet fd-list"><h3 class="pl-h">Δεν τις έκανες ακόμα</h3>${unseen.map(row).join("")}</div>` : ""}
-    ${defs.length ? `<details class="sheet pl-again"><summary><span class="pl-again-ic" aria-hidden="true">✎</span><span class="pl-t"><b>Για το διαγώνισμα</b><small>${defs.length === 1 ? "1 ορισμός ή κανόνας" : defs.length + " ορισμοί και κανόνες"}, όλοι μαζί</small></span></summary>${defs.map(c => `<div class="pl-miss"><p><b>${C[key] ? c.b.h : esc(c.b.h)}</b></p><p>${T(c.b.def)}</p></div>`).join("")}</details>` : ""}
+    ${defs.length ? `<details class="sheet pl-again"><summary><span class="pl-again-ic" aria-hidden="true">✎</span><span class="pl-t"><b>Για το διαγώνισμα</b><small>${defs.length === 1 ? "1 ορισμός ή κανόνας" : defs.length + " ορισμοί και κανόνες"}, όλοι μαζί</small></span></summary>${defs.map(c => `<div class="pl-miss"><p><b>${C[key] ? c.b.h : esc(c.b.h)}</b></p><p>${T(c.b.def)}</p>${hookList(key, c.b).filter(x => x.pin).map(x => `<p class="hook-mini">${PIN_SVG}<span>${x.own ? x.t : T(x.t)}</span></p>`).join("")}</div>`).join("")}</details>` : ""}
     <div class="pl-actions">
       ${again.length ? `<button class="btn" data-fd-again>Ξανά ${again.length === 1 ? "αυτή την κάρτα" : `αυτές τις ${again.length} κάρτες`}</button>` : ""}
       ${nextUnit ? `<a class="btn${again.length ? " ghost" : ""}" href="#study/${nextUnit}">Επόμενη ενότητα: ${unitLabel(nextUnit)}</a>` : nextSid ? `<a class="btn${again.length ? " ghost" : ""}" href="#plan/${nextSid}">Επόμενο για αύριο: ${esc(gradeSubject(selectedGrade, nextSid).name)}</a>` : ""}
