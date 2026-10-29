@@ -136,6 +136,35 @@ if (fs.existsSync(sharedFile)) {
   }
 }
 
+// Οι σελίδες των βιβλίων της Β΄ (src/book-pages.json): ο τίτλος όπως στο βιβλίο, και ποιες δεν είναι μαθήματα.
+// section.kind = "head" (επικεφαλίδα ενότητας) ή "info" (εξώφυλλο, περιεχόμενα, γλωσσάρι κ.λπ.)· book.reference για τα λεξικά.
+// Ο ηλεκτρονικός πίνακας περιεχομένων γράφει συχνά λατινικά A, B, H, O αντί για ελληνικά: τα διορθώνουμε.
+const LATIN_GREEK = { A:"Α", B:"Β", E:"Ε", H:"Η", I:"Ι", K:"Κ", M:"Μ", N:"Ν", O:"Ο", P:"Ρ", T:"Τ", X:"Χ", Y:"Υ", Z:"Ζ", o:"ο" };
+const GREEK_CHAR = /[Ͱ-Ͽἀ-῿]/;
+const greekFix = s => s.replace(/[ABEHIKMNOPTXYZo]/g, (ch, i) => {
+  const prev = s[i - 1] || "", next = s[i + 1] || "", word = (s.slice(i).match(/^\S+/) || [""])[0];
+  const greekNear = GREEK_CHAR.test(prev) || GREEK_CHAR.test(next) || /^\d/.test(next);
+  const lone = word.length === 1 && (GREEK_CHAR.test(s.slice(i + 1).trim()[0] || "") || GREEK_CHAR.test(s.slice(0, i).trim().slice(-1)));
+  return greekNear || lone ? LATIN_GREEK[ch] : ch;
+}).replace(/(\S)s$/, "$1");
+const pagesFile = path.join(__dirname, "src", "book-pages.json");
+if (fs.existsSync(pagesFile)) {
+  const P = JSON.parse(fs.readFileSync(pagesFile, "utf8")), info = new RegExp(P.info, "i");
+  for (const key of [...Object.keys(P.titles), ...P.lesson]) if (!sectionAt(key)) throw new Error(`book-pages.json: άγνωστη σελίδα ${key}`);
+  const B = curriculum.grades.find(item => item.id === "B");
+  for (const subject of B.subjects) subject.books.forEach((book, bi) => {
+    const scope = `B/${subject.id}/${bi}`, head = P.head[scope] && new RegExp(P.head[scope]);
+    if (P.reference.includes(scope)) book.reference = true;
+    book.sections.forEach((sec, si) => {
+      const key = `${scope}/${si}`;
+      sec.title = P.titles[key] || (["english", "french", "german", "italian"].includes(subject.id) ? sec.title : greekFix(sec.title));
+      if (P.lesson.includes(key)) return;
+      if (book.reference || si === 0 || info.test(sec.title)) sec.kind = "info";
+      else if (head && head.test(sec.title)) { sec.kind = "head"; const t = sec.title.replace(/:\s*Ε(ισαγωγή)?\s*$/, ""); if (t !== sec.title) sec.head = t; }
+    });
+  });
+}
+
 // Πίνακες γραμματικής (κλίσεις, συζυγίες). Στα κείμενα μια λέξη γίνεται «κουμπί» γραμματικής με {{τύπος|κλειδί}}.
 const G = JSON.parse(fs.readFileSync(path.join(dir, "_grammar.json"), "utf8"));
 for (const [k, g] of Object.entries(G)) {
@@ -175,6 +204,14 @@ for (const f of fs.readdirSync(dir).filter(f => f.endsWith(".json") && !f.starts
     if (!G[m[1]]) throw new Error(`${f}: η λέξη γραμματικής "${m[0]}" δείχνει σε "${m[1]}", που δεν υπάρχει στο _grammar.json`);
   }
   C[key] = data;
+}
+
+// Ο τίτλος κάθε ενότητας της Β΄ με κάρτες είναι ο τίτλος του βιβλίου. Σε σελίδες που δεν είναι μαθήματα δεν μπαίνει περιεχόμενο.
+for (const [key, unit] of [...Object.entries(officialContent), ...Object.entries(C)]) {
+  if (!key.startsWith("B/")) continue;
+  const { section } = sectionAt(key);
+  if (section.kind) throw new Error(`${key}: η σελίδα «${section.title}» είναι ${section.kind === "head" ? "επικεφαλίδα" : "σελίδα πληροφοριών"}, όχι μάθημα· δεν παίρνει κάρτες`);
+  if (officialContent[key] === unit) officialContent[key] = { ...unit, title: section.title }; else unit.title = section.title;
 }
 
 // Βοήθεια για τις ασκήσεις του βιβλίου (src/book-help-*.json): κλειδί ενότητας -> λίστα ασκήσεων.

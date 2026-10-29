@@ -927,7 +927,7 @@ function scopeGroups(grade){
       if(last && last.name === name) last.keys.push(key); else chapters.push({name, keys:[key]});
     };
     (s.bookOrder || s.books.map((_, i) => i)).forEach(bi => { const b = s.books[bi]; let head = null; b.sections.forEach((sec, si) => {
-      const key = `${grade}/${s.id}/${bi}/${si}`, h = chapterHead(sec.title || "");
+      const key = `${grade}/${s.id}/${bi}/${si}`, h = chapterHead(sec.title || "") || (sec.kind === "head" ? sec.head || sec.title : null);
       if(h && !unitData(key)){ head = h; return; }
       const unit = ALIAS[key] || (unitData(key) ? key : null);
       if(!unit) return;
@@ -1303,7 +1303,7 @@ let tsWidget = null, tsToken = "", photoBlob = null;
 const sendSubjects = () => getGrade("B").subjects.filter(s => s.books.length && !INFO_ONLY[s.id]);
 function sectionOptions(sid, sel){
   const s = gradeSubject("B", sid);
-  return (s.bookOrder || s.books.map((_, i) => i)).map(bi => [s.books[bi], bi]).map(([b, bi]) => `<optgroup label="${esc(b.title)}">${b.sections.map((x, si) => { const key = `B/${sid}/${bi}/${si}`; return `<option value="${key}"${key === sel ? " selected" : ""}>${esc(x.title)}</option>`; }).join("")}</optgroup>`).join("");
+  return (s.bookOrder || s.books.map((_, i) => i)).map(bi => [s.books[bi], bi]).map(([b, bi]) => `<optgroup label="${esc(b.title)}">${b.sections.map((x, si) => { const key = `B/${sid}/${bi}/${si}`; if(b.reference || x.kind) return ""; return `<option value="${key}"${key === sel ? " selected" : ""}>${esc(x.title)}</option>`; }).join("")}</optgroup>`).join("");
 }
 function renderSend(key){
   const el = $("#send"), subjects = sendSubjects();
