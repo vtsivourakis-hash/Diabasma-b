@@ -90,14 +90,20 @@ function tourShow(tries){
   $("#tour-n", TS.el).textContent = `${TS.i + 1} από ${TOUR.length}`;
   $("#tour-h", TS.el).textContent = s.title;
   $("#tour-t", TS.el).textContent = s.text;
+  /* Αν το πάτημα έχει ήδη γίνει (π.χ. γύρισες με «Πίσω» σε ερώτηση που απάντησες), δεν περιμένουμε: φαίνεται το «Επόμενο» */
+  const done = s.wait === "opt" && t && !t.querySelector("[data-fc-opt]:not([disabled])");
+  const wait = !!(s.wait && t && !done);
   const next = $("[data-tour=next]", TS.el);
-  next.hidden = !!(s.wait && t);
+  next.hidden = wait;
   next.textContent = TS.i === TOUR.length - 1 ? "Τέλος" : "Επόμενο";
   $("[data-tour=back]", TS.el).hidden = TS.i === 0;
-  TS.el.classList.toggle("tour-wait", !!(s.wait && t));
+  TS.el.classList.toggle("tour-wait", wait);
   TS.el.classList.toggle("tour-center", !t);
   TS.target = t;
   tourPlace();
+  /* Τα μέρη της κάρτας μπαίνουν με κίνηση (γλιστράνε από δεξιά): ξαναμετράμε όταν σταματήσουν */
+  if(document.getAnimations) Promise.all(document.getAnimations().map(a => a.finished.catch(() => {}))).then(tourPlace);
+  [150, 450, 900].forEach(ms => setTimeout(tourPlace, ms));
   $("#tour-h", TS.el).focus({ preventScroll:true });
 }
 
@@ -105,8 +111,10 @@ function tourShow(tries){
 function tourPlace(){
   if(!TS.el) return;
   const W = window.innerWidth, H = window.innerHeight, t = TS.target, hole = $(".tour-hole", TS.el), blk = TS.el.querySelectorAll(".tour-blk"), tip = $(".tour-tip", TS.el);
-  const r = t ? t.getBoundingClientRect() : null, p = 6;
-  const box = r ? { x:Math.max(4, r.left - p), y:Math.max(4, r.top - p), w:Math.min(W - 8, r.width + 2 * p), h:Math.min(H - 8, r.height + 2 * p) } : { x:W / 2, y:H / 2, w:0, h:0 };
+  const r = t && t.isConnected ? t.getBoundingClientRect() : null, p = 6;
+  /* Η τρύπα μένει πάντα μέσα στην οθόνη, από όποια πλευρά κι αν ξεφεύγει το στοιχείο */
+  const x0 = r && Math.max(4, r.left - p), y0 = r && Math.max(4, r.top - p);
+  const box = r ? { x:x0, y:y0, w:Math.max(0, Math.min(W - 4, r.right + p) - x0), h:Math.max(0, Math.min(H - 4, r.bottom + p) - y0) } : { x:W / 2, y:H / 2, w:0, h:0 };
   Object.assign(hole.style, { left:box.x + "px", top:box.y + "px", width:box.w + "px", height:box.h + "px" });
   const wait = TS.el.classList.contains("tour-wait");
   const rects = wait ? [[0, 0, W, box.y], [0, box.y + box.h, W, H - box.y - box.h], [0, box.y, box.x, box.h], [box.x + box.w, box.y, W - box.x - box.w, box.h]] : [[0, 0, W, H], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
@@ -116,7 +124,8 @@ function tourPlace(){
   if(!r) y = Math.max(16, (H - th) / 2);
   else if(box.y + box.h + 12 + th < H - 8) y = box.y + box.h + 12;
   else if(box.y - 12 - th > 8) y = box.y - 12 - th;
-  else y = Math.max(8, H - th - 8);
+  /* Δεν χωράει ούτε από πάνω ούτε από κάτω: στη μεριά της οθόνης που έχει περισσότερο χώρο */
+  else y = box.y > H - (box.y + box.h) ? 8 : Math.max(8, H - th - 8);
   Object.assign(tip.style, { left:x + "px", top:y + "px", width:tw + "px" });
 }
 
