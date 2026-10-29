@@ -12,6 +12,8 @@ const TOUR = [
     text:"Γράψε μία φορά το εβδομαδιαίο πρόγραμμα της τάξης. Μετά, στο «Αύριο» θα βλέπεις κάθε μέρα τα μαθήματα της επόμενης μέρας. Πατώντας ένα μάθημα, διαλέγεις τι κάνατε στην τάξη." },
   { at:"#plan/geography", target:".pl-chap", title:"Τι κάνατε στην τάξη;",
     text:"Εδώ τσεκάρεις τις ενότητες που κάνατε. Μετά πατάς «Διάβασμα για αύριο» και ανοίγουν οι κάρτες. Ας ανοίξουμε μαζί το πρώτο μάθημα της Γεωγραφίας." },
+  { at:"#study/" + TOUR_UNIT, target:".lv-ask, .lv-card", title:"Πώς θα το διαβάσεις;",
+    text:"Σε κάθε ενότητα διαλέγεις: με τις κάρτες της σελίδας, ή «Το διάβασα αλλού», από το βιβλίο ή τις σημειώσεις σου, και πας κατευθείαν στον έλεγχο. Τσέκαρε και «Διδάχτηκε στην τάξη». Τώρα ας δούμε τις κάρτες." },
   { at:"#study/" + TOUR_UNIT, target:`.fd-tile[href="#study/${TOUR_UNIT}/c/${TOUR_CARD}"]`, wait:"click", title:"Οι κάρτες",
     text:"Κάθε ενότητα είναι μερικές κάρτες, μία ιδέα σε καθεμιά. Το ✓ δείχνει όσες κατάλαβες. Πάτα αυτή την κάρτα για να ανοίξει." },
   { target:".fc .pl-segs", title:"Τα μέρη της κάρτας",
@@ -26,6 +28,10 @@ const TOUR = [
     text:"Κάποιες κάρτες έχουν αυτό το μπλε πλαίσιο: εκεί άλλες πηγές λένε κάτι διαφορετικό από το βιβλίο. Γράφεις ό,τι λέει το βιβλίο, αλλά ρώτα τον καθηγητή σου." },
   { part:"def", target:".fc .fc-hooks", title:"Κόλπο για να θυμάσαι",
     text:"Ένας εύκολος τρόπος να θυμηθείς τον κανόνα. Καρφίτσωσε όσα σε βοηθούν ή γράψε το δικό σου. Μένουν μόνο σε αυτή τη συσκευή." },
+  { at:"#study/" + TOUR_UNIT, target:".lv-ask, .lv-card", title:"Ο έλεγχος και ο κύκλος",
+    text:"Όταν νιώσεις έτοιμος, κάνε τον «Έλεγχο»: όλες οι ερωτήσεις της ενότητας. Ο κύκλος της ενότητας γεμίζει όσο πιο πολλές βρίσκεις: Βασικό, Προχωρημένο, Κορυφαίο. Μπορείς να τον ξανακάνεις όσες φορές θέλεις· ο κύκλος δεν αδειάζει ποτέ." },
+  { at:"#calendar", target:".cal-grid:not(.cal-wd)", title:"Το ημερολόγιο",
+    text:"Κάθε σχολική μέρα έχει έναν κύκλο για κάθε μάθημα του προγράμματός σου, στο χρώμα του μαθήματος. Γεμίζει με τον έλεγχο της ενότητας που διάβασες γι' αυτή τη μέρα. Θα το βρεις στο «Αύριο», δίπλα στο πρόγραμμά σου." },
   { at:"#practice", target:"#practice .pseg", title:"Εξάσκηση",
     text:"Δοκιμαστικό διαγώνισμα, «Τα λάθη μου» (όσες ερωτήσεις σου ξέφυγαν, για να τις ξαναδείς), χρονόμετρο μελέτης και το πρόγραμμά σου." },
   { at:"#practice", target:".app-toolbar", title:"Η πάνω μπάρα",
@@ -33,6 +39,8 @@ const TOUR = [
   { at:"#tomorrow", title:"Έτοιμος!",
     text:"Αυτά ήταν. Ξεκίνα από το «Αύριο». Αν θέλεις να ξαναδείς την ξενάγηση, θα τη βρεις στην καρτέλα «Σχολείο»." }
 ];
+/* Τα βήματα μέσα στην κάρτα ξεκινούν αμέσως μετά το «Πάτα την κάρτα» */
+const TOUR_CARD_FROM = TOUR.findIndex(s => s.at && s.wait === "click") + 1;
 const TS = { i:-1, el:null, expect:null, timer:0, offer:false };
 
 function tourStart(){
@@ -73,18 +81,26 @@ function tourGo(i){
   const s = TOUR[i], back = i < TS.i;
   TS.i = i;
   /* Πίσω σε βήμα της κάρτας: ξανανοίγουμε την κάρτα, γιατί τα μέρη της δεν είναι στη διεύθυνση */
-  const at = s.at || (s.part || back && i >= 5 ? `#study/${TOUR_UNIT}/c/${TOUR_CARD}` : null);
+  const at = s.at || (s.part || back && i >= TOUR_CARD_FROM ? `#study/${TOUR_UNIT}/c/${TOUR_CARD}` : null);
   if(at && location.hash !== at){ TS.expect = at; location.hash = at; }
-  const rewind = () => { for(let n = 0; n < 8; n++) if(!PL.fc.go(-1)) break; };
-  if(s.part && PL.fc && !$(`.fc .fc-body.p-${s.part}`)){ rewind(); for(let n = 0; n < 8 && !$(`.fc .fc-body.p-${s.part}`); n++) if(!PL.fc.go(1)) break; }
-  if(back && (i === 5 || i === 6) && PL.fc) rewind();
+  if(back && (i === TOUR_CARD_FROM || i === TOUR_CARD_FROM + 1) && PL.fc && !TS.expect) tourRewind();
+  TS.rewound = !back || !(i === TOUR_CARD_FROM || i === TOUR_CARD_FROM + 1) || !TS.expect;
   tourShow(0);
+}
+const tourRewind = () => { for(let n = 0; n < 8; n++) if(!PL.fc.go(-1)) break; };
+/* Φέρε την κάρτα στο μέρος του βήματος. Αν η κάρτα μόλις ανοίγει (π.χ. «Πίσω» από άλλη σελίδα), γίνεται όταν φανεί. */
+function tourSeekPart(s){
+  if(!$(".fc") || !PL.fc) return;
+  if(!TS.rewound){ tourRewind(); TS.rewound = true; }
+  if(s.part && !$(`.fc .fc-body.p-${s.part}`)){ tourRewind(); for(let n = 0; n < 8 && !$(`.fc .fc-body.p-${s.part}`); n++) if(!PL.fc.go(1)) break; }
 }
 
 function tourShow(tries){
   clearTimeout(TS.timer);
   if(!TS.el) return;
-  const s = TOUR[TS.i], t = s.target ? $(s.target) : null;
+  const s = TOUR[TS.i];
+  tourSeekPart(s);
+  const t = s.target ? $(s.target) : null;
   if(s.target && !t && tries < 30){ TS.timer = setTimeout(() => tourShow(tries + 1), 100); return; }
   if(t && t.scrollIntoView) t.scrollIntoView({ block:"center", behavior:"instant" });
   $("#tour-n", TS.el).textContent = `${TS.i + 1} από ${TOUR.length}`;
