@@ -25,7 +25,7 @@ try { if(localStorage.getItem("diab-theme") === "light") document.documentElemen
   --nav:rgba(255,255,255,.84); --nav-text:#7A7490;
   --hero:radial-gradient(120% 140% at 100% 0%,#8B5CF6 0%,#5B21B6 48%,#2E1065 100%); --on-hero:#FFFFFF;
   --shadow:0 1px 0 rgba(21,17,31,.04);
-  --c-violet:#7C3AED; --c-cyan:#0E7490; --c-lime:#4D7C0F; --c-green:#047857; --c-amber:#B45309; --c-pink:#BE185D; --c-orange:#C2410C; --c-blue:#1D4ED8;
+  --c-violet:#7C3AED; --c-cyan:#0E7490; --c-lime:#4D7C0F; --c-green:#15803D; --c-amber:#B45309; --c-pink:#BE185D; --c-orange:#C2410C; --c-blue:#1D4ED8; --c-teal:#0F766E; --c-rose:#BE123C; --c-fuchsia:#A21CAF; --c-slate:#475569;
   color-scheme:light;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
@@ -40,7 +40,7 @@ try { if(localStorage.getItem("diab-theme") === "light") document.documentElemen
     --nav:rgba(11,10,18,.8); --nav-text:#7F7896;
     --hero:radial-gradient(120% 140% at 100% 0%,#7C3AED 0%,#4C1D95 45%,#1A0F33 100%); --on-hero:#FFFFFF;
     --shadow:none;
-    --c-violet:#C4B5FD; --c-cyan:#67E8F9; --c-lime:#BEF264; --c-green:#6EE7B7; --c-amber:#FCD34D; --c-pink:#F9A8D4; --c-orange:#FDBA74; --c-blue:#93C5FD;
+    --c-violet:#C4B5FD; --c-cyan:#67E8F9; --c-lime:#BEF264; --c-green:#86EFAC; --c-amber:#FCD34D; --c-pink:#F9A8D4; --c-orange:#FDBA74; --c-blue:#93C5FD; --c-teal:#5EEAD4; --c-rose:#FDA4AF; --c-fuchsia:#F0ABFC; --c-slate:#CBD5E1;
     color-scheme:dark;
   }
 }
@@ -53,7 +53,7 @@ try { if(localStorage.getItem("diab-theme") === "light") document.documentElemen
   --nav:rgba(11,10,18,.8); --nav-text:#7F7896;
   --hero:radial-gradient(120% 140% at 100% 0%,#7C3AED 0%,#4C1D95 45%,#1A0F33 100%); --on-hero:#FFFFFF;
   --shadow:none;
-  --c-violet:#C4B5FD; --c-cyan:#67E8F9; --c-lime:#BEF264; --c-green:#6EE7B7; --c-amber:#FCD34D; --c-pink:#F9A8D4; --c-orange:#FDBA74; --c-blue:#93C5FD;
+  --c-violet:#C4B5FD; --c-cyan:#67E8F9; --c-lime:#BEF264; --c-green:#86EFAC; --c-amber:#FCD34D; --c-pink:#F9A8D4; --c-orange:#FDBA74; --c-blue:#93C5FD; --c-teal:#5EEAD4; --c-rose:#FDA4AF; --c-fuchsia:#F0ABFC; --c-slate:#CBD5E1;
   color-scheme:dark;
 }
 html{scroll-padding-top:16px;background:var(--paper);-webkit-tap-highlight-color:transparent}
@@ -594,12 +594,12 @@ function route(){
   let parts;
   try { parts = decodeURIComponent(location.hash.slice(1)).split("/").filter(Boolean); } catch(e){ parts = []; }
   let p = parts[0] || "tomorrow";
-  if(!["tomorrow","plan","study","prep","mock","class","course","lesson","sources","practice","timer","schedule","send","school","review","terms"].includes(p)) p = "class";
+  if(!["tomorrow","plan","study","prep","mock","class","course","lesson","sources","practice","timer","schedule","send","school","review","terms","check","calendar"].includes(p)) p = "class";
   /* Κρυφές τάξεις (βλ. SHOWN_GRADES): οι διαδρομές τους οδηγούν στη Β΄ */
   if((p === "class" || p === "course" || p === "lesson") && parts[1] && !SHOWN_GRADES.includes(parts[1])){ location.replace("#class/" + selectedGrade); return; }
   if(p === "class" || p === "course" || p === "lesson") selectGrade(parts[1] || selectedGrade);
   if(p === "send") selectGrade('B');
-  const panel = p === "class" || p === "course" || p === "lesson" ? "catalogue" : ["tomorrow","plan","study","prep","mock"].includes(p) ? "plan" : p;
+  const panel = p === "class" || p === "course" || p === "lesson" ? "catalogue" : ["tomorrow","plan","study","prep","mock","check","calendar"].includes(p) ? "plan" : p;
   document.querySelectorAll(".panel").forEach(el => el.hidden = el.id !== panel);
   renderGradeNav();
   $('#grade-nav').hidden = shownGrades().length < 2;

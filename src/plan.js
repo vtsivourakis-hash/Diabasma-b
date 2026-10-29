@@ -4,7 +4,7 @@
    και κάθε ενότητα ανοίγει ως κάρτες (#study/<κλειδί>), μία ιδέα σε κάθε κάρτα, σε όλη την οθόνη (#study/<κλειδί>/c/<αριθμός>).
    Για διαγώνισμα υπάρχει ένας γύρος ερωτήσεων από όλες τις ενότητες (#prep/<μάθημα>).
    Όλα μένουν μόνο σε αυτή τη συσκευή. Χωρίς βαθμούς και χωρίς σύγκριση με άλλους. */
-const PL = { sel:{}, add:null, u:{}, prep:null, mock:null, queue:[], fc:null, fromFeed:null };
+const PL = { sel:{}, add:null, u:{}, prep:null, mock:null, check:null, calDay:null, queue:[], fc:null, fromFeed:null };
 const WEEK = ["Κυριακή", "Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο"];
 const WEEK_ACC = ["την Κυριακή", "τη Δευτέρα", "την Τρίτη", "την Τετάρτη", "την Πέμπτη", "την Παρασκευή", "το Σάββατο"];
 const MONTHS = ["Ιανουαρίου", "Φεβρουαρίου", "Μαρτίου", "Απριλίου", "Μαΐου", "Ιουνίου", "Ιουλίου", "Αυγούστου", "Σεπτεμβρίου", "Οκτωβρίου", "Νοεμβρίου", "Δεκεμβρίου"];
@@ -50,6 +50,8 @@ function renderPlanRoute(p, parts){
   else if(p === "study") renderStudy(parts.slice(1, 5).join("/"), parts.slice(5));
   else if(p === "prep") renderPrep(parts[1]);
   else if(p === "mock") renderMock(parts[1]);
+  else if(p === "check") renderCheck(parts.slice(1, 5).join("/"));
+  else if(p === "calendar") renderCalendar(parts[1]);
 }
 
 /* Η αρχική: τι έχεις την επόμενη σχολική μέρα και ποια διαγωνίσματα έρχονται */
@@ -80,7 +82,7 @@ function renderTomorrow(){
       const s = gradeSubject(selectedGrade, e.sid), has = unitsOf(e.sid).length;
       return `<li class="pl-item"><a class="pl-row" href="${has ? "#plan/" + e.sid : courseHref(selectedGrade, e.sid)}">${subjectIcon(e.sid)}<span class="pl-t"><b>${esc(s.name)}</b><small>Διαγώνισμα · ${dayName(e.date)} · ${whenText(e.date)}</small></span><span class="pl-when">${Math.max(0, daysTo(e.date))}<small>${daysTo(e.date) === 1 ? "μέρα" : "μέρες"}</small></span></a><button class="pl-x" data-pl-del="${e.sid}|${e.date}" aria-label="Αφαίρεση του διαγωνίσματος: ${esc(s.name)}">✕</button></li>`;
     }).join("")}</ul>` : ""}
-    ${sched ? `<a class="btn ghost" href="#schedule">Το πρόγραμμά μου</a>` : `<a class="btn" href="#schedule">Γράψε το πρόγραμμά σου</a>`}
+    ${sched ? `<div class="row"><a class="btn ghost" href="#schedule">Το πρόγραμμά μου</a><a class="btn ghost" href="#calendar">Το ημερολόγιό μου</a></div>` : `<a class="btn" href="#schedule">Γράψε το πρόγραμμά σου</a>`}
     <p class="pnote center">Το πρόγραμμα και ό,τι προσθέτεις μένουν μόνο σε αυτή τη συσκευή.</p>
     <p class="pnote center">Πώς δουλεύει η σελίδα; <button class="linkbtn" type="button" data-tour-start>Ξενάγηση</button></p>`;
 
@@ -119,7 +121,7 @@ function renderChooser(sid){
     <div class="pl-head">${subjectIcon(sid)}<div><h2 class="ct">${esc(g.name)}</h2><p class="pl-sub">${test ? `Διαγώνισμα ${dayName(test.date)} · ${whenText(test.date)}` : "Τι κάνατε στην τάξη;"}</p></div></div>
     <p class="pl-note">${note}</p>
     ${g.chapters.map(c => `<details class="pl-chap"${c.keys.some(k => sel.has(k) || k === sug) || g.chapters.length === 1 ? " open" : ""}><summary><span>${esc(c.name)}</span><small>${c.keys.length}</small></summary>
-      ${c.keys.map(k => { const on = sel.has(k), pr = cardProgress(k); return `<label class="pl-unit${on ? " on" : ""}"><input type="checkbox" data-pk="${k}"${on ? " checked" : ""}><span class="pl-ut">${unitLabel(k)}</span>${k === sug && !pr.seen ? `<span class="pl-sug">Πρόταση</span>` : pr.seen ? `<span class="pl-prog${pr.ok === pr.n ? " all" : ""}" aria-label="Κατάλαβες ${pr.ok} από ${pr.n} κάρτες">✓ ${pr.ok}/${pr.n}</span>` : ""}</label>`; }).join("")}
+      ${c.keys.map(k => { const on = sel.has(k), pr = cardProgress(k); return `<label class="pl-unit${on ? " on" : ""}"><input type="checkbox" data-pk="${k}"${on ? " checked" : ""}><span class="pl-ut">${unitLabel(k)}</span>${k === sug && !pr.seen && scoreOf(k) === null ? `<span class="pl-sug">Πρόταση</span>` : ""}${scoreOf(k) !== null || pr.seen ? unitRing(k, 28) : ""}</label>`; }).join("")}
     </details>`).join("")}
     <div class="pl-actions">${test ? prepBtn + studyBtn : studyBtn + prepBtn}<button class="btn ghost" data-pl-mock${n ? "" : " disabled"}>Δοκιμαστικό διαγώνισμα</button><p class="pnote center" id="pl-count">${n ? "" : "Διάλεξε τουλάχιστον μία ενότητα."}</p></div>`;
   el.querySelectorAll("[data-pk]").forEach(x => x.onchange = () => {
@@ -186,6 +188,7 @@ function renderStudy(key, parts){
   if(!u || !u.quiz?.length || !SHOWN_GRADES.includes(key[0])){ location.replace("#tomorrow"); return; }
   const sid = key.split("/")[1], last = store.get("diab-last-unit", {});
   if(last[sid] !== key){ last[sid] = key; store.set("diab-last-unit", last); }
+  noteDay(key);
   const n = deckOf(key).length;
   if(parts[0] === "c" && +parts[1] >= 0 && +parts[1] < n) cardView(key, +parts[1]);
   else if(parts[0] === "end") unitEnd(key);
@@ -201,6 +204,7 @@ function unitFeed(key){
   const meta = c => [c.parts.includes("fig") && "Σχήμα", c.ex.length && (c.ex.length === 1 ? "1 άσκηση" : c.ex.length + " ασκήσεις"), c.qs.length && (c.qs.length === 1 ? "1 ερώτηση" : c.qs.length + " ερωτήσεις")].filter(Boolean).join(" · ");
   el.innerHTML = `<a class="back" href="${unitsOf(sid).length ? "#plan/" + sid : "#tomorrow"}">← ${unitName(key)}</a>
     <div class="pl-title"><span class="ref">${unitName(key)}${unitNum(key) ? " · " + unitNum(key).replace(" · ", "") : ""}</span><h2 class="ct">${unitTitle(key)}</h2></div>
+    ${unitStatus(key, p)}
     <div class="fd-prog"><div class="bar" role="img" aria-label="${p.ok} από ${p.n} κάρτες"><i style="width:${Math.round(p.ok / p.n * 100)}%"></i></div><span>${p.ok} από ${p.n} τα κατάλαβες</span></div>
     <div class="fd-grid">${deck.map((c, i) => {
       const st = m[i] === 1 ? `<span class="fd-st ok" aria-label="Το κατάλαβες">✓</span>` : m[i] === 2 ? `<span class="fd-st again" aria-label="Θέλει μια ματιά ακόμα">↻</span>` : "";
@@ -211,6 +215,7 @@ function unitFeed(key){
     ${bookButton(key)}
     <p class="pnote center">Πάτα μια κάρτα για να ανοίξει σε όλη την οθόνη. <a href="${unitHref(key)}">Όλη η ενότητα σε μία σελίδα</a></p>`;
   bindBookButton(el, key);
+  bindUnitStatus(el, key);
   PL.fromFeed = key;
 }
 
@@ -411,6 +416,7 @@ function unitEnd(key){
     <div class="pl-actions">
       ${again.length ? `<button class="btn" data-fd-again>Ξανά ${again.length === 1 ? "αυτή την κάρτα" : `αυτές τις ${again.length} κάρτες`}</button>` : ""}
       ${nextUnit ? `<a class="btn${again.length ? " ghost" : ""}" href="#study/${nextUnit}">Επόμενη ενότητα: ${unitLabel(nextUnit)}</a>` : nextSid ? `<a class="btn${again.length ? " ghost" : ""}" href="#plan/${nextSid}">Επόμενο για αύριο: ${esc(gradeSubject(selectedGrade, nextSid).name)}</a>` : ""}
+      <a class="btn ghost" href="#check/${key}">Έλεγχος: όλες οι ερωτήσεις</a>
       ${bookButton(key)}
       <a class="btn ghost" href="#tomorrow">Φτάνει για σήμερα</a>
       <p class="pnote center"><a href="#study/${key}">Όλες οι κάρτες</a></p>
@@ -514,4 +520,125 @@ function renderMock(sid){
     z.qs.forEach((q, i) => { if(z.picked[i] !== undefined) markAnswer(q.key, q.oi, q.opts[z.picked[i]].ok); });
     m.done = true; m.t1 = Date.now(); rr(); window.scrollTo({top:0});
   };
+}
+
+/* Επίπεδα γνώσης. Ο μαθητής διαβάζει όπως τον βολεύει (κάρτες, βιβλίο, σημειώσεις) και εδώ ελέγχει τι ξέρει.
+   Το επίπεδο βγαίνει μόνο από τον έλεγχο με όλες τις ερωτήσεις της ενότητας (#check/<κλειδί>), ποτέ από δήλωση.
+   diab-level: {κλειδί: [σωστές, ερωτήσεις]}, η καλύτερη προσπάθεια, οπότε το επίπεδο μόνο ανεβαίνει.
+   Βασικό: τουλάχιστον οι μισές. Προχωρημένο: 8 στις 10. Κορυφαίο: όλες. («Πλήρες» είναι η ετικέτα του καταλόγου για ενότητες με όλο το περιεχόμενο· δεν τη χρησιμοποιούμε για επίπεδο.) Από το Προχωρημένο η ενότητα είναι «έτοιμη».
+   Ο κύκλος της ενότητας γεμίζει όσο το ποσοστό, με το χρώμα του μαθήματος· το ποσοστό δεν γράφεται πουθενά.
+   diab-taught: ενότητες που διδάχτηκαν στην τάξη. diab-way: πώς διάλεξε να διαβάσει ("cards" ή "self").
+   diab-days: {μέρα: {μάθημα: κλειδί}}, ποια ενότητα διάβασε για ποια σχολική μέρα (για το ημερολόγιο). */
+const LEVEL_NAMES = ["Ξεκίνησες", "Βασικό", "Προχωρημένο", "Κορυφαίο"];
+const scoreOf = key => { const v = store.get("diab-level", {})[key]; return Array.isArray(v) && v[1] > 0 ? v[0] / v[1] : null; };
+const levelOf = f => f === null ? -1 : f >= 1 ? 3 : f >= 0.8 ? 2 : f >= 0.5 ? 1 : 0;
+const levelName = key => { const l = levelOf(scoreOf(key)); return l < 0 ? "Χωρίς έλεγχο ακόμα" : LEVEL_NAMES[l]; };
+const isReady = key => levelOf(scoreOf(key)) >= 2;
+function saveLevel(key, right, n){
+  const all = store.get("diab-level", {}), old = all[key];
+  if(!(Array.isArray(old) && old[1] > 0 && old[0] / old[1] >= right / n)){ all[key] = [right, n]; store.set("diab-level", all); }
+}
+const isTaught = key => !!store.get("diab-taught", {})[key];
+function setTaught(key, on){ const t = store.get("diab-taught", {}); if(on) t[key] = 1; else delete t[key]; store.set("diab-taught", t); }
+function noteDay(key){
+  const all = store.get("diab-days", {}), date = nextSchoolDay(), d = all[date] || (all[date] = {}), sid = key.split("/")[1];
+  if(d[sid] !== key){ d[sid] = key; store.set("diab-days", all); }
+}
+const subjectColor = sid => `var(--c-${(SUBJECT_LOOK[sid] || ["slate"])[0]})`;
+/* Ο κύκλος: f από 0 έως 1. Με label γίνεται εικόνα για τον αναγνώστη οθόνης, αλλιώς διακοσμητικός. */
+function ringSvg(f, color, size, label){
+  const p = Math.round(Math.max(0, Math.min(1, f || 0)) * 1000) / 10;
+  return `<svg class="lring" width="${size}" height="${size}" viewBox="0 0 100 100" style="--rc:${color}" ${label ? `role="img" aria-label="${label}"` : `aria-hidden="true"`}><circle cx="50" cy="50" r="40" class="lr-t"/>${p > 0 ? `<circle cx="50" cy="50" r="40" class="lr-b" pathLength="100" stroke-dasharray="${p} 100" transform="rotate(-90 50 50)"/>` : ""}</svg>`;
+}
+const unitRing = (key, size) => ringSvg(scoreOf(key), subjectColor(key.split("/")[1]), size, `${unitLabel(key).replace(/<[^>]+>/g, "")}: ${levelName(key)}`);
+const READY_SVG = `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M8.5 14 7 22l5-3 5 3-1.5-8"/></svg>`;
+const readyBadge = key => isReady(key) ? `<span class="lv-ready" title="Έτοιμος">${READY_SVG}</span>` : "";
+const taughtBox = key => `<label class="lv-taught"><input type="checkbox" data-taught${isTaught(key) ? " checked" : ""}> Διδάχτηκε στην τάξη</label>`;
+function bindTaught(el, key){ el.querySelectorAll("[data-taught]").forEach(x => x.onchange = () => setTaught(key, x.checked)); }
+
+/* Στην αρχή της ενότητας: «Πώς θα το διαβάσεις;» μέχρι να διαλέξει. Μετά, ο κύκλος, το επίπεδο και ο έλεγχος. */
+function unitStatus(key, p){
+  const way = store.get("diab-way", {})[key], f = scoreOf(key), n = unitData(key).quiz.length;
+  if(!way && !p.seen && f === null) return `<div class="sheet lv-ask"><h3 class="pl-h">Πώς θα το διαβάσεις;</h3>
+      <button class="lv-way" data-way="cards"><span class="lv-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="13" height="15" rx="2"/><path d="M8 3h11a2 2 0 0 1 2 2v13"/></svg></span><span class="pl-t"><b>Με τις κάρτες</b><small>${p.n} κάρτες, μία ιδέα η καθεμία, με ερωτήσεις στη διαδρομή.</small></span></button>
+      <button class="lv-way" data-way="self"><span class="lv-ic self" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M2 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H2zM22 5h-7a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h8z"/></svg></span><span class="pl-t"><b>Το διάβασα αλλού</b><small>Από το βιβλίο ή τις σημειώσεις σου. Πάμε κατευθείαν στον έλεγχο: ${n} ερωτήσεις.</small></span></button>
+      <p class="pnote">Μπορείς να αλλάξεις τρόπο όποτε θέλεις. Οι κάρτες μένουν εδώ.</p>${taughtBox(key)}</div>`;
+  return `<div class="sheet lv-card"><div class="lv-row">${unitRing(key, 56)}<span class="pl-t"><b>${levelName(key)}${readyBadge(key)}</b><small>${f === null ? "Όταν νιώσεις έτοιμος, κάνε τον έλεγχο. Ο κύκλος γεμίζει όσο πιο πολλές βρίσκεις." : f >= 1 ? "Τις βρήκες όλες!" : "Ο κύκλος γεμίζει όσο πιο πολλές βρίσκεις."}</small></span></div>
+      <a class="btn${f === null && way === "self" ? "" : " ghost"}" href="#check/${key}">${f === null ? `Έλεγχος: ${n} ερωτήσεις` : `Ξανά ο έλεγχος: ${n} ερωτήσεις`}</a>${taughtBox(key)}</div>`;
+}
+function bindUnitStatus(el, key){
+  el.querySelectorAll("[data-way]").forEach(b => b.onclick = () => {
+    const w = store.get("diab-way", {}); w[key] = b.dataset.way; store.set("diab-way", w);
+    if(b.dataset.way === "self") location.hash = "#check/" + key; else unitFeed(key);
+  });
+  bindTaught(el, key);
+}
+
+/* Έλεγχος (#check/<κλειδί>): όλες οι ερωτήσεις της ενότητας, με άλλη σειρά κάθε φορά. Στο τέλος, το επίπεδο. */
+function renderCheck(key){
+  if(ALIAS[key]){ location.replace("#check/" + ALIAS[key]); return; }
+  const u = unitData(key);
+  if(!u || !u.quiz?.length || !SHOWN_GRADES.includes(key[0])){ location.replace("#tomorrow"); return; }
+  noteDay(key);
+  const el = $("#plan"), sid = key.split("/")[1];
+  if(!PL.check || PL.check.key !== key) PL.check = { key, z:newQuiz(unitItems(key), "unit"), before:levelOf(scoreOf(key)) };
+  const z = PL.check.z, rr = () => renderCheck(key), top = () => window.scrollTo({top:0});
+  const head = `<div class="pl-bar"><div><span class="ref">Έλεγχος · ${unitName(key)}</span><h2 class="pl-where">${unitLabel(key)}</h2></div><span class="pl-tools"><a class="pl-round" href="#study/${key}" aria-label="Κλείσιμο"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></a></span></div>`;
+  if(z.done){
+    const {right} = quizScore(z), n = z.qs.length, best = levelOf(scoreOf(key)), up = best > PL.check.before, deck = deckOf(key);
+    const miss = [...new Set(z.qs.filter((q, i) => !(z.picked[i] !== undefined && q.opts[z.picked[i]].ok)).map(q => u.quiz[q.oi].topic).filter(t => Number.isInteger(t) && deck[t]))].sort((a, b) => a - b);
+    const title = up && best >= 1 ? (best === 3 ? "Κορυφαίο! Τις βρήκες όλες!" : `Έφτασες στο ${LEVEL_NAMES[best]}!`) : best >= 1 ? `Είσαι στο ${LEVEL_NAMES[best]}` : "Καλή αρχή!";
+    const steps = [["Βασικό", "τουλάχιστον τις μισές"], ["Προχωρημένο", "8 στις 10"], ["Κορυφαίο", "όλες σωστές"]];
+    el.innerHTML = head + `<div class="sheet lv-result">
+        ${ringSvg(scoreOf(key), subjectColor(sid), 180, `${unitLabel(key).replace(/<[^>]+>/g, "")}: ${levelName(key)}`)}
+        <h2 class="ct">${title}</h2>
+        <p class="pl-sub">Αυτή τη φορά: ${right} σωστές από ${n}</p>
+        <ul class="lv-steps">${steps.map(([name, rule], j) => `<li${best > j ? ` class="on"` : ""}><span>${name} · ${rule}</span><b>${best > j ? "✓" : best === j ? "επόμενο" : ""}</b></li>`).join("")}</ul></div>
+      ${isReady(key) ? `<div class="sheet lv-badge">${READY_SVG}<span class="pl-t"><b>${unitLabel(key)}: έτοιμος</b><small>Μένει, ό,τι κι αν γίνει μετά.</small></span></div>` : ""}
+      ${best < 3 && miss.length ? `<div class="sheet fd-list"><h3 class="pl-h">${best >= 2 ? "Για το Κορυφαίο" : "Ας τα ξαναδούμε"}</h3><p class="pnote">Δες τις κάρτες όσων σου ξέφυγαν και ξαναδοκίμασε. Οι ερωτήσεις ανακατεύονται κάθε φορά.</p>${miss.map(t => `<a class="fd-row" href="#study/${key}/c/${t}"><span class="fd-num">${t + 1}</span><span class="pl-t"><b>${cardTitle(key, deck[t])}</b></span><span aria-hidden="true">›</span></a>`).join("")}</div>` : ""}
+      <div class="pl-actions"><button class="btn" data-lv-again>Ξανά ο έλεγχος</button><button class="btn ghost" data-lv-review>Δες τις απαντήσεις</button><a class="btn ghost" href="#study/${key}">Στις κάρτες της ενότητας</a></div>`;
+    $("[data-lv-again]", el).onclick = () => { PL.check = null; rr(); top(); };
+    $("[data-lv-review]", el).onclick = () => { z.done = false; z.qi = 0; rr(); top(); };
+    return;
+  }
+  const v = quizView(z, rr);
+  el.innerHTML = head + `<p class="pnote">Όλες οι ερωτήσεις της ενότητας, με άλλη σειρά κάθε φορά. Από εδώ βγαίνει το επίπεδό σου.</p>` + v.body;
+  keyNav = v.go;
+  el.querySelectorAll("[data-nav]").forEach(b => b.onclick = () => v.go && v.go(+b.dataset.nav));
+  const slide = $(".slide", el);
+  if(slide && v.go) swipe(slide, v.go);
+  bindQuiz(el, z, rr, { top, finish:() => { saveLevel(key, quizScore(z).right, z.qs.length); saveBest(key, gradeOf(z)); } });
+}
+
+/* Ημερολόγιο (#calendar ή #calendar/2026-10): οι σχολικές μέρες του μήνα. Κάθε μέρα έχει έναν κύκλο για κάθε μάθημα
+   του προγράμματος (το πολύ 7), στο χρώμα του μαθήματος, γεμάτο όσο το επίπεδο της ενότητας που διάβασες για εκείνη τη μέρα.
+   Χωρίς μετρητές και χωρίς σερί: τίποτα δεν μηδενίζεται. */
+const MONTHS_NOM = ["Ιανουάριος", "Φεβρουάριος", "Μάρτιος", "Απρίλιος", "Μάιος", "Ιούνιος", "Ιούλιος", "Αύγουστος", "Σεπτέμβριος", "Οκτώβριος", "Νοέμβριος", "Δεκέμβριος"];
+function calendarDay(date, sched, days){
+  const wd = dayAt(date).getDay(), ids = [];
+  if(sched && sched.g === selectedGrade) sched.d[wd - 1].forEach(v => { if(v && !v.startsWith("~") && !ids.includes(v)) ids.push(v); });
+  Object.keys(days[date] || {}).forEach(sid => { if(!ids.includes(sid) && gradeSubject(selectedGrade, sid)) ids.push(sid); });
+  return ids.slice(0, 7).map(sid => ({ sid, key:(days[date] || {})[sid] || null }));
+}
+function renderCalendar(ym){
+  const el = $("#plan"), now = new Date(), m0 = /^\d{4}-\d\d$/.test(ym || "") ? ym.split("-").map(Number) : [now.getFullYear(), now.getMonth() + 1];
+  const [y, m] = m0, sched = loadSchedule(), days = store.get("diab-days", {}), today = ymd(now), last = new Date(y, m, 0).getDate();
+  const mk = (yy, mm) => `#calendar/${yy}-${String(mm).padStart(2, "0")}`, prev = m === 1 ? mk(y - 1, 12) : mk(y, m - 1), next = m === 12 ? mk(y + 1, 1) : mk(y, m + 1);
+  const dates = [];
+  for(let d = 1; d <= last; d++){ const s = ymd(new Date(y, m - 1, d)), wd = dayAt(s).getDay(); if(wd >= 1 && wd <= 5) dates.push(s); }
+  const sel = dates.includes(PL.calDay) ? PL.calDay : dates.includes(today) ? today : dates[0];
+  const lead = dates.length ? dayAt(dates[0]).getDay() - 1 : 0;
+  const cell = s => { const list = calendarDay(s, sched, days);
+    return `<button class="cal-d${s === today ? " today" : ""}${s === sel ? " sel" : ""}" data-cal="${s}" aria-pressed="${s === sel}" aria-label="${dayName(s)}${list.length ? `, ${list.length === 1 ? "1 μάθημα" : list.length + " μαθήματα"}` : ""}"><span class="cal-n">${dayAt(s).getDate()}</span><span class="cal-rings">${list.map(x => ringSvg(x.key ? scoreOf(x.key) : 0, subjectColor(x.sid), 14)).join("")}</span></button>`; };
+  const detail = calendarDay(sel, sched, days);
+  el.innerHTML = `<a class="back" href="#tomorrow">← Αύριο</a>
+    <div class="cal-head"><a class="pl-round" href="${prev}" aria-label="Προηγούμενος μήνας"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></a><h2 class="ct">${MONTHS_NOM[m - 1]} ${y}</h2><a class="pl-round" href="${next}" aria-label="Επόμενος μήνας"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></a></div>
+    <div class="cal-grid cal-wd" aria-hidden="true"><span>ΔΕ</span><span>ΤΡ</span><span>ΤΕ</span><span>ΠΕ</span><span>ΠΑ</span></div>
+    <div class="cal-grid">${"<span></span>".repeat(Math.max(0, lead))}${dates.map(cell).join("")}</div>
+    <div class="sheet cal-detail"><h3 class="pl-h">${dayName(sel)}</h3>
+      ${detail.length ? detail.map(x => { const s = gradeSubject(selectedGrade, x.sid), has = unitsOf(x.sid).length;
+        return `<a class="cal-row" href="${x.key ? "#study/" + x.key : has ? "#plan/" + x.sid : courseHref(selectedGrade, x.sid)}">${ringSvg(x.key ? scoreOf(x.key) : 0, subjectColor(x.sid), 34)}<span class="pl-t"><b>${esc(s.name)}${x.key ? readyBadge(x.key) : ""}</b><small>${x.key ? `${unitLabel(x.key)} · ${levelName(x.key)}` : !has ? "Χωρίς ερωτήσεις στη σελίδα" : sel >= today ? "Διάλεξε ενότητα" : "Δεν διάβασες ενότητα εδώ γι' αυτή τη μέρα"}</small></span><span aria-hidden="true">›</span></a>`; }).join("")
+        : `<p class="pnote">${sched ? "Δεν έχεις μαθήματα στο πρόγραμμα για αυτή τη μέρα." : `Γράψε το πρόγραμμά σου και εδώ θα βλέπεις τα μαθήματα κάθε μέρας. <a href="#schedule">Το πρόγραμμά μου</a>`}</p>`}</div>
+    <p class="pnote center">Κάθε κύκλος είναι ένα μάθημα της μέρας. Γεμίζει με τον έλεγχο της ενότητας που διάβασες γι' αυτή τη μέρα. Όλα μένουν μόνο σε αυτή τη συσκευή.</p>`;
+  el.querySelectorAll("[data-cal]").forEach(b => b.onclick = () => { PL.calDay = b.dataset.cal; renderCalendar(`${y}-${String(m).padStart(2, "0")}`); });
 }

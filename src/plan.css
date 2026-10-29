@@ -178,3 +178,49 @@
 .hook-mini{display:flex;gap:6px;align-items:flex-start;margin:6px 0 0;color:var(--c-amber);font-size:14.5px}
 .hook-mini svg{flex:0 0 16px;width:16px;height:16px;margin-top:2px;fill:currentColor}
 .hook-mini span{color:var(--text)}
+/* Επίπεδα γνώσης: ο κύκλος της ενότητας, «Πώς θα το διαβάσεις;», ο έλεγχος και το ημερολόγιο */
+.lring{flex:0 0 auto;display:block}
+.lring circle{fill:none;stroke:var(--rc);stroke-width:14}
+.lring .lr-t{opacity:.2}
+.lring .lr-b{stroke-linecap:round}
+.lv-ask,.lv-card{display:flex;flex-direction:column;gap:10px}
+.lv-ask .pl-h{margin:0}
+.lv-ask .pnote{margin:0}
+.lv-way{display:flex;align-items:flex-start;gap:14px;width:100%;padding:14px;border-radius:14px;border:1px solid var(--line);background:var(--card2);color:var(--text);font:inherit;text-align:left;cursor:pointer}
+.lv-way:hover{border-color:var(--hi)}
+.lv-ic{flex:0 0 auto;display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--mark-soft);color:var(--hi)}
+.lv-ic.self{background:var(--mid-soft);color:var(--mid)}
+.lv-ic svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.lv-row{display:flex;align-items:center;gap:14px}
+.lv-card .btn{margin:0}
+.lv-taught{display:flex;align-items:center;gap:10px;min-height:44px;font-size:15px;cursor:pointer}
+.lv-taught input{width:20px;height:20px;margin:0;accent-color:var(--accent)}
+.lv-ready{display:inline-grid;place-items:center;width:24px;height:24px;margin-left:6px;vertical-align:-5px;border-radius:50%;background:var(--mark-soft);color:var(--hi)}
+.lv-ready svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.lv-result{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding-top:22px}
+.lv-result .lring circle{stroke-width:12}
+.lv-result .ct{margin:6px 0 0}
+.lv-steps{list-style:none;margin:6px 0 0;padding:0;width:100%;display:flex;flex-direction:column;gap:8px;text-align:left}
+.lv-steps li{display:flex;justify-content:space-between;gap:10px;font-size:15px;color:var(--muted)}
+.lv-steps li.on{color:var(--text)}
+.lv-steps b{color:var(--hi);font-weight:600;font-size:14px}
+.lv-badge{display:flex;align-items:center;gap:12px}
+.lv-badge>svg{flex:0 0 auto;width:44px;height:44px;padding:10px;box-sizing:border-box;border-radius:50%;background:var(--mark-soft);color:var(--hi);fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.chip.lv-chip{display:inline-flex;align-items:center;gap:6px;text-transform:none;letter-spacing:0;font-size:12px;background:transparent;padding:0}
+.chip.lv-chip .lv-ready{width:20px;height:20px;margin-left:0}
+.pl-unit .lring{margin-left:auto}
+.cal-head{display:flex;align-items:center;gap:8px;margin:4px 0 14px}
+.cal-head .ct{flex:1;margin:0;text-align:center;font-size:24px}
+.cal-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-bottom:6px}
+.cal-wd{text-align:center;font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--muted)}
+.cal-d{min-height:76px;padding:6px 2px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);font:inherit;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer}
+.cal-d.today .cal-n{color:var(--hi)}
+.cal-d.sel{border:2px solid var(--accent);background:var(--mark-soft)}
+.cal-n{font-size:13px;font-weight:700}
+.cal-rings{display:grid;grid-template-columns:repeat(4,14px);justify-content:center;gap:2px}
+.cal-rings .lring circle{stroke-width:18}
+.cal-detail{margin-top:10px}
+.cal-detail .pl-h{margin:0 0 4px}
+.cal-row{display:flex;align-items:center;gap:12px;min-height:52px;color:var(--text);text-decoration:none;border-top:1px solid var(--line)}
+.cal-row:first-of-type{border-top:0}
+@media (max-width:360px){.cal-rings{grid-template-columns:repeat(3,14px)}}

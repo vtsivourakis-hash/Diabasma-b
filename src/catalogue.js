@@ -35,22 +35,22 @@ const SUBJECT_LOOK = {
   biology:['green','<path d="M5 20c0-9 6-15 15-15 0 9-6 15-15 15z"/><path d="M5 20l8-8"/>'],
   geography:['blue','<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/>'],
   history:['amber','<path d="M3 9l9-5 9 5"/><path d="M5 9h14M6 9v9M10 9v9M14 9v9M18 9v9M4 20h16"/>'],
-  ancient:['pink','<path d="M7 4h11v13a3 3 0 0 1-3 3H6"/><path d="M6 20a3 3 0 0 1-3-3h11a3 3 0 0 0 3 3"/><path d="M10 8h5M10 12h5"/>'],
-  translated:['pink','<path d="M20 4c-7 0-12 5-13 12l-3 4"/><path d="M7 16c4 0 9-3 11-8"/>'],
+  ancient:['fuchsia','<path d="M7 4h11v13a3 3 0 0 1-3 3H6"/><path d="M6 20a3 3 0 0 1-3-3h11a3 3 0 0 0 3 3"/><path d="M10 8h5M10 12h5"/>'],
+  translated:['rose','<path d="M20 4c-7 0-12 5-13 12l-3 4"/><path d="M7 16c4 0 9-3 11-8"/>'],
   language:['orange','<path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/>'],
-  literature:['orange','<path d="M3 5c3-1 6-1 9 1 3-2 6-2 9-1v14c-3-1-6-1-9 1-3-2-6-2-9-1z"/><path d="M12 6v14"/>'],
-  religion:['amber','<path d="M12 3c1.6 2 1.6 3.6 0 5-1.6-1.4-1.6-3 0-5z"/><path d="M9 11h6v10H9z"/>'],
-  ethics:['amber','<path d="M12 4v16M6 20h12M5 8h14"/><path d="M5 8l-3 6h6zM19 8l-3 6h6z"/>'],
-  english:['blue','<path d="M4 6h9M8.5 4v2M6 6c0 4 2.5 6.5 6 7.5M11 6c0 4-2.5 6.5-6 7.5"/><path d="M13 20l4-9 4 9M14.5 17h5"/>'],
-  french:['blue','<path d="M4 6h9M8.5 4v2M6 6c0 4 2.5 6.5 6 7.5M11 6c0 4-2.5 6.5-6 7.5"/><path d="M13 20l4-9 4 9M14.5 17h5"/>'],
-  german:['blue','<path d="M4 6h9M8.5 4v2M6 6c0 4 2.5 6.5 6 7.5M11 6c0 4-2.5 6.5-6 7.5"/><path d="M13 20l4-9 4 9M14.5 17h5"/>'],
-  italian:['blue','<path d="M4 6h9M8.5 4v2M6 6c0 4 2.5 6.5 6 7.5M11 6c0 4-2.5 6.5-6 7.5"/><path d="M13 20l4-9 4 9M14.5 17h5"/>'],
-  computing:['cyan','<path d="M3 4h18v12H3z"/><path d="M8 20h8M12 16v4"/>'],
-  technology:['lime','<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"/>'],
-  music:['pink','<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>'],
-  art:['orange','<path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-.9 2-2s-1-1.6-1-2.6 1-1.4 2-1.4h2a4 4 0 0 0 4-4c0-4.4-4-8-9-8z"/><circle cx="7.5" cy="11" r="1" fill="currentColor"/><circle cx="10" cy="7" r="1" fill="currentColor"/><circle cx="15" cy="7.5" r="1" fill="currentColor"/>'],
-  pe:['green','<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3.5 3 3.5 15 0 18M12 3c-3.5 3-3.5 15 0 18"/>'],
-  skills:['violet','<path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6l-5.4 2.9 1.2-6-4.5-4.2 6.1-.7z"/>']
+  literature:['teal','<path d="M3 5c3-1 6-1 9 1 3-2 6-2 9-1v14c-3-1-6-1-9 1-3-2-6-2-9-1z"/><path d="M12 6v14"/>'],
+  religion:['slate','<path d="M12 3c1.6 2 1.6 3.6 0 5-1.6-1.4-1.6-3 0-5z"/><path d="M9 11h6v10H9z"/>'],
+  ethics:['slate','<path d="M12 4v16M6 20h12M5 8h14"/><path d="M5 8l-3 6h6zM19 8l-3 6h6z"/>'],
+  english:['slate','<path d="M4 6h9M8.5 4v2M6 6c0 4 2.5 6.5 6 7.5M11 6c0 4-2.5 6.5-6 7.5"/><path d="M13 20l4-9 4 9M14.5 17h5"/>'],
+  french:['slate','<path d="M4 6h9M8.5 4v2M6 6c0 4 2.5 6.5 6 7.5M11 6c0 4-2.5 6.5-6 7.5"/><path d="M13 20l4-9 4 9M14.5 17h5"/>'],
+  german:['slate','<path d="M4 6h9M8.5 4v2M6 6c0 4 2.5 6.5 6 7.5M11 6c0 4-2.5 6.5-6 7.5"/><path d="M13 20l4-9 4 9M14.5 17h5"/>'],
+  italian:['slate','<path d="M4 6h9M8.5 4v2M6 6c0 4 2.5 6.5 6 7.5M11 6c0 4-2.5 6.5-6 7.5"/><path d="M13 20l4-9 4 9M14.5 17h5"/>'],
+  computing:['slate','<path d="M3 4h18v12H3z"/><path d="M8 20h8M12 16v4"/>'],
+  technology:['slate','<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"/>'],
+  music:['slate','<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>'],
+  art:['slate','<path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-.9 2-2s-1-1.6-1-2.6 1-1.4 2-1.4h2a4 4 0 0 0 4-4c0-4.4-4-8-9-8z"/><circle cx="7.5" cy="11" r="1" fill="currentColor"/><circle cx="10" cy="7" r="1" fill="currentColor"/><circle cx="15" cy="7.5" r="1" fill="currentColor"/>'],
+  pe:['slate','<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3.5 3 3.5 15 0 18M12 3c-3.5 3-3.5 15 0 18"/>'],
+  skills:['slate','<path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6l-5.4 2.9 1.2-6-4.5-4.2 6.1-.7z"/>']
 };
 function subjectIcon(id,cls=''){
   const [c,paths]=SUBJECT_LOOK[id]||['violet','<circle cx="12" cy="12" r="8"/>'];
@@ -243,8 +243,8 @@ function figure(f){
   return d ? `<figure class="fig"><svg viewBox="${d.box}" role="img" aria-label="${esc(f.alt)}">${figArrowDefs(id)}${d.body}</svg>${f.caption ? `<figcaption>${esc(f.caption)}</figcaption>` : ''}</figure>`
     + (f.explain ? `<div class="box figb"><b>Στο σχήμα</b><p>${esc(f.explain).replace(/(\d) (?=(N|J|m|Pa|kg|K|W|cm|m\/s|°C|°F)(?![\p{L}]))/gu, '$1\u00a0')}</p></div>` : '') : '';
 }
-/* Αν ο μαθητής έχει λύσει το Quiz της ενότητας, δείχνουμε τον καλύτερο βαθμό του αντί για «Πλήρες» */
-const lessonChip = key => { const u = ALIAS[key] || key, best = unitData(u) ? bestOf(u) : undefined; return best === undefined ? LEVEL_CHIP[lessonLevel(key)] : `<span class="chip score ${best >= 14 ? 'ok' : best >= 10 ? 'mid' : 'low'}" title="Οι περισσότερες σωστές σου στις ερωτήσεις">${Math.round(best*unitData(u).quiz.length/20)}/${unitData(u).quiz.length}</span>`; };
+/* Αν ο μαθητής έχει κάνει τον έλεγχο της ενότητας, δείχνουμε τον κύκλο και το επίπεδό του· αλλιώς τον καλύτερο βαθμό του από τις ερωτήσεις, αν υπάρχει */
+const lessonChip = key => { const u = ALIAS[key] || key, best = unitData(u) ? bestOf(u) : undefined; if(unitData(u) && scoreOf(u) !== null) return `<span class="chip lv-chip">${unitRing(u, 22)}${levelName(u)}${readyBadge(u)}</span>`; return best === undefined ? LEVEL_CHIP[lessonLevel(key)] : `<span class="chip score ${best >= 14 ? 'ok' : best >= 10 ? 'mid' : 'low'}" title="Οι περισσότερες σωστές σου στις ερωτήσεις">${Math.round(best*unitData(u).quiz.length/20)}/${unitData(u).quiz.length}</span>`; };
 const levelLegend = () => `<p class="level-legend">${LEVEL_CHIP.full} μελετάς από εδώ · ${LEVEL_CHIP.expl} σύντομη εξήγηση, εξάσκηση από το βιβλίο · ${LEVEL_CHIP.guide} μελετάς από το βιβλίο</p>`;
 /* Μαθήματα χωρίς κάρτες, κουίζ και λυμένες: μόνο σύνδεσμος στο βιβλίο και μια γενική περιγραφή.
    Τα πρακτικά μαθήματα μαθαίνονται στην τάξη, και στις ξένες γλώσσες τα σχολεία χρησιμοποιούν συχνά δικά τους βιβλία. */
