@@ -467,6 +467,7 @@ footer p{margin:0 0 6px}
 /*__CATALOGUE_CSS__*/
 /*__APP_CSS__*/
 /*__PLAN_CSS__*/
+/*__TOUR_CSS__*/
 </style>
 </head>
 <body>
@@ -500,6 +501,7 @@ footer p{margin:0 0 6px}
     <section class="panel" id="send" hidden></section>
     <section class="panel faq" id="school" hidden>
       <div class="hero catalogue-hero"><span class="ref">Για όλες τις τάξεις του Γυμνασίου</span><h2 class="ct">Η καθημερινότητα στο σχολείο</h2><p>Μικρές συνήθειες που βοηθούν στο διάβασμα και στη συνεργασία.</p></div>
+      <button class="btn" type="button" data-tour-start>Ξενάγηση: πώς δουλεύει η σελίδα</button>
       <div class="catalogue-note">Κάθε σχολείο έχει τον δικό του εσωτερικό κανονισμό. Για ωράρια, απουσίες, συσκευές και διαδικασίες, συμβουλέψου τον κανονισμό του σχολείου σου και τον/την υπεύθυνο/η εκπαιδευτικό.</div>
       <details><summary><span class="emo" aria-hidden="true">01</span><span class="st">Οργάνωσε το διάβασμά σου<small>Ένα βήμα κάθε φορά</small></span></summary><div class="a"><ul><li>Σημείωσε τι έχετε για την επόμενη μέρα.</li><li>Διάλεξε τάξη και μάθημα και βρες την ενότητα που δουλεύετε.</li><li>Διάβασε τη θεωρία και δοκίμασε τις ασκήσεις πριν κοιτάξεις τη λύση.</li><li>Κράτησε τις απορίες σου για το επόμενο μάθημα.</li></ul><a href="#timer" class="btn ghost">Χρονόμετρο μελέτης</a></div></details>
       <details><summary><span class="emo" aria-hidden="true">02</span><span class="st">Ποια κεφάλαια διαβάζω;<small>Βιβλίο και διδακτέα ύλη</small></span></summary><div class="a"><p>Στον κατάλογο θα βρεις τα πλήρη βιβλία. Ο/η εκπαιδευτικός σου θα σε καθοδηγήσει για τις ενότητες, τις ασκήσεις και την έκδοση που χρησιμοποιείτε.</p><p>Στις ξένες γλώσσες μπορεί να υπάρχουν διαφορετικά επίπεδα. Διάλεξε το βιβλίο του τμήματός σου.</p><a href="#sources">Δες τις επίσημες πηγές και οδηγίες</a></div></details>
@@ -1477,6 +1479,7 @@ if("serviceWorker" in navigator && (location.protocol === "https:" || location.h
 
 /*__APP_JS__*/
 /*__PLAN_JS__*/
+/*__TOUR_JS__*/
 route();
 updateAppNavigation();
 </script>

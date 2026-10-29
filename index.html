@@ -773,6 +773,26 @@ footer p{margin:0 0 6px}
 .hook-mini svg{flex:0 0 16px;width:16px;height:16px;margin-top:2px;fill:currentColor}
 .hook-mini span{color:var(--text)}
 
+/* Ξενάγηση: σκοτεινή οθόνη με «τρύπα» γύρω από το στοιχείο, και ένα συννεφάκι με το κείμενο */
+.tour{position:fixed;inset:0;z-index:60;pointer-events:none}
+.tour-hole{position:fixed;border-radius:14px;box-shadow:0 0 0 2px var(--accent),0 0 0 100vmax rgba(10,8,24,.62);transition:left .25s,top .25s,width .25s,height .25s}
+.tour-center .tour-hole{box-shadow:0 0 0 100vmax rgba(10,8,24,.62)}
+.tour-blk{position:fixed;pointer-events:auto}
+.tour-tip{position:fixed;box-sizing:border-box;pointer-events:auto;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 12px 40px rgba(0,0,0,.35);transition:left .25s,top .25s}
+.tour-n{margin:0 44px 0 0;font-size:12.5px;font-weight:700;letter-spacing:.06em;color:var(--muted)}
+.tour-h{margin:4px 44px 6px 0;font-size:19px;line-height:1.25;outline:none}
+.tour-t{margin:0;font-size:15.5px;line-height:1.5}
+.tour-wait .tour-t::after{content:" 👆";}
+.tour-row{display:flex;align-items:center;gap:8px;margin-top:14px}
+.tour-b{margin:0;flex:1 1 0;min-width:0;min-height:44px;padding:0 12px}
+.tour-b[hidden]{display:none}
+.tour-x{position:absolute;top:10px;right:10px;width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--muted);font-size:15px;cursor:pointer}
+.tour-offer{position:fixed;box-sizing:border-box;left:16px;right:16px;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:30;max-width:420px;margin:0 auto;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 12px 40px rgba(0,0,0,.3)}
+.tour-offer h2{margin:0 0 4px;font-size:18px}
+.tour-offer p{margin:0;font-size:15px}
+.tour-offer .btn{margin:0;flex:1 1 0;min-width:0;min-height:44px;padding:0 12px}
+@media (prefers-reduced-motion: reduce){.tour-hole,.tour-tip{transition:none}}
+
 </style>
 </head>
 <body>
@@ -806,6 +826,7 @@ footer p{margin:0 0 6px}
     <section class="panel" id="send" hidden></section>
     <section class="panel faq" id="school" hidden>
       <div class="hero catalogue-hero"><span class="ref">Για όλες τις τάξεις του Γυμνασίου</span><h2 class="ct">Η καθημερινότητα στο σχολείο</h2><p>Μικρές συνήθειες που βοηθούν στο διάβασμα και στη συνεργασία.</p></div>
+      <button class="btn" type="button" data-tour-start>Ξενάγηση: πώς δουλεύει η σελίδα</button>
       <div class="catalogue-note">Κάθε σχολείο έχει τον δικό του εσωτερικό κανονισμό. Για ωράρια, απουσίες, συσκευές και διαδικασίες, συμβουλέψου τον κανονισμό του σχολείου σου και τον/την υπεύθυνο/η εκπαιδευτικό.</div>
       <details><summary><span class="emo" aria-hidden="true">01</span><span class="st">Οργάνωσε το διάβασμά σου<small>Ένα βήμα κάθε φορά</small></span></summary><div class="a"><ul><li>Σημείωσε τι έχετε για την επόμενη μέρα.</li><li>Διάλεξε τάξη και μάθημα και βρες την ενότητα που δουλεύετε.</li><li>Διάβασε τη θεωρία και δοκίμασε τις ασκήσεις πριν κοιτάξεις τη λύση.</li><li>Κράτησε τις απορίες σου για το επόμενο μάθημα.</li></ul><a href="#timer" class="btn ghost">Χρονόμετρο μελέτης</a></div></details>
       <details><summary><span class="emo" aria-hidden="true">02</span><span class="st">Ποια κεφάλαια διαβάζω;<small>Βιβλίο και διδακτέα ύλη</small></span></summary><div class="a"><p>Στον κατάλογο θα βρεις τα πλήρη βιβλία. Ο/η εκπαιδευτικός σου θα σε καθοδηγήσει για τις ενότητες, τις ασκήσεις και την έκδοση που χρησιμοποιείτε.</p><p>Στις ξένες γλώσσες μπορεί να υπάρχουν διαφορετικά επίπεδα. Διάλεξε το βιβλίο του τμήματός σου.</p><a href="#sources">Δες τις επίσημες πηγές και οδηγίες</a></div></details>
@@ -2852,6 +2873,176 @@ function renderMock(sid){
     m.done = true; m.t1 = Date.now(); rr(); window.scrollTo({top:0});
   };
 }
+
+/* Ξενάγηση (tour): η σελίδα δείχνει τι κάνει κάθε κομμάτι. Σκοτεινιάζει την οθόνη εκτός από ένα στοιχείο
+   και ένα συννεφάκι εξηγεί. Σε μερικά βήματα ο μαθητής πατά ο ίδιος («Πάτα εδώ») και η ξενάγηση συνεχίζει.
+   Περνά από μια πραγματική ενότητα (Γεωγραφία, μάθημα 1, κάρτα 4: έχει ερώτηση, κόλπο και «Ρώτα τον καθηγητή»).
+   Την πρώτη φορά προτείνεται μία φορά· μετά ξεκινά από το κουμπί στο «Σχολείο». Μένει μόνο στη συσκευή (diab-tour). */
+const TOUR_UNIT = "B/geography/0/2", TOUR_CARD = 3;
+const TOUR = [
+  { at:"#tomorrow", title:"Καλώς ήρθες!",
+    text:"Αυτή η σελίδα σε βοηθά να διαβάζεις λίγο κάθε μέρα, με κάρτες που ακολουθούν τα σχολικά βιβλία. Η ξενάγηση κρατά δύο λεπτά. Μπορείς να τη σταματήσεις όποτε θέλεις." },
+  { at:"#tomorrow", target:"nav.tabs", title:"Οι καρτέλες",
+    text:"Από εδώ πας παντού. «Αύριο»: τι έχεις για την επόμενη μέρα. «Μαθήματα»: όλα τα βιβλία και οι ενότητες. «Εξάσκηση»: διαγωνίσματα και τα λάθη σου. «Σχολείο»: συμβουλές, και αυτή η ξενάγηση ξανά." },
+  { at:"#tomorrow", target:"#plan a[href='#schedule']", title:"Το πρόγραμμά σου",
+    text:"Γράψε μία φορά το εβδομαδιαίο πρόγραμμα της τάξης. Μετά, στο «Αύριο» θα βλέπεις κάθε μέρα τα μαθήματα της επόμενης μέρας. Πατώντας ένα μάθημα, διαλέγεις τι κάνατε στην τάξη." },
+  { at:"#plan/geography", target:".pl-chap", title:"Τι κάνατε στην τάξη;",
+    text:"Εδώ τσεκάρεις τις ενότητες που κάνατε. Μετά πατάς «Διάβασμα για αύριο» και ανοίγουν οι κάρτες. Ας ανοίξουμε μαζί το πρώτο μάθημα της Γεωγραφίας." },
+  { at:"#study/" + TOUR_UNIT, target:`.fd-tile[href="#study/${TOUR_UNIT}/c/${TOUR_CARD}"]`, wait:"click", title:"Οι κάρτες",
+    text:"Κάθε ενότητα είναι μερικές κάρτες, μία ιδέα σε καθεμιά. Το ✓ δείχνει όσες κατάλαβες. Πάτα αυτή την κάρτα για να ανοίξει." },
+  { target:".fc .pl-segs", title:"Τα μέρη της κάρτας",
+    text:"Κάθε κάρτα έχει μέρη: «Η ιδέα», παραδείγματα, ασκήσεις, ερώτηση, και στο τέλος «Για το διαγώνισμα». Οι γραμμούλες εδώ πάνω δείχνουν πού είσαι." },
+  { target:".fc .fc-actions .btn", wait:"click", title:"Προχώρα",
+    text:"Πάτα εδώ για το επόμενο μέρος. Στο κινητό μπορείς και να σύρεις την κάρτα." },
+  { part:"check", target:".fc .fc-body", wait:"opt", title:"Το κατάλαβες;",
+    text:"Κάθε κάρτα έχει μια ερώτηση. Διάλεξε μια απάντηση. Αν κάνεις λάθος, το «Πες το μου αλλιώς» στο εξηγεί με άλλα λόγια, και η κάρτα ξανάρχεται στο τέλος." },
+  { part:"def", target:".fc .defb", title:"Για το διαγώνισμα",
+    text:"Αυτό είναι ό,τι γράφεις στο διαγώνισμα, με τα λόγια του βιβλίου." },
+  { part:"def", target:".fc .fc-teach", title:"Ρώτα τον καθηγητή",
+    text:"Κάποιες κάρτες έχουν αυτό το μπλε πλαίσιο: εκεί άλλες πηγές λένε κάτι διαφορετικό από το βιβλίο. Γράφεις ό,τι λέει το βιβλίο, αλλά ρώτα τον καθηγητή σου." },
+  { part:"def", target:".fc .fc-hooks", title:"Κόλπο για να θυμάσαι",
+    text:"Ένας εύκολος τρόπος να θυμηθείς τον κανόνα. Καρφίτσωσε όσα σε βοηθούν ή γράψε το δικό σου. Μένουν μόνο σε αυτή τη συσκευή." },
+  { at:"#practice", target:"#practice .pseg", title:"Εξάσκηση",
+    text:"Δοκιμαστικό διαγώνισμα, «Τα λάθη μου» (όσες ερωτήσεις σου ξέφυγαν, για να τις ξαναδείς), χρονόμετρο μελέτης και το πρόγραμμά σου." },
+  { at:"#practice", target:".app-toolbar", title:"Η πάνω μπάρα",
+    text:"«Άκουσε»: η σελίδα σού διαβάζει δυνατά. «Αναζήτηση»: βρες ένα μάθημα ή μια ενότητα. «25΄»: χρονόμετρο για να διαβάζεις λίγο και να κάνεις διάλειμμα." },
+  { at:"#tomorrow", title:"Έτοιμος!",
+    text:"Αυτά ήταν. Ξεκίνα από το «Αύριο». Αν θέλεις να ξαναδείς την ξενάγηση, θα τη βρεις στην καρτέλα «Σχολείο»." }
+];
+const TS = { i:-1, el:null, expect:null, timer:0, offer:false };
+
+function tourStart(){
+  tourOfferClose();
+  if(selectedGrade !== "B") selectGrade("B");
+  TS.el = document.createElement("div");
+  TS.el.className = "tour";
+  TS.el.innerHTML = `<div class="tour-hole" aria-hidden="true"></div><div class="tour-blk" aria-hidden="true"></div><div class="tour-blk" aria-hidden="true"></div><div class="tour-blk" aria-hidden="true"></div><div class="tour-blk" aria-hidden="true"></div>
+    <div class="tour-tip" role="dialog" aria-modal="false" aria-labelledby="tour-h"><p class="tour-n" id="tour-n"></p><h2 class="tour-h" id="tour-h" tabindex="-1"></h2><p class="tour-t" id="tour-t"></p>
+      <div class="tour-row"><button class="btn ghost tour-b" type="button" data-tour="back">Πίσω</button><button class="btn tour-b" type="button" data-tour="next">Επόμενο</button></div>
+      <button class="tour-x" type="button" data-tour="end" aria-label="Τέλος ξενάγησης">✕</button></div>`;
+  document.body.appendChild(TS.el);
+  TS.el.querySelectorAll("[data-tour]").forEach(b => b.onclick = () => ({ end:tourEnd, back:() => tourGo(TS.i - 1), next:() => tourGo(TS.i + 1) })[b.dataset.tour]());
+  document.addEventListener("click", tourClick, true);
+  document.addEventListener("keydown", tourKey, true);
+  window.addEventListener("hashchange", tourHash);
+  window.addEventListener("resize", tourPlace);
+  window.addEventListener("scroll", tourPlace, true);
+  tourGo(0);
+}
+
+function tourEnd(){
+  if(!TS.el) return;
+  clearTimeout(TS.timer);
+  document.removeEventListener("click", tourClick, true);
+  document.removeEventListener("keydown", tourKey, true);
+  window.removeEventListener("hashchange", tourHash);
+  window.removeEventListener("resize", tourPlace);
+  window.removeEventListener("scroll", tourPlace, true);
+  TS.el.remove(); TS.el = null; TS.i = -1; TS.expect = null;
+  store.set("diab-tour", "done");
+}
+
+/* Πήγαινε στο βήμα i: άλλαξε σελίδα αν χρειάζεται, φέρε την κάρτα στο σωστό μέρος, και περίμενε το στοιχείο */
+function tourGo(i){
+  if(i < 0) return;
+  if(i >= TOUR.length){ tourEnd(); location.hash = "#tomorrow"; return; }
+  const s = TOUR[i], back = i < TS.i;
+  TS.i = i;
+  /* Πίσω σε βήμα της κάρτας: ξανανοίγουμε την κάρτα, γιατί τα μέρη της δεν είναι στη διεύθυνση */
+  const at = s.at || (s.part || back && i >= 5 ? `#study/${TOUR_UNIT}/c/${TOUR_CARD}` : null);
+  if(at && location.hash !== at){ TS.expect = at; location.hash = at; }
+  const rewind = () => { for(let n = 0; n < 8; n++) if(!PL.fc.go(-1)) break; };
+  if(s.part && PL.fc && !$(`.fc .fc-body.p-${s.part}`)){ rewind(); for(let n = 0; n < 8 && !$(`.fc .fc-body.p-${s.part}`); n++) if(!PL.fc.go(1)) break; }
+  if(back && (i === 5 || i === 6) && PL.fc) rewind();
+  tourShow(0);
+}
+
+function tourShow(tries){
+  clearTimeout(TS.timer);
+  if(!TS.el) return;
+  const s = TOUR[TS.i], t = s.target ? $(s.target) : null;
+  if(s.target && !t && tries < 30){ TS.timer = setTimeout(() => tourShow(tries + 1), 100); return; }
+  if(t && t.scrollIntoView) t.scrollIntoView({ block:"center", behavior:"instant" });
+  $("#tour-n", TS.el).textContent = `${TS.i + 1} από ${TOUR.length}`;
+  $("#tour-h", TS.el).textContent = s.title;
+  $("#tour-t", TS.el).textContent = s.text;
+  const next = $("[data-tour=next]", TS.el);
+  next.hidden = !!(s.wait && t);
+  next.textContent = TS.i === TOUR.length - 1 ? "Τέλος" : "Επόμενο";
+  $("[data-tour=back]", TS.el).hidden = TS.i === 0;
+  TS.el.classList.toggle("tour-wait", !!(s.wait && t));
+  TS.el.classList.toggle("tour-center", !t);
+  TS.target = t;
+  tourPlace();
+  $("#tour-h", TS.el).focus({ preventScroll:true });
+}
+
+/* Η «τρύπα» γύρω από το στοιχείο, τα τέσσερα κομμάτια που εμποδίζουν τα πατήματα έξω από αυτήν, και το συννεφάκι */
+function tourPlace(){
+  if(!TS.el) return;
+  const W = window.innerWidth, H = window.innerHeight, t = TS.target, hole = $(".tour-hole", TS.el), blk = TS.el.querySelectorAll(".tour-blk"), tip = $(".tour-tip", TS.el);
+  const r = t ? t.getBoundingClientRect() : null, p = 6;
+  const box = r ? { x:Math.max(4, r.left - p), y:Math.max(4, r.top - p), w:Math.min(W - 8, r.width + 2 * p), h:Math.min(H - 8, r.height + 2 * p) } : { x:W / 2, y:H / 2, w:0, h:0 };
+  Object.assign(hole.style, { left:box.x + "px", top:box.y + "px", width:box.w + "px", height:box.h + "px" });
+  const wait = TS.el.classList.contains("tour-wait");
+  const rects = wait ? [[0, 0, W, box.y], [0, box.y + box.h, W, H - box.y - box.h], [0, box.y, box.x, box.h], [box.x + box.w, box.y, W - box.x - box.w, box.h]] : [[0, 0, W, H], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+  blk.forEach((b, k) => Object.assign(b.style, { left:rects[k][0] + "px", top:rects[k][1] + "px", width:Math.max(0, rects[k][2]) + "px", height:Math.max(0, rects[k][3]) + "px" }));
+  const tw = Math.min(360, W - 32), th = tip.offsetHeight || 180;
+  let x = r ? Math.min(Math.max(16, box.x + box.w / 2 - tw / 2), W - tw - 16) : (W - tw) / 2, y;
+  if(!r) y = Math.max(16, (H - th) / 2);
+  else if(box.y + box.h + 12 + th < H - 8) y = box.y + box.h + 12;
+  else if(box.y - 12 - th > 8) y = box.y - 12 - th;
+  else y = Math.max(8, H - th - 8);
+  Object.assign(tip.style, { left:x + "px", top:y + "px", width:tw + "px" });
+}
+
+/* Στα βήματα «Πάτα εδώ»: αφήνουμε το πάτημα να γίνει και μετά πάμε στο επόμενο βήμα */
+function tourClick(e){
+  if(!TS.el || TS.el.contains(e.target)) return;
+  const s = TOUR[TS.i];
+  if(!s.wait || !TS.target) return;
+  const hit = s.wait === "opt" ? e.target.closest("[data-fc-opt]") : e.target.closest(s.target);
+  if(!hit || !TS.target.contains(hit) && hit !== TS.target) return;
+  const href = hit.getAttribute && hit.getAttribute("href");
+  if(href && href.startsWith("#")) TS.expect = href;
+  /* Μετά από την απάντηση, αφήνουμε λίγο χρόνο να φανεί αν ήταν σωστή */
+  TS.timer = setTimeout(() => tourGo(TS.i + 1), s.wait === "opt" ? 1400 : 250);
+}
+
+/* Αν ο μαθητής φύγει μόνος του (π.χ. με το «πίσω» του κινητού), η ξενάγηση σταματά */
+function tourHash(){
+  if(!TS.el) return;
+  if(TS.expect && location.hash === TS.expect){ TS.expect = null; return; }
+  if(location.hash === TOUR[TS.i].at || location.hash.startsWith(`#study/${TOUR_UNIT}/c/${TOUR_CARD}`)) return;
+  tourEnd();
+}
+function tourKey(e){
+  if(!TS.el) return;
+  if(e.key === "Escape"){ e.preventDefault(); e.stopPropagation(); tourEnd(); }
+  else if(e.key === "Tab"){
+    const f = [...TS.el.querySelectorAll("button:not([hidden])")];
+    if(TOUR[TS.i].wait && TS.target) return;
+    if(!f.includes(document.activeElement)){ e.preventDefault(); f[0].focus(); }
+  } else if(!TOUR[TS.i].wait && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)) e.stopPropagation();
+}
+
+/* Η πρόταση της πρώτης φοράς: μία φορά, στο «Αύριο», χωρίς να κρύβει τη σελίδα */
+function tourOffer(){
+  if(TS.el || TS.offer || store.get("diab-tour", "") || !/^(#tomorrow)?$/.test(location.hash)) return;
+  TS.offer = true;
+  const d = document.createElement("div");
+  d.className = "tour-offer";
+  d.setAttribute("role", "dialog");
+  d.setAttribute("aria-labelledby", "tour-offer-h");
+  d.innerHTML = `<h2 id="tour-offer-h">Πρώτη φορά εδώ;</h2><p>Μια σύντομη ξενάγηση σού δείχνει πώς δουλεύει η σελίδα.</p><div class="tour-row"><button class="btn ghost" type="button" data-to="no">Όχι τώρα</button><button class="btn" type="button" data-to="go">Ξενάγηση</button></div>`;
+  document.body.appendChild(d);
+  d.querySelector("[data-to=no]").onclick = () => { store.set("diab-tour", "later"); tourOfferClose(); };
+  d.querySelector("[data-to=go]").onclick = tourStart;
+}
+function tourOfferClose(){ const d = $(".tour-offer"); if(d) d.remove(); }
+
+document.querySelectorAll("[data-tour-start]").forEach(b => b.onclick = tourStart);
+setTimeout(tourOffer, 900);
 
 route();
 updateAppNavigation();

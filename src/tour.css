@@ -1,0 +1,19 @@
+/* Ξενάγηση: σκοτεινή οθόνη με «τρύπα» γύρω από το στοιχείο, και ένα συννεφάκι με το κείμενο */
+.tour{position:fixed;inset:0;z-index:60;pointer-events:none}
+.tour-hole{position:fixed;border-radius:14px;box-shadow:0 0 0 2px var(--accent),0 0 0 100vmax rgba(10,8,24,.62);transition:left .25s,top .25s,width .25s,height .25s}
+.tour-center .tour-hole{box-shadow:0 0 0 100vmax rgba(10,8,24,.62)}
+.tour-blk{position:fixed;pointer-events:auto}
+.tour-tip{position:fixed;box-sizing:border-box;pointer-events:auto;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 12px 40px rgba(0,0,0,.35);transition:left .25s,top .25s}
+.tour-n{margin:0 44px 0 0;font-size:12.5px;font-weight:700;letter-spacing:.06em;color:var(--muted)}
+.tour-h{margin:4px 44px 6px 0;font-size:19px;line-height:1.25;outline:none}
+.tour-t{margin:0;font-size:15.5px;line-height:1.5}
+.tour-wait .tour-t::after{content:" 👆";}
+.tour-row{display:flex;align-items:center;gap:8px;margin-top:14px}
+.tour-b{margin:0;flex:1 1 0;min-width:0;min-height:44px;padding:0 12px}
+.tour-b[hidden]{display:none}
+.tour-x{position:absolute;top:10px;right:10px;width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--muted);font-size:15px;cursor:pointer}
+.tour-offer{position:fixed;box-sizing:border-box;left:16px;right:16px;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:30;max-width:420px;margin:0 auto;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 12px 40px rgba(0,0,0,.3)}
+.tour-offer h2{margin:0 0 4px;font-size:18px}
+.tour-offer p{margin:0;font-size:15px}
+.tour-offer .btn{margin:0;flex:1 1 0;min-width:0;min-height:44px;padding:0 12px}
+@media (prefers-reduced-motion: reduce){.tour-hole,.tour-tip{transition:none}}

@@ -202,7 +202,7 @@ for (const file of fs.readdirSync(path.join(__dirname, "src")).filter(name => /^
 }
 
 const template = fs.readFileSync(path.join(__dirname, "src", "template.html"), "utf8");
-for (const mark of ["/*__DATA__*/", "/*__GRAMMAR__*/", "/*__BOOK_HELP__*/", "/*__CATALOGUE_JS__*/", "/*__CATALOGUE_CSS__*/", "/*__PLAN_JS__*/", "/*__PLAN_CSS__*/"]) {
+for (const mark of ["/*__DATA__*/", "/*__GRAMMAR__*/", "/*__BOOK_HELP__*/", "/*__CATALOGUE_JS__*/", "/*__CATALOGUE_CSS__*/", "/*__PLAN_JS__*/", "/*__PLAN_CSS__*/", "/*__TOUR_JS__*/", "/*__TOUR_CSS__*/"]) {
   if (!template.includes(mark)) throw new Error(`Το template δεν έχει το ${mark}`);
 }
 const json = value => JSON.stringify(value).replace(/</g, "\\u003c");
@@ -216,7 +216,9 @@ const html = template.replace("/*__DATA__*/", () => json(C)).replace("/*__GRAMMA
   .replace("/*__APP_CSS__*/", () => fs.readFileSync(path.join(__dirname,"src","app.css"),"utf8"))
   .replace("/*__APP_JS__*/", () => fs.readFileSync(path.join(__dirname,"src","app.js"),"utf8"))
   .replace("/*__PLAN_CSS__*/", () => fs.readFileSync(path.join(__dirname,"src","plan.css"),"utf8"))
-  .replace("/*__PLAN_JS__*/", () => fs.readFileSync(path.join(__dirname,"src","plan.js"),"utf8"));
+  .replace("/*__PLAN_JS__*/", () => fs.readFileSync(path.join(__dirname,"src","plan.js"),"utf8"))
+  .replace("/*__TOUR_CSS__*/", () => fs.readFileSync(path.join(__dirname,"src","tour.css"),"utf8"))
+  .replace("/*__TOUR_JS__*/", () => fs.readFileSync(path.join(__dirname,"src","tour.js"),"utf8"));
 
 // Έλεγχος ότι κάθε <script> της σελίδας είναι συντακτικά σωστό
 for (const s of html.split("<script>").slice(1)) new Function(s.split("</script>")[0]);
