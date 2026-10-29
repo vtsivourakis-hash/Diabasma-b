@@ -18,7 +18,7 @@ const TOUR = [
     text:"Κάθε κάρτα έχει μέρη: «Η ιδέα», παραδείγματα, ασκήσεις, ερώτηση, και στο τέλος «Για το διαγώνισμα». Οι γραμμούλες εδώ πάνω δείχνουν πού είσαι." },
   { target:".fc .fc-actions .btn", wait:"click", title:"Προχώρα",
     text:"Πάτα εδώ για το επόμενο μέρος. Στο κινητό μπορείς και να σύρεις την κάρτα." },
-  { part:"check", target:".fc .fc-body", wait:"opt", title:"Το κατάλαβες;",
+  { part:"check", target:".fc .fc-body", area:".fc .fc-qh, .fc [data-fc-opt], .fc .why", wait:"opt", title:"Το κατάλαβες;",
     text:"Κάθε κάρτα έχει μια ερώτηση. Διάλεξε μια απάντηση. Αν κάνεις λάθος, το «Πες το μου αλλιώς» στο εξηγεί με άλλα λόγια, και η κάρτα ξανάρχεται στο τέλος." },
   { part:"def", target:".fc .defb", title:"Για το διαγώνισμα",
     text:"Αυτό είναι ό,τι γράφεις στο διαγώνισμα, με τα λόγια του βιβλίου." },
@@ -91,7 +91,7 @@ function tourShow(tries){
   $("#tour-h", TS.el).textContent = s.title;
   $("#tour-t", TS.el).textContent = s.text;
   /* Αν το πάτημα έχει ήδη γίνει (π.χ. γύρισες με «Πίσω» σε ερώτηση που απάντησες), δεν περιμένουμε: φαίνεται το «Επόμενο» */
-  const done = s.wait === "opt" && t && !t.querySelector("[data-fc-opt]:not([disabled])");
+  const done = s.wait === "opt" && t && !$(".fc [data-fc-opt]:not([disabled])");
   const wait = !!(s.wait && t && !done);
   const next = $("[data-tour=next]", TS.el);
   next.hidden = wait;
@@ -107,11 +107,20 @@ function tourShow(tries){
   $("#tour-h", TS.el).focus({ preventScroll:true });
 }
 
-/* Η «τρύπα» γύρω από το στοιχείο, τα τέσσερα κομμάτια που εμποδίζουν τα πατήματα έξω από αυτήν, και το συννεφάκι */
+/* Η «τρύπα» γύρω από το στοιχείο, τα τέσσερα κομμάτια που εμποδίζουν τα πατήματα έξω από αυτήν, και το συννεφάκι.
+   Με "area" η τρύπα αγκαλιάζει μόνο αυτά τα στοιχεία (π.χ. ερώτηση και απαντήσεις), για να χωρά το συννεφάκι δίπλα τους. */
+function tourRect(){
+  const s = TOUR[TS.i], t = TS.target;
+  if(!t) return null;
+  const els = s.area ? [...document.querySelectorAll(s.area)] : t.isConnected ? [t] : [];
+  if(!els.length) return null;
+  const rs = els.map(e => e.getBoundingClientRect());
+  return { left:Math.min(...rs.map(r => r.left)), top:Math.min(...rs.map(r => r.top)), right:Math.max(...rs.map(r => r.right)), bottom:Math.max(...rs.map(r => r.bottom)) };
+}
 function tourPlace(){
   if(!TS.el) return;
   const W = window.innerWidth, H = window.innerHeight, t = TS.target, hole = $(".tour-hole", TS.el), blk = TS.el.querySelectorAll(".tour-blk"), tip = $(".tour-tip", TS.el);
-  const r = t && t.isConnected ? t.getBoundingClientRect() : null, p = 6;
+  const r = tourRect(), p = 6;
   /* Η τρύπα μένει πάντα μέσα στην οθόνη, από όποια πλευρά κι αν ξεφεύγει το στοιχείο */
   const x0 = r && Math.max(4, r.left - p), y0 = r && Math.max(4, r.top - p);
   const box = r ? { x:x0, y:y0, w:Math.max(0, Math.min(W - 4, r.right + p) - x0), h:Math.max(0, Math.min(H - 4, r.bottom + p) - y0) } : { x:W / 2, y:H / 2, w:0, h:0 };
@@ -139,6 +148,7 @@ function tourClick(e){
   const href = hit.getAttribute && hit.getAttribute("href");
   if(href && href.startsWith("#")) TS.expect = href;
   /* Μετά από την απάντηση, αφήνουμε λίγο χρόνο να φανεί αν ήταν σωστή */
+  if(s.wait === "opt") setTimeout(tourPlace, 60);
   TS.timer = setTimeout(() => tourGo(TS.i + 1), s.wait === "opt" ? 1400 : 250);
 }
 
@@ -174,5 +184,6 @@ function tourOffer(){
 }
 function tourOfferClose(){ const d = $(".tour-offer"); if(d) d.remove(); }
 
-document.querySelectorAll("[data-tour-start]").forEach(b => b.onclick = tourStart);
+/* Τα κουμπιά «Ξενάγηση» (στο «Σχολείο» και στο «Αύριο», που ξαναζωγραφίζεται): ένας ακροατής για όλα */
+document.addEventListener("click", e => { if(e.target.closest("[data-tour-start]") && !TS.el) tourStart(); });
 setTimeout(tourOffer, 900);
