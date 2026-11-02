@@ -19,7 +19,7 @@ function validateCurriculum(catalogue) {
       assert.ok(s.books.length || s.resourceUrl,`Missing resources: ${g.id}/${s.id}`);
       if(s.resourceUrl) safeUrl(s.resourceUrl);
       assert.equal(new Set(s.books.map(b=>b.id)).size,s.books.length);
-      for(const b of s.books) {
+      for(const b of s.books.filter(b=>!b.own)) {
         assert.ok(b.title && /^8547\/\d+$/.test(b.id));
         safeUrl(b.source);
         assert.ok(b.formats.length);

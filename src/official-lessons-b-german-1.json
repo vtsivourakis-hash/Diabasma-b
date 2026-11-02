@@ -1,0 +1,2621 @@
+{
+  "B/german/1/0": {
+    "title": "1. Ποιος είναι αυτός; Συστήνουμε κάποιον",
+    "summary": [
+      {
+        "h": "Wer ist das? – Das ist …",
+        "t": "Για να ρωτήσεις ποιος είναι κάποιος, λες «Wer ist das?» (Ποιος είναι αυτός; / Ποια είναι αυτή;). Απαντάς «Das ist …» (Αυτός/Αυτή είναι …). Για δύο ή περισσότερους λες «Das sind …».",
+        "ex": "• Wer ist das? ▲ Das ist Lena. • Und wer ist das? ▲ Das sind Tim und Jonas.",
+        "def": "Wer ist das? → Das ist + ένα πρόσωπο. → Das sind + πολλά πρόσωπα.",
+        "alt": {
+          "t": "Το «Wer» είναι για πρόσωπα, το «Was» για πράγματα: Wer ist das? – Das ist Mia. Was ist das? – Das ist ein Ball.",
+          "mistake": "Κάποιοι ρωτούν «Was ist das?» για έναν άνθρωπο. Για πρόσωπο λέμε «Wer».",
+          "q": {
+            "q": "Ρωτάς για ένα αγόρι σε μια φωτογραφία. Τι λες;",
+            "c": "Wer ist das?",
+            "w": [
+              "Was ist das?",
+              "Woher ist das?",
+              "Wie alt ist das?"
+            ],
+            "why": "Για πρόσωπα: Wer."
+          }
+        }
+      },
+      {
+        "h": "Wie heißt er? Wie heißt sie?",
+        "t": "Για το όνομα ρωτάς με «Wie heißt …?»: «Wie heißt du?» (Πώς σε λένε;), «Wie heißt er?» (Πώς τον λένε;), «Wie heißt sie?» (Πώς τη λένε;). Απαντάς: «Ich heiße …», «Er heißt …», «Sie heißt …».",
+        "ex": "• Wie heißt er? ▲ Er heißt Jonas. • Und wie heißt sie? ▲ Sie heißt Emma.",
+        "def": "Wie heißt du? – Ich heiße … · Wie heißt er/sie? – Er/Sie heißt …",
+        "more": [
+          "Προσοχή στη γραφή: du heißt (όχι heißst). Το ß είναι ένα «διπλό s», οπότε δεν προσθέτουμε άλλο s."
+        ],
+        "alt": {
+          "t": "«Wie» σημαίνει «πώς». Κυριολεκτικά ρωτάς «Πώς ονομάζεται;», όπως στα ελληνικά «Πώς τον λένε;».",
+          "mistake": "Κάποιοι ρωτούν «Wer heißt er?». Για το όνομα ρωτάμε «Wie heißt er?».",
+          "q": {
+            "q": "Πώς ρωτάς το όνομα ενός κοριτσιού;",
+            "c": "Wie heißt sie?",
+            "w": [
+              "Wer heißt sie?",
+              "Wo heißt sie?",
+              "Wie alt heißt sie?"
+            ],
+            "why": "Όνομα → Wie heißt …?"
+          }
+        }
+      },
+      {
+        "h": "Wie alt ist er?",
+        "t": "Για την ηλικία ρωτάς «Wie alt bist du?» (Πόσο χρονών είσαι;) ή «Wie alt ist er/sie?». Απαντάς με το ρήμα sein (είμαι): «Ich bin vierzehn (Jahre alt).», «Er ist dreizehn.»",
+        "ex": "• Wie alt ist Mia? ▲ Sie ist zwölf Jahre alt.",
+        "def": "Wie alt bist du? – Ich bin … (Jahre alt). · Wie alt ist er/sie? – Er/Sie ist … (Jahre alt).",
+        "more": [
+          "Το «Jahre alt» μπορείς να το παραλείψεις: «Ich bin vierzehn.» είναι σωστό."
+        ],
+        "alt": {
+          "t": "Wie alt = «πόσο μεγάλος;». Δύο λέξεις μαζί: Wie (πώς, πόσο) + alt (μεγάλος σε ηλικία).",
+          "mistake": "Κάποιοι απαντούν «Ich habe vierzehn Jahre», σαν τα ισπανικά. Στα γερμανικά λέμε «Ich bin vierzehn».",
+          "q": {
+            "q": "Τι απαντάς στο «Wie alt bist du?»;",
+            "c": "Ich bin vierzehn.",
+            "w": [
+              "Ich habe vierzehn.",
+              "Ich heiße vierzehn.",
+              "Ich wohne vierzehn."
+            ],
+            "why": "Η ηλικία λέγεται με το sein: ich bin …"
+          }
+        }
+      },
+      {
+        "h": "Woher kommt er? Wo wohnt er?",
+        "t": "«Woher kommt er?» σημαίνει «Από πού είναι;». Απαντάς με «aus»: «Er kommt aus Österreich.» «Wo wohnt er?» σημαίνει «Πού μένει;». Απαντάς με «in»: «Er wohnt in Wien.»",
+        "ex": "• Woher kommt Lena? ▲ Aus Deutschland. • Wo wohnt sie? ▲ In Hamburg.",
+        "def": "Woher kommst du? – Ich komme aus + χώρα ή πόλη. · Wo wohnst du? – Ich wohne in + πόλη.",
+        "hooks": [
+          "Woher → aus · Wo → in. Δύο ερωτήσεις, δύο μικρές λέξεις."
+        ],
+        "more": [
+          "Λίγες χώρες έχουν άρθρο, όπως η Ελβετία: die Schweiz → aus der Schweiz, in der Schweiz. Οι περισσότερες όχι: aus Deutschland, aus Österreich, aus Griechenland."
+        ],
+        "alt": {
+          "t": "Σκέψου ένα ταξίδι: Woher είναι η αφετηρία (από πού ξεκίνησε), Wo είναι το μέρος όπου βρίσκεται τώρα.",
+          "mistake": "Κάποιοι μπερδεύουν Wo και Woher. «Wo wohnst du?» (πού μένεις) αλλά «Woher kommst du?» (από πού είσαι).",
+          "q": {
+            "q": "«Woher kommt Tim?» Ποια απάντηση ταιριάζει;",
+            "c": "Aus Österreich.",
+            "w": [
+              "In Österreich.",
+              "Vierzehn.",
+              "Er heißt Tim."
+            ],
+            "why": "Woher → aus."
+          }
+        }
+      },
+      {
+        "h": "Schüler ή Schülerin;",
+        "t": "Πολλές λέξεις για πρόσωπα έχουν αρσενικό και θηλυκό. Το θηλυκό συχνά παίρνει -in: der Schüler (ο μαθητής) → die Schülerin (η μαθήτρια). Λέμε er για αγόρι ή άντρα και sie για κορίτσι ή γυναίκα.",
+        "ex": "Jonas ist Schüler. Emma ist Schülerin. Herr Weber ist Lehrer, Frau Klein ist Lehrerin.",
+        "def": "Αρσενικό → θηλυκό με -in: Schüler → Schülerin, Lehrer → Lehrerin. Er ist Schüler. · Sie ist Schülerin.",
+        "more": [
+          "Στα γερμανικά λέμε «Er ist Schüler» χωρίς άρθρο, όπως στα ελληνικά «Είναι μαθητής»."
+        ],
+        "alt": {
+          "t": "Το -in είναι η «θηλυκή ουρά»: κόλλησέ τη στη λέξη και γίνεται θηλυκή.",
+          "mistake": "Κάποιοι λένε «Sie ist Schüler» για ένα κορίτσι. Το σωστό είναι «Sie ist Schülerin».",
+          "q": {
+            "q": "Η Mia πάει σχολείο. Τι λες;",
+            "c": "Sie ist Schülerin.",
+            "w": [
+              "Sie ist Schüler.",
+              "Er ist Schülerin.",
+              "Sie bist Schülerin."
+            ],
+            "why": "Κορίτσι: sie + Schülerin."
+          }
+        }
+      },
+      {
+        "h": "Οι ερωτήσεις με W",
+        "t": "Οι ερωτηματικές λέξεις αρχίζουν από W: Wer (ποιος), Was (τι), Wie (πώς), Wie alt (πόσο χρονών), Wo (πού), Woher (από πού). Η σειρά είναι πάντα ίδια: πρώτα η W-λέξη, μετά το ρήμα, μετά το πρόσωπο.",
+        "ex": "Was machst du gern? – Ich lese gern. · Wo wohnst du? – In Thessaloniki.",
+        "def": "W-λέξη + ρήμα + πρόσωπο: Wer ist das? · Wie heißt du? · Wie alt bist du? · Woher kommst du? · Wo wohnst du? · Was machst du gern?",
+        "defLabel": "Ο κανόνας",
+        "hooks": [
+          "Το ρήμα είναι πάντα δεύτερο: W-λέξη (1) + ρήμα (2). «Wo wohnst du?», ποτέ «Wo du wohnst?»."
+        ],
+        "alt": {
+          "t": "Κάθε W-λέξη ψάχνει κάτι άλλο: πρόσωπο (Wer), πράγμα ή δραστηριότητα (Was), όνομα ή τρόπο (Wie), ηλικία (Wie alt), μέρος (Wo), αφετηρία (Woher).",
+          "mistake": "Κάποιοι βάζουν το ρήμα στο τέλος: «Wo du wohnst?». Στην ερώτηση το ρήμα έρχεται αμέσως μετά τη W-λέξη.",
+          "q": {
+            "q": "«___ macht er gern? – Lesen.» Ποια λέξη λείπει;",
+            "c": "Was",
+            "w": [
+              "Wer",
+              "Wo",
+              "Woher"
+            ],
+            "why": "Ρωτάμε για δραστηριότητα: Was."
+          }
+        }
+      },
+      {
+        "h": "ich, du, er, sie, sie και το sein",
+        "t": "Οι προσωπικές αντωνυμίες: ich (εγώ), du (εσύ), er (αυτός), sie (αυτή), wir (εμείς), ihr (εσείς), sie (αυτοί, αυτές). Το «sie» είναι και «αυτή» και «αυτοί». Το ρήμα δείχνει ποιο είναι: sie ist (αυτή), sie sind (αυτοί). Το ρήμα sein (είμαι): ich bin, du bist, er/sie ist, wir sind, ihr seid, sie sind.",
+        "ex": "Das ist Tante Eva. Sie ist nett. · Das ist Opa Karl. Er ist lustig. · Das sind Ben und Mia. Sie sind in Wien.",
+        "def": "sein: ich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind. Γυναίκα → sie ist. Άντρας → er ist. Πολλοί → sie sind.",
+        "defLabel": "Ο κανόνας",
+        "alt": {
+          "t": "Κοίτα το ρήμα για να καταλάβεις ποιο «sie» είναι: με ist είναι μία (αυτή), με sind είναι πολλοί (αυτοί).",
+          "mistake": "Κάποιοι γράφουν «Ben und Mia ist …». Για δύο πρόσωπα: sie sind.",
+          "q": {
+            "q": "«Das sind Jonas und Lena. ___ sind in Wien.» Τι λείπει;",
+            "c": "Sie",
+            "w": [
+              "Er",
+              "Ich",
+              "Du"
+            ],
+            "why": "Πολλά πρόσωπα: sie sind."
+          }
+        }
+      }
+    ],
+    "vocab": [
+      [
+        "Wer?",
+        "Ποιος; Ποια;",
+        "Wer ist das?"
+      ],
+      [
+        "Was?",
+        "Τι;",
+        "Was machst du gern?"
+      ],
+      [
+        "Wie?",
+        "Πώς;",
+        "Wie heißt du?"
+      ],
+      [
+        "Wie alt?",
+        "Πόσο χρονών;",
+        "Wie alt bist du?"
+      ],
+      [
+        "Wo?",
+        "Πού;",
+        "Wo wohnst du?"
+      ],
+      [
+        "Woher?",
+        "Από πού;",
+        "Woher kommst du?"
+      ],
+      [
+        "heißen",
+        "ονομάζομαι",
+        "Ich heiße Nikos."
+      ],
+      [
+        "wohnen",
+        "μένω",
+        "Ich wohne in Athen."
+      ],
+      [
+        "kommen aus",
+        "είμαι από",
+        "Ich komme aus Griechenland."
+      ],
+      [
+        "der Schüler / die Schülerin",
+        "ο μαθητής / η μαθήτρια",
+        "Sie ist Schülerin."
+      ],
+      [
+        "die Schweiz",
+        "η Ελβετία (με άρθρο)",
+        "aus der Schweiz"
+      ]
+    ],
+    "quiz": [
+      {
+        "topic": 0,
+        "q": "Δείχνεις μια φωτογραφία με δύο φίλους. Ποια φράση είναι σωστή;",
+        "c": "Das sind Tim und Jonas.",
+        "w": [
+          "Das bin Tim und Jonas.",
+          "Wer sind Tim und Jonas.",
+          "Das bist Tim und Jonas."
+        ],
+        "why": "Για πολλά πρόσωπα: Das sind …"
+      },
+      {
+        "topic": 1,
+        "q": "Πώς απαντάς στο «Wie heißt du?»;",
+        "c": "Ich heiße Nikos.",
+        "w": [
+          "Ich bin vierzehn.",
+          "Ich komme aus Griechenland.",
+          "Ich wohne in Athen."
+        ],
+        "why": "Το «Wie heißt …?» ρωτά το όνομα."
+      },
+      {
+        "topic": 1,
+        "q": "Ποιο είναι σωστό;",
+        "c": "Sie heißt Emma.",
+        "w": [
+          "Sie heiße Emma.",
+          "Sie heißst Emma.",
+          "Sie heißte Emma."
+        ],
+        "why": "er/sie heißt."
+      },
+      {
+        "topic": 2,
+        "q": "Τι ρωτάει το «Wie alt bist du?»;",
+        "c": "Πόσο χρονών είσαι;",
+        "w": [
+          "Πώς σε λένε;",
+          "Από πού είσαι;",
+          "Πού μένεις;"
+        ],
+        "why": "alt = ηλικία."
+      },
+      {
+        "topic": 3,
+        "q": "«Woher kommt Lena?» Ποια απάντηση ταιριάζει;",
+        "c": "Aus Deutschland.",
+        "w": [
+          "In Deutschland.",
+          "Zwölf.",
+          "Sie heißt Lena."
+        ],
+        "why": "Woher → aus."
+      },
+      {
+        "topic": 3,
+        "q": "«Wo wohnt Jonas?» Ποια απάντηση ταιριάζει;",
+        "c": "In Berlin.",
+        "w": [
+          "Aus Berlin.",
+          "Er ist dreizehn.",
+          "Das ist Jonas."
+        ],
+        "why": "Wo → in."
+      },
+      {
+        "topic": 3,
+        "q": "Πώς λες «Είναι από την Ελβετία»;",
+        "c": "Er kommt aus der Schweiz.",
+        "w": [
+          "Er kommt aus Schweiz.",
+          "Er kommt in der Schweiz.",
+          "Er wohnt aus der Schweiz."
+        ],
+        "why": "Η Ελβετία έχει άρθρο: aus der Schweiz."
+      },
+      {
+        "topic": 4,
+        "q": "Η Emma πάει σχολείο. Ποια πρόταση είναι σωστή;",
+        "c": "Sie ist Schülerin.",
+        "w": [
+          "Sie ist Schüler.",
+          "Er ist Schülerin.",
+          "Sie bin Schülerin."
+        ],
+        "why": "Θηλυκό με -in, και sie ist."
+      },
+      {
+        "topic": 4,
+        "q": "Ποιο είναι το θηλυκό του «Lehrer»;",
+        "c": "Lehrerin",
+        "w": [
+          "Lehrera",
+          "Lehrerie",
+          "Lehrerse"
+        ],
+        "why": "Θηλυκό με -in."
+      },
+      {
+        "topic": 5,
+        "q": "«___ ist das? – Das ist mein Freund Tim.»",
+        "c": "Wer",
+        "w": [
+          "Was",
+          "Wo",
+          "Woher"
+        ],
+        "why": "Για πρόσωπο: Wer."
+      },
+      {
+        "topic": 5,
+        "q": "Ποια ερώτηση έχει σωστή σειρά λέξεων;",
+        "c": "Wo wohnst du?",
+        "w": [
+          "Wo du wohnst?",
+          "Wohnst wo du?",
+          "Du wo wohnst?"
+        ],
+        "why": "W-λέξη, μετά ρήμα, μετά πρόσωπο."
+      },
+      {
+        "topic": 6,
+        "q": "«Das ist Tante Eva. ___ ist super.»",
+        "c": "Sie",
+        "w": [
+          "Er",
+          "Du",
+          "Ich"
+        ],
+        "why": "Γυναίκα → sie."
+      },
+      {
+        "topic": 6,
+        "q": "Ποιο είναι σωστό;",
+        "c": "Ich bin zehn Jahre alt.",
+        "w": [
+          "Ich ist zehn Jahre alt.",
+          "Ich bist zehn Jahre alt.",
+          "Ich sind zehn Jahre alt."
+        ],
+        "why": "ich bin."
+      },
+      {
+        "topic": 6,
+        "q": "«Mia, wo bist ___?»",
+        "c": "du",
+        "w": [
+          "er",
+          "sie",
+          "ich"
+        ],
+        "why": "Το bist πάει με το du."
+      }
+    ],
+    "exTitle": "Λυμένες ασκήσεις",
+    "ex": [
+      {
+        "h": "ist ή sind;",
+        "q": "Συμπλήρωσε με «ist» ή «sind»: α) Das ___ Lena. β) Das ___ Tim und Jonas. γ) Wer ___ das? δ) Das ___ Oma und Opa.",
+        "lvl": 1,
+        "learn": "Όπως μάθαμε, για ένα πρόσωπο λέμε «Das ist», για πολλά «Das sind».",
+        "topic": 0,
+        "steps": [
+          "α) Ένα πρόσωπο → ist.",
+          "β) Δύο πρόσωπα → sind.",
+          "γ) Η ερώτηση «Wer ist das?» έχει ist.",
+          "δ) Δύο πρόσωπα → sind."
+        ],
+        "ans": "α) ist · β) sind · γ) ist · δ) sind"
+      },
+      {
+        "h": "Η σωστή αντωνυμία",
+        "q": "Βάλε ich, du, er, sie (αυτή) ή sie (αυτοί): α) Das ist Opa Karl. ___ ist siebzig. β) Das sind Mia und Ben. ___ sind in Wien. γ) ___ bin vierzehn. δ) Emma, woher kommst ___? ε) Das ist Oma Anna. ___ ist lustig.",
+        "lvl": 1,
+        "learn": "Όπως μάθαμε, er για άντρα, sie για γυναίκα, sie (με sind) για πολλούς, και το ρήμα δείχνει το πρόσωπο.",
+        "topic": 6,
+        "steps": [
+          "α) Ο Opa είναι άντρας → Er.",
+          "β) Δύο πρόσωπα, «sind» → Sie.",
+          "γ) «bin» πάει μόνο με το ich → Ich.",
+          "δ) «kommst» πάει με το du → du.",
+          "ε) Η Oma είναι γυναίκα → Sie."
+        ],
+        "ans": "α) Er · β) Sie · γ) Ich · δ) du · ε) Sie"
+      },
+      {
+        "h": "Βρες την ερώτηση",
+        "q": "Γράψε την ερώτηση για κάθε απάντηση: α) Das ist mein Cousin. β) Er heißt Lukas. γ) Er kommt aus Österreich. δ) Er wohnt in Graz. ε) Er ist fünfzehn.",
+        "lvl": 2,
+        "learn": "Όπως μάθαμε, κάθε W-λέξη ψάχνει κάτι άλλο, και μετά τη W-λέξη έρχεται το ρήμα.",
+        "topic": 5,
+        "steps": [
+          "α) Πρόσωπο → Wer ist das?",
+          "β) Όνομα → Wie heißt er?",
+          "γ) Αφετηρία («aus») → Woher kommt er?",
+          "δ) Μέρος («in») → Wo wohnt er?",
+          "ε) Ηλικία → Wie alt ist er?"
+        ],
+        "ans": "α) Wer ist das? · β) Wie heißt er? · γ) Woher kommt er? · δ) Wo wohnt er? · ε) Wie alt ist er?"
+      },
+      {
+        "h": "Αγόρι ή κορίτσι;",
+        "q": "Διόρθωσε όπου χρειάζεται: α) Mia ist Schüler. β) Tim ist Schüler. γ) Frau Weber ist Lehrer. δ) Er ist Schülerin.",
+        "lvl": 2,
+        "learn": "Όπως μάθαμε, το θηλυκό παίρνει -in: Schülerin, Lehrerin.",
+        "topic": 4,
+        "steps": [
+          "α) Η Mia είναι κορίτσι → Schülerin.",
+          "β) Ο Tim είναι αγόρι → σωστό.",
+          "γ) Η Frau Weber είναι γυναίκα → Lehrerin.",
+          "δ) Er = αγόρι → Schüler."
+        ],
+        "ans": "α) Mia ist Schülerin. · β) σωστό · γ) Frau Weber ist Lehrerin. · δ) Er ist Schüler."
+      },
+      {
+        "h": "Σύστησε τη Sophie",
+        "q": "Με αυτά τα στοιχεία γράψε πέντε προτάσεις για τη Sophie: όνομα Sophie, 13 χρονών, από την Ελβετία, μένει στη Ζυρίχη (Zürich), μαθήτρια.",
+        "lvl": 3,
+        "learn": "Όπως μάθαμε, Woher → aus, Wo → in, η Ελβετία θέλει «der», και για κορίτσι λέμε sie και Schülerin.",
+        "topic": 3,
+        "steps": [
+          "Όνομα: Das ist Sophie.",
+          "Ηλικία: Sie ist dreizehn (Jahre alt).",
+          "Αφετηρία, η Ελβετία με άρθρο: Sie kommt aus der Schweiz.",
+          "Μέρος: Sie wohnt in Zürich.",
+          "Κορίτσι: Sie ist Schülerin."
+        ],
+        "ans": "Das ist Sophie. Sie ist dreizehn (Jahre alt). Sie kommt aus der Schweiz. Sie wohnt in Zürich. Sie ist Schülerin."
+      },
+      {
+        "h": "Ερώτηση και απάντηση",
+        "q": "Φτιάξε ερώτηση και απάντηση για τον Ben: α) από πού είναι (Deutschland), β) πού μένει (München), γ) τι του αρέσει να κάνει (Fußball spielen). Πρόσεξε τη σειρά των λέξεων.",
+        "lvl": 3,
+        "learn": "Όπως μάθαμε, στην ερώτηση έρχεται πρώτα η W-λέξη και μετά το ρήμα· στην απάντηση πρώτα το πρόσωπο και μετά το ρήμα.",
+        "topic": 5,
+        "steps": [
+          "α) Woher + kommt + Ben → «Woher kommt Ben?» – «Er kommt aus Deutschland.»",
+          "β) Wo + wohnt + Ben → «Wo wohnt Ben?» – «Er wohnt in München.»",
+          "γ) Was + macht + Ben + gern → «Was macht Ben gern?» – «Er spielt gern Fußball.»"
+        ],
+        "ans": "α) Woher kommt Ben? – Er kommt aus Deutschland. · β) Wo wohnt Ben? – Er wohnt in München. · γ) Was macht Ben gern? – Er spielt gern Fußball."
+      }
+    ]
+  },
+  "B/german/1/1": {
+    "title": "2. Η οικογένειά μου: mein, meine, dein, deine",
+    "summary": [
+      {
+        "h": "Οι γονείς: die Eltern",
+        "t": "Ο πατέρας είναι der Vater και η μητέρα die Mutter. Στο σπίτι λέμε Papa και Mama. Και οι δύο μαζί είναι die Eltern (οι γονείς).",
+        "ex": "Mein Vater heißt Thomas. Meine Mutter heißt Anna. Meine Eltern wohnen in Köln.",
+        "def": "der Vater + die Mutter = die Eltern (οι γονείς).",
+        "alt": {
+          "t": "Eltern μοιάζει με το «älter» (μεγαλύτερος): οι γονείς είναι οι «μεγαλύτεροι» του σπιτιού.",
+          "mistake": "Κάποιοι νομίζουν ότι Eltern σημαίνει παππούδες. Οι παππούδες είναι die Großeltern.",
+          "q": {
+            "q": "Τι σημαίνει «die Eltern»;",
+            "c": "οι γονείς",
+            "w": [
+              "οι παππούδες",
+              "τα αδέρφια",
+              "οι θείοι"
+            ],
+            "why": "Vater + Mutter = Eltern."
+          }
+        }
+      },
+      {
+        "h": "Τα αδέρφια: die Geschwister",
+        "t": "Ο αδερφός είναι der Bruder και η αδερφή die Schwester. Όλα τα αδέρφια μαζί, αγόρια και κορίτσια, είναι die Geschwister.",
+        "ex": "• Hast du Geschwister? ▲ Ja, einen Bruder und eine Schwester. Mein Bruder ist acht.",
+        "def": "der Bruder + die Schwester = die Geschwister (τα αδέρφια).",
+        "alt": {
+          "t": "Geschwister = «όλα τα αδέρφια μαζί», όπως λέμε στα ελληνικά «τα αδέρφια» και εννοούμε και αγόρια και κορίτσια.",
+          "mistake": "Κάποιοι νομίζουν ότι Geschwister είναι μόνο οι αδερφές, επειδή μοιάζει με το Schwester. Είναι όλα τα αδέρφια.",
+          "q": {
+            "q": "Bruder + Schwester = ?",
+            "c": "die Geschwister",
+            "w": [
+              "die Eltern",
+              "die Großeltern",
+              "die Cousinen"
+            ],
+            "why": "Όλα τα αδέρφια μαζί: Geschwister."
+          }
+        }
+      },
+      {
+        "h": "Οι παππούδες: die Großeltern",
+        "t": "Ο παππούς είναι der Großvater ή, πιο απλά, der Opa. Η γιαγιά είναι die Großmutter ή die Oma. Μαζί είναι die Großeltern (οι παππούδες).",
+        "ex": "Mein Opa ist siebzig. Meine Oma wohnt in Wien. Meine Großeltern sind nett.",
+        "def": "der Großvater (Opa) + die Großmutter (Oma) = die Großeltern.",
+        "more": [
+          "groß = μεγάλος. Großvater = ο «μεγάλος πατέρας», Großmutter = η «μεγάλη μητέρα»."
+        ],
+        "alt": {
+          "t": "Βάλε «Groß-» μπροστά στις λέξεις των γονιών και έχεις τους παππούδες: Vater → Großvater, Mutter → Großmutter, Eltern → Großeltern.",
+          "mistake": "Κάποιοι μπερδεύουν Oma και Mama. Oma είναι η γιαγιά, Mama η μαμά.",
+          "q": {
+            "q": "Ποια λέξη σημαίνει το ίδιο με «der Opa»;",
+            "c": "der Großvater",
+            "w": [
+              "der Vater",
+              "der Onkel",
+              "der Bruder"
+            ],
+            "why": "Opa = Großvater."
+          }
+        }
+      },
+      {
+        "h": "Θείοι και ξαδέρφια",
+        "t": "Ο θείος είναι der Onkel και η θεία die Tante. Ο ξάδερφος είναι der Cousin και η ξαδέρφη die Cousine.",
+        "ex": "Das ist mein Onkel Peter. Das ist meine Tante Eva. Und das ist mein Cousin Ben.",
+        "def": "der Onkel (θείος), die Tante (θεία), der Cousin (ξάδερφος), die Cousine (ξαδέρφη).",
+        "more": [
+          "Το Cousin και το Cousine είναι γαλλικές λέξεις: προφέρονται περίπου «κουζέν» και «κουζίνε»."
+        ],
+        "alt": {
+          "t": "Η ξαδέρφη είναι ο ξάδερφος με ένα -e στο τέλος: Cousin → Cousine.",
+          "mistake": "Κάποιοι λένε «der Cousine». Η ξαδέρφη είναι θηλυκό: die Cousine.",
+          "q": {
+            "q": "Πώς λέγεται η ξαδέρφη;",
+            "c": "die Cousine",
+            "w": [
+              "der Cousin",
+              "die Tante",
+              "die Schwester"
+            ],
+            "why": "Ξαδέρφη: die Cousine."
+          }
+        }
+      },
+      {
+        "h": "mein ή meine;",
+        "t": "Το «μου» στα γερμανικά μπαίνει μπροστά και αλλάζει με το γένος της λέξης. Για λέξεις με der: mein (mein Vater, mein Bruder, mein Onkel). Για λέξεις με die: meine (meine Mutter, meine Schwester, meine Tante). Για πολλά πρόσωπα (πληθυντικός): πάλι meine (meine Eltern, meine Großeltern).",
+        "ex": "Das ist mein Bruder. · Das ist meine Schwester. · Das sind meine Eltern.",
+        "def": "der → mein · die → meine · πληθυντικός → meine.",
+        "defLabel": "Ο κανόνας",
+        "hooks": [
+          "Το -e του meine πάει με τα θηλυκά και με τα πολλά: meine Mutter, meine Eltern. Οι αρσενικοί μένουν χωρίς -e: mein Vater."
+        ],
+        "alt": {
+          "t": "Ρώτα «der ή die;». der Vater → mein Vater. die Mutter → meine Mutter. Και όταν είναι πολλοί, σαν die: meine Eltern.",
+          "mistake": "Κάποιοι γράφουν «meine Bruder». Ο Bruder είναι der: mein Bruder.",
+          "q": {
+            "q": "«Ich bin Lena. Das ist ___ Bruder Tim.»",
+            "c": "mein",
+            "w": [
+              "meine",
+              "meinen",
+              "meinem"
+            ],
+            "why": "der Bruder → mein."
+          }
+        }
+      },
+      {
+        "h": "dein ή deine;",
+        "t": "Το «σου» δουλεύει ακριβώς όπως το mein: dein για λέξεις με der, deine για λέξεις με die και για τον πληθυντικό.",
+        "ex": "• Ist das dein Bruder? ▲ Nein, das ist mein Cousin. • Sind das deine Großeltern? ▲ Ja.",
+        "def": "der → dein · die → deine · πληθυντικός → deine.",
+        "defLabel": "Ο κανόνας",
+        "alt": {
+          "t": "Είναι το ίδιο με το mein, απλώς με d: mein → dein, meine → deine.",
+          "mistake": "Κάποιοι γράφουν «dein Schwester». Η Schwester είναι die: deine Schwester.",
+          "q": {
+            "q": "«Wo wohnt ___ Tante?»",
+            "c": "deine",
+            "w": [
+              "dein",
+              "deinem",
+              "deinen"
+            ],
+            "why": "die Tante → deine."
+          }
+        }
+      },
+      {
+        "h": "Λέξεις που είναι πάντα πολλοί",
+        "t": "Οι λέξεις die Eltern, die Geschwister και die Großeltern είναι πάντα πληθυντικός. Γι' αυτό παίρνουν meine/deine και το ρήμα στον πληθυντικό: sind, wohnen.",
+        "ex": "Meine Eltern sind nett. · Meine Großeltern wohnen in Berlin. · Hast du Geschwister?",
+        "def": "Eltern, Geschwister, Großeltern: πληθυντικός → meine/deine και sind (όχι ist).",
+        "defLabel": "Ο κανόνας",
+        "alt": {
+          "t": "Οι γονείς είναι δύο, τα αδέρφια πολλά, οι παππούδες δύο: γι' αυτό οι λέξεις αυτές είναι πάντα «πολλοί».",
+          "mistake": "Κάποιοι γράφουν «Meine Eltern ist nett». Οι γονείς είναι πολλοί: sind.",
+          "q": {
+            "q": "Ποιο είναι σωστό;",
+            "c": "Meine Eltern sind in Athen.",
+            "w": [
+              "Meine Eltern ist in Athen.",
+              "Mein Eltern sind in Athen.",
+              "Mein Eltern ist in Athen."
+            ],
+            "why": "Πληθυντικός: meine … sind."
+          }
+        }
+      }
+    ],
+    "vocab": [
+      [
+        "der Vater / die Mutter",
+        "ο πατέρας / η μητέρα",
+        "Papa, Mama"
+      ],
+      [
+        "die Eltern",
+        "οι γονείς",
+        "Meine Eltern sind nett."
+      ],
+      [
+        "der Bruder / die Schwester",
+        "ο αδερφός / η αδερφή",
+        "mein Bruder, meine Schwester"
+      ],
+      [
+        "die Geschwister",
+        "τα αδέρφια",
+        "Hast du Geschwister?"
+      ],
+      [
+        "der Großvater (Opa)",
+        "ο παππούς",
+        "mein Opa"
+      ],
+      [
+        "die Großmutter (Oma)",
+        "η γιαγιά",
+        "meine Oma"
+      ],
+      [
+        "die Großeltern",
+        "οι παππούδες",
+        "meine Großeltern"
+      ],
+      [
+        "der Onkel / die Tante",
+        "ο θείος / η θεία",
+        "mein Onkel, meine Tante"
+      ],
+      [
+        "der Cousin / die Cousine",
+        "ο ξάδερφος / η ξαδέρφη",
+        "mein Cousin, meine Cousine"
+      ],
+      [
+        "mein, meine",
+        "μου",
+        "mein Vater, meine Mutter"
+      ],
+      [
+        "dein, deine",
+        "σου",
+        "dein Bruder, deine Schwester"
+      ]
+    ],
+    "quiz": [
+      {
+        "topic": 0,
+        "q": "Vater + Mutter = ?",
+        "c": "die Eltern",
+        "w": [
+          "die Großeltern",
+          "die Geschwister",
+          "die Tante"
+        ],
+        "why": "Οι γονείς: die Eltern."
+      },
+      {
+        "topic": 1,
+        "q": "Bruder + Schwester = ?",
+        "c": "die Geschwister",
+        "w": [
+          "die Eltern",
+          "die Großeltern",
+          "die Cousine"
+        ],
+        "why": "Τα αδέρφια: die Geschwister."
+      },
+      {
+        "topic": 2,
+        "q": "Ποια λέξη σημαίνει το ίδιο με «die Oma»;",
+        "c": "die Großmutter",
+        "w": [
+          "die Mutter",
+          "die Tante",
+          "die Schwester"
+        ],
+        "why": "Oma = Großmutter."
+      },
+      {
+        "topic": 2,
+        "q": "Ποια λέξη ΔΕΝ ταιριάζει: Opa, Oma, Großeltern, Onkel;",
+        "c": "Onkel",
+        "w": [
+          "Opa",
+          "Oma",
+          "Großeltern"
+        ],
+        "why": "Opa + Oma = Großeltern· ο Onkel είναι θείος."
+      },
+      {
+        "topic": 3,
+        "q": "Πώς λέγεται η ξαδέρφη;",
+        "c": "die Cousine",
+        "w": [
+          "der Cousin",
+          "die Tante",
+          "die Schwester"
+        ],
+        "why": "Ξαδέρφη: die Cousine."
+      },
+      {
+        "topic": 3,
+        "q": "Ο αδερφός της μαμάς σου είναι ο …",
+        "c": "Onkel",
+        "w": [
+          "Opa",
+          "Cousin",
+          "Vater"
+        ],
+        "why": "Ο αδερφός του γονιού σου είναι ο θείος σου."
+      },
+      {
+        "topic": 4,
+        "q": "«Ich bin Lena. Das ist ___ Bruder Tim.»",
+        "c": "mein",
+        "w": [
+          "meine",
+          "meinen",
+          "meinem"
+        ],
+        "why": "der Bruder → mein."
+      },
+      {
+        "topic": 4,
+        "q": "«Das sind ___ Großeltern.»",
+        "c": "meine",
+        "w": [
+          "mein",
+          "meinem",
+          "meinen"
+        ],
+        "why": "Πληθυντικός → meine."
+      },
+      {
+        "topic": 4,
+        "q": "Ποιο είναι σωστό;",
+        "c": "meine Schwester",
+        "w": [
+          "mein Schwester",
+          "meines Schwester",
+          "meinem Schwester"
+        ],
+        "why": "die Schwester → meine."
+      },
+      {
+        "topic": 5,
+        "q": "«Ist das ___ Schwester? – Nein, das ist meine Cousine.»",
+        "c": "deine",
+        "w": [
+          "dein",
+          "deinem",
+          "deinen"
+        ],
+        "why": "die Schwester → deine."
+      },
+      {
+        "topic": 5,
+        "q": "«Wo wohnt ___ Onkel?»",
+        "c": "dein",
+        "w": [
+          "deine",
+          "deinem",
+          "deinen"
+        ],
+        "why": "der Onkel → dein."
+      },
+      {
+        "topic": 6,
+        "q": "Ποιο είναι σωστό;",
+        "c": "Meine Eltern sind nett.",
+        "w": [
+          "Meine Eltern ist nett.",
+          "Mein Eltern sind nett.",
+          "Mein Eltern ist nett."
+        ],
+        "why": "Eltern είναι πληθυντικός: meine … sind."
+      },
+      {
+        "topic": 6,
+        "q": "Ποια λέξη είναι πάντα πληθυντικός;",
+        "c": "die Geschwister",
+        "w": [
+          "der Bruder",
+          "die Schwester",
+          "der Cousin"
+        ],
+        "why": "Geschwister = όλα τα αδέρφια μαζί."
+      }
+    ],
+    "exTitle": "Λυμένες ασκήσεις",
+    "ex": [
+      {
+        "h": "mein ή meine;",
+        "q": "Συμπλήρωσε: α) ___ Vater β) ___ Mutter γ) ___ Eltern δ) ___ Cousin ε) ___ Tante στ) ___ Geschwister",
+        "lvl": 1,
+        "learn": "Όπως μάθαμε, der → mein, die → meine, πληθυντικός → meine.",
+        "topic": 4,
+        "steps": [
+          "α) der Vater → mein.",
+          "β) die Mutter → meine.",
+          "γ) Πληθυντικός → meine.",
+          "δ) der Cousin → mein.",
+          "ε) die Tante → meine.",
+          "στ) Πληθυντικός → meine."
+        ],
+        "ans": "α) mein · β) meine · γ) meine · δ) mein · ε) meine · στ) meine"
+      },
+      {
+        "h": "Ποιος είναι;",
+        "q": "Γράψε τη γερμανική λέξη: α) ο πατέρας του πατέρα σου, β) η αδερφή της μαμάς σου, γ) ο γιος του θείου σου, δ) η κόρη της θείας σου.",
+        "lvl": 1,
+        "learn": "Όπως μάθαμε, Opa/Großvater, Tante, Cousin, Cousine.",
+        "topic": 3,
+        "steps": [
+          "α) Ο πατέρας του γονιού σου είναι ο παππούς → der Opa (der Großvater).",
+          "β) Η αδερφή του γονιού σου είναι η θεία → die Tante.",
+          "γ) Το παιδί του θείου, αγόρι → der Cousin.",
+          "δ) Το παιδί της θείας, κορίτσι → die Cousine."
+        ],
+        "ans": "α) der Opa (der Großvater) · β) die Tante · γ) der Cousin · δ) die Cousine"
+      },
+      {
+        "h": "Ποια λέξη δεν ταιριάζει;",
+        "q": "Βρες τη λέξη που δεν ταιριάζει και πες γιατί: α) Bruder, Schwester, Geschwister, Onkel β) Vater, Mutter, Eltern, Cousine γ) Oma, Opa, Großeltern, Tante",
+        "lvl": 2,
+        "learn": "Όπως μάθαμε, Bruder + Schwester = Geschwister, Vater + Mutter = Eltern, Opa + Oma = Großeltern.",
+        "topic": 6,
+        "steps": [
+          "α) Bruder + Schwester = Geschwister· ο Onkel δεν ανήκει → Onkel.",
+          "β) Vater + Mutter = Eltern· η Cousine δεν ανήκει → Cousine.",
+          "γ) Oma + Opa = Großeltern· η Tante δεν ανήκει → Tante."
+        ],
+        "ans": "α) Onkel · β) Cousine · γ) Tante"
+      },
+      {
+        "h": "dein ή deine;",
+        "q": "Συμπλήρωσε: α) Ist das ___ Bruder? β) Wie heißt ___ Mutter? γ) Wo wohnen ___ Großeltern? δ) Wie alt ist ___ Cousine?",
+        "lvl": 2,
+        "learn": "Όπως μάθαμε, το dein δουλεύει όπως το mein: der → dein, die και πληθυντικός → deine.",
+        "topic": 5,
+        "steps": [
+          "α) der Bruder → dein.",
+          "β) die Mutter → deine.",
+          "γ) Πληθυντικός → deine.",
+          "δ) die Cousine → deine."
+        ],
+        "ans": "α) dein · β) deine · γ) deine · δ) deine"
+      },
+      {
+        "h": "Η οικογένεια του Ben",
+        "q": "Ο Ben λέει: «Ο πατέρας μου λέγεται Peter. Η μητέρα μου λέγεται Julia. Οι γονείς μου μένουν στο Αμβούργο. Η αδερφή μου είναι δέκα χρονών.» Γράψ' το στα γερμανικά.",
+        "lvl": 3,
+        "learn": "Όπως μάθαμε, mein για der, meine για die και για τον πληθυντικό· οι Eltern θέλουν ρήμα στον πληθυντικό.",
+        "topic": 4,
+        "steps": [
+          "der Vater → Mein Vater heißt Peter.",
+          "die Mutter → Meine Mutter heißt Julia.",
+          "Πληθυντικός, ρήμα wohnen → Meine Eltern wohnen in Hamburg.",
+          "die Schwester, ηλικία με sein → Meine Schwester ist zehn (Jahre alt)."
+        ],
+        "ans": "Mein Vater heißt Peter. Meine Mutter heißt Julia. Meine Eltern wohnen in Hamburg. Meine Schwester ist zehn (Jahre alt)."
+      },
+      {
+        "h": "Διόρθωσε τα λάθη",
+        "q": "Κάθε πρόταση έχει ένα λάθος: α) Das ist meine Bruder. β) Mein Eltern sind nett. γ) Ist das deine Opa? δ) Das ist mein Cousine Lisa.",
+        "lvl": 3,
+        "learn": "Όπως μάθαμε, der → mein/dein, die και πληθυντικός → meine/deine.",
+        "topic": 4,
+        "steps": [
+          "α) der Bruder → mein Bruder.",
+          "β) Πληθυντικός → Meine Eltern.",
+          "γ) der Opa → dein Opa.",
+          "δ) die Cousine → meine Cousine."
+        ],
+        "ans": "α) Das ist mein Bruder. · β) Meine Eltern sind nett. · γ) Ist das dein Opa? · δ) Das ist meine Cousine Lisa."
+      }
+    ]
+  },
+  "B/german/1/2": {
+    "title": "3. Τα χόμπι μου: gern και nicht gern",
+    "summary": [
+      {
+        "h": "Ποιο ρήμα με ποια λέξη",
+        "t": "Για τα χόμπι μαθαίνουμε τη λέξη μαζί με το ρήμα της: Musik hören (ακούω μουσική), Fußball spielen (παίζω ποδόσφαιρο), lesen (διαβάζω), E-Mails schreiben (γράφω email), malen (ζωγραφίζω), telefonieren (μιλάω στο τηλέφωνο), im Garten arbeiten (δουλεύω στον κήπο), den Computer reparieren (επισκευάζω τον υπολογιστή), Hausaufgaben machen (κάνω τα μαθήματα), Sport machen (κάνω αθλητισμό).",
+        "ex": "Ich höre Musik. Mein Opa arbeitet im Garten. Meine Schwester telefoniert mit Lena.",
+        "def": "Musik hören · Fußball spielen · lesen · E-Mails schreiben · malen · telefonieren · im Garten arbeiten · den Computer reparieren · Hausaufgaben machen · Sport machen",
+        "more": [
+          "Στα γερμανικά το ρήμα στο απαρέμφατο είναι στο τέλος: «Musik hören», όχι «hören Musik»."
+        ],
+        "alt": {
+          "t": "Φτιάξε ζευγάρια σαν ταυτότητες: Musik ↔ hören, Fußball ↔ spielen, Hausaufgaben ↔ machen, E-Mails ↔ schreiben, Garten ↔ arbeiten.",
+          "mistake": "Κάποιοι λένε «Hausaufgaben schreiben». Το σωστό ζευγάρι είναι «Hausaufgaben machen».",
+          "q": {
+            "q": "Ποιο ρήμα ταιριάζει: «Musik ___»;",
+            "c": "hören",
+            "w": [
+              "reparieren",
+              "arbeiten",
+              "schreiben"
+            ],
+            "why": "Musik hören = ακούω μουσική."
+          }
+        }
+      },
+      {
+        "h": "gern: μου αρέσει",
+        "t": "Για να πεις ότι σου αρέσει να κάνεις κάτι, βάζεις gern μετά το ρήμα: «Ich lese gern.» (Μου αρέσει να διαβάζω.) Ρωτάς: «Was machst du gern?» (Τι σου αρέσει να κάνεις;)",
+        "ex": "• Was machst du gern? ▲ Ich höre gern Musik und ich male gern.",
+        "def": "πρόσωπο + ρήμα + gern: Ich spiele gern Tennis. · Was machst du gern?",
+        "defLabel": "Ο κανόνας",
+        "alt": {
+          "t": "Το gern είναι σαν ένα χαμόγελο δίπλα στο ρήμα: «Ich lese» = διαβάζω, «Ich lese gern» = διαβάζω και μου αρέσει.",
+          "mistake": "Κάποιοι βάζουν το gern στην αρχή: «Gern ich lese.» Το gern μπαίνει μετά το ρήμα.",
+          "q": {
+            "q": "Τι σημαίνει «Ich male gern»;",
+            "c": "Μου αρέσει να ζωγραφίζω.",
+            "w": [
+              "Ζωγραφίζω πολύ.",
+              "Δεν μου αρέσει να ζωγραφίζω.",
+              "Θέλω να γίνω ζωγράφος."
+            ],
+            "why": "gern = μου αρέσει."
+          }
+        }
+      },
+      {
+        "h": "nicht gern: δεν μου αρέσει",
+        "t": "Για κάτι που δεν σου αρέσει, βάζεις nicht πριν από το gern: «Ich spiele nicht gern Fußball.» (Δεν μου αρέσει να παίζω ποδόσφαιρο.)",
+        "ex": "Ich mache nicht gern Sport, aber ich lese gern.",
+        "def": "πρόσωπο + ρήμα + nicht gern: Ich spiele nicht gern Fußball.",
+        "defLabel": "Ο κανόνας",
+        "hooks": [
+          "Το nicht κολλάει πάντα μπροστά στο gern: «nicht gern», σαν μία λέξη."
+        ],
+        "alt": {
+          "t": "Ξεκίνα από τη θετική πρόταση και πρόσθεσε μόνο το nicht μπροστά στο gern: Ich spiele gern → Ich spiele nicht gern.",
+          "mistake": "Κάποιοι γράφουν «Ich spiele gern nicht». Το nicht μπαίνει πριν από το gern.",
+          "q": {
+            "q": "Πώς λες «Δεν μου αρέσει να παίζω ποδόσφαιρο»;",
+            "c": "Ich spiele nicht gern Fußball.",
+            "w": [
+              "Ich spiele gern nicht Fußball.",
+              "Ich nicht spiele gern Fußball.",
+              "Nicht ich spiele gern Fußball."
+            ],
+            "why": "nicht πριν από το gern."
+          }
+        }
+      },
+      {
+        "h": "Ερωτήσεις ναι ή όχι",
+        "t": "Στις ερωτήσεις που απαντάμε με ναι ή όχι, το ρήμα μπαίνει πρώτο: «Spielst du gern Fußball?» Απαντάς «Ja, …» ή «Nein, …».",
+        "ex": "• Malst du gern? ▲ Ja, sehr gern! • Spielst du gern Tennis? ▲ Nein, ich spiele nicht gern Tennis.",
+        "def": "Ρήμα + πρόσωπο + …?: Spielst du gern Fußball? – Ja, ich spiele gern Fußball. / Nein, ich spiele nicht gern Fußball.",
+        "defLabel": "Ο κανόνας",
+        "alt": {
+          "t": "Η ερώτηση είναι η πρόταση με το ρήμα και το πρόσωπο αλλαγμένα: «Du spielst gern Tennis.» → «Spielst du gern Tennis?»",
+          "mistake": "Κάποιοι ρωτούν «Du spielst gern Tennis?» μόνο με τον τόνο. Στη γραπτή ερώτηση το ρήμα πάει πρώτο.",
+          "q": {
+            "q": "Ποια ερώτηση είναι σωστή;",
+            "c": "Spielst du gern Tennis?",
+            "w": [
+              "Spielt du gern Tennis?",
+              "Gern spielst du Tennis du?",
+              "Du gern spielst Tennis?"
+            ],
+            "why": "Το ρήμα πρώτο, με την κατάληξη του du (-st)."
+          }
+        }
+      },
+      {
+        "h": "Πού μπαίνει το nicht",
+        "t": "Το nicht μπαίνει πριν από τη λέξη που αρνείται. Πριν από το gern: «Ich trinke nicht gern Milch.» Πριν από ένα επίθετο: «Lukas ist nicht doof.» (Ο Lukas δεν είναι χαζός.)",
+        "ex": "Mia ist nicht langweilig. · Wir spielen nicht gern Volleyball.",
+        "def": "nicht + gern: Ich trinke nicht gern Milch. · sein + nicht + επίθετο: Er ist nicht doof.",
+        "defLabel": "Ο κανόνας",
+        "alt": {
+          "t": "Βάλε το nicht σαν «φρένο» ακριβώς μπροστά σε αυτό που δεν ισχύει: nicht gern, nicht doof, nicht langweilig.",
+          "mistake": "Κάποιοι γράφουν «Lukas nicht ist doof». Το nicht έρχεται μετά το ist, πριν από το doof.",
+          "q": {
+            "q": "Πώς λες «Ο Lukas δεν είναι χαζός»;",
+            "c": "Lukas ist nicht doof.",
+            "w": [
+              "Lukas nicht ist doof.",
+              "Lukas ist doof nicht.",
+              "Nicht Lukas ist doof."
+            ],
+            "why": "ist + nicht + επίθετο."
+          }
+        }
+      },
+      {
+        "h": "gern ή viel;",
+        "t": "Το gern λέει ότι σου αρέσει κάτι. Το viel λέει ότι το κάνεις πολύ (συχνά ή σε μεγάλη ποσότητα). «Ich lese gern» = μου αρέσει το διάβασμα. «Ich lese viel» = διαβάζω πολύ.",
+        "ex": "Tim hört viel Musik. Er hört gern Hip-Hop.",
+        "def": "gern = μου αρέσει. viel = πολύ.",
+        "alt": {
+          "t": "gern = καρδιά (πόσο σου αρέσει), viel = ρολόι (πόσο συχνά).",
+          "mistake": "Κάποιοι νομίζουν ότι «Ich lese viel» σημαίνει «μου αρέσει να διαβάζω». Σημαίνει «διαβάζω πολύ».",
+          "q": {
+            "q": "Τι σημαίνει «Er liest viel»;",
+            "c": "Διαβάζει πολύ.",
+            "w": [
+              "Του αρέσει να διαβάζει.",
+              "Δεν διαβάζει.",
+              "Διαβάζει λίγο."
+            ],
+            "why": "viel = πολύ."
+          }
+        }
+      },
+      {
+        "h": "sehr gern και nicht so gern",
+        "t": "Μπορείς να πεις πόσο σου αρέσει: «sehr gern» (πάρα πολύ), «gern» (μου αρέσει), «nicht so gern» (όχι και τόσο), «nicht gern» (δεν μου αρέσει).",
+        "ex": "• Spielst du gern Fußball? ▲ Nein, nicht so gern. Ich schwimme sehr gern.",
+        "def": "sehr gern > gern > nicht so gern > nicht gern",
+        "alt": {
+          "t": "Σκέψου μια σκάλα με τέσσερα σκαλιά: sehr gern (πάνω), gern, nicht so gern, nicht gern (κάτω).",
+          "mistake": "Κάποιοι νομίζουν ότι «nicht so gern» σημαίνει «καθόλου». Σημαίνει «όχι και τόσο».",
+          "q": {
+            "q": "«Spielst du gern Fußball? – Nein, nicht so gern.» Τι σημαίνει η απάντηση;",
+            "c": "Όχι και τόσο.",
+            "w": [
+              "Ναι, πάρα πολύ.",
+              "Ναι, παίζω κάθε μέρα.",
+              "Παίζω ποδόσφαιρο."
+            ],
+            "why": "nicht so gern = όχι και τόσο."
+          }
+        }
+      }
+    ],
+    "vocab": [
+      [
+        "Musik hören",
+        "ακούω μουσική",
+        "Ich höre gern Musik."
+      ],
+      [
+        "Fußball spielen",
+        "παίζω ποδόσφαιρο",
+        "Spielst du gern Fußball?"
+      ],
+      [
+        "lesen",
+        "διαβάζω",
+        "Ich lese viel."
+      ],
+      [
+        "schreiben",
+        "γράφω",
+        "E-Mails schreiben"
+      ],
+      [
+        "malen",
+        "ζωγραφίζω",
+        "Sie malt gern."
+      ],
+      [
+        "telefonieren",
+        "μιλάω στο τηλέφωνο",
+        "mit Lena telefonieren"
+      ],
+      [
+        "im Garten arbeiten",
+        "δουλεύω στον κήπο",
+        "Opa arbeitet im Garten."
+      ],
+      [
+        "reparieren",
+        "επισκευάζω",
+        "den Computer reparieren"
+      ],
+      [
+        "Hausaufgaben machen",
+        "κάνω τα μαθήματα του σπιτιού",
+        "Ich mache Hausaufgaben."
+      ],
+      [
+        "gern / nicht gern",
+        "μου αρέσει / δεν μου αρέσει",
+        "Ich male nicht gern."
+      ],
+      [
+        "viel",
+        "πολύ",
+        "Er liest viel."
+      ],
+      [
+        "doof / langweilig",
+        "χαζός / βαρετός",
+        "Das ist nicht langweilig."
+      ]
+    ],
+    "quiz": [
+      {
+        "topic": 0,
+        "q": "Ποιο ρήμα ταιριάζει: «im Garten ___»;",
+        "c": "arbeiten",
+        "w": [
+          "hören",
+          "schreiben",
+          "reparieren"
+        ],
+        "why": "im Garten arbeiten = δουλεύω στον κήπο."
+      },
+      {
+        "topic": 0,
+        "q": "Ποιο ρήμα ταιριάζει: «Hausaufgaben ___»;",
+        "c": "machen",
+        "w": [
+          "hören",
+          "reparieren",
+          "arbeiten"
+        ],
+        "why": "Hausaufgaben machen."
+      },
+      {
+        "topic": 0,
+        "q": "Ποιο ρήμα ταιριάζει: «E-Mails ___»;",
+        "c": "schreiben",
+        "w": [
+          "hören",
+          "arbeiten",
+          "reparieren"
+        ],
+        "why": "E-Mails schreiben."
+      },
+      {
+        "topic": 1,
+        "q": "Τι σημαίνει «Ich male gern»;",
+        "c": "Μου αρέσει να ζωγραφίζω.",
+        "w": [
+          "Ζωγραφίζω πολύ.",
+          "Δεν μου αρέσει να ζωγραφίζω.",
+          "Θέλω να γίνω ζωγράφος."
+        ],
+        "why": "gern = μου αρέσει."
+      },
+      {
+        "topic": 1,
+        "q": "«Was machst du gern?» Ποια απάντηση ταιριάζει;",
+        "c": "Ich höre gern Musik.",
+        "w": [
+          "Ich bin vierzehn.",
+          "Ich wohne in Wien.",
+          "Das ist mein Bruder."
+        ],
+        "why": "Ρωτά τι σου αρέσει να κάνεις."
+      },
+      {
+        "topic": 2,
+        "q": "Πώς λες «Δεν μου αρέσει να παίζω ποδόσφαιρο»;",
+        "c": "Ich spiele nicht gern Fußball.",
+        "w": [
+          "Ich spiele gern nicht Fußball.",
+          "Ich nicht spiele gern Fußball.",
+          "Nicht ich spiele gern Fußball."
+        ],
+        "why": "nicht πριν από το gern."
+      },
+      {
+        "topic": 3,
+        "q": "Ποια ερώτηση είναι σωστή;",
+        "c": "Spielst du gern Tennis?",
+        "w": [
+          "Spielt du gern Tennis?",
+          "Gern spielst du Tennis du?",
+          "Du gern spielst Tennis?"
+        ],
+        "why": "Το ρήμα πρώτο, με -st για το du."
+      },
+      {
+        "topic": 4,
+        "q": "Πώς λες «Ο Lukas δεν είναι χαζός»;",
+        "c": "Lukas ist nicht doof.",
+        "w": [
+          "Lukas nicht ist doof.",
+          "Lukas ist doof nicht.",
+          "Nicht Lukas ist doof."
+        ],
+        "why": "ist + nicht + επίθετο."
+      },
+      {
+        "topic": 4,
+        "q": "Ποια πρόταση είναι σωστή;",
+        "c": "Ich trinke nicht gern Milch.",
+        "w": [
+          "Ich nicht trinke gern Milch.",
+          "Nicht ich trinke gern Milch.",
+          "Ich trinke gern nicht Milch."
+        ],
+        "why": "nicht πριν από το gern."
+      },
+      {
+        "topic": 5,
+        "q": "Τι σημαίνει «Er liest viel»;",
+        "c": "Διαβάζει πολύ.",
+        "w": [
+          "Του αρέσει να διαβάζει.",
+          "Δεν διαβάζει.",
+          "Διαβάζει λίγο."
+        ],
+        "why": "viel = πολύ."
+      },
+      {
+        "topic": 6,
+        "q": "«Spielst du gern Fußball? – Nein, nicht so gern.» Τι σημαίνει η απάντηση;",
+        "c": "Όχι και τόσο.",
+        "w": [
+          "Ναι, πάρα πολύ.",
+          "Ναι, παίζω κάθε μέρα.",
+          "Παίζω ποδόσφαιρο."
+        ],
+        "why": "nicht so gern = όχι και τόσο."
+      },
+      {
+        "topic": 6,
+        "q": "Ποια είναι η πιο δυνατή απάντηση;",
+        "c": "sehr gern",
+        "w": [
+          "gern",
+          "nicht so gern",
+          "nicht gern"
+        ],
+        "why": "sehr gern = πάρα πολύ."
+      }
+    ],
+    "exTitle": "Λυμένες ασκήσεις",
+    "ex": [
+      {
+        "h": "Ποιο ρήμα;",
+        "q": "Ταίριαξε κάθε λέξη με το ρήμα της: α) Fußball β) ein Buch γ) Bilder δ) Sport ε) mit Oma. Ρήματα: spielen, lesen, malen, machen, telefonieren.",
+        "lvl": 1,
+        "learn": "Όπως μάθαμε, μαθαίνουμε τη λέξη μαζί με το ρήμα της.",
+        "topic": 0,
+        "steps": [
+          "α) Fußball spielen.",
+          "β) ein Buch lesen.",
+          "γ) Bilder malen.",
+          "δ) Sport machen.",
+          "ε) mit Oma telefonieren."
+        ],
+        "ans": "α) spielen · β) lesen · γ) malen · δ) machen · ε) telefonieren"
+      },
+      {
+        "h": "Με ή χωρίς nicht",
+        "q": "Γράψε στα γερμανικά: α) Μου αρέσει να διαβάζω. β) Δεν μου αρέσει να ζωγραφίζω. γ) Της αρέσει να ακούει μουσική.",
+        "lvl": 1,
+        "learn": "Όπως μάθαμε, gern μετά το ρήμα, και nicht πριν από το gern.",
+        "topic": 2,
+        "steps": [
+          "α) ich + lese + gern → Ich lese gern.",
+          "β) ich + male + nicht gern → Ich male nicht gern.",
+          "γ) sie + hört + gern + Musik → Sie hört gern Musik."
+        ],
+        "ans": "α) Ich lese gern. · β) Ich male nicht gern. · γ) Sie hört gern Musik."
+      },
+      {
+        "h": "Ερώτηση ναι ή όχι",
+        "q": "Κάνε ερώτηση στη Mia και γράψε την απάντησή της: α) κολύμπι (schwimmen): ναι β) τένις: όχι.",
+        "lvl": 2,
+        "learn": "Όπως μάθαμε, στην ερώτηση ναι/όχι το ρήμα μπαίνει πρώτο.",
+        "topic": 3,
+        "steps": [
+          "α) Ρήμα πρώτο: Schwimmst du gern? → Ja, ich schwimme gern.",
+          "β) Spielst du gern Tennis? → Nein, ich spiele nicht gern Tennis."
+        ],
+        "ans": "α) Schwimmst du gern? – Ja, ich schwimme gern. · β) Spielst du gern Tennis? – Nein, ich spiele nicht gern Tennis."
+      },
+      {
+        "h": "Βάλε τις λέξεις σε σειρά",
+        "q": "Φτιάξε προτάσεις: α) gern / Milch / ich / trinke / nicht β) Mia / langweilig / nicht / ist γ) du / Tennis / spielst / gern / nicht (ερώτηση)",
+        "lvl": 2,
+        "learn": "Όπως μάθαμε, το nicht μπαίνει πριν από το gern ή πριν από το επίθετο.",
+        "topic": 4,
+        "steps": [
+          "α) Πρόσωπο, ρήμα, nicht gern, μετά το ποτό: Ich trinke nicht gern Milch.",
+          "β) Πρόσωπο, ist, nicht, επίθετο: Mia ist nicht langweilig.",
+          "γ) Ερώτηση: ρήμα πρώτο: Spielst du nicht gern Tennis?"
+        ],
+        "ans": "α) Ich trinke nicht gern Milch. · β) Mia ist nicht langweilig. · γ) Spielst du nicht gern Tennis?"
+      },
+      {
+        "h": "gern ή viel;",
+        "q": "Γράψε στα γερμανικά: α) Μου αρέσει να διαβάζω και διαβάζω πολύ. β) Ο Tim ακούει πολλή μουσική. γ) Δεν μου αρέσει και τόσο το ποδόσφαιρο (να παίζω).",
+        "lvl": 3,
+        "learn": "Όπως μάθαμε, gern = μου αρέσει, viel = πολύ, nicht so gern = όχι και τόσο.",
+        "topic": 5,
+        "steps": [
+          "α) Δύο πράγματα: μου αρέσει (gern) και πολύ (viel) → Ich lese gern und ich lese viel.",
+          "β) Πολλή μουσική = ποσότητα → Tim hört viel Musik.",
+          "γ) Όχι και τόσο → Ich spiele nicht so gern Fußball."
+        ],
+        "ans": "α) Ich lese gern und ich lese viel. · β) Tim hört viel Musik. · γ) Ich spiele nicht so gern Fußball."
+      },
+      {
+        "h": "Τα δικά σου χόμπι",
+        "q": "Γράψε τέσσερις προτάσεις για σένα: δύο πράγματα που σου αρέσουν και δύο που δεν σου αρέσουν, με διαφορετικά ρήματα.",
+        "lvl": 3,
+        "learn": "Όπως μάθαμε, gern μετά το ρήμα, nicht gern για όσα δεν σου αρέσουν, και κάθε χόμπι με το ρήμα του.",
+        "topic": 1,
+        "steps": [
+          "Διάλεξε τέσσερα διαφορετικά ρήματα, π.χ. hören, lesen, spielen, machen.",
+          "Δύο θετικές: Ich höre gern Musik. Ich lese gern.",
+          "Δύο αρνητικές: Ich spiele nicht gern Tennis. Ich mache nicht gern Hausaufgaben.",
+          "Έλεγξε: το ρήμα έχει την κατάληξη του ich (-e) και το nicht είναι πριν από το gern."
+        ],
+        "ans": "Π.χ. Ich höre gern Musik. Ich lese gern. Ich spiele nicht gern Tennis. Ich mache nicht gern Hausaufgaben."
+      }
+    ]
+  },
+  "B/german/1/3": {
+    "title": "4. Τα ρήματα στον ενεστώτα",
+    "summary": [
+      {
+        "h": "Θέμα και κατάληξη",
+        "t": "Τα ρήματα στο λεξικό τελειώνουν σε -en: spielen, wohnen, machen. Για να τα κλίνεις, κόβεις το -en και κρατάς το θέμα (spiel-, wohn-, mach-). Μετά βάζεις την κατάληξη του προσώπου.",
+        "ex": "spielen → spiel- → ich spiele, du spielst, er spielt.",
+        "def": "ρήμα σε -en → θέμα + κατάληξη προσώπου (spiel-en → spiel-e, spiel-st, spiel-t).",
+        "defLabel": "Ο κανόνας",
+        "alt": {
+          "t": "Σαν τουβλάκια: το θέμα μένει ίδιο και αλλάζεις μόνο το τελευταίο τουβλάκι (την κατάληξη).",
+          "mistake": "Κάποιοι κρατούν το -en: «ich spielene». Πρώτα κόβεις το -en.",
+          "q": {
+            "q": "Ποιο είναι το θέμα του «schreiben»;",
+            "c": "schreib-",
+            "w": [
+              "schreiben-",
+              "schre-",
+              "schr-"
+            ],
+            "why": "Κόβεις το -en: schreib-."
+          }
+        }
+      },
+      {
+        "h": "Ενικός: ich -e, du -st, er/sie -t",
+        "t": "Στον ενικό οι καταλήξεις είναι: ich -e, du -st, er/sie/es -t. Έτσι: ich spiele, du spielst, er spielt· ich mache, du machst, sie macht· ich höre, du hörst, er hört.",
+        "ex": "Ich höre Musik. Du hörst Musik. Lena hört Musik.",
+        "def": "ich -e · du -st · er/sie/es -t (ich spiele, du spielst, er/sie spielt)",
+        "defLabel": "Ο κανόνας",
+        "hooks": [
+          "-e, -st, -t, -en, -t, -en: πες το σαν ρυθμό, «ε – στ – τ, εν – τ – εν»."
+        ],
+        "alt": {
+          "t": "Τρία πρόσωπα, τρεις ήχοι: ich «-ε», du «-στ», er «-τ».",
+          "mistake": "Κάποιοι γράφουν «du spielt». Με το du η κατάληξη είναι -st: du spielst.",
+          "q": {
+            "q": "«___ du gern Musik?»",
+            "c": "Hörst",
+            "w": [
+              "Höre",
+              "Hört",
+              "Hören"
+            ],
+            "why": "du → -st."
+          }
+        }
+      },
+      {
+        "h": "Πληθυντικός: wir -en, ihr -t, sie -en",
+        "t": "Στον πληθυντικό: wir -en, ihr -t, sie/Sie -en. Το wir και το sie είναι ίδια με το απαρέμφατο: wir spielen, sie spielen. Το ihr μοιάζει με το er: ihr spielt.",
+        "ex": "Wir machen Hausaufgaben. Ihr wohnt in Berlin. Tim und Mia spielen Tennis.",
+        "def": "wir -en · ihr -t · sie/Sie -en (wir spielen, ihr spielt, sie spielen)",
+        "defLabel": "Ο κανόνας",
+        "alt": {
+          "t": "wir και sie (πολλοί) = όπως στο λεξικό. ihr = όπως το er.",
+          "mistake": "Κάποιοι γράφουν «Tim und Mia spielt». Δύο πρόσωπα = sie → spielen.",
+          "q": {
+            "q": "«Tim und Mia ___ Tennis.»",
+            "c": "spielen",
+            "w": [
+              "spielt",
+              "spielst",
+              "spiele"
+            ],
+            "why": "Πολλοί → -en."
+          }
+        }
+      },
+      {
+        "h": "arbeiten και finden: ένα -e- παραπάνω",
+        "t": "Όταν το θέμα τελειώνει σε -t ή -d, βάζουμε ένα -e- πριν από το -st και το -t, για να ακούγεται: du arbeitest, er arbeitet, ihr arbeitet· du findest, er findet.",
+        "ex": "Mein Vater arbeitet im Garten. Wie findest du das Buch?",
+        "def": "θέμα σε -t/-d: du arbeit-e-st, er arbeit-e-t, ihr arbeit-e-t (το ίδιο: finden → du findest, er findet).",
+        "defLabel": "Ο κανόνας",
+        "alt": {
+          "t": "Δοκίμασε να πεις «arbeitt»: δεν ακούγεται το δεύτερο t. Το -e- είναι ένα «μαξιλαράκι» ανάμεσα.",
+          "mistake": "Κάποιοι γράφουν «er arbeit» ή «du arbeitst». Το σωστό είναι er arbeitet, du arbeitest.",
+          "q": {
+            "q": "«Mein Vater ___ im Garten.»",
+            "c": "arbeitet",
+            "w": [
+              "arbeitt",
+              "arbeiten",
+              "arbeitest"
+            ],
+            "why": "Θέμα σε -t: er arbeitet."
+          }
+        }
+      },
+      {
+        "h": "Μεγάλα ρήματα: telefonieren, reparieren",
+        "t": "Τα ρήματα σε -ieren είναι μεγάλα αλλά κανονικά: κόβεις το -en και βάζεις τις ίδιες καταλήξεις. ich telefoniere, du telefonierst, er telefoniert· ich repariere, du reparierst, er repariert.",
+        "ex": "Emma telefoniert mit Ben. Opa repariert den Computer.",
+        "def": "telefonieren: ich telefoniere, du telefonierst, er/sie telefoniert, wir telefonieren, ihr telefoniert, sie telefonieren.",
+        "defLabel": "Ο κανόνας",
+        "alt": {
+          "t": "Μην τρομάζεις από το μήκος: telefonier- είναι το θέμα και μετά οι γνωστές καταλήξεις.",
+          "mistake": "Κάποιοι γράφουν «sie telefonierst» για τη Laura. Με το er/sie η κατάληξη είναι -t.",
+          "q": {
+            "q": "«Emma ___ mit Ben.»",
+            "c": "telefoniert",
+            "w": [
+              "telefoniere",
+              "telefonierst",
+              "telefonieren"
+            ],
+            "why": "sie (μία) → -t."
+          }
+        }
+      },
+      {
+        "h": "lesen: e → ie",
+        "t": "Το lesen (διαβάζω) αλλάζει φωνήεν στο du και στο er/sie: ich lese, du liest, er liest. Στον πληθυντικό ξαναγίνεται κανονικό: wir lesen, ihr lest, sie lesen.",
+        "ex": "• Liest du gern? ▲ Ja, ich lese viel. Mein Opa liest die Zeitung.",
+        "def": "lesen: ich lese, du liest, er/sie liest, wir lesen, ihr lest, sie lesen.",
+        "defLabel": "Ο κανόνας",
+        "hooks": [
+          "Μόνο τα δύο «μεσαία» πρόσωπα παίρνουν ie: du liest, er liest."
+        ],
+        "alt": {
+          "t": "Σκέψου ότι το e «μεγαλώνει» σε ie μόνο όταν μιλάς σε κάποιον (du) ή για κάποιον (er/sie).",
+          "mistake": "Κάποιοι γράφουν «du lest». Το σωστό είναι du liest (και όχι liesst: το s δεν διπλασιάζεται).",
+          "q": {
+            "q": "«___ du gern Bücher?»",
+            "c": "Liest",
+            "w": [
+              "Lest",
+              "Lese",
+              "Lesen"
+            ],
+            "why": "du → liest."
+          }
+        }
+      },
+      {
+        "h": "heißen: du heißt",
+        "t": "Το heißen έχει θέμα που τελειώνει σε ß. Στο du δεν προσθέτουμε άλλο s: du heißt (όχι heißst). Το ίδιο και er heißt.",
+        "ex": "• Wie heißt du? ▲ Ich heiße Mia. Und mein Bruder heißt Ben.",
+        "def": "heißen: ich heiße, du heißt, er/sie heißt, wir heißen, ihr heißt, sie heißen.",
+        "defLabel": "Ο κανόνας",
+        "alt": {
+          "t": "Το ß «έχει ήδη μέσα του» ένα s, οπότε στο du βάζεις μόνο το -t.",
+          "mistake": "Κάποιοι γράφουν «du heißst». Σωστό: du heißt.",
+          "q": {
+            "q": "Ποιο είναι σωστό;",
+            "c": "du heißt",
+            "w": [
+              "du heißst",
+              "du heiße",
+              "du heißen"
+            ],
+            "why": "ß + t = heißt."
+          }
+        }
+      }
+    ],
+    "vocab": [
+      [
+        "spielen",
+        "παίζω",
+        "ich spiele, du spielst"
+      ],
+      [
+        "machen",
+        "κάνω",
+        "er macht"
+      ],
+      [
+        "hören",
+        "ακούω",
+        "du hörst"
+      ],
+      [
+        "wohnen",
+        "μένω",
+        "wir wohnen"
+      ],
+      [
+        "arbeiten",
+        "δουλεύω",
+        "er arbeitet"
+      ],
+      [
+        "finden",
+        "βρίσκω (μου φαίνεται)",
+        "Wie findest du das?"
+      ],
+      [
+        "telefonieren",
+        "μιλάω στο τηλέφωνο",
+        "sie telefoniert"
+      ],
+      [
+        "reparieren",
+        "επισκευάζω",
+        "er repariert"
+      ],
+      [
+        "lesen",
+        "διαβάζω",
+        "du liest"
+      ],
+      [
+        "heißen",
+        "ονομάζομαι",
+        "du heißt"
+      ]
+    ],
+    "quiz": [
+      {
+        "topic": 0,
+        "q": "Ποιο είναι το θέμα του «schreiben»;",
+        "c": "schreib-",
+        "w": [
+          "schreiben-",
+          "schre-",
+          "schr-"
+        ],
+        "why": "Κόβεις το -en."
+      },
+      {
+        "topic": 1,
+        "q": "«___ du gern Musik?»",
+        "c": "Hörst",
+        "w": [
+          "Höre",
+          "Hört",
+          "Hören"
+        ],
+        "why": "du → -st."
+      },
+      {
+        "topic": 1,
+        "q": "«Ich ___ gern Fußball.»",
+        "c": "spiele",
+        "w": [
+          "spielst",
+          "spielt",
+          "spielen"
+        ],
+        "why": "ich → -e."
+      },
+      {
+        "topic": 2,
+        "q": "«Wir ___ Hausaufgaben.»",
+        "c": "machen",
+        "w": [
+          "mache",
+          "machst",
+          "macht"
+        ],
+        "why": "wir → -en."
+      },
+      {
+        "topic": 2,
+        "q": "«Ihr ___ in Berlin.»",
+        "c": "wohnt",
+        "w": [
+          "wohne",
+          "wohnst",
+          "wohnen"
+        ],
+        "why": "ihr → -t."
+      },
+      {
+        "topic": 2,
+        "q": "«Tim und Mia ___ Tennis.»",
+        "c": "spielen",
+        "w": [
+          "spielt",
+          "spielst",
+          "spiele"
+        ],
+        "why": "Πολλοί → -en."
+      },
+      {
+        "topic": 3,
+        "q": "«Mein Vater ___ im Garten.»",
+        "c": "arbeitet",
+        "w": [
+          "arbeitt",
+          "arbeiten",
+          "arbeitest"
+        ],
+        "why": "Θέμα σε -t: er arbeitet."
+      },
+      {
+        "topic": 3,
+        "q": "«Du ___ viel.» (arbeiten)",
+        "c": "arbeitest",
+        "w": [
+          "arbeitst",
+          "arbeitet",
+          "arbeite"
+        ],
+        "why": "Θέμα σε -t: du arbeitest."
+      },
+      {
+        "topic": 3,
+        "q": "«Wie ___ du den Film?» (finden)",
+        "c": "findest",
+        "w": [
+          "findst",
+          "findet",
+          "finde"
+        ],
+        "why": "Θέμα σε -d: du findest."
+      },
+      {
+        "topic": 4,
+        "q": "«Emma ___ mit Ben.»",
+        "c": "telefoniert",
+        "w": [
+          "telefoniere",
+          "telefonierst",
+          "telefonieren"
+        ],
+        "why": "sie (μία) → -t."
+      },
+      {
+        "topic": 5,
+        "q": "«___ du gern Bücher?»",
+        "c": "Liest",
+        "w": [
+          "Lest",
+          "Lese",
+          "Lesen"
+        ],
+        "why": "du liest."
+      },
+      {
+        "topic": 5,
+        "q": "«Mein Opa ___ viel.»",
+        "c": "liest",
+        "w": [
+          "lest",
+          "lese",
+          "lesen"
+        ],
+        "why": "er liest."
+      },
+      {
+        "topic": 6,
+        "q": "Ποιο είναι σωστό;",
+        "c": "du heißt",
+        "w": [
+          "du heißst",
+          "du heiße",
+          "du heißen"
+        ],
+        "why": "ß + t."
+      }
+    ],
+    "exTitle": "Λυμένες ασκήσεις",
+    "ex": [
+      {
+        "h": "Κλίνε το «machen»",
+        "q": "Γράψε το machen στον ενικό: ich, du, er/sie.",
+        "lvl": 1,
+        "learn": "Όπως μάθαμε, ich -e, du -st, er/sie -t.",
+        "topic": 1,
+        "steps": [
+          "Θέμα: mach-.",
+          "ich + -e → ich mache.",
+          "du + -st → du machst.",
+          "er/sie + -t → er/sie macht."
+        ],
+        "ans": "ich mache · du machst · er/sie macht"
+      },
+      {
+        "h": "Συμπλήρωσε",
+        "q": "α) Wir ___ (wohnen) in Athen. β) Ihr ___ (machen) Sport. γ) Sie ___ (hören) Musik. (αυτοί) δ) Ich ___ (malen) gern.",
+        "lvl": 1,
+        "learn": "Όπως μάθαμε, wir -en, ihr -t, sie -en, ich -e.",
+        "topic": 2,
+        "steps": [
+          "α) wir → wohnen.",
+          "β) ihr → macht.",
+          "γ) sie, πολλοί → hören.",
+          "δ) ich → male."
+        ],
+        "ans": "α) wohnen · β) macht · γ) hören · δ) male"
+      },
+      {
+        "h": "Με ένα -e- παραπάνω",
+        "q": "α) du ___ (arbeiten) β) er ___ (finden) γ) ihr ___ (arbeiten) δ) ich ___ (arbeiten)",
+        "lvl": 2,
+        "learn": "Όπως μάθαμε, όταν το θέμα τελειώνει σε -t ή -d, μπαίνει -e- πριν από το -st και το -t.",
+        "topic": 3,
+        "steps": [
+          "α) arbeit + e + st → arbeitest.",
+          "β) find + e + t → findet.",
+          "γ) arbeit + e + t → arbeitet.",
+          "δ) Το ich έχει ήδη -e → arbeite."
+        ],
+        "ans": "α) arbeitest · β) findet · γ) arbeitet · δ) arbeite"
+      },
+      {
+        "h": "lesen",
+        "q": "Συμπλήρωσε με το lesen: α) Ich ___ viel. β) ___ du gern? γ) Mia ___ ein Buch. δ) Wir ___ zusammen.",
+        "lvl": 2,
+        "learn": "Όπως μάθαμε, το lesen παίρνει ie στο du και στο er/sie.",
+        "topic": 5,
+        "steps": [
+          "α) ich → lese.",
+          "β) du → Liest (με κεφαλαίο, γιατί αρχίζει η ερώτηση).",
+          "γ) sie (η Mia) → liest.",
+          "δ) wir → lesen."
+        ],
+        "ans": "α) lese · β) Liest · γ) liest · δ) lesen"
+      },
+      {
+        "h": "Διόρθωσε το μήνυμα",
+        "q": "Βρες και διόρθωσε τα 4 λάθη: «Hallo Ben! Was machen du gern? Ich spielt Tennis. Mein Bruder lest viel und meine Schwester telefonierst mit Freunden.»",
+        "lvl": 3,
+        "learn": "Όπως μάθαμε, κάθε πρόσωπο έχει τη δική του κατάληξη, και το lesen παίρνει ie.",
+        "topic": 4,
+        "steps": [
+          "«machen du» → du θέλει -st → machst du.",
+          "«Ich spielt» → ich θέλει -e → Ich spiele.",
+          "«Mein Bruder lest» → er liest → Mein Bruder liest.",
+          "«meine Schwester telefonierst» → sie (μία) θέλει -t → telefoniert."
+        ],
+        "ans": "Was machst du gern? · Ich spiele Tennis. · Mein Bruder liest viel · meine Schwester telefoniert mit Freunden."
+      },
+      {
+        "h": "Ποιο πρόσωπο κρύβεται;",
+        "q": "Συμπλήρωσε: α) Lena und ich ___ (spielen) Fußball. β) Du und Tim, ihr ___ (hören) Musik. γ) Herr Weber ___ (reparieren) den Computer. δ) Meine Großeltern ___ (arbeiten) im Garten.",
+        "lvl": 3,
+        "learn": "Όπως μάθαμε, για να βρεις την κατάληξη πρώτα βρίσκεις ποιο πρόσωπο είναι το υποκείμενο.",
+        "topic": 2,
+        "steps": [
+          "α) Lena und ich = wir → spielen.",
+          "β) Du und Tim = ihr → hört.",
+          "γ) Herr Weber = er → repariert.",
+          "δ) Meine Großeltern = sie (πολλοί) → arbeiten."
+        ],
+        "ans": "α) spielen · β) hört · γ) repariert · δ) arbeiten"
+      }
+    ]
+  },
+  "B/german/1/4": {
+    "title": "5. Επαγγέλματα, ραντεβού και αποχαιρετισμοί",
+    "summary": [
+      {
+        "h": "Επαγγέλματα",
+        "t": "Τα επαγγέλματα έχουν αρσενικό και θηλυκό με -in: der Ingenieur / die Ingenieurin (μηχανικός), der Architekt / die Architektin (αρχιτέκτονας), der Techniker / die Technikerin (τεχνικός), der Künstler / die Künstlerin (καλλιτέχνης), der Lehrer / die Lehrerin (καθηγητής). Λέμε το επάγγελμα χωρίς άρθρο: «Er ist Ingenieur.»",
+        "ex": "Mein Vater ist Techniker. Meine Tante ist Architektin. Herr Berg ist Künstler.",
+        "def": "Er ist Ingenieur / Architekt / Techniker / Künstler. · Sie ist Ingenieurin / Architektin / Technikerin / Künstlerin.",
+        "alt": {
+          "t": "Όπως στο Schüler → Schülerin: βάζεις -in και γίνεται θηλυκό.",
+          "mistake": "Κάποιοι λένε «Sie ist Architekt» για γυναίκα. Το σωστό είναι «Sie ist Architektin».",
+          "q": {
+            "q": "Πώς λέγεται η γυναίκα αρχιτέκτονας;",
+            "c": "die Architektin",
+            "w": [
+              "die Architekt",
+              "der Architektin",
+              "die Architekte"
+            ],
+            "why": "Θηλυκό με -in."
+          }
+        }
+      },
+      {
+        "h": "Τι θέλεις να γίνεις; möchten + werden",
+        "t": "«Was möchtest du werden?» σημαίνει «Τι θέλεις να γίνεις;». Απαντάς «Ich möchte Künstler werden.» Το möchten κλίνεται: ich möchte, du möchtest, er/sie möchte, wir möchten, ihr möchtet, sie möchten. Το δεύτερο ρήμα (werden) πάει στο τέλος.",
+        "ex": "• Was möchtest du werden? ▲ Ich möchte Ingenieurin werden. Mein Bruder möchte Lehrer werden.",
+        "def": "möchten: ich möchte, du möchtest, er/sie möchte, wir möchten, ihr möchtet, sie möchten. Ich möchte … werden (το werden στο τέλος).",
+        "defLabel": "Ο κανόνας",
+        "hooks": [
+          "Στο möchten, ich και er είναι ίδια: ich möchte, er möchte (χωρίς -t)."
+        ],
+        "alt": {
+          "t": "Η πρόταση είναι σαν σάντουιτς: möchte στη δεύτερη θέση, werden στο τέλος, και το επάγγελμα στη μέση.",
+          "mistake": "Κάποιοι γράφουν «er möchtet». Με το er/sie: möchte, χωρίς -t.",
+          "q": {
+            "q": "«Mia ___ Künstlerin werden.»",
+            "c": "möchte",
+            "w": [
+              "möchtet",
+              "möchtest",
+              "möchten"
+            ],
+            "why": "er/sie → möchte."
+          }
+        }
+      },
+      {
+        "h": "Möchtest du mitmachen?",
+        "t": "Το mitmachen σημαίνει «συμμετέχω, μπαίνω κι εγώ». Ρωτάς «Möchtest du mitmachen?» (Θέλεις να μπεις κι εσύ;). Απαντάς «Ja, ich möchte mitmachen.» ή «Nein, ich möchte nicht mitmachen.»",
+        "ex": "• Wir spielen Volleyball. Möchtest du mitmachen? ▲ Ja, gern! / Nein, danke, ich möchte nicht mitmachen.",
+        "def": "Möchtest du mitmachen? – Ja, ich möchte mitmachen. / Nein, ich möchte nicht mitmachen.",
+        "alt": {
+          "t": "mit = μαζί, machen = κάνω. mitmachen = «κάνω μαζί με τους άλλους».",
+          "mistake": "Κάποιοι γράφουν «Ich möchte mitmachen nicht». Το nicht μπαίνει πριν από το mitmachen.",
+          "q": {
+            "q": "Πώς λες «Δεν θέλω να συμμετάσχω»;",
+            "c": "Ich möchte nicht mitmachen.",
+            "w": [
+              "Ich möchte mitmachen nicht.",
+              "Ich nicht möchte mitmachen.",
+              "Nicht ich möchte mitmachen."
+            ],
+            "why": "nicht πριν από το mitmachen."
+          }
+        }
+      },
+      {
+        "h": "Ραντεβού: έρχομαι!",
+        "t": "Όταν σε περιμένουν: «Kommst du?» (Έρχεσαι;). Απαντάς: «Ja, ich komme sofort!» (Έρχομαι αμέσως!), «Ich bin gleich da.» (Σε λίγο είμαι εκεί.), «Ich bin gleich fertig.» (Σε λίγο είμαι έτοιμος.)",
+        "ex": "• Lena, kommst du? Das Spiel beginnt! ▲ Ja, ich bin gleich fertig. Ich komme sofort!",
+        "def": "Kommst du? – Ich komme sofort. / Ich bin gleich da. / Ich bin gleich fertig.",
+        "more": [
+          "gleich = σε λίγο, sofort = αμέσως, fertig = έτοιμος, da = εκεί/εδώ."
+        ],
+        "alt": {
+          "t": "Τρεις απαντήσεις, τρεις καταστάσεις: έρχομαι τώρα (sofort), φτάνω σε λίγο (gleich da), τελειώνω σε λίγο (gleich fertig).",
+          "mistake": "Κάποιοι μπερδεύουν το fertig με το «κουρασμένος». Εδώ σημαίνει «έτοιμος».",
+          "q": {
+            "q": "Τι σημαίνει «Ich bin gleich fertig»;",
+            "c": "Σε λίγο είμαι έτοιμος.",
+            "w": [
+              "Είμαι πολύ κουρασμένος.",
+              "Δεν έρχομαι.",
+              "Είμαι ήδη εκεί."
+            ],
+            "why": "gleich = σε λίγο, fertig = έτοιμος."
+          }
+        }
+      },
+      {
+        "h": "Αποχαιρετισμοί",
+        "t": "Για να πεις αντίο: «Tschüss!» (φιλικά, σε φίλους και οικογένεια), «Auf Wiedersehen!» (ευγενικά, σε μεγάλους και άγνωστους), «Gute Nacht!» (το βράδυ πριν από τον ύπνο), «Bis bald!» (τα λέμε σύντομα), «Bis morgen!» (τα λέμε αύριο).",
+        "ex": "Tschüss, Ben! Bis morgen! · Auf Wiedersehen, Frau Klein! · Gute Nacht, Mama!",
+        "def": "Tschüss (φιλικά) · Auf Wiedersehen (ευγενικά) · Gute Nacht (πριν από τον ύπνο) · Bis bald / Bis morgen",
+        "alt": {
+          "t": "Σκέψου σε ποιον μιλάς: φίλος → Tschüss, καθηγητής → Auf Wiedersehen, ώρα για ύπνο → Gute Nacht.",
+          "mistake": "Κάποιοι λένε «Tschüss» στη διευθύντρια. Σε μεγάλους και άγνωστους λέμε «Auf Wiedersehen».",
+          "q": {
+            "q": "Αποχαιρετάς την καθηγήτριά σου. Τι λες;",
+            "c": "Auf Wiedersehen, Frau Klein!",
+            "w": [
+              "Tschüss, Alter!",
+              "Gute Nacht, Frau Klein!",
+              "Guten Morgen, Frau Klein!"
+            ],
+            "why": "Ευγενικά: Auf Wiedersehen."
+          }
+        }
+      },
+      {
+        "h": "Χαιρετισμοί της μέρας",
+        "t": "Όταν συναντάς κάποιον: «Hallo!» (φιλικά), «Guten Morgen!» (το πρωί), «Guten Tag!» (τη μέρα), «Guten Abend!» (το βράδυ). Προσοχή: το «Gute Nacht!» δεν είναι χαιρετισμός· το λες όταν φεύγεις για ύπνο.",
+        "ex": "Guten Morgen, Oma! · Guten Tag, Herr Weber! · Guten Abend! · Gute Nacht!",
+        "def": "Guten Morgen / Guten Tag / Guten Abend (χαιρετισμοί) · Gute Nacht (αποχαιρετισμός πριν από τον ύπνο)",
+        "hooks": [
+          "Guten Morgen, Guten Tag, Guten Abend: όλα με «Guten». Μόνο η νύχτα είναι «Gute» Nacht (die Nacht)."
+        ],
+        "alt": {
+          "t": "Μια μέρα σε τέσσερα σκαλιά: πρωί (Guten Morgen), μέρα (Guten Tag), βράδυ (Guten Abend), ύπνος (Gute Nacht).",
+          "mistake": "Κάποιοι γράφουν «Guten Nacht». Το σωστό είναι «Gute Nacht».",
+          "q": {
+            "q": "Είναι 8 το πρωί. Τι λες;",
+            "c": "Guten Morgen!",
+            "w": [
+              "Gute Nacht!",
+              "Guten Abend!",
+              "Bis morgen!"
+            ],
+            "why": "Το πρωί: Guten Morgen."
+          }
+        }
+      }
+    ],
+    "vocab": [
+      [
+        "der Ingenieur / die Ingenieurin",
+        "ο/η μηχανικός",
+        "Sie ist Ingenieurin."
+      ],
+      [
+        "der Architekt / die Architektin",
+        "ο/η αρχιτέκτονας",
+        "Er ist Architekt."
+      ],
+      [
+        "der Techniker / die Technikerin",
+        "ο/η τεχνικός",
+        "Mein Vater ist Techniker."
+      ],
+      [
+        "der Künstler / die Künstlerin",
+        "ο/η καλλιτέχνης",
+        "Ich möchte Künstler werden."
+      ],
+      [
+        "werden",
+        "γίνομαι",
+        "Was möchtest du werden?"
+      ],
+      [
+        "möchten",
+        "θα ήθελα, θέλω",
+        "ich möchte, du möchtest"
+      ],
+      [
+        "mitmachen",
+        "συμμετέχω",
+        "Möchtest du mitmachen?"
+      ],
+      [
+        "sofort / gleich",
+        "αμέσως / σε λίγο",
+        "Ich komme sofort."
+      ],
+      [
+        "fertig",
+        "έτοιμος",
+        "Ich bin gleich fertig."
+      ],
+      [
+        "Tschüss / Auf Wiedersehen",
+        "γεια (φιλικά) / αντίο (ευγενικά)",
+        "Tschüss, Ben!"
+      ],
+      [
+        "Gute Nacht",
+        "καληνύχτα",
+        "Gute Nacht, Mama!"
+      ]
+    ],
+    "quiz": [
+      {
+        "topic": 0,
+        "q": "Πώς λέγεται η γυναίκα αρχιτέκτονας;",
+        "c": "die Architektin",
+        "w": [
+          "die Architekt",
+          "der Architektin",
+          "die Architekte"
+        ],
+        "why": "Θηλυκό με -in."
+      },
+      {
+        "topic": 0,
+        "q": "«Mein Onkel ist ___.» Ποιο ταιριάζει;",
+        "c": "Techniker",
+        "w": [
+          "Technikerin",
+          "Technikern",
+          "Techniks"
+        ],
+        "why": "Ο θείος είναι άντρας: Techniker."
+      },
+      {
+        "topic": 1,
+        "q": "«Was ___ du werden?»",
+        "c": "möchtest",
+        "w": [
+          "möchte",
+          "möchtet",
+          "möchten"
+        ],
+        "why": "du → möchtest."
+      },
+      {
+        "topic": 1,
+        "q": "«Mia ___ Künstlerin werden.»",
+        "c": "möchte",
+        "w": [
+          "möchtet",
+          "möchtest",
+          "möchten"
+        ],
+        "why": "er/sie → möchte."
+      },
+      {
+        "topic": 1,
+        "q": "Ποια πρόταση είναι σωστή;",
+        "c": "Ich möchte Ingenieur werden.",
+        "w": [
+          "Ich möchte werden Ingenieur.",
+          "Ich werden möchte Ingenieur.",
+          "Werden ich möchte Ingenieur."
+        ],
+        "why": "Το werden πάει στο τέλος."
+      },
+      {
+        "topic": 2,
+        "q": "Πώς λες «Δεν θέλω να συμμετάσχω»;",
+        "c": "Ich möchte nicht mitmachen.",
+        "w": [
+          "Ich möchte mitmachen nicht.",
+          "Ich nicht möchte mitmachen.",
+          "Nicht ich möchte mitmachen."
+        ],
+        "why": "nicht πριν από το mitmachen."
+      },
+      {
+        "topic": 3,
+        "q": "Η φίλη σου ρωτά «Kommst du?» και εσύ φτάνεις σε ένα λεπτό. Τι λες;",
+        "c": "Ja, ich bin gleich da.",
+        "w": [
+          "Gute Nacht!",
+          "Auf Wiedersehen!",
+          "Ich bin vierzehn."
+        ],
+        "why": "gleich da = σε λίγο είμαι εκεί."
+      },
+      {
+        "topic": 3,
+        "q": "Τι σημαίνει «Ich bin gleich fertig»;",
+        "c": "Σε λίγο είμαι έτοιμος.",
+        "w": [
+          "Είμαι πολύ κουρασμένος.",
+          "Δεν έρχομαι.",
+          "Είμαι ήδη εκεί."
+        ],
+        "why": "fertig = έτοιμος."
+      },
+      {
+        "topic": 4,
+        "q": "Αποχαιρετάς την καθηγήτριά σου. Τι λες;",
+        "c": "Auf Wiedersehen!",
+        "w": [
+          "Tschüss, Alter!",
+          "Guten Morgen!",
+          "Guten Abend!"
+        ],
+        "why": "Ευγενικά: Auf Wiedersehen."
+      },
+      {
+        "topic": 4,
+        "q": "Λες «καληνύχτα» στη γιαγιά πριν πας για ύπνο:",
+        "c": "Gute Nacht, Oma!",
+        "w": [
+          "Guten Nacht, Oma!",
+          "Guten Morgen, Oma!",
+          "Gute Tag, Oma!"
+        ],
+        "why": "Gute Nacht."
+      },
+      {
+        "topic": 4,
+        "q": "Ποιο είναι φιλικό «γεια» όταν φεύγεις;",
+        "c": "Tschüss!",
+        "w": [
+          "Guten Tag!",
+          "Wie heißt du?",
+          "Danke!"
+        ],
+        "why": "Tschüss = γεια (φιλικά)."
+      },
+      {
+        "topic": 5,
+        "q": "Είναι 8 το πρωί. Τι λες;",
+        "c": "Guten Morgen!",
+        "w": [
+          "Gute Nacht!",
+          "Guten Abend!",
+          "Bis morgen!"
+        ],
+        "why": "Το πρωί: Guten Morgen."
+      }
+    ],
+    "exTitle": "Λυμένες ασκήσεις",
+    "ex": [
+      {
+        "h": "Αρσενικό και θηλυκό",
+        "q": "Γράψε το άλλο γένος: α) der Ingenieur β) der Künstler γ) die Technikerin δ) die Lehrerin",
+        "lvl": 1,
+        "learn": "Όπως μάθαμε, το θηλυκό παίρνει -in.",
+        "topic": 0,
+        "steps": [
+          "α) + -in → die Ingenieurin.",
+          "β) + -in → die Künstlerin.",
+          "γ) − -in → der Techniker.",
+          "δ) − -in → der Lehrer."
+        ],
+        "ans": "α) die Ingenieurin · β) die Künstlerin · γ) der Techniker · δ) der Lehrer"
+      },
+      {
+        "h": "Τι λες;",
+        "q": "Τι λες σε κάθε περίπτωση; α) Φεύγεις από το σπίτι ενός φίλου. β) Πας για ύπνο. γ) Αποχαιρετάς τη διευθύντρια του σχολείου.",
+        "lvl": 1,
+        "learn": "Όπως μάθαμε, Tschüss φιλικά, Gute Nacht πριν από τον ύπνο, Auf Wiedersehen ευγενικά.",
+        "topic": 4,
+        "steps": [
+          "α) Φίλος → Tschüss!",
+          "β) Ύπνος → Gute Nacht!",
+          "γ) Μεγάλος, ευγενικά → Auf Wiedersehen!"
+        ],
+        "ans": "α) Tschüss! · β) Gute Nacht! · γ) Auf Wiedersehen!"
+      },
+      {
+        "h": "Τι θέλει να γίνει;",
+        "q": "Γράψε στα γερμανικά: α) Ο Ben θέλει να γίνει μηχανικός. β) Η Mia θέλει να γίνει καλλιτέχνις. γ) Θέλω να γίνω αρχιτέκτονας. δ) Ρώτα τον φίλο σου τι θέλει να γίνει.",
+        "lvl": 2,
+        "learn": "Όπως μάθαμε, möchte(n) στη δεύτερη θέση και werden στο τέλος.",
+        "topic": 1,
+        "steps": [
+          "α) er → möchte, άντρας → Ingenieur: Ben möchte Ingenieur werden.",
+          "β) sie → möchte, γυναίκα → Künstlerin: Mia möchte Künstlerin werden.",
+          "γ) ich → möchte: Ich möchte Architekt (ή Architektin) werden.",
+          "δ) Was + möchtest + du + werden?"
+        ],
+        "ans": "α) Ben möchte Ingenieur werden. · β) Mia möchte Künstlerin werden. · γ) Ich möchte Architekt/Architektin werden. · δ) Was möchtest du werden?"
+      },
+      {
+        "h": "Ένα μήνυμα",
+        "q": "Η Lena γράφει: «Kommst du? Wir spielen Fußball!» Απάντησε δύο φορές: α) έρχεσαι αμέσως, β) σε λίγο είσαι έτοιμος.",
+        "lvl": 2,
+        "learn": "Όπως μάθαμε, sofort = αμέσως, gleich fertig = σε λίγο έτοιμος.",
+        "topic": 3,
+        "steps": [
+          "α) Αμέσως → Ja, ich komme sofort!",
+          "β) Σε λίγο έτοιμος → Ich bin gleich fertig!"
+        ],
+        "ans": "α) Ja, ich komme sofort! · β) Ich bin gleich fertig!"
+      },
+      {
+        "h": "Θέλεις να συμμετάσχεις;",
+        "q": "Απάντησε στο «Möchtest du mitmachen? Wir spielen Fußball.» μία φορά με ναι και μία με όχι, και πρόσθεσε μια πρόταση με gern ή nicht gern.",
+        "lvl": 3,
+        "learn": "Όπως μάθαμε, Ich möchte (nicht) mitmachen, και gern / nicht gern μετά το ρήμα.",
+        "topic": 2,
+        "steps": [
+          "Ναι: Ja, ich möchte mitmachen. + Ich spiele gern Fußball.",
+          "Όχι: το nicht πριν από το mitmachen: Nein, ich möchte nicht mitmachen. + Ich spiele nicht gern Fußball."
+        ],
+        "ans": "Ja, ich möchte mitmachen. Ich spiele gern Fußball. · Nein, ich möchte nicht mitmachen. Ich spiele nicht gern Fußball."
+      },
+      {
+        "h": "Η κλίση του möchten",
+        "q": "Γράψε όλα τα πρόσωπα: ich, du, er/sie, wir, ihr, sie.",
+        "lvl": 3,
+        "learn": "Όπως μάθαμε, στο möchten το ich και το er είναι ίδια.",
+        "topic": 1,
+        "steps": [
+          "ich möchte (χωρίς κατάληξη).",
+          "du möchtest.",
+          "er/sie möchte (ίδιο με το ich).",
+          "wir möchten.",
+          "ihr möchtet.",
+          "sie möchten."
+        ],
+        "ans": "ich möchte · du möchtest · er/sie möchte · wir möchten · ihr möchtet · sie möchten"
+      }
+    ]
+  },
+  "B/german/1/5": {
+    "title": "6. Οι αριθμοί ως το 2000",
+    "summary": [
+      {
+        "h": "Οι δεκάδες",
+        "t": "Οι δεκάδες φτιάχνονται με -zig: zwanzig (20), vierzig (40), fünfzig (50), sechzig (60), siebzig (70), achtzig (80), neunzig (90). Το 30 είναι διαφορετικό: dreißig, με ß.",
+        "ex": "Mein Opa ist siebzig. Hier ist eine 30-Zone: dreißig!",
+        "def": "20 zwanzig · 30 dreißig · 40 vierzig · 50 fünfzig · 60 sechzig · 70 siebzig · 80 achtzig · 90 neunzig",
+        "hooks": [
+          "Τρεις «παράξενες» δεκάδες: dreißig (ß αντί για z), sechzig (χάνει το s του sechs), siebzig (χάνει το -en του sieben)."
+        ],
+        "alt": {
+          "t": "Σχεδόν πάντα: αριθμός + zig (vier → vierzig). Πρόσεξε μόνο τις τρεις εξαιρέσεις: dreißig, sechzig, siebzig.",
+          "mistake": "Κάποιοι γράφουν «dreizig» ή «sechszig». Σωστά: dreißig, sechzig.",
+          "q": {
+            "q": "Πώς γράφεται το 60;",
+            "c": "sechzig",
+            "w": [
+              "sechszig",
+              "sechzehn",
+              "sechsig"
+            ],
+            "why": "Το 60 χάνει το s: sechzig."
+          }
+        }
+      },
+      {
+        "h": "Σύνθετοι αριθμοί: πρώτα οι μονάδες",
+        "t": "Για αριθμούς όπως το 57 λες πρώτα τις μονάδες, μετά «und», μετά τις δεκάδες, όλα σε μία λέξη: siebenundfünfzig (εφτά-και-πενήντα).",
+        "ex": "36 sechsunddreißig · 47 siebenundvierzig · 64 vierundsechzig · 99 neunundneunzig",
+        "def": "μονάδες + und + δεκάδες, σε μία λέξη: 57 = siebenundfünfzig.",
+        "defLabel": "Ο κανόνας",
+        "alt": {
+          "t": "Διαβάζεις τον αριθμό «ανάποδα»: πρώτα το δεξί ψηφίο, μετά το αριστερό. 57 → 7 und 50.",
+          "mistake": "Κάποιοι γράφουν «fünfzigsieben». Σωστό: siebenundfünfzig.",
+          "q": {
+            "q": "Τι αριθμός είναι το «siebenundfünfzig»;",
+            "c": "57",
+            "w": [
+              "75",
+              "507",
+              "17"
+            ],
+            "why": "sieben (7) und fünfzig (50) = 57."
+          }
+        }
+      },
+      {
+        "h": "eins γίνεται ein",
+        "t": "Το 1 μόνο του είναι eins. Μέσα σε σύνθετο αριθμό χάνει το s: 21 einundzwanzig, 31 einunddreißig, 71 einundsiebzig.",
+        "ex": "21 einundzwanzig · 31 einunddreißig · der Bus Nummer einundsiebzig (71).",
+        "def": "1 = eins, αλλά 21 = einundzwanzig, 71 = einundsiebzig (ein-, χωρίς s).",
+        "defLabel": "Ο κανόνας",
+        "alt": {
+          "t": "Το eins «χάνει την ουρά του» όταν κολλάει σε άλλη λέξη: eins → ein-und-…",
+          "mistake": "Κάποιοι γράφουν «einsundzwanzig». Σωστό: einundzwanzig.",
+          "q": {
+            "q": "Πώς λέγεται το 71;",
+            "c": "einundsiebzig",
+            "w": [
+              "einsundsiebzig",
+              "siebzigundeins",
+              "einsiebzig"
+            ],
+            "why": "ein + und + siebzig."
+          }
+        }
+      },
+      {
+        "h": "Εκατοντάδες και χιλιάδες",
+        "t": "100 είναι (ein)hundert, 200 zweihundert, 300 dreihundert. 1000 είναι (ein)tausend, 2000 zweitausend. Στους μεγάλους αριθμούς λες πρώτα τις εκατοντάδες και μετά τα υπόλοιπα, πάλι σε μία λέξη: 309 dreihundertneun, 245 zweihundertfünfundvierzig.",
+        "ex": "Das Haus hat die Nummer dreihundertneun (309). · Das kostet zweihundert Euro.",
+        "def": "100 hundert · 200 zweihundert · 1000 tausend · 2000 zweitausend · 245 = zweihundert + fünfundvierzig = zweihundertfünfundvierzig",
+        "defLabel": "Ο κανόνας",
+        "alt": {
+          "t": "Χώρισε τον αριθμό σε δύο κομμάτια: 245 → 200 (zweihundert) και 45 (fünfundvierzig). Κόλλησέ τα.",
+          "mistake": "Κάποιοι μπερδεύουν zweihundert (200) με zweitausend (2000). hundert = 100, tausend = 1000.",
+          "q": {
+            "q": "Τι αριθμός είναι το «zweitausend»;",
+            "c": "2000",
+            "w": [
+              "200",
+              "20",
+              "2200"
+            ],
+            "why": "tausend = 1000."
+          }
+        }
+      },
+      {
+        "h": "Πράξεις: plus, minus, ist",
+        "t": "Στις πράξεις λέμε plus (+), minus (−) και ist ή gleich (=). «Zwanzig plus dreißig ist fünfzig.» (20 + 30 = 50.)",
+        "ex": "hundert minus dreißig ist siebzig (100 − 30 = 70).",
+        "def": "+ plus · − minus · = ist / gleich",
+        "alt": {
+          "t": "Είναι σχεδόν σαν τα ελληνικά: «συν» = plus, «πλην» = minus, «ίσον» = ist.",
+          "mistake": "Κάποιοι γράφουν «und» για το +. Στα μαθηματικά λέμε plus.",
+          "q": {
+            "q": "«zwanzig plus vierzig ist …»",
+            "c": "sechzig",
+            "w": [
+              "vierzig",
+              "achtzig",
+              "fünfzig"
+            ],
+            "why": "20 + 40 = 60."
+          }
+        }
+      },
+      {
+        "h": "Οι αριθμοί γύρω μας",
+        "t": "Τους αριθμούς τους βλέπεις παντού: σε πινακίδες, σε σπίτια, στις χρονιές. Η χρονιά 2026 λέγεται zweitausendsechsundzwanzig (2000 + 26).",
+        "ex": "Wir haben das Jahr zweitausendsechsundzwanzig. · Hausnummer fünfundachtzig (85).",
+        "def": "2026 = zweitausend + sechsundzwanzig = zweitausendsechsundzwanzig",
+        "alt": {
+          "t": "Η χρονιά διαβάζεται όπως κάθε μεγάλος αριθμός: χιλιάδες, μετά μονάδες-und-δεκάδες.",
+          "mistake": "Κάποιοι γράφουν «zweitausendzwanzigsechs». Σωστό: zweitausendsechsundzwanzig.",
+          "q": {
+            "q": "Πώς διαβάζεται το 2026;",
+            "c": "zweitausendsechsundzwanzig",
+            "w": [
+              "zweitausendzwanzigsechs",
+              "zweihundertsechsundzwanzig",
+              "sechsundzwanzigzweitausend"
+            ],
+            "why": "2000 + 26."
+          }
+        }
+      }
+    ],
+    "vocab": [
+      [
+        "zwanzig, dreißig",
+        "20, 30",
+        "dreißig με ß"
+      ],
+      [
+        "vierzig, fünfzig",
+        "40, 50",
+        "Mein Vater ist vierzig."
+      ],
+      [
+        "sechzig, siebzig",
+        "60, 70",
+        "χωρίς s / χωρίς -en"
+      ],
+      [
+        "achtzig, neunzig",
+        "80, 90",
+        "Meine Oma ist achtzig."
+      ],
+      [
+        "hundert, zweihundert",
+        "100, 200",
+        "Das kostet zweihundert Euro."
+      ],
+      [
+        "tausend, zweitausend",
+        "1000, 2000",
+        "das Jahr zweitausend"
+      ],
+      [
+        "und",
+        "και (μέσα στους αριθμούς)",
+        "siebenundfünfzig = 57"
+      ],
+      [
+        "plus, minus, ist",
+        "συν, πλην, ίσον",
+        "zwanzig plus zehn ist dreißig"
+      ]
+    ],
+    "quiz": [
+      {
+        "topic": 0,
+        "q": "Πώς γράφεται το 30;",
+        "c": "dreißig",
+        "w": [
+          "dreizig",
+          "dreizehn",
+          "dreitzig"
+        ],
+        "why": "Το 30 θέλει ß: dreißig."
+      },
+      {
+        "topic": 0,
+        "q": "Πώς γράφεται το 60;",
+        "c": "sechzig",
+        "w": [
+          "sechszig",
+          "sechzehn",
+          "sechsig"
+        ],
+        "why": "Χωρίς s: sechzig."
+      },
+      {
+        "topic": 0,
+        "q": "Πώς γράφεται το 70;",
+        "c": "siebzig",
+        "w": [
+          "siebenzig",
+          "siebzehn",
+          "siebig"
+        ],
+        "why": "siebzig."
+      },
+      {
+        "topic": 1,
+        "q": "Τι αριθμός είναι το «siebenundfünfzig»;",
+        "c": "57",
+        "w": [
+          "75",
+          "507",
+          "17"
+        ],
+        "why": "7 und 50 = 57."
+      },
+      {
+        "topic": 1,
+        "q": "Πώς λέγεται το 36;",
+        "c": "sechsunddreißig",
+        "w": [
+          "dreißigundsechs",
+          "dreiundsechzig",
+          "sechsdreißig"
+        ],
+        "why": "6 und 30."
+      },
+      {
+        "topic": 1,
+        "q": "Πώς λέγεται το 64;",
+        "c": "vierundsechzig",
+        "w": [
+          "sechsundvierzig",
+          "sechzigvier",
+          "vierzigsechs"
+        ],
+        "why": "4 und 60."
+      },
+      {
+        "topic": 2,
+        "q": "Πώς λέγεται το 71;",
+        "c": "einundsiebzig",
+        "w": [
+          "einsundsiebzig",
+          "siebzigundeins",
+          "einsiebzig"
+        ],
+        "why": "ein + und + siebzig."
+      },
+      {
+        "topic": 3,
+        "q": "Πώς λέγεται το 200;",
+        "c": "zweihundert",
+        "w": [
+          "zweihunderte",
+          "zwanzighundert",
+          "zweitausend"
+        ],
+        "why": "2 × 100."
+      },
+      {
+        "topic": 3,
+        "q": "Τι αριθμός είναι το «zweitausend»;",
+        "c": "2000",
+        "w": [
+          "200",
+          "20",
+          "2200"
+        ],
+        "why": "tausend = 1000."
+      },
+      {
+        "topic": 3,
+        "q": "Πώς λέγεται το 309;",
+        "c": "dreihundertneun",
+        "w": [
+          "dreihundertneunzig",
+          "neunhundertdrei",
+          "dreihundertneunzehn"
+        ],
+        "why": "300 + 9."
+      },
+      {
+        "topic": 4,
+        "q": "«zwanzig plus vierzig ist …»",
+        "c": "sechzig",
+        "w": [
+          "vierzig",
+          "achtzig",
+          "fünfzig"
+        ],
+        "why": "20 + 40 = 60."
+      },
+      {
+        "topic": 4,
+        "q": "«hundert minus dreißig ist …»",
+        "c": "siebzig",
+        "w": [
+          "sechzig",
+          "achtzig",
+          "dreißig"
+        ],
+        "why": "100 − 30 = 70."
+      },
+      {
+        "topic": 5,
+        "q": "Πώς διαβάζεται το 2026;",
+        "c": "zweitausendsechsundzwanzig",
+        "w": [
+          "zweitausendzwanzigsechs",
+          "zweihundertsechsundzwanzig",
+          "sechsundzwanzigzweitausend"
+        ],
+        "why": "2000 + 26."
+      }
+    ],
+    "exTitle": "Λυμένες ασκήσεις",
+    "ex": [
+      {
+        "h": "Γράψε τις δεκάδες",
+        "q": "Γράψε με λέξεις: α) 40 β) 50 γ) 80 δ) 90",
+        "lvl": 1,
+        "learn": "Όπως μάθαμε, οι δεκάδες φτιάχνονται με -zig.",
+        "topic": 0,
+        "steps": [
+          "α) vier + zig → vierzig.",
+          "β) fünf + zig → fünfzig.",
+          "γ) acht + zig → achtzig.",
+          "δ) neun + zig → neunzig."
+        ],
+        "ans": "α) vierzig · β) fünfzig · γ) achtzig · δ) neunzig"
+      },
+      {
+        "h": "Από λέξεις σε αριθμούς",
+        "q": "Γράψε τον αριθμό: α) dreiundzwanzig β) achtundneunzig γ) fünfundvierzig δ) einunddreißig",
+        "lvl": 1,
+        "learn": "Όπως μάθαμε, πρώτα λέμε τις μονάδες και μετά τις δεκάδες.",
+        "topic": 1,
+        "steps": [
+          "α) drei (3) und zwanzig (20) → 23.",
+          "β) acht (8) und neunzig (90) → 98.",
+          "γ) fünf (5) und vierzig (40) → 45.",
+          "δ) ein (1) und dreißig (30) → 31."
+        ],
+        "ans": "α) 23 · β) 98 · γ) 45 · δ) 31"
+      },
+      {
+        "h": "Από αριθμούς σε λέξεις",
+        "q": "Γράψε με λέξεις: α) 150 β) 427 γ) 1000 δ) 2000",
+        "lvl": 2,
+        "learn": "Όπως μάθαμε, πρώτα οι εκατοντάδες και μετά τα υπόλοιπα, σε μία λέξη.",
+        "topic": 3,
+        "steps": [
+          "α) 100 + 50 → (ein)hundertfünfzig.",
+          "β) 400 + 27 → vierhundert + siebenundzwanzig → vierhundertsiebenundzwanzig.",
+          "γ) (ein)tausend.",
+          "δ) zweitausend."
+        ],
+        "ans": "α) (ein)hundertfünfzig · β) vierhundertsiebenundzwanzig · γ) (ein)tausend · δ) zweitausend"
+      },
+      {
+        "h": "Λύσε στα γερμανικά",
+        "q": "Κάνε τις πράξεις και γράψε το αποτέλεσμα με λέξεις: α) zwanzig plus fünfunddreißig β) neunzig minus vierzig",
+        "lvl": 2,
+        "learn": "Όπως μάθαμε, plus = +, minus = −, ist = =.",
+        "topic": 4,
+        "steps": [
+          "α) 20 + 35 = 55 → fünfundfünfzig.",
+          "β) 90 − 40 = 50 → fünfzig."
+        ],
+        "ans": "α) Zwanzig plus fünfunddreißig ist fünfundfünfzig. · β) Neunzig minus vierzig ist fünfzig."
+      },
+      {
+        "h": "Μεγάλη αφαίρεση",
+        "q": "Γράψε τους αριθμούς και κάνε την πράξη: dreihundert − achtundvierzig − zweiundfünfzig = ? Γράψε και το αποτέλεσμα με λέξεις.",
+        "lvl": 3,
+        "learn": "Όπως μάθαμε, πρώτα οι μονάδες και μετά οι δεκάδες, και hundert = 100.",
+        "topic": 4,
+        "steps": [
+          "dreihundert = 300.",
+          "achtundvierzig = 8 und 40 = 48.",
+          "zweiundfünfzig = 2 und 50 = 52.",
+          "300 − 48 = 252, και 252 − 52 = 200.",
+          "200 = zweihundert."
+        ],
+        "ans": "300 − 48 − 52 = 200 · zweihundert"
+      },
+      {
+        "h": "Μεγάλη πρόσθεση",
+        "q": "Γράψε τους αριθμούς και κάνε την πράξη: dreiundsechzig + siebenundzwanzig + fünfzehn = ? Γράψε και το αποτέλεσμα με λέξεις.",
+        "lvl": 3,
+        "learn": "Όπως μάθαμε, διαβάζουμε πρώτα τις μονάδες, και οι μεγάλοι αριθμοί γράφονται σε μία λέξη.",
+        "topic": 4,
+        "steps": [
+          "dreiundsechzig = 3 und 60 = 63.",
+          "siebenundzwanzig = 7 und 20 = 27.",
+          "fünfzehn = 15.",
+          "63 + 27 = 90, και 90 + 15 = 105.",
+          "105 = (ein)hundertfünf."
+        ],
+        "ans": "63 + 27 + 15 = 105 · (ein)hundertfünf"
+      },
+      {
+        "h": "Βρες το λάθος",
+        "q": "Κάθε αριθμός είναι γραμμένος λάθος. Διόρθωσέ τον: α) 21 = einsundzwanzig β) 30 = dreizig γ) 67 = sechzigsieben δ) 70 = siebenzig",
+        "lvl": 3,
+        "learn": "Όπως μάθαμε, eins γίνεται ein, το 30 θέλει ß, πρώτα οι μονάδες, και το 70 είναι siebzig.",
+        "topic": 2,
+        "steps": [
+          "α) Σε σύνθετο το eins χάνει το s → einundzwanzig.",
+          "β) Το 30 είναι εξαίρεση → dreißig.",
+          "γ) Πρώτα οι μονάδες: sieben und sechzig → siebenundsechzig.",
+          "δ) Το 70 χάνει το -en → siebzig."
+        ],
+        "ans": "α) einundzwanzig · β) dreißig · γ) siebenundsechzig · δ) siebzig"
+      }
+    ]
+  }
+}

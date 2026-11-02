@@ -14,6 +14,17 @@ for (const [key, explanation] of Object.entries(explanations)) {
   if (!["core", "modified", "optional"].includes(explanation.status)) throw new Error(`explanations.json: ${key} έχει άγνωστο status`);
   for (const field of ["simple", "remember", "example", "syllabusNote"]) if (!explanation[field]) throw new Error(`explanations.json: ${key} θέλει ${field}`);
 }
+// Δικές μας ενότητες για μαθήματα όπου η τάξη δουλεύει με άλλο βιβλίο από το επίσημο (π.χ. Γερμανικά): src/own-books.json.
+// Μπαίνουν ως ένα ακόμα «βιβλίο» του μαθήματος (own: true), πρώτο στη σειρά, με δικούς μας τίτλους και χωρίς σύνδεσμο σε βιβλίο.
+const ownFile = path.join(__dirname, "src", "own-books.json");
+if (fs.existsSync(ownFile)) for (const [scope, o] of Object.entries(JSON.parse(fs.readFileSync(ownFile, "utf8")))) {
+  if (scope.startsWith("_")) continue;
+  const [gradeId, subjectId] = scope.split("/");
+  const subject = curriculum.grades.find(item => item.id === gradeId)?.subjects.find(item => item.id === subjectId);
+  if (!subject || !o.title || !o.sections?.length) throw new Error(`own-books.json: άγνωστο μάθημα ή χωρίς τίτλο και ενότητες: ${scope}`);
+  subject.books.push({ id:`own/${subjectId}`, own:true, title:o.title, note:o.note || "", formats:[], sections:o.sections.map(title => ({ title })) });
+  subject.bookOrder = [subject.books.length - 1, ...subject.books.map((_, i) => i).slice(0, -1)];
+}
 const officialContent = {};
 for (const file of fs.readdirSync(path.join(__dirname, "src")).filter(name => /^official-lessons(?:-.+)?\.json$/.test(name)).sort()) {
   const entries = JSON.parse(fs.readFileSync(path.join(__dirname, "src", file), "utf8"));
@@ -153,6 +164,7 @@ if (fs.existsSync(pagesFile)) {
   for (const key of [...Object.keys(P.titles), ...P.lesson]) if (!sectionAt(key)) throw new Error(`book-pages.json: άγνωστη σελίδα ${key}`);
   const B = curriculum.grades.find(item => item.id === "B");
   for (const subject of B.subjects) subject.books.forEach((book, bi) => {
+    if (book.own) return;
     const scope = `B/${subject.id}/${bi}`, head = P.head[scope] && new RegExp(P.head[scope]);
     if (P.reference.includes(scope)) book.reference = true;
     book.sections.forEach((sec, si) => {

@@ -66,7 +66,7 @@ function renderTomorrow(){
   const n = day.ids.length;
   const lead = n ? `Έχεις ${n === 1 ? "1 μάθημα" : n + " μαθήματα"}. Διάλεξε από πού θα ξεκινήσεις. Λίγο κάθε μέρα φτάνει.`
     : sched ? "Δεν έχεις μαθήματα στο πρόγραμμα για αυτή τη μέρα. Πρόσθεσε κάτι αν χρειάζεται." : "Γράψε μία φορά το πρόγραμμα της τάξης σου και εδώ θα βλέπεις τι έχεις κάθε μέρα.";
-  const subjects = getGrade(selectedGrade).subjects.filter(s => !INFO_ONLY[s.id]);
+  const subjects = getGrade(selectedGrade).subjects.filter(s => !INFO_ONLY[s.id] || s.books.some(b => b.own));
   const form = PL.add ? `<form class="sheet pl-form" id="pl-form">
       <h3 class="pl-h">Κάτι άλλο</h3>
       <div class="seg" role="group" aria-label="Τι έχεις"><button type="button" data-pl-kind="study" aria-pressed="${PL.add.kind === "study"}">Διάβασμα</button><button type="button" data-pl-kind="test" aria-pressed="${PL.add.kind === "test"}">Διαγώνισμα</button></div>
