@@ -98,6 +98,19 @@
 .fig .fig-c-fill{fill:var(--muted)}
 .fig .fig-x{fill:var(--accent)}
 .fig .fig-on{fill:#fff;font-weight:800}
+.fig-map{padding:6px;background:color-mix(in srgb,var(--c-blue) 16%,var(--paper))}
+.fig-map svg{max-height:420px;border-radius:10px}
+.fig .map-sea{fill:color-mix(in srgb,var(--c-blue) 16%,var(--paper))}
+.fig .map-land{fill:color-mix(in srgb,var(--text) 7%,var(--card));stroke:color-mix(in srgb,var(--muted) 60%,transparent);stroke-width:.7;stroke-linejoin:round}
+.fig .map-lake{stroke:none}
+.fig .map-river{fill:none;stroke:color-mix(in srgb,var(--c-blue) 45%,transparent);stroke-width:.8}
+.fig .map-river-hl{stroke:var(--c-blue);stroke-width:2.6;stroke-linecap:round}
+.fig .map-name{font-weight:700;fill:var(--text);paint-order:stroke;stroke:var(--card);stroke-width:.25em;stroke-linejoin:round}
+.fig .map-dot{fill:var(--text);stroke:var(--card);stroke-width:1.5}
+.map-legend{display:flex;flex-wrap:wrap;gap:4px 14px;margin:8px 4px 2px;padding:0;list-style:none;font-size:12.5px;color:var(--text)}
+.map-legend li{display:flex;align-items:center;gap:6px}
+.map-legend i{width:14px;height:14px;border-radius:4px;border:1px solid color-mix(in srgb,var(--muted) 50%,transparent)}
+.map-legend i.map-key-river{height:0;border:0;border-top:3px solid var(--c-blue);border-radius:2px}
 .figb{background:color-mix(in srgb,var(--c-cyan) 12%,var(--card2))}
 .figb b{color:var(--c-cyan)}
 /* Επικεφαλίδες ενοτήτων και «Άλλες σελίδες του βιβλίου» (src/book-pages.json) */

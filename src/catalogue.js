@@ -2,6 +2,7 @@
 const CATALOGUE = /*__CURRICULUM__*/;
 const OFFICIAL_CONTENT = /*__OFFICIAL_CONTENT__*/;
 const EXPLANATIONS = /*__EXPLANATIONS__*/;
+const EUROPE_MAP = /*__EUROPE_MAP__*/;
 const getGrade = id => CATALOGUE.grades.find(g => g.id === id);
 /* Τάξεις που φαίνονται στη σελίδα. Τα δεδομένα της Α΄ και της Γ΄ μένουν, αλλά προς το παρόν εστιάζουμε στη Β΄. */
 const SHOWN_GRADES = ['B'];
@@ -77,7 +78,8 @@ const LEVEL_CHIP = {full:'<span class="chip ok">Πλήρες</span>', expl:'<spa
    energy:  στήλες δυναμικής (u) και κινητικής (k) ενέργειας  {unit, cols:[{label, u, k}]}
    chain:   αλυσίδα μετατροπών ενέργειας, από πάνω προς τα κάτω {steps:[…], via:[…]}
    split:   μια ποσότητα μοιρασμένη σε μέρη (π.χ. απόδοση)    {total, parts:[{label, v}]}
-   balance: ζυγαριά σε ισορροπία, μία ή περισσότερες φορές     {steps:[{eq, l:[x, n], r:[x, n]}]} (x σακουλάκια, n βαρίδια του 1) */
+   balance: ζυγαριά σε ισορροπία, μία ή περισσότερες φορές     {steps:[{eq, l:[x, n], r:[x, n]}]} (x σακουλάκια, n βαρίδια του 1)
+   map:     χάρτης της Ευρώπης (src/europe-map.json)          {view, hl:[{c:[ADM0_A3], k, label}], names:[ADM0_A3], rivers:[{r, label}], points:[{lon, lat, label, at}]} */
 let figSeq = 0;
 const figText = (x, y, t, a = 'middle', cls = '') => `<text x="${x}" y="${y}" text-anchor="${a}"${cls ? ` class="${cls}"` : ''}>${esc(t)}</text>`;
 function figArrowDefs(id){
@@ -236,11 +238,55 @@ function figBalance(f){
   });
   return {box:`0 0 320 ${y0 - 6}`, body:s};
 }
-const FIGS = {balance:figBalance, line:figLine, forces:figForces, compose:figCompose, depth:figDepth, vessels:figVessels, buoy:figBuoy, press:figPress, scales:figScales, energy:figEnergy, chain:figChain, split:figSplit};
+/* Χάρτης: η Ευρώπη του src/europe-map.json (Natural Earth, ισοδύναμη αζιμουθιακή προβολή).
+   view: [δυτικό, νότιο, ανατολικό, βόρειο] σε μοίρες ή ένα από τα MAP_VIEWS. Οι χώρες με τους κωδικούς ADM0_A3 του Natural Earth.
+   hl: ομάδες χωρών με χρώμα της παλέτας (k) και υπόμνημα· names: χώρες με το όνομά τους πάνω στον χάρτη·
+   rivers: ποτάμια με έντονη γραμμή· points: πόλεις ή σημεία (at: πού μπαίνει η ετικέτα, 'r' δεξιά από προεπιλογή, 'l', 't', 'b'). */
+const MAP_VIEWS = {europe:[-25, 34, 50, 71], balkans:[13, 34.5, 30.5, 47.2], greece:[19.2, 34.6, 29.9, 41.9], mediterranean:[-8, 30, 37, 47]};
+const MAP_COLORS = ['violet','cyan','pink','amber','green','orange','blue','teal','rose','indigo','lime','fuchsia','slate'];
+let mapBoxes = null;
+function mapProj(lon, lat){
+  const m = EUROPE_MAP, r = Math.PI / 180, s0 = Math.sin(m.lat0 * r), c0 = Math.cos(m.lat0 * r), l = (lon - m.lon0) * r, p = lat * r;
+  const k = Math.sqrt(2 / (1 + s0 * Math.sin(p) + c0 * Math.cos(p) * Math.cos(l)));
+  return [(k * Math.cos(p) * Math.sin(l) - m.mnx) * m.k, (-k * (c0 * Math.sin(p) - s0 * Math.cos(p) * Math.cos(l)) - m.mny) * m.k];
+}
+function mapBBox(d){
+  const n = d.match(/-?\d+(\.\d+)?/g).map(Number); let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for(let i = 0; i < n.length; i += 2){ x0 = Math.min(x0, n[i]); x1 = Math.max(x1, n[i]); y0 = Math.min(y0, n[i + 1]); y1 = Math.max(y1, n[i + 1]); }
+  return [x0, y0, x1, y1];
+}
+function figMap(f){
+  if(!EUROPE_MAP) return null;
+  const m = EUROPE_MAP, v = Array.isArray(f.view) ? f.view : MAP_VIEWS[f.view || 'europe'];
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for(let i = 0; i <= 8; i++) for(const [lon, lat] of [[v[0] + (v[2] - v[0]) * i / 8, v[1]], [v[0] + (v[2] - v[0]) * i / 8, v[3]], [v[0], v[1] + (v[3] - v[1]) * i / 8], [v[2], v[1] + (v[3] - v[1]) * i / 8]]){
+    const [x, y] = mapProj(lon, lat); x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y);
+  }
+  const W = x1 - x0, Hh = y1 - y0, u = W / 320, fs = (12 * u).toFixed(2);
+  mapBoxes = mapBoxes || Object.fromEntries(Object.entries(m.countries).map(([k, c]) => [k, mapBBox(c.d)]));
+  const seen = ([a, b, c, d]) => c >= x0 && a <= x1 && d >= y0 && b <= y1;
+  const color = {}; (f.hl || []).forEach((g, i) => g.c.forEach(c => { color[c] = g.k || MAP_COLORS[i % MAP_COLORS.length]; }));
+  let s = `<rect x="${x0.toFixed(1)}" y="${y0.toFixed(1)}" width="${W.toFixed(1)}" height="${Hh.toFixed(1)}" class="map-sea"/>`;
+  for(const [k, c] of Object.entries(m.countries)) if(seen(mapBoxes[k]))
+    s += `<path d="${c.d}" class="map-land"${color[k] ? ` style="fill:color-mix(in srgb,var(--c-${color[k]}) 58%,var(--card))"` : ''} vector-effect="non-scaling-stroke"/>`;
+  if(m.lakes) s += `<path d="${m.lakes}" class="map-sea map-lake" vector-effect="non-scaling-stroke"/>`;
+  const strong = new Set((f.rivers || []).map(r => r.r));
+  for(const [k, d] of Object.entries(m.rivers)) s += `<path d="${d}" class="map-river${strong.has(k) ? ' map-river-hl' : ''}" vector-effect="non-scaling-stroke"/>`;
+  for(const c of f.names || []){ const n = m.countries[c]; if(n && n.lx != null) s += `<text x="${n.lx}" y="${n.ly}" text-anchor="middle" class="map-name" font-size="${fs}">${esc(n.n)}</text>`; }
+  for(const p of f.points || []){
+    const [x, y] = mapProj(p.lon, p.lat), at = p.at || 'r', g = 7 * u;
+    const [tx, ty, an] = at === 'l' ? [x - g, y + 4 * u, 'end'] : at === 't' ? [x, y - g, 'middle'] : at === 'b' ? [x, y + g + 8 * u, 'middle'] : [x + g, y + 4 * u, 'start'];
+    s += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(3.6 * u).toFixed(2)}" class="map-dot" vector-effect="non-scaling-stroke"/><text x="${tx.toFixed(1)}" y="${ty.toFixed(1)}" text-anchor="${an}" class="map-name" font-size="${fs}">${esc(p.label)}</text>`;
+  }
+  const legend = [...(f.hl || []).filter(g => g.label).map((g, i) => `<li><i style="background:color-mix(in srgb,var(--c-${g.k || MAP_COLORS[i % MAP_COLORS.length]}) 58%,var(--card))"></i>${esc(g.label)}</li>`),
+    ...(f.rivers || []).filter(r => r.label).map(r => `<li><i class="map-key-river"></i>${esc(r.label)}</li>`)].join('');
+  return {box:`${x0.toFixed(1)} ${y0.toFixed(1)} ${W.toFixed(1)} ${Hh.toFixed(1)}`, body:s, after: legend ? `<ul class="map-legend">${legend}</ul>` : '', cls:'fig-map'};
+}
+const FIGS = {map:figMap, balance:figBalance, line:figLine, forces:figForces, compose:figCompose, depth:figDepth, vessels:figVessels, buoy:figBuoy, press:figPress, scales:figScales, energy:figEnergy, chain:figChain, split:figSplit};
 function figure(f){
   if(!f) return '';
   const id = 'fg' + (++figSeq) + '-', draw = FIGS[f.type], d = draw ? draw(f, id) : null;
-  return d ? `<figure class="fig"><svg viewBox="${d.box}" role="img" aria-label="${esc(f.alt)}">${figArrowDefs(id)}${d.body}</svg>${f.caption ? `<figcaption>${esc(f.caption)}</figcaption>` : ''}</figure>`
+  return d ? `<figure class="fig${d.cls ? ' ' + d.cls : ''}"><svg viewBox="${d.box}" role="img" aria-label="${esc(f.alt)}">${figArrowDefs(id)}${d.body}</svg>${d.after || ''}${f.caption ? `<figcaption>${esc(f.caption)}</figcaption>` : ''}</figure>`
     + (f.explain ? `<div class="box figb"><b>Στο σχήμα</b><p>${esc(f.explain).replace(/(\d) (?=(N|J|m|Pa|kg|K|W|cm|m\/s|°C|°F)(?![\p{L}]))/gu, '$1\u00a0')}</p></div>` : '') : '';
 }
 /* Αν ο μαθητής έχει κάνει τον έλεγχο της ενότητας, δείχνουμε τον κύκλο και το επίπεδό του· αλλιώς τον καλύτερο βαθμό του από τις ερωτήσεις, αν υπάρχει */

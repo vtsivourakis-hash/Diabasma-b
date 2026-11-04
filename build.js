@@ -49,6 +49,9 @@ if (fs.existsSync(sharedFile)) {
     if (officialContent[from]) officialContent[key] = officialContent[from];
   }
 }
+// Ο χάρτης της Ευρώπης (src/europe-map.json, από το scripts/build-europe-map.js) μπαίνει στη σελίδα μόνο αν τον χρησιμοποιεί κάποια κάρτα
+let usesMap = false, europeMapData = null;
+const europeMap = () => europeMapData || (europeMapData = JSON.parse(fs.readFileSync(path.join(__dirname, "src", "europe-map.json"), "utf8")));
 // Σχήμα κάρτας ("fig"): τύπος, alt, explain και τα δεδομένα κάθε τύπου (βλ. figure() στο src/catalogue.js)
 function checkFig(f, at) {
     if (!f.alt) throw new Error(`${at} θέλει alt (περιγραφή για αναγνώστες οθόνης)`);
@@ -76,6 +79,13 @@ function checkFig(f, at) {
       if (!(f.steps?.length >= 2)) throw new Error(`${at}: θέλει τουλάχιστον 2 βήματα`);
     } else if (f.type === "split") {
       if (!f.total || !f.parts?.length || f.parts.some(p => !(p.v > 0) || !p.label)) throw new Error(`${at}: θέλει total και μέρη με v > 0 και label`);
+    } else if (f.type === "map") {
+      usesMap = true;
+      const m = europeMap(), views = ["europe", "balkans", "greece", "mediterranean"];
+      if (f.view !== undefined && !views.includes(f.view) && !(Array.isArray(f.view) && f.view.length === 4 && f.view[0] < f.view[2] && f.view[1] < f.view[3])) throw new Error(`${at}: view θέλει ένα από ${views.join(", ")} ή [δ, ν, α, β] σε μοίρες`);
+      for (const c of [...(f.hl || []).flatMap(g => g.c || []), ...(f.names || [])]) if (!m.countries[c]) throw new Error(`${at}: άγνωστη χώρα ${c} (κωδικοί ADM0_A3 του src/europe-map.json)`);
+      for (const r of f.rivers || []) if (!m.rivers[r.r]) throw new Error(`${at}: άγνωστο ποτάμι ${r.r} (υπάρχουν: ${Object.keys(m.rivers).join(", ")})`);
+      for (const p of f.points || []) if (!(p.lon >= m.box.w && p.lon <= m.box.e && p.lat >= m.box.s && p.lat <= m.box.n) || !p.label) throw new Error(`${at}: κάθε σημείο θέλει lon, lat μέσα στον χάρτη και label`);
     } else if (f.type !== "vessels") throw new Error(`${at}: άγνωστος τύπος ${f.type}`);
 }
 // Τα πεδία της κάρτας για τη ροή «μία ιδέα σε κάθε κάρτα»: more (κι άλλα παραδείγματα), alt («Πες το μου αλλιώς»),
@@ -258,7 +268,8 @@ const json = value => JSON.stringify(value).replace(/</g, "\\u003c");
 const catalogueJS = fs.readFileSync(path.join(__dirname,"src","catalogue.js"),"utf8")
   .replace("/*__CURRICULUM__*/", () => json(curriculum))
   .replace("/*__OFFICIAL_CONTENT__*/", () => json(officialContent))
-  .replace("/*__EXPLANATIONS__*/", () => json(explanations));
+  .replace("/*__EXPLANATIONS__*/", () => json(explanations))
+  .replace("/*__EUROPE_MAP__*/", () => usesMap ? fs.readFileSync(path.join(__dirname, "src", "europe-map.json"), "utf8").trim() : "null");
 const html = template.replace("/*__DATA__*/", () => json(C)).replace("/*__GRAMMAR__*/", () => json(G)).replace("/*__BOOK_HELP__*/", () => json(bookHelp))
   .replace("/*__CATALOGUE_JS__*/", () => catalogueJS)
   .replace("/*__CATALOGUE_CSS__*/", () => fs.readFileSync(path.join(__dirname,"src","catalogue.css"),"utf8"))
