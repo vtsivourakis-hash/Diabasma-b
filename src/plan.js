@@ -296,12 +296,19 @@ function cardView(key, i){
   el.innerHTML = `<div class="fc" role="dialog" aria-modal="true" aria-label="${esc(strip(cardTitle(key, c)))}">
     <div class="pl-segs" style="--n:${parts.length}" role="img" aria-label="Μέρος ${pi + 1} από ${parts.length}">${parts.map((x, j) => `<span class="${j <= pi ? "on" : ""}"></span>`).join("")}</div>
     <div class="pl-bar"><h2 class="pl-where">Κάρτα ${i + 1} από ${deck.length}${s.review ? " · ξανά" : ""}</h2><span class="pl-tools"><button class="pl-round" data-pl-voice aria-label="Διάβασέ το μου φωναχτά"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg></button><button class="pl-round" data-fc="close" aria-label="Πίσω στις κάρτες"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></span></div>
-    <section class="fc-body fc-read p-${part}${anim ? " " + anim : ""}">${body}</section>
+    <section class="fc-body fc-read p-${part}${anim ? " " + anim : ""}"><div class="fc-in">${body}</div></section>
     <div class="fc-actions">${sec}${prim}</div>
     <p class="fc-hint">← → τα μέρη της κάρτας · ↑ η επόμενη κάρτα</p>
+    <div class="fc-rotate" aria-hidden="true"><p><span>📱</span>Γύρισε το κινητό όρθιο για να διαβάσεις την κάρτα.</p></div>
   </div>`;
 
-  const go = (d, a = d > 0 ? "in-next" : "in-prev") => { const j = pi + d; if(alt || j < 0 || j >= parts.length) return false; s.part[i] = j; s.anim = a; cardView(key, i); return true; };
+  const pgKey = i + ":" + part, pg = s.pg || (s.pg = {});
+  const go = (d, a = d > 0 ? "in-next" : "in-prev") => {
+    const f = PL.fit, p = pg[pgKey] || 0;
+    if(f && f.pages > 1 && p + d >= 0 && p + d < f.pages){ pg[pgKey] = p + d; s.anim = a; cardView(key, i); return true; }
+    const j = pi + d; if(alt || j < 0 || j >= parts.length) return false;
+    s.part[i] = j; s.anim = a; pg[i + ":" + parts[j]] = d > 0 ? 0 : 99; cardView(key, i); return true;
+  };
   const card = d => {
     const j = d > 0 ? nextCard : prevCard;
     if(d > 0 && j === undefined){ location.replace("#study/" + key + "/end"); return true; }
@@ -315,10 +322,10 @@ function cardView(key, i){
   keyNav = go;
   const act = {
     right:() => go(1), down:() => card(1),
-    more:() => { s.life[i] = (s.life[i] || 0) + 1; cardView(key, i); const n = $(".fc-new", el); if(n) n.scrollIntoView({block:"nearest"}); },
+    more:() => { s.life[i] = (s.life[i] || 0) + 1; cardView(key, i); fcReveal(".fc-new"); },
     nextex:() => { s.ti[i] = (s.ti[i] || 0) + 1; s.anim = "in-next"; cardView(key, i); },
-    hint:() => { const id = i + "/" + Math.min(s.ti[i] || 0, c.ex.length - 1); s.hints[id] = (s.hints[id] || 0) + 1; cardView(key, i); const li = $(".pl-sol li:last-child", el); if(li) li.scrollIntoView({block:"nearest"}); },
-    ans:() => { s.ans[i + "/" + Math.min(s.ti[i] || 0, c.ex.length - 1)] = 1; cardView(key, i); const a = $(".ans", el); if(a) a.scrollIntoView({block:"nearest"}); },
+    hint:() => { const id = i + "/" + Math.min(s.ti[i] || 0, c.ex.length - 1); s.hints[id] = (s.hints[id] || 0) + 1; cardView(key, i); fcReveal(".pl-sol li:last-child"); },
+    ans:() => { s.ans[i + "/" + Math.min(s.ti[i] || 0, c.ex.length - 1)] = 1; cardView(key, i); fcReveal(".ans"); },
     nextq:() => { s.quiz[i].qi++; s.anim = "in-next"; cardView(key, i); },
     alt:() => { s.alt[i] = { open:true }; s.anim = "in-next"; cardView(key, i); },
     back:() => { s.alt[i].open = false; s.anim = "in-prev"; cardView(key, i); },
@@ -339,13 +346,13 @@ function cardView(key, i){
     if(c.all && Object.keys(z.picked).length === z.qs.length) saveBest(key, gradeOf(z));
     try { navigator.vibrate && navigator.vibrate(ok ? 30 : [40, 60, 40]); } catch(e){}
     cardView(key, i);
-    const w = $(".why", el); if(w) w.scrollIntoView({block:"nearest"});
+    fcReveal(".why");
   });
   el.querySelectorAll("[data-fc-aopt]").forEach(b => b.onclick = () => {
     const st = s.alt[i], j = +b.dataset.fcAopt;
     st.picked = j; markCard(key, i, st.q.opts[j].ok ? 1 : 2);
     cardView(key, i);
-    const w = $(".fc-again .why", el); if(w) w.scrollIntoView({block:"nearest"});
+    fcReveal(".fc-again .why");
   });
   if(part === "def"){
     const keep = () => { const b = $(".fc-body", el), top = b ? b.scrollTop : 0; cardView(key, i); const n = $(".fc-body", el); if(n) n.scrollTop = top; };
@@ -356,7 +363,7 @@ function cardView(key, i){
       else if(v.own[j]) v.own[j].pin = !v.own[j].pin;
     }));
     el.querySelectorAll("[data-hook-del]").forEach(b => b.onclick = () => edit(v => { v.own.splice(+b.dataset.hookDel.slice(1), 1); }));
-    const add = $("[data-hook-add]", el); if(add) add.onclick = () => { s.hookEdit = i; keep(); const t = $("#hook-new", el); if(t){ t.focus(); t.scrollIntoView({block:"nearest"}); } };
+    const add = $("[data-hook-add]", el); if(add) add.onclick = () => { s.hookEdit = i; keep(); fcReveal("#hook-new"); const t = $("#hook-new", el); if(t) t.focus(); };
     const cancel = $("[data-hook-cancel]", el); if(cancel) cancel.onclick = () => { s.hookEdit = null; keep(); };
     const form = $("[data-hook-form]", el); if(form) form.onsubmit = e => {
       e.preventDefault();
@@ -366,7 +373,170 @@ function cardView(key, i){
     };
   }
   if(c.b && c.b.fig) el.querySelectorAll(".fig").forEach(f => f.classList.add("fc-fig"));
+  el.querySelectorAll(".fc .fig-map").forEach(f => { f.tabIndex = 0; f.setAttribute("role", "button"); f.setAttribute("aria-label", "Άνοιξε τον χάρτη σε όλη την οθόνη"); f.onclick = () => mapFull(f); f.onkeydown = e => { if(e.key === "Enter" || e.key === " "){ e.preventDefault(); mapFull(f); } }; });
   bindCardGestures($(".fc", el));
+  PL.fcRedraw = () => cardView(key, i);
+  PL.fcPage = j => { pg[pgKey] = j; cardView(key, i); };
+  PL.fit = fitCard(el, pg, pgKey, !["check", "alt"].includes(part));
+  if(PL.fit && PL.fit.page < PL.fit.pages - 1){
+    const b = $(".fc-actions .btn", el);
+    if(b){ b.textContent = "Συνέχεια →"; b.dataset.fc = "right"; b.onclick = () => go(1); }
+  }
+}
+/* Η κάρτα χωράει στην οθόνη, χωρίς κύλιση μέσα της. Πρώτα λίγο μικρότερα γράμματα (ως 88%). Αν πάλι δεν χωράει,
+   χωρίζεται σε σελίδες σε όρια παραγράφων ή κουτιών (και οι μεγάλες παράγραφοι σε όρια προτάσεων), με «1/2» πάνω δεξιά.
+   Οι ερωτήσεις (Το κατάλαβες;) δεν χωρίζονται· στο «Δοκίμασε» η εκφώνηση μπορεί να πάει στη μία σελίδα και οι βοήθειες στην άλλη. Μόνο αν κάτι δεν χωράει ούτε μόνο του
+   (π.χ. πολύ μεγάλα γράμματα στον browser, οριζόντιο κινητό) η κάρτα κυλάει. Χωρίς διάταξη (π.χ. στα tests) δεν κάνει τίποτα. */
+function fitCard(el, pg, pgKey, canSplit){
+  const body = $(".fc-body", el), inn = $(".fc-in", el);
+  if(!body || !inn || !body.clientHeight || !inn.getBoundingClientRect().height) return null;
+  const cs = getComputedStyle(body), pad = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
+  const room = () => body.getBoundingClientRect().height - pad - 2, tall = () => inn.getBoundingClientRect().height > room();
+  for(const z of [1, .94, .88]){ inn.style.zoom = z; if(!tall()) return {pages:1, page:0}; }
+  const scroll = () => { inn.style.zoom = .88; [...inn.children].forEach(k => k.hidden = false); body.classList.add("fc-scroll"); textNote(el); return {pages:1, page:0, scroll:true}; };
+  if(!canSplit) return scroll();
+  inn.style.zoom = .94;
+  const cont = 30, top0 = () => inn.getBoundingClientRect().top;
+  /* Ό,τι δεν χωράει σε μία σελίδα κόβεται σε μικρότερα κομμάτια: οι παράγραφοι σε προτάσεις (ή σε κόμματα),
+     τα κουτιά σε δύο κουτιά, οι λίστες (λέξεις, κόλπα) ανά στοιχείο */
+  const lim = room() - cont;
+  for(let pass = 0; pass < 4; pass++){
+    let changed = false;
+    [...inn.children].forEach(k => {
+      const r = k.getBoundingClientRect(), h = r.height, n = inn.children.length, at = r.top - top0();
+      if(h <= lim && at + h <= room()) return;
+      /* Το πρώτο κομμάτι γεμίζει όσο χώρο μένει κάτω από τον τίτλο· τα επόμενα μια ολόκληρη σελίδα */
+      const first = at < room() - 60 ? room() - at : lim;
+      if(at + h <= room() && h <= lim) return;
+      if(k.tagName === "P") splitPara(k, lim, first);
+      else if((k.classList.contains("box") || k.classList.contains("fc-teach")) && k.lastElementChild && k.lastElementChild.tagName === "P") splitBox(k, lim, first);
+      else if(k.children.length > 1) splitList(k);
+      if(inn.children.length > n) changed = true;
+    });
+    if(!changed) break;
+  }
+  const kids = [...inn.children].filter(k => !k.classList.contains("fc-pg")), pages = [[]];
+  let start = 0;
+  for(const k of kids){
+    const r = k.getBoundingClientRect(), t = r.top - top0(), b = r.bottom - top0(), lim = room() - (pages.length > 1 ? cont : 0);
+    if(r.height > room() - cont) return scroll();
+    if(b - start > lim && pages[pages.length - 1].length){ pages.push([]); start = t; }
+    pages[pages.length - 1].push(k);
+  }
+  /* Μια σελίδα μόνο με τον τίτλο δεν έχει νόημα: ο τίτλος πάει μαζί με την επόμενη */
+  const head = k => k.classList.contains("fc-k") || k.classList.contains("lvl") || /^H[23]$/.test(k.tagName);
+  if(pages.length > 1 && pages[0].every(head)) pages.splice(0, 2, [...pages[0], ...pages[1]]);
+  /* Κομμάτια του ίδιου κειμένου που έπεσαν στην ίδια σελίδα ξαναγίνονται ένα (μία παράγραφος, ένα κουτί) */
+  pages.forEach(list => { for(let j = list.length - 1; j > 0; j--){
+    const k = list[j], prev = list[j - 1];
+    if(!k.classList.contains("fc-more") || k.previousElementSibling !== prev) continue;
+    if(k.tagName === "P" && prev.tagName === "P"){ prev.innerHTML += " " + k.innerHTML; k.remove(); list.splice(j, 1); }
+    else if(k.lastElementChild && prev.lastElementChild && k.className.replace(" fc-more", "") === prev.className.replace(" fc-more", "")){ prev.lastElementChild.innerHTML += " " + k.lastElementChild.innerHTML; k.remove(); list.splice(j, 1); }
+  } });
+  if(pages.length === 1) return {pages:1, page:0};
+  const p = Math.min(pg[pgKey] || 0, pages.length - 1);
+  pg[pgKey] = p;
+  pages.forEach((list, j) => list.forEach(k => k.hidden = j !== p));
+  inn.insertAdjacentHTML("afterbegin", `<span class="fc-pg" aria-label="Σελίδα ${p + 1} από ${pages.length}">${p + 1}/${pages.length}</span>${p ? `<span class="fc-k fc-cont">συνέχεια</span>` : ""}`);
+  textNote(el);
+  return {pages:pages.length, page:p, list:pages};
+}
+/* Χωρίζει μια παράγραφο ώστε κάθε κομμάτι να χωράει (περίπου, με βάση το μήκος του κειμένου): γεμίζει κάθε κομμάτι όσο
+   γίνεται και κόβει στο τέλος πρότασης ή, αν δεν υπάρχει μέσα στο όριο, σε κόμμα. Κόβει μόνο έξω από ετικέτες HTML.
+   Ό,τι βγει ακόμα μεγάλο ξαναχωρίζεται στο επόμενο πέρασμα του fitCard. */
+function splitPara(p, lim, first = lim){
+  const h = p.innerHTML, per = h.length / p.getBoundingClientRect().height * .95, marks = [];
+  let depth = 0, inTag = false;
+  for(let j = 0; j < h.length - 1; j++){
+    const ch = h[j];
+    if(ch === "<"){ inTag = true; depth += h[j + 1] === "/" ? -1 : 1; }
+    else if(ch === ">"){ inTag = false; if(h[j - 1] === "/" || /<(br|img|wbr|hr)\b[^>]*$/i.test(h.slice(Math.max(0, j - 40), j))) depth--; }
+    else if(!inTag && depth <= 0 && (h[j + 1] === " " || h[j + 1] === "\u00a0" || h.startsWith("&nbsp;", j + 1)) && /[,.;·!;:]/.test(ch)) marks.push({j: j + 1, strong: !/[,:]/.test(ch)});
+  }
+  const cuts = []; let last = 0, cap = first * per;
+  while(h.length - last > cap){
+    const fit = marks.filter(m => m.j > last && m.j - last <= cap);
+    const strong = fit.filter(m => m.strong && m.j - last >= cap * .4), pick = (strong.length ? strong : fit.length ? fit : marks.filter(m => m.j > last).slice(0, 1)).pop();
+    if(!pick) break;
+    cuts.push(pick.j); last = pick.j; cap = lim * per;
+  }
+  if(!cuts.length) return;
+  const all = [0, ...cuts, h.length], chunks = all.slice(0, -1).map((x, j) => h.slice(x, all[j + 1]).trim()).filter(Boolean);
+  p.insertAdjacentHTML("afterend", chunks.slice(1).map(c => `<p class="${p.className} fc-more">${c}</p>`).join(""));
+  p.innerHTML = chunks[0];
+}
+/* Ένα κουτί (π.χ. «Στο διαγώνισμα γράφεις») που δεν χωράει: η παράγραφός του χωρίζεται και κάθε κομμάτι μπαίνει σε δικό του κουτί */
+function splitBox(box, lim, first = lim){
+  const p = box.lastElementChild, head = box.getBoundingClientRect().height - p.getBoundingClientRect().height;
+  splitPara(p, lim - head, first - head);
+  const more = []; let n = p.nextElementSibling;
+  while(n && n.classList.contains("fc-more")){ more.push(n); n = n.nextElementSibling; }
+  more.reverse().forEach(q => { const b = document.createElement("div"); b.className = box.className + " fc-more"; b.appendChild(q); box.after(b); });
+}
+/* Μια λίστα (λέξεις, κόλπα) που δεν χωράει: κάθε στοιχείο γίνεται δικό του κομμάτι, ώστε να μοιραστούν σε σελίδες */
+function splitList(k){
+  const items = [...k.children];
+  items.slice(1).reverse().forEach(it => { const c = k.cloneNode(false); c.removeAttribute("id"); c.classList.add("fc-more"); c.appendChild(it); k.after(c); });
+}
+/* Μετά από μια κίνηση (βοήθεια, απάντηση, παράδειγμα), δείχνει τη σελίδα όπου βρίσκεται το νέο κομμάτι */
+function fcReveal(sel){
+  const e = $("#plan .fc-in " + sel), f = PL.fit;
+  if(!e) return;
+  if(f && f.list){
+    const j = f.list.findIndex(list => list.some(k => k === e || k.contains(e)));
+    const s = $("#plan .fc-body"); if(j >= 0 && j !== f.page && PL.fcPage){ PL.fcPage(j); return; }
+    if(s && s.classList.contains("fc-scroll")) e.scrollIntoView({block:"nearest"});
+  } else e.scrollIntoView({block:"nearest"});
+}
+/* Αν τα γράμματα του browser είναι μεγαλωμένα και η κάρτα δεν χωράει, ένα σημείωμα μία φορά (μένει μόνο στη συσκευή) */
+function textNote(el){
+  try { if(localStorage.getItem("diab-textnote")) return; } catch(e){ return; }
+  if(!textEnlarged() || $(".fc-note", el)) return;
+  const a = $(".fc-actions", el); if(!a) return;
+  a.insertAdjacentHTML("beforebegin", `<p class="fc-note">Τα γράμματα στον browser σου είναι μεγαλωμένα, γι' αυτό κάποιες κάρτες δεν χωράνε στην οθόνη. Αν θέλεις, μίκρυνέ τα λίγο (στο Safari: αΑ → μικρότερο). <button type="button">Εντάξει</button></p>`);
+  $(".fc-note button", el).onclick = () => { try { localStorage.setItem("diab-textnote", "1"); } catch(e){} $(".fc-note", el).remove(); if(PL.fcRedraw) PL.fcRedraw(); };
+}
+function textEnlarged(){
+  if(!matchMedia("(pointer: coarse)").matches) return false;
+  const sw = Math.min(screen.width, screen.height), portrait = innerHeight > innerWidth;
+  if(portrait && sw && innerWidth && sw / innerWidth > 1.1) return true;   /* Safari: αΑ μεγαλύτερα = στενότερη σελίδα */
+  const t = document.createElement("span");
+  t.style.cssText = "position:absolute;visibility:hidden;font-size:20px;line-height:1;white-space:nowrap";
+  t.textContent = "ΑΒΓ"; document.body.appendChild(t);
+  const big = t.getBoundingClientRect().height > 23;                        /* Android: μεγέθυνση γραμμάτων στις ρυθμίσεις */
+  t.remove();
+  return big;
+}
+/* Ο χάρτης σε όλη την οθόνη· κλείνει με πάτημα, ✕ ή Esc */
+function mapFull(f){
+  const svg = $("svg", f); if(!svg) return;
+  const d = document.createElement("div");
+  d.className = "map-full"; d.setAttribute("role", "dialog"); d.setAttribute("aria-modal", "true"); d.setAttribute("aria-label", svg.getAttribute("aria-label") || "Χάρτης");
+  d.innerHTML = `<button class="pl-round map-x" aria-label="Κλείσε τον χάρτη"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button><figure class="fig fig-map">${svg.outerHTML}${$(".map-legend", f) ? $(".map-legend", f).outerHTML : ""}</figure>`;
+  const close = () => { d.remove(); document.removeEventListener("keydown", esc); f.focus(); };
+  const esc = e => { if(e.key === "Escape") close(); };
+  d.onclick = close; document.addEventListener("keydown", esc);
+  document.body.appendChild(d); $(".map-x", d).focus();
+}
+/* Αν αλλάξει το μέγεθος της οθόνης (π.χ. κρύβεται η μπάρα του browser ή γυρίζει το κινητό), η κάρτα ξαναχωρίζεται */
+let fitTimer = null;
+window.addEventListener("resize", () => { clearTimeout(fitTimer); fitTimer = setTimeout(() => { if(PL.fcRedraw && $("#plan .fc") && !$("#plan").hidden) PL.fcRedraw(); }, 200); });
+/* Η «Περίληψη» στη σελίδα της ενότητας: τα θέματα ως λίστα που ανοίγει τις ίδιες κάρτες σε όλη την οθόνη.
+   Το ✕ και το «πίσω» του κινητού γυρίζουν στη σελίδα της ενότητας, στο ίδιο σημείο (st.retY). */
+function cardLauncher(key, titles, next){
+  return `<div class="sum-launch"><p class="pnote">${titles.length} κάρτες. Η καθεμιά χωράει στην οθόνη: σύρε δεξιά-αριστερά για τα μέρη της, πάνω για την επόμενη κάρτα.</p>
+    <a class="btn" href="#study/${key}/c/0" data-cards-from="0">Ξεκίνα τις κάρτες</a>
+    <div class="sum-list">${titles.map((t, i) => `<a class="fd-row" href="#study/${key}/c/${i}" data-cards-from="${i}"><span class="fd-num">${i + 1}</span><span class="pl-t"><b>${t}</b></span><span aria-hidden="true">›</span></a>`).join("")}</div>${next || ""}</div>`;
+}
+function bindCardLauncher(el, key, st){
+  el.querySelectorAll("[data-cards-from]").forEach(a => a.onclick = e => { e.preventDefault(); openCardsFrom(key, +a.dataset.cardsFrom, st); });
+}
+function openCardsFrom(key, t, st){
+  st.retY = window.scrollY; PL.fromFeed = key;
+  location.hash = "#study/" + key + "/c/" + (t || 0);
+}
+function restoreScroll(st){
+  if(st && st.retY != null){ const y = st.retY; st.retY = null; requestAnimationFrame(() => window.scrollTo(0, y)); }
 }
 /* Σύρσιμο στην κάρτα: οριζόντια τα μέρη, κάθετα οι κάρτες. Το κάθετο σύρσιμο αλλάζει κάρτα μόνο
    όταν το κείμενο της κάρτας έχει φτάσει στο τέλος (ή στην αρχή), αλλιώς απλώς κυλάει το κείμενο. */

@@ -834,7 +834,9 @@ function pager(prevOk, nextOk, mid){
 function renderUnit(key){
   const c = C[key], s = st(key), [g, sid, bi, si] = key.split("/"), lesson = officialLesson(g, sid, +bi, +si), el = $("#catalogue"), iliad = sid === "translated";
   let body = "", go = null;
-  if(s.view === "sum"){
+  if(s.view === "sum" && unitData(key)){
+    body = cardLauncher(key, c.summary.map(b => b.h), `<button class="btn ghost" data-go="quiz">Μετά: Quiz →</button>`);
+  } else if(s.view === "sum"){
     const n = c.summary.length, i = Math.min(s.idx, n - 1), b = c.summary[i], last = i === n - 1;
     body = `${s.fromBook != null ? `<button class="retex" data-ret>← Πίσω στην άσκηση του βιβλίου</button>` : ""}${s.from !== null ? `<button class="retex" data-ret>← Πίσω στην ${iliad ? "ερώτηση" : "άσκηση"} ${s.from + 1}</button>` : ""}<div class="prog"><div class="bar" role="img" aria-label="Θέμα ${i+1} από ${n}"><i style="width:${Math.round((i+1) / n * 100)}%"></i></div><span>${i+1}/${n}</span></div>
       <div class="deck"><section class="blk slide${b.warn ? " warn" : ""}${s.anim ? " " + s.anim : ""}" aria-live="polite"><span class="k">${b.warn ? "Προσοχή" : "Θέμα " + (i+1)}</span><h3>${b.h}</h3>${b.quote ? `<p class="quote" lang="grc">${b.quote}</p>` : ""}<p>${rich(b.t)}</p>${b.f ? `<p class="f formula">${b.f}</p>` : ""}${b.ex ? `<div class="box exb"><b>Παράδειγμα</b><p>${rich(b.ex)}</p></div>` : ""}${b.def ? `<div class="box defb"><b>${b.defLabel || "Στο διαγώνισμα γράφεις"}</b><p>${rich(b.def)}</p></div>` : ""}</section></div>
@@ -880,6 +882,7 @@ function renderUnit(key){
   const top = () => { const r = $(".seg", el).getBoundingClientRect(); if(r.top < 0) window.scrollBy({top: r.top - 12}); };
   el.querySelectorAll("[data-go]").forEach(b => b.onclick = () => { s.view = b.dataset.go; s.fromBook = null; renderUnit(key); top(); });
   bindBookHelp(el, key, () => renderUnit(key), (t, from) => {
+    if(unitData(key)){ openCardsFrom(key, t, s); return; }
     s.view = "sum"; s.idx = t; s.anim = "in-next"; s.from = null; s.fromBook = from;
     history.pushState({theory:key}, "");
     renderUnit(key); top();
@@ -904,13 +907,15 @@ function renderUnit(key){
   });
   /* Από τη λύση στη θεωρία. Μπαίνει μια εγγραφή στο ιστορικό, ώστε το «πίσω» του κινητού να γυρίζει στην άσκηση. */
   el.querySelectorAll("[data-topic]").forEach(b => b.onclick = () => {
+    if(unitData(key)){ openCardsFrom(key, +b.dataset.topic, s); return; }
     s.view = "sum"; s.idx = +b.dataset.topic; s.anim = "in-next"; s.from = +b.dataset.from;
     history.pushState({theory:key}, "");
     renderUnit(key); top();
   });
   el.querySelectorAll("[data-ret]").forEach(b => b.onclick = () => {
     if(history.state && history.state.theory === key) history.back(); else backToEx(key);
-  });
+  });  bindCardLauncher(el, key, s);
+  restoreScroll(s);
 }
 function backToEx(key){
   const s = state[key];

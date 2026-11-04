@@ -444,7 +444,9 @@ function renderOfficialLesson(grade,subjectId,bookIndex,sectionIndex){
   const quiz=content?.quiz||officialQuiz(lesson);
   let body='';
   const hasBook=!!BOOK_HELP[key],tabs=4+(hasGrammar?1:0)+(hasBook?1:0);
-  if(st.view==='sum'){
+  if(st.view==='sum'&&content&&unitData(key)){
+    body=cardLauncher(key,cards.map(c=>esc(c.h)),`<button class="btn ghost" data-oview="${hasGrammar?'grammar':'quiz'}">${hasGrammar?'Μετά: Γραμματική':'Μετά: Quiz'} →</button>`);
+  } else if(st.view==='sum'){
     const c=cards[Math.min(st.card,cards.length-1)];
     body=`${st.fromBook!=null?'<button class="retex" data-oback>← Πίσω στην άσκηση του βιβλίου</button>':''}<div class="prog"><div class="bar"><i style="width:${Math.round((st.card+1)/cards.length*100)}%"></i></div><span>${st.card+1}/${cards.length}</span></div><div class="deck"><section class="blk slide"><span class="k">Θέμα ${st.card+1}</span><h3>${esc(c.h)}</h3><p>${esc(c.t)}</p>${figure(c.fig)}<div class="box exb"><b>Παράδειγμα</b><p>${esc(c.ex)}</p></div><div class="box defb"><b>${esc(c.defLabel||'Στο διαγώνισμα γράφεις')}</b><p>${esc(c.def)}</p></div></section></div>${pager(st.card>0,st.card<cards.length-1,st.card===cards.length-1?`<button class="btn gold" data-oview="${hasGrammar?'grammar':'quiz'}">${hasGrammar?'Πάμε στη Γραμματική':'Πάμε στο Quiz'} →</button>`:'← σύρε →')}`;
   }else if(st.view==='grammar'&&hasGrammar){
@@ -473,7 +475,9 @@ function renderOfficialLesson(grade,subjectId,bookIndex,sectionIndex){
   const redraw=()=>renderOfficialLesson(grade,subjectId,bookIndex,sectionIndex);
   el.querySelectorAll('[data-oview]').forEach(x=>x.onclick=()=>{st.view=x.dataset.oview;st.fromBook=null;redraw();});
   /* Από την άσκηση του βιβλίου στη θεωρία και πίσω. Η εγγραφή στο ιστορικό κάνει το «πίσω» του κινητού να γυρίζει στην άσκηση. */
-  bindBookHelp(el,key,redraw,(t,from)=>{st.view='sum';st.card=t;st.fromBook=from;history.pushState({theory:key},'');redraw();window.scrollTo({top:0});});
+  bindBookHelp(el,key,redraw,(t,from)=>{if(content&&unitData(key)){openCardsFrom(key,t,st);return;}st.view='sum';st.card=t;st.fromBook=from;history.pushState({theory:key},'');redraw();window.scrollTo({top:0});});
+  bindCardLauncher(el,key,st);
+  restoreScroll(st);
   el.querySelectorAll('[data-oback]').forEach(x=>x.onclick=()=>{if(history.state&&history.state.theory===key)history.back();else officialBackToBook(key,redraw);});
   el.querySelectorAll('[data-nav]').forEach(x=>x.onclick=()=>{if(st.view==='voc')st.vi=Math.max(0,Math.min(Math.max(content?.vocab?.length||words.length,1)-1,st.vi+(+x.dataset.nav)));else if(st.view==='grammar')st.gi=Math.max(0,Math.min(grammar.length-1,st.gi+(+x.dataset.nav)));else st.card=Math.max(0,Math.min(cards.length-1,st.card+(+x.dataset.nav)));redraw();});
   el.querySelectorAll('[data-oanswer]').forEach(x=>x.onclick=()=>{const qi=Object.keys(st.picked).length;st.picked[qi]=x.dataset.oanswer;if(qi===quiz.length-1)st.done=true;redraw();});

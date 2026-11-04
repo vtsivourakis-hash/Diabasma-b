@@ -1,6 +1,6 @@
 // Service worker: η σελίδα ανοίγει και χωρίς internet.
 // Κρατά ένα αντίγραφο μόνο σε αυτή τη συσκευή. Δεν στέλνει τίποτα πουθενά.
-const CACHE = "diabasma-v6-voice";
+const CACHE = "diabasma-v7-fit";
 const CORE = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-180.png"];
 
 self.addEventListener("install", e => {

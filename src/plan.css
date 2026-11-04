@@ -100,11 +100,48 @@
 .fd-list .pl-h{margin:0 0 4px}
 .fd-row{display:flex;align-items:center;gap:12px;min-height:52px;color:var(--text);text-decoration:none;border-top:1px solid var(--line)}
 .fd-list .pl-h + .fd-row{border-top:0}
+.sum-launch .btn{margin:4px 0 14px}
+.sum-list{margin:0 0 14px;padding:0 14px;border:1px solid var(--line);border-radius:16px;background:var(--card)}
+.sum-list .fd-row:first-child{border-top:0}
 .fd-num{flex:0 0 36px;height:36px;border-radius:10px;display:grid;place-items:center;font-weight:800;background:color-mix(in srgb,var(--c-amber) 14%,transparent);color:var(--c-amber)}
 /* Μία κάρτα σε όλη την οθόνη */
 .fc{position:fixed;inset:0;z-index:40;max-width:600px;margin:0 auto;display:flex;flex-direction:column;background:var(--paper);box-shadow:0 0 0 100vmax var(--paper);padding:calc(10px + env(safe-area-inset-top,0px)) 16px calc(10px + env(safe-area-inset-bottom,0px))}
 .fc .pl-bar{margin:0 0 10px}
-.fc-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;border-radius:24px;background:var(--card);border:1px solid var(--line);padding:22px 20px}
+/* Η κάρτα χωράει στην οθόνη (fitCard): σελίδες αντί για κύλιση, και κύλιση μόνο αν κάτι δεν χωράει ούτε μόνο του */
+.fc-body.fc-scroll{overflow-y:auto}
+.fc-in{position:relative}
+.fc-in>[hidden]{display:none !important}
+.fc-pg{position:absolute;top:-10px;right:-8px;padding:3px 9px;border-radius:999px;background:var(--card2);border:1px solid var(--line);font-size:12px;font-weight:800;color:var(--muted)}
+.fc-k.fc-cont{display:block;margin-bottom:8px;color:var(--muted)}
+.fc-big.fc-more,.fc-in p.fc-more{margin-top:0}
+.fc-in .box.fc-more,.fc-in .fc-teach.fc-more{margin-top:8px}
+.fc-in .fc-hooks.fc-more{margin-top:6px;padding-top:0;border-top:0}
+.fc-in .fc-voc.fc-more{margin-top:10px}
+/* Μικρές οθόνες (κινητά 5 ιντσών): λίγο πιο σφιχτά οι ερωτήσεις και οι ασκήσεις, για να χωράνε */
+@media (max-height:700px){
+  .fc .pl-think{display:none}
+  .fc .opt{padding-top:9px;padding-bottom:9px;margin-bottom:7px}
+  .fc-body .fc-qh{font-size:19px;margin:4px 0 12px}
+  .fc-q{font-size:17px;line-height:1.45}
+  .fc-body.p-try .btn.ghost{margin-top:8px;min-height:44px;padding-top:9px;padding-bottom:9px}
+  .fc-body{padding:18px 18px}
+}
+.fc .fig-map{cursor:zoom-in}
+.fc .fig-map svg{max-height:40vh}
+.map-full{position:fixed;inset:0;z-index:70;display:flex;flex-direction:column;justify-content:center;padding:calc(56px + env(safe-area-inset-top,0px)) 10px calc(16px + env(safe-area-inset-bottom,0px));background:var(--paper)}
+.map-full .fig-map{margin:0;cursor:zoom-out}
+.map-full .fig-map svg{max-height:78vh}
+.map-x{position:absolute;top:calc(10px + env(safe-area-inset-top,0px));right:12px}
+.fc-note{margin:8px 0 0;padding:10px 12px;border-radius:12px;background:var(--mark-soft);color:var(--text);font-size:13.5px;line-height:1.4}
+.fc-note button{margin-left:6px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--text);font:inherit;font-weight:700;cursor:pointer}
+/* Οριζόντιο κινητό: η κάρτα θέλει το κινητό όρθιο */
+.fc-rotate{display:none}
+@media (orientation:landscape) and (max-height:500px) and (pointer:coarse){
+  .fc-rotate{display:grid;place-items:center;position:absolute;inset:0;z-index:5;padding:24px;background:var(--paper);text-align:center}
+  .fc-rotate p{max-width:320px;margin:0;font-size:18px;font-weight:700;line-height:1.4;color:var(--text)}
+  .fc-rotate span{display:block;margin-bottom:10px;font-size:44px;transform:rotate(-90deg)}
+}
+.fc-body{position:relative;flex:1;min-height:0;overflow:hidden;overscroll-behavior:contain;touch-action:pan-y;border-radius:24px;background:var(--card);border:1px solid var(--line);padding:22px 20px}
 .fc-body.p-idea{background:linear-gradient(170deg,color-mix(in srgb,var(--accent) 18%,var(--card)),var(--card) 60%)}
 .fc-body h2{margin:6px 0 14px;font-size:28px;font-weight:800;line-height:1.12;letter-spacing:-.025em}
 .fc-body .fc-qh{font-size:22px;line-height:1.25;margin:6px 0 16px}
