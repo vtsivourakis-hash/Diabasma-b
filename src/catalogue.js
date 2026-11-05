@@ -274,7 +274,11 @@ function figMap(f){
   for(const [k, d] of Object.entries(m.rivers)) s += `<path d="${d}" class="map-river${strong.has(k) ? ' map-river-hl' : ''}" vector-effect="non-scaling-stroke"/>`;
   for(const c of f.names || []){ const n = m.countries[c]; if(n && n.lx != null) s += `<text x="${n.lx}" y="${n.ly}" text-anchor="middle" class="map-name" font-size="${fs}">${esc(n.n)}</text>`; }
   for(const p of f.points || []){
-    const [x, y] = mapProj(p.lon, p.lat), at = p.at || 'r', g = 7 * u;
+    const [x, y] = mapProj(p.lon, p.lat), g = 7 * u, tw = p.label.length * 7 * u;
+    /* Η ετικέτα δεν βγαίνει από τον χάρτη: αν δεν χωράει από τη μία πλευρά, πάει στην άλλη */
+    let at = p.at || 'r';
+    if(at === 'r' && x + g + tw > x1) at = 'l'; else if(at === 'l' && x - g - tw < x0) at = 'r';
+    else if((at === 't' || at === 'b') && x + tw / 2 > x1) at = 'l'; else if((at === 't' || at === 'b') && x - tw / 2 < x0) at = 'r';
     const [tx, ty, an] = at === 'l' ? [x - g, y + 4 * u, 'end'] : at === 't' ? [x, y - g, 'middle'] : at === 'b' ? [x, y + g + 8 * u, 'middle'] : [x + g, y + 4 * u, 'start'];
     s += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(3.6 * u).toFixed(2)}" class="map-dot" vector-effect="non-scaling-stroke"/><text x="${tx.toFixed(1)}" y="${ty.toFixed(1)}" text-anchor="${an}" class="map-name" font-size="${fs}">${esc(p.label)}</text>`;
   }
