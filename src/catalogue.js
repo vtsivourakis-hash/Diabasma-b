@@ -4,8 +4,8 @@ const OFFICIAL_CONTENT = /*__OFFICIAL_CONTENT__*/;
 const EXPLANATIONS = /*__EXPLANATIONS__*/;
 const EUROPE_MAP = /*__EUROPE_MAP__*/;
 const getGrade = id => CATALOGUE.grades.find(g => g.id === id);
-/* Τάξεις που φαίνονται στη σελίδα. Τα δεδομένα της Α΄ και της Γ΄ μένουν, αλλά προς το παρόν εστιάζουμε στη Β΄. */
-const SHOWN_GRADES = ['B'];
+/* Τάξεις που φαίνονται στη σελίδα. Από τις 8/11/2026 και οι τρεις (η Β΄ έχει τις περισσότερες κάρτες). */
+const SHOWN_GRADES = ['A', 'B', 'C'];
 const shownGrades = () => CATALOGUE.grades.filter(g => SHOWN_GRADES.includes(g.id));
 let selectedGrade = 'B';
 try { const saved = JSON.parse(localStorage.getItem('diab-grade')); if(SHOWN_GRADES.includes(saved)) selectedGrade = saved; } catch(e){}

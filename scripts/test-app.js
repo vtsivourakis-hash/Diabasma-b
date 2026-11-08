@@ -25,7 +25,7 @@ assert.ok(!html.includes('href="downloads/Diabasma-test-windows.zip"'));
 assert.ok(!html.includes('/*__APP_JS__*/'));
 for(const script of html.matchAll(/<script>([\s\S]*?)<\/script>/g)) new vm.Script(script[1]);
 const elements=new Map();const listeners={};let heading={textContent:'Μαθήματα'},backs=0,prompts=0;
-const element=id=>{if(!elements.has(id))elements.set(id,{hidden:false,textContent:'',addEventListener(){},showModal(){this.open=true;},close(){this.open=false;},focus(){this.focused=true;},scrollIntoView(){}});return elements.get(id);};
+const element=id=>{if(!elements.has(id))elements.set(id,{hidden:false,textContent:'',addEventListener(){},showModal(){this.open=true;},close(){this.open=false;},focus(){this.focused=true;},scrollIntoView(){},querySelector(q){return element(id+' '+q);},querySelectorAll(){return [];}});return elements.get(id);};
 const saved=new Map();
 const context=vm.createContext({document:{querySelector:q=>q==='.panel:not([hidden]) h2'?heading:element(q)},window:{addEventListener:(event,fn)=>{(listeners[event] ||= []).push(fn);}},MutationObserver:class{observe(){} disconnect(){}},navigator:{},matchMedia:()=>({matches:false}),location:{hash:'#class/B',protocol:'https:'},history:{back(){backs++;}},selectedGrade:'B',getGrade:()=>({label:'Β΄ Γυμνασίου'}),store:{get:(k,d)=>saved.has(k)?saved.get(k):d,set:(k,v)=>saved.set(k,v)}});
 vm.runInContext(fs.readFileSync(path.join(root,'src/app.js'),'utf8'),context);

@@ -21,7 +21,7 @@ try { if(localStorage.getItem("diab-theme") === "light") document.documentElemen
   --ink:#6D28D9; --on-ink:#FFFFFF; --text:#15111F; --muted:#6B6580;
   --accent:#7C3AED; --on-accent:#FFFFFF; --hi:#7C3AED; --glow:rgba(124,58,237,.12);
   --grad:linear-gradient(135deg,#7C3AED 0%,#DB2777 100%); --grad-glow:rgba(219,39,119,.35);
-  --mark:rgba(236,72,153,.28); --mark-soft:#F6EEFF; --red:#E11D48; --mid:#B45309; --mid-soft:#FEF3C7; --ok:#4D7C0F; --ok-soft:#EBF6D8; --no-soft:#FDE7EC;
+  --mark:rgba(236,72,153,.28); --mark-soft:#F6EEFF; --red:#E11D48; --mid:#B45309; --mid-soft:#FEF3C7; --ok:#4D7C0F; --ok-soft:#EBF6D8; --no-soft:#FDE7EC; --say:rgba(250,204,21,.45);
   --nav:rgba(255,255,255,.84); --nav-text:#7A7490;
   --hero:radial-gradient(120% 140% at 100% 0%,#8B5CF6 0%,#5B21B6 48%,#2E1065 100%); --on-hero:#FFFFFF;
   --shadow:0 1px 0 rgba(21,17,31,.04);
@@ -36,7 +36,7 @@ try { if(localStorage.getItem("diab-theme") === "light") document.documentElemen
     --ink:#C4B5FD; --on-ink:#0B0A12; --text:#F1EEF9; --muted:#9A94AD;
     --accent:#8B5CF6; --on-accent:#FFFFFF; --hi:#C4B5FD; --glow:rgba(139,92,246,.22);
     --grad:linear-gradient(135deg,#8B5CF6 0%,#EC4899 100%); --grad-glow:rgba(236,72,153,.45);
-    --mark:rgba(236,72,153,.42); --mark-soft:#211A30; --red:#FB7185; --mid:#FBBF24; --mid-soft:#2A2110; --ok:#A3E635; --ok-soft:#1C2610; --no-soft:#2C1420;
+    --mark:rgba(236,72,153,.42); --mark-soft:#211A30; --red:#FB7185; --mid:#FBBF24; --mid-soft:#2A2110; --ok:#A3E635; --ok-soft:#1C2610; --no-soft:#2C1420; --say:rgba(250,204,21,.3);
     --nav:rgba(11,10,18,.8); --nav-text:#7F7896;
     --hero:radial-gradient(120% 140% at 100% 0%,#7C3AED 0%,#4C1D95 45%,#1A0F33 100%); --on-hero:#FFFFFF;
     --shadow:none;
@@ -49,7 +49,7 @@ try { if(localStorage.getItem("diab-theme") === "light") document.documentElemen
   --ink:#C4B5FD; --on-ink:#0B0A12; --text:#F1EEF9; --muted:#9A94AD;
   --accent:#8B5CF6; --on-accent:#FFFFFF; --hi:#C4B5FD; --glow:rgba(139,92,246,.22);
   --grad:linear-gradient(135deg,#8B5CF6 0%,#EC4899 100%); --grad-glow:rgba(236,72,153,.45);
-  --mark:rgba(236,72,153,.42); --mark-soft:#211A30; --red:#FB7185; --mid:#FBBF24; --mid-soft:#2A2110; --ok:#A3E635; --ok-soft:#1C2610; --no-soft:#2C1420;
+  --mark:rgba(236,72,153,.42); --mark-soft:#211A30; --red:#FB7185; --mid:#FBBF24; --mid-soft:#2A2110; --ok:#A3E635; --ok-soft:#1C2610; --no-soft:#2C1420; --say:rgba(250,204,21,.3);
   --nav:rgba(11,10,18,.8); --nav-text:#7F7896;
   --hero:radial-gradient(120% 140% at 100% 0%,#7C3AED 0%,#4C1D95 45%,#1A0F33 100%); --on-hero:#FFFFFF;
   --shadow:none;
@@ -481,6 +481,8 @@ footer p{margin:0 0 6px}
   <dialog class="app-dialog" id="app-download" aria-labelledby="app-dialog-title"><button class="app-tool app-dialog-close" id="app-close" type="button" aria-label="Κλείσιμο">✕</button><span class="ref" id="app-mode">Δοκιμαστική έκδοση</span><h2 id="app-dialog-title">Το διάβασμά σου, σε δικό του παράθυρο.</h2><p>Αρχική, πίσω, αναζήτηση και χρονόμετρο με ένα πάτημα. Συνέχισε από την τελευταία ενότητα που άνοιξες.</p><a class="btn" href="downloads/Diabasma-test-windows.zip" download>Λήψη για Windows · δοκιμαστική</a><ol><li>Κατέβασε και αποσυμπίεσε το ZIP σε έναν φάκελο.</li><li>Άνοιξε το <b>Start-Diabasma.cmd</b>. Χρειάζεται Microsoft Edge ή Google Chrome και ανοίγει σε ξεχωριστό παράθυρο.</li><li>Οι ενσωματωμένες ενότητες δουλεύουν χωρίς internet. Τα εξωτερικά βιβλία χρειάζονται σύνδεση ή δικό σου PDF.</li></ol><button class="btn ghost" id="app-install" type="button" hidden>Εγκατάσταση σε αυτή τη συσκευή</button><p id="app-install-status" role="status"></p><details><summary>Κινητό ή άλλος υπολογιστής</summary><p>Άνοιξε το site και διάλεξε «Εγκατάσταση εφαρμογής» από το μενού του browser. Σε iPhone/iPad: Safari → Κοινή χρήση → Προσθήκη στην οθόνη Αφετηρίας.</p></details><p>Η τοπική έκδοση είναι ένα δοκιμαστικό στιγμιότυπο. Για νέο υλικό κατέβασε ξανά το ZIP. Η πρόοδος μένει στη συσκευή και δεν μεταφέρεται αυτόματα από το site.</p></dialog>
 
   <nav class="seg grade-nav" id="grade-nav" aria-label="Επιλογή τάξης"></nav>
+  <div class="app-player" id="app-player" role="group" aria-label="Ανάγνωση" hidden><button class="vp-btn" type="button" data-vp="back" aria-label="Προηγούμενη πρόταση"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M19 5 9 12l10 7z"/></svg></button><button class="vp-btn vp-play" type="button" data-vp="play" aria-label="Παύση"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg></button><button class="vp-btn" type="button" data-vp="next" aria-label="Επόμενη πρόταση"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M5 5l10 7-10 7z"/></svg></button><button class="vp-btn vp-speed" type="button" data-vp="speed"><span class="voice-status">Ταχύτητα: </span><span class="vp-v">Κανονικά</span></button><button class="vp-btn" type="button" data-vp="set" aria-label="Ρυθμίσεις φωνής"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/></svg><svg class="vp-dots" viewBox="0 0 24 24" aria-hidden="true"><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></button><button class="vp-btn" type="button" data-vp="stop" aria-label="Σταμάτα την ανάγνωση"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <dialog class="app-dialog" id="app-voice-set" aria-labelledby="app-voice-title"><button class="app-tool app-dialog-close" data-vs-close type="button" aria-label="Κλείσιμο">✕</button><h2 id="app-voice-title">Ρυθμίσεις φωνής</h2><p class="vs-label" id="app-voice-speed">Ταχύτητα</p><div class="vs-speeds" role="group" aria-labelledby="app-voice-speed"><button class="app-tool" type="button" data-vs-speed="0">Αργά</button><button class="app-tool" type="button" data-vs-speed="1">Κανονικά</button><button class="app-tool" type="button" data-vs-speed="2">Γρήγορα</button></div><label class="vs-label">Φωνή<select id="app-voice-pick" class="vs-pick"></select></label><p id="app-voice-none" hidden>Δεν βρέθηκε ελληνική φωνή σε αυτή τη συσκευή. Μπορείς να προσθέσεις μία από τις ρυθμίσεις της συσκευής (Προσβασιμότητα ή Γλώσσα).</p><label class="vs-check"><input type="checkbox" id="app-voice-auto"> Διάβαζε κάθε κάρτα μόλις ανοίγει</label><button class="btn" id="app-voice-try" type="button">Δοκίμασε τη φωνή</button><p>Η πρόταση που ακούς φωτίζεται. Με τα κουμπιά πάνω πας στην προηγούμενη ή στην επόμενη πρόταση. Οι ρυθμίσεις μένουν μόνο σε αυτή τη συσκευή.</p></dialog>
   <p id="app-voice-status" class="voice-status" role="status" aria-live="polite"></p><main id="main-content" tabindex="-1">
     <section class="panel" id="plan" hidden></section>
     <section class="panel" id="catalogue"></section>
@@ -581,12 +583,12 @@ function route(){
   let parts;
   try { parts = decodeURIComponent(location.hash.slice(1)).split("/").filter(Boolean); } catch(e){ parts = []; }
   let p = parts[0] || "tomorrow";
-  if(!["tomorrow","plan","study","prep","mock","class","course","lesson","sources","practice","timer","schedule","send","school","terms","check","calendar"].includes(p)) p = "class";
+  if(!["tomorrow","plan","study","prep","mock","class","course","lesson","sources","practice","timer","schedule","send","school","terms","check","calendar","day"].includes(p)) p = "class";
   /* Κρυφές τάξεις (βλ. SHOWN_GRADES): οι διαδρομές τους οδηγούν στη Β΄ */
   if((p === "class" || p === "course" || p === "lesson") && parts[1] && !SHOWN_GRADES.includes(parts[1])){ location.replace("#class/" + selectedGrade); return; }
   if(p === "class" || p === "course" || p === "lesson") selectGrade(parts[1] || selectedGrade);
   if(p === "send") selectGrade('B');
-  const panel = p === "class" || p === "course" || p === "lesson" ? "catalogue" : ["tomorrow","plan","study","prep","mock","check","calendar"].includes(p) ? "plan" : p;
+  const panel = p === "class" || p === "course" || p === "lesson" ? "catalogue" : ["tomorrow","plan","study","prep","mock","check","calendar","day"].includes(p) ? "plan" : p;
   document.querySelectorAll(".panel").forEach(el => el.hidden = el.id !== panel);
   renderGradeNav();
   $('#grade-nav').hidden = shownGrades().length < 2;

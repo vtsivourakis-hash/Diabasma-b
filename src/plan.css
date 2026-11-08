@@ -261,3 +261,39 @@
 .cal-row{display:flex;align-items:center;gap:12px;min-height:52px;color:var(--text);text-decoration:none;border-top:1px solid var(--line)}
 .cal-row:first-of-type{border-top:0}
 @media (max-width:360px){.cal-rings{grid-template-columns:repeat(3,14px)}}
+
+/* «Η μέρα μου» */
+.dm-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin:0 0 14px}
+.dm-top .ct{margin:2px 0 0}
+.dm-sum{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 18px}
+.dm-sum div{display:flex;flex-direction:column;gap:3px;padding:12px 10px;border-radius:16px;background:var(--card);border:1px solid var(--line)}
+.dm-sum small{font-size:11.5px;font-weight:700;color:var(--muted)}
+.dm-sum b{font-size:19px;font-weight:800;letter-spacing:-.01em}
+.dm-line{list-style:none;margin:0 0 16px;padding:0;display:flex;flex-direction:column;gap:8px}
+.dm-line li{display:grid;grid-template-columns:48px 12px minmax(0,1fr);column-gap:8px;align-items:start}
+.dm-at{padding-top:13px;text-align:right;font-size:13px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+.dm-dot{width:12px;height:12px;margin-top:16px;border-radius:50%;background:var(--k,var(--muted))}
+.dm-box{display:flex;flex-direction:column;gap:3px;padding:11px 13px;border-radius:14px;background:var(--card);border:1px solid var(--line);color:var(--text);text-decoration:none}
+.dm-box b{font-size:15.5px;line-height:1.3}
+.dm-box small{font-size:13px;line-height:1.4;color:var(--muted)}
+a.dm-box:hover{border-color:var(--accent)}
+.dm-wake{--k:var(--c-amber)}.dm-school{--k:var(--c-slate)}.dm-rest{--k:var(--c-teal)}.dm-study{--k:var(--c-violet)}.dm-act{--k:var(--c-orange)}.dm-free{--k:var(--c-green)}.dm-off{--k:var(--c-blue)}.dm-sleep{--k:var(--c-indigo)}
+.dm-study .dm-box,.dm-act .dm-box,.dm-free .dm-box,.dm-sleep .dm-box{border-color:color-mix(in srgb,var(--k) 45%,var(--line))}
+.dm-why{margin:0 0 6px;padding:13px 14px;border-radius:14px;border:1px dashed var(--line);font-size:14px}
+.dm-why p{margin:6px 0 0;font-size:13.5px;line-height:1.5;color:var(--muted)}
+.dm-back{display:inline-block;margin:0 0 8px;font-size:14px;font-weight:700;color:var(--hi);text-decoration:none}
+.dm-sec{margin:0 0 12px}
+.dm-sec .pl-h{margin-top:0}
+.dm-lab{display:block;margin:0 0 6px;font-size:13px;font-weight:700;color:var(--muted)}
+.dm-note{margin:4px 0 0;padding:10px 12px;border-radius:12px;background:var(--glow);font-size:14px;line-height:1.45}
+.dm-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.dm-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin:0 0 12px;padding:0;border:0}
+.dm-days legend{margin:0 0 6px;font-size:13px;font-weight:700;color:var(--muted)}
+.dm-days label{position:relative}
+.dm-days input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.dm-days span{display:grid;place-items:center;min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--paper);font-size:13px;font-weight:700}
+.dm-days input:checked+span{background:var(--text);color:var(--paper);border-color:var(--text)}
+.dm-days input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+.dm-kind{flex:none;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--c-orange)}
+.dm-act.once{border-style:dashed}.dm-act.once .dm-kind{color:var(--hi)}
+.dm-msg{color:var(--red)}

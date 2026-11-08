@@ -52,6 +52,7 @@ function renderPlanRoute(p, parts){
   else if(p === "mock") renderMock(parts[1]);
   else if(p === "check") renderCheck(parts.slice(1, 5).join("/"));
   else if(p === "calendar") renderCalendar(parts[1]);
+  else if(p === "day") renderDay(parts[1]);
 }
 
 /* Η αρχική: τι έχεις την επόμενη σχολική μέρα και ποια διαγωνίσματα έρχονται */
@@ -82,7 +83,7 @@ function renderTomorrow(){
       const s = gradeSubject(selectedGrade, e.sid), has = unitsOf(e.sid).length;
       return `<li class="pl-item"><a class="pl-row" href="${has ? "#plan/" + e.sid : courseHref(selectedGrade, e.sid)}">${subjectIcon(e.sid)}<span class="pl-t"><b>${esc(s.name)}</b><small>Διαγώνισμα · ${dayName(e.date)} · ${whenText(e.date)}</small></span><span class="pl-when">${Math.max(0, daysTo(e.date))}<small>${daysTo(e.date) === 1 ? "μέρα" : "μέρες"}</small></span></a><button class="pl-x" data-pl-del="${e.sid}|${e.date}" aria-label="Αφαίρεση του διαγωνίσματος: ${esc(s.name)}">✕</button></li>`;
     }).join("")}</ul>` : ""}
-    ${sched ? `<div class="row"><a class="btn ghost" href="#schedule">Το πρόγραμμά μου</a><a class="btn ghost" href="#calendar">Το ημερολόγιό μου</a></div>` : `<a class="btn" href="#schedule">Γράψε το πρόγραμμά σου</a>`}
+    ${sched ? `<div class="row"><a class="btn ghost" href="#schedule">Το πρόγραμμά μου</a><a class="btn ghost" href="#calendar">Το ημερολόγιό μου</a></div><a class="btn ghost" href="#day">Η μέρα μου</a>` : `<a class="btn" href="#schedule">Γράψε το πρόγραμμά σου</a><a class="btn ghost" href="#day">Η μέρα μου</a>`}
     <p class="pnote center">Το πρόγραμμα και ό,τι προσθέτεις μένουν μόνο σε αυτή τη συσκευή.</p>
     <p class="pnote center">Πώς δουλεύει η σελίδα; <button class="linkbtn" type="button" data-tour-start>Ξενάγηση</button></p>`;
 
@@ -104,6 +105,184 @@ function renderTomorrow(){
     if(!/^\d{4}-\d\d-\d\d$/.test(d) || d < ymd(new Date())) return;
     const rest = plan.filter(x => !(x.sid === sid && x.date === d && (x.kind === PL.add.kind || x.kind === "skip")));
     rest.push({kind:PL.add.kind, sid, date:d}); savePlan(rest); PL.add = null; renderTomorrow();
+  };
+}
+
+/* «Η μέρα μου» (#day, #day/tomorrow, #day/settings): πρόταση για τη μέρα, από τις ρυθμίσεις (diab-day), το πρόγραμμα και τα διαγωνίσματα.
+   Είναι πρόταση, όχι υποχρέωση· όλα μένουν στη συσκευή. Η σελίδα δεν μετράει τίποτα (ούτε χρόνο οθόνης). */
+const DAY_WEEK = ["Κυ", "Δε", "Τρ", "Τε", "Πε", "Πα", "Σα"];
+/* Ύπνος ανά τάξη (AASM): η Α΄ είναι 12–13 ετών, η Β΄ 13–14 και η Γ΄ 14–15 (σχολικό έτος 2026–27) */
+const SLEEP_RANGE = { A:[9, 10], B:[8, 10], C:[8, 10] };
+const DAY_DEF = { wake:"07:00", sleep:9, screens:60, screenGoal:0, free:90, schoolStart:"08:15", schoolEnd:"14:00", acts:[] };
+const tMin = s => { const m = /^(\d\d):(\d\d)$/.exec(s || ""); return m ? +m[1] * 60 + +m[2] : null; };
+const tStr = m => { m = ((Math.round(m) % 1440) + 1440) % 1440; return `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`; };
+const hrs = m => { const h = Math.floor(m / 60), r = m % 60; return h && r === 30 ? `${h}½ ${h === 1 ? "ώρα" : "ώρες"}` : !h ? `${m}΄` : !r ? `${h} ${h === 1 ? "ώρα" : "ώρες"}` : `${h} ${h === 1 ? "ώρα" : "ώρες"} ${r}΄`; };
+function loadDay(){
+  const o = Object.assign({}, DAY_DEF, store.get("diab-day", {}));
+  if(tMin(o.wake) === null) o.wake = DAY_DEF.wake;
+  if(![8, 8.5, 9, 9.5, 10].includes(o.sleep)) o.sleep = DAY_DEF.sleep;
+  if(![30, 45, 60].includes(o.screens)) o.screens = DAY_DEF.screens;
+  if(![0, 60, 90, 120].includes(o.screenGoal)) o.screenGoal = 0;
+  if(![60, 90, 120].includes(o.free)) o.free = DAY_DEF.free;
+  if(tMin(o.schoolStart) === null) o.schoolStart = DAY_DEF.schoolStart;
+  if(tMin(o.schoolEnd) === null || tMin(o.schoolEnd) <= tMin(o.schoolStart)) o.schoolEnd = DAY_DEF.schoolEnd;
+  o.acts = (Array.isArray(o.acts) ? o.acts : []).filter(a => a && typeof a.name === "string" && tMin(a.from) !== null && tMin(a.to) > tMin(a.from) &&
+    (a.kind === "week" ? Array.isArray(a.days) && a.days.length : a.kind === "once" && /^\d{4}-\d\d-\d\d$/.test(a.date))).slice(0, 30);
+  return o;
+}
+const saveDay = o => store.set("diab-day", o);
+const actDays = days => days.length === 7 ? "Κάθε μέρα" : "Κάθε " + days.slice().sort((x, y) => (x || 7) - (y || 7)).map(d => WEEK[d]).join(", ");
+
+/* Η επόμενη σχολική μέρα μετά από μια μέρα: γι' αυτήν διαβάζεις το απόγευμα */
+function schoolDayAfter(date){ const d = dayAt(date); do d.setDate(d.getDate() + 1); while(d.getDay() === 0 || d.getDay() === 6); return ymd(d); }
+/* Εκτίμηση διαβάσματος (περίπου): 15΄ για κάθε μάθημα με κάρτες, 10΄ για τα άλλα, +20΄ για κάθε διαγώνισμα στις επόμενες 4 μέρες */
+function studyEstimate(date){
+  const target = schoolDayAfter(date), day = dayPlan(target), sched = loadSchedule();
+  const tests = loadPlan().filter(e => e.kind === "test" && e.date > date && Math.round((dayAt(e.date) - dayAt(date)) / 864e5) <= 4);
+  const withCards = day.ids.filter(id => unitsOf(id).length), other = day.ids.filter(id => !unitsOf(id).length);
+  const min = withCards.length * 15 + other.length * 10 + tests.length * 20;
+  return { target, min:Math.round(min / 5) * 5, withCards, other, tests, sched:!!sched };
+}
+function studyWhy(e){
+  const names = ids => ids.map(id => gradeSubject(selectedGrade, id).name).join(", ");
+  const when = e.target === ymd(new Date(Date.now() + 864e5)) ? "Αύριο" : "Για " + WEEK_ACC[dayAt(e.target).getDay()];
+  const parts = [];
+  if(e.withCards.length) parts.push(`${e.withCards.length === 1 ? "1 μάθημα" : e.withCards.length + " μαθήματα"} με κάρτες (${esc(names(e.withCards))}), περίπου 15΄ το καθένα`);
+  if(e.other.length) parts.push(`${esc(names(e.other))}, περίπου 10΄ ${e.other.length === 1 ? "" : "το καθένα"}`.trim());
+  const tests = e.tests.map(t => `${esc(gradeSubject(selectedGrade, t.sid).name)} ${WEEK_ACC[dayAt(t.date).getDay()]}`);
+  if(!e.sched && !e.tests.length) return `Γράψε το <a href="#schedule">πρόγραμμά σου</a> και εδώ θα βγαίνει πόσο διάβασμα θέλει η μέρα.`;
+  if(!parts.length && !tests.length) return `${when} δεν έχεις μαθήματα στο πρόγραμμα, ούτε διαγώνισμα τις επόμενες μέρες.`;
+  return `${when} έχεις ${parts.join(" και ") || "μόνο επανάληψη"}.${tests.length ? ` Έρχεται διαγώνισμα: ${tests.join(", ")} (+20΄${tests.length > 1 ? " για το καθένα" : ""}).` : ""} Είναι εκτίμηση: αν κάτι το ξέρεις ήδη, θέλει λιγότερο.`;
+}
+
+/* Τα κομμάτια της μέρας, με τη σειρά. Ό,τι έχει σταθερή ώρα (σχολείο, δραστηριότητες, ύπνος) μπαίνει πρώτο·
+   το διάβασμα και ο ελεύθερος χρόνος μπαίνουν στα κενά που μένουν. */
+function dayTimeline(date, o){
+  const wd = dayAt(date).getDay(), school = wd >= 1 && wd <= 5, wake = tMin(o.wake);
+  const bed = wake + 1440 - o.sleep * 60, off = bed - o.screens, rows = [], busy = [];
+  rows.push({ at:wake, k:"wake", t:"Ξύπνημα", s:"" });
+  /* Σαββατοκύριακο: οι προτάσεις αρχίζουν από τις 10:00, όχι αμέσως μετά το ξύπνημα */
+  let after = school ? wake + 60 : Math.max(wake + 120, 600);
+  if(school){
+    const s = loadSchedule(), start = tMin(o.schoolStart), full = tMin(o.schoolEnd) - start;
+    let n = 7;
+    if(s && s.g === selectedGrade){ const d = s.d[wd - 1]; n = 0; d.forEach((v, h) => { if(v) n = h + 1; }); }
+    const end = n ? start + Math.round(full * n / 7 / 5) * 5 : start;
+    if(n){
+      rows.push({ at:start, k:"school", t:`Σχολείο ως τις ${tStr(end)}`, s:s && s.g === selectedGrade ? `${n} ${n === 1 ? "ώρα" : "ώρες"}, από το πρόγραμμά σου${n < 7 ? " (η ώρα λήξης είναι περίπου)" : ""}` : "Γράψε το πρόγραμμά σου για να ξέρει η σελίδα πόσες ώρες έχεις" });
+      busy.push([start, end]);
+      rows.push({ at:end + 15, k:"rest", t:"Φαγητό και ξεκούραση", s:"" });
+      busy.push([end, end + 90]);
+      after = end + 90;
+    }
+  }
+  o.acts.filter(a => a.kind === "week" ? a.days.includes(wd) : a.date === date).forEach(a => {
+    const f = tMin(a.from), to = tMin(a.to);
+    rows.push({ at:f, k:"act", t:`${esc(a.name)} ως τις ${a.to}`, s:a.kind === "week" ? actDays(a.days) : "Μία φορά" });
+    busy.push([f, to]);
+  });
+  /* Τα κενά από το «after» ως τις οθόνες κλειστές */
+  const gaps = () => {
+    const b = busy.slice().sort((x, y) => x[0] - y[0]), out = [];
+    let t = after;
+    b.forEach(([f, to]) => { if(f > t) out.push([t, f]); t = Math.max(t, to); });
+    if(off > t) out.push([t, off]);
+    return out;
+  };
+  const place = (need, min) => { const g = gaps().find(([f, to]) => to - f >= need) || gaps().filter(([f, to]) => to - f >= min).sort((x, y) => (y[1] - y[0]) - (x[1] - x[0]))[0]; if(!g) return null; const len = Math.min(need, g[1] - g[0]); busy.push([g[0], g[0] + len]); return [g[0], len]; };
+  const est = studyEstimate(date);
+  if(est.min){
+    const p = place(est.min, 20);
+    const subj = [...est.tests.map(t => gradeSubject(selectedGrade, t.sid).name + " (διαγώνισμα)"), ...est.withCards.map(id => gradeSubject(selectedGrade, id).name), ...est.other.map(id => gradeSubject(selectedGrade, id).name)];
+    const what = esc([...new Set(subj)].join(", "));
+    if(p) rows.push({ at:p[0], k:"study", t:`Διάβασμα, περίπου ${hrs(p[1])}`, s:p[1] < est.min ? `${what} · χωράνε ${hrs(p[1])} από τα ${hrs(est.min)}: ίσως λίγο νωρίτερα ή σε δύο κομμάτια` : what, href:"#tomorrow" });
+    else rows.push({ at:after, k:"study", t:`Διάβασμα, περίπου ${hrs(est.min)}`, s:`${what} · δεν βρέθηκε κενό στη μέρα σου` , href:"#tomorrow" });
+  }
+  const fr = place(o.free, 30);
+  rows.push(fr ? { at:fr[0], k:"free", t:"Ελεύθερος χρόνος", s:`Ο στόχος σου: ${hrs(o.free)}${fr[1] < o.free ? ` · σήμερα χωράει ${hrs(fr[1])}` : ""}${o.screenGoal ? ` · παιχνίδι και βίντεο έως ${hrs(o.screenGoal)}` : ""}` }
+    : { at:off - 30, k:"free", t:"Ελεύθερος χρόνος", s:`Η μέρα είναι γεμάτη. Κράτα λίγο χρόνο για σένα, έστω μισή ώρα.` });
+  rows.push({ at:off, k:"off", t:"Οθόνες κλειστές", s:`Πρόταση: ${o.screens === 60 ? "μία ώρα" : o.screens + "΄"} χωρίς κινητό, τάμπλετ και υπολογιστή πριν τον ύπνο` });
+  const [lo, hi] = SLEEP_RANGE[selectedGrade] || [8, 10];
+  rows.push({ at:bed, k:"sleep", t:"Ύπνος", s:`${hrs(o.sleep * 60)} ως τις ${o.wake} · για την ${getGrade(selectedGrade).label} προτείνονται ${lo}–${hi} ώρες` });
+  return { rows:rows.sort((a, b) => a.at - b.at), est };
+}
+
+function renderDay(sub){
+  if(sub === "settings") return renderDaySettings();
+  const el = $("#plan"), o = loadDay(), today = new Date(), tom = new Date(Date.now() + 864e5);
+  const date = ymd(sub === "tomorrow" ? tom : today), { rows, est } = dayTimeline(date, o);
+  el.innerHTML = `<div class="dm-top"><div><span class="ref">${dayName(date)}</span><h2 class="ct">Η μέρα μου</h2></div><a class="pl-round" href="#day/settings" aria-label="Ρυθμίσεις της μέρας"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></a></div>
+    <nav class="seg" aria-label="Ποια μέρα"><a href="#day"${sub === "tomorrow" ? "" : ` aria-current="page"`}>Σήμερα</a><a href="#day/tomorrow"${sub === "tomorrow" ? ` aria-current="page"` : ""}>Αύριο</a></nav>
+    <div class="dm-sum">
+      <div><small>Ύπνος</small><b>${hrs(o.sleep * 60)}</b><small>${tStr(tMin(o.wake) - o.sleep * 60)} → ${o.wake}</small></div>
+      <div><small>Διάβασμα</small><b>${est.min ? "~" + hrs(est.min) : "—"}</b><small>εκτίμηση</small></div>
+      <div><small>Ελεύθερο</small><b>${hrs(o.free)}</b><small>ο στόχος σου</small></div>
+    </div>
+    <ol class="dm-line">${rows.map(r => `<li class="dm-${r.k}"><span class="dm-at">${tStr(r.at)}</span><span class="dm-dot" aria-hidden="true"></span>${r.href ? `<a class="dm-box" href="${r.href}">` : `<div class="dm-box">`}<b>${r.t}</b>${r.s ? `<small>${r.s}</small>` : ""}${r.href ? "</a>" : "</div>"}</li>`).join("")}</ol>
+    <div class="dm-why"><b>Πώς βγήκε η εκτίμηση για το διάβασμα</b><p>${studyWhy(est)}</p></div>
+    <div class="row"><a class="btn ghost" href="#day/settings">Άλλαξε τη μέρα</a><a class="btn" href="#tomorrow">Στο διάβασμα</a></div>
+    <p class="pnote center">Είναι πρόταση, όχι υποχρέωση. Μένει μόνο σε αυτή τη συσκευή.</p>`;
+}
+
+const DAY_FORM = { kind:"week", days:[], open:false, msg:"" };
+function renderDaySettings(){
+  const el = $("#plan"), o = loadDay(), [lo, hi] = SLEEP_RANGE[selectedGrade] || [8, 10];
+  const pick = (name, list, cur, label) => `<div class="seg" role="group" aria-label="${label}">${list.map(([v, t]) => `<button type="button" data-dm-set="${name}" data-v="${v}" aria-pressed="${v === cur}">${t}</button>`).join("")}</div>`;
+  const acts = o.acts.map((a, i) => `<li class="pl-item"><div class="pl-row dm-act ${a.kind}"><span class="pl-t"><b>${esc(a.name)}</b><small>${a.kind === "week" ? actDays(a.days) : dayName(a.date)} · ${a.from}–${a.to}</small></span><span class="dm-kind">${a.kind === "week" ? "Τακτική" : "Μία φορά"}</span></div><button class="pl-x" data-dm-del="${i}" aria-label="Αφαίρεση: ${esc(a.name)}">✕</button></li>`).join("");
+  const f = DAY_FORM;
+  const form = f.open ? `<form class="sheet pl-form" id="dm-form">
+      <h3 class="pl-h">Νέα δραστηριότητα</h3>
+      <label class="pl-field"><span>Τι είναι</span><input id="dm-name" maxlength="40" required placeholder="π.χ. Ποδόσφαιρο, Αγγλικά, πιάνο"></label>
+      <div class="seg" role="group" aria-label="Πόσο συχνά"><button type="button" data-dm-kind="week" aria-pressed="${f.kind === "week"}">Κάθε εβδομάδα</button><button type="button" data-dm-kind="once" aria-pressed="${f.kind === "once"}">Μία φορά</button></div>
+      ${f.kind === "week" ? `<fieldset class="dm-days"><legend>Ποιες μέρες</legend>${[1, 2, 3, 4, 5, 6, 0].map(d => `<label><input type="checkbox" value="${d}"${f.days.includes(d) ? " checked" : ""}><span>${DAY_WEEK[d]}</span></label>`).join("")}</fieldset>`
+        : `<label class="pl-field"><span>Πότε</span><input type="date" id="dm-date" min="${ymd(new Date())}" value="${ymd(new Date())}" required></label>`}
+      <div class="dm-two"><label class="pl-field"><span>Από</span><input type="time" id="dm-from" value="17:00" required></label><label class="pl-field"><span>Ως</span><input type="time" id="dm-to" value="18:30" required></label></div>
+      ${f.msg ? `<p class="pnote dm-msg" role="alert">${f.msg}</p>` : ""}
+      <div class="row"><button class="btn" type="submit">Πρόσθεσε</button><button class="btn ghost" type="button" data-dm-cancel>Άκυρο</button></div>
+    </form>` : `<button class="pl-add" data-dm-add>+ Πρόσθεσε δραστηριότητα</button>`;
+  el.innerHTML = `<a class="dm-back" href="#day">← Η μέρα μου</a>
+    <h2 class="ct">Ρυθμίσεις της μέρας</h2>
+    <section class="sheet dm-sec"><h3 class="pl-h">Ύπνος</h3>
+      <p class="pnote">Για την ${getGrade(selectedGrade).label} (περίπου ${{A:"12–13", B:"13–14", C:"14–15"}[selectedGrade] || "13–15"} ετών) προτείνονται ${lo}–${hi} ώρες ύπνου.</p>
+      <label class="pl-field"><span>Ξύπνημα</span><input type="time" id="dm-wake" value="${o.wake}"></label>
+      <span class="dm-lab">Ώρες ύπνου</span>${pick("sleep", [[8, "8"], [8.5, "8½"], [9, "9"], [9.5, "9½"], [10, "10"]], o.sleep, "Ώρες ύπνου")}
+      <p class="dm-note">Για να κοιμηθείς ${hrs(o.sleep * 60)} και να ξυπνήσεις στις ${o.wake}, πήγαινε για ύπνο στις <b>${tStr(tMin(o.wake) - o.sleep * 60)}</b>.</p></section>
+    <section class="sheet dm-sec"><h3 class="pl-h">Σχολείο</h3>
+      <div class="dm-two"><label class="pl-field"><span>Αρχίζει</span><input type="time" id="dm-s1" value="${o.schoolStart}"></label><label class="pl-field"><span>Τελειώνει (με 7 ώρες)</span><input type="time" id="dm-s2" value="${o.schoolEnd}"></label></div>
+      <p class="pnote">Τις μέρες με λιγότερες ώρες, η σελίδα υπολογίζει περίπου πότε τελειώνει, από <a href="#schedule">το πρόγραμμά σου</a>.</p></section>
+    <section class="sheet dm-sec"><h3 class="pl-h">Οθόνες πριν τον ύπνο</h3>
+      <p class="pnote">Πόση ώρα πριν τον ύπνο κλείνεις κινητό, τάμπλετ και υπολογιστή.</p>
+      ${pick("screens", [[30, "30΄"], [45, "45΄"], [60, "1 ώρα"]], o.screens, "Οθόνες κλειστές πριν τον ύπνο")}
+      <span class="dm-lab">Παιχνίδι και βίντεο (αν θέλεις στόχο)</span>${pick("screenGoal", [[0, "Χωρίς"], [60, "1 ώρα"], [90, "1½"], [120, "2 ώρες"]], o.screenGoal, "Στόχος για παιχνίδι και βίντεο")}
+      <p class="pnote">Η σελίδα δεν μετράει πόση ώρα είσαι στην οθόνη. Είναι μόνο ένας στόχος που βάζεις εσύ.</p></section>
+    <section class="sheet dm-sec"><h3 class="pl-h">Ελεύθερος χρόνος</h3>
+      ${pick("free", [[60, "1 ώρα"], [90, "1½ ώρα"], [120, "2 ώρες"]], o.free, "Στόχος ελεύθερου χρόνου")}</section>
+    <h3 class="pl-h">Δραστηριότητες έξω από το σχολείο</h3>
+    ${acts ? `<ul class="pl-list">${acts}</ul>` : `<p class="pnote">Ακόμα καμία. Πρόσθεσε π.χ. προπόνηση, φροντιστήριο ή ένα πάρτι.</p>`}
+    ${form}
+    <p class="pnote center">Όλα μένουν μόνο σε αυτή τη συσκευή.</p>`;
+  const set = (k, v) => { const n = loadDay(); n[k] = v; saveDay(n); renderDaySettings(); };
+  el.querySelectorAll("[data-dm-set]").forEach(b => b.onclick = () => set(b.dataset.dmSet, +b.dataset.v));
+  const time = (id, k, ok = () => true) => { const i = $(id, el); if(i) i.onchange = () => { if(tMin(i.value) !== null && ok(i.value)) set(k, i.value); }; };
+  time("#dm-wake", "wake");
+  time("#dm-s1", "schoolStart", v => tMin(v) < tMin(loadDay().schoolEnd));
+  time("#dm-s2", "schoolEnd", v => tMin(v) > tMin(loadDay().schoolStart));
+  el.querySelectorAll("[data-dm-del]").forEach(b => b.onclick = () => { const n = loadDay(); n.acts.splice(+b.dataset.dmDel, 1); saveDay(n); renderDaySettings(); });
+  el.querySelectorAll("[data-dm-add]").forEach(b => b.onclick = () => { Object.assign(DAY_FORM, { open:true, kind:"week", days:[], msg:"" }); renderDaySettings(); $("#dm-name").focus(); });
+  el.querySelectorAll("[data-dm-cancel]").forEach(b => b.onclick = () => { DAY_FORM.open = false; renderDaySettings(); });
+  el.querySelectorAll("[data-dm-kind]").forEach(b => b.onclick = () => { const name = $("#dm-name").value; DAY_FORM.kind = b.dataset.dmKind; DAY_FORM.msg = ""; renderDaySettings(); $("#dm-name").value = name; });
+  const fm = $("#dm-form", el);
+  if(fm) fm.onsubmit = e => {
+    e.preventDefault();
+    const name = $("#dm-name").value.trim().slice(0, 40), from = $("#dm-from").value, to = $("#dm-to").value;
+    const a = { name, kind:DAY_FORM.kind, from, to };
+    if(a.kind === "week") a.days = [...fm.querySelectorAll(".dm-days input:checked")].map(i => +i.value);
+    else a.date = $("#dm-date").value;
+    const msg = !name ? "Γράψε τι είναι." : tMin(from) === null || !(tMin(to) > tMin(from)) ? "Η ώρα που τελειώνει πρέπει να είναι μετά την ώρα που αρχίζει." : a.kind === "week" && !a.days.length ? "Διάλεξε τουλάχιστον μία μέρα." : a.kind === "once" && !/^\d{4}-\d\d-\d\d$/.test(a.date) ? "Διάλεξε μέρα." : "";
+    if(msg){ DAY_FORM.msg = msg; DAY_FORM.days = a.days || []; renderDaySettings(); $("#dm-name").value = name; $("#dm-from").value = from; $("#dm-to").value = to; return; }
+    const n = loadDay(), today = ymd(new Date());
+    n.acts = n.acts.filter(x => x.kind === "week" || x.date >= today);
+    n.acts.push(a); saveDay(n); DAY_FORM.open = false; renderDaySettings();
   };
 }
 
