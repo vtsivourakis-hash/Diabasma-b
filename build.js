@@ -157,7 +157,7 @@ if (fs.existsSync(sharedFile)) {
   }
 }
 
-// Οι σελίδες των βιβλίων της Β΄ (src/book-pages.json): ο τίτλος όπως στο βιβλίο, και ποιες δεν είναι μαθήματα.
+// Οι σελίδες των βιβλίων της Α΄ και της Β΄ (src/book-pages.json): ο τίτλος όπως στο βιβλίο, και ποιες δεν είναι μαθήματα.
 // section.kind = "head" (επικεφαλίδα ενότητας) ή "info" (εξώφυλλο, περιεχόμενα, γλωσσάρι κ.λπ.)· book.reference για τα λεξικά.
 // Ο ηλεκτρονικός πίνακας περιεχομένων γράφει συχνά λατινικά A, B, H, O αντί για ελληνικά: τα διορθώνουμε.
 const LATIN_GREEK = { A:"Α", B:"Β", E:"Ε", H:"Η", I:"Ι", K:"Κ", M:"Μ", N:"Ν", O:"Ο", P:"Ρ", T:"Τ", X:"Χ", Y:"Υ", Z:"Ζ", o:"ο" };
@@ -172,10 +172,9 @@ const pagesFile = path.join(__dirname, "src", "book-pages.json");
 if (fs.existsSync(pagesFile)) {
   const P = JSON.parse(fs.readFileSync(pagesFile, "utf8")), info = new RegExp(P.info, "i");
   for (const key of [...Object.keys(P.titles), ...P.lesson]) if (!sectionAt(key)) throw new Error(`book-pages.json: άγνωστη σελίδα ${key}`);
-  const B = curriculum.grades.find(item => item.id === "B");
-  for (const subject of B.subjects) subject.books.forEach((book, bi) => {
+  for (const grade of curriculum.grades.filter(item => item.id === "A" || item.id === "B")) for (const subject of grade.subjects) subject.books.forEach((book, bi) => {
     if (book.own) return;
-    const scope = `B/${subject.id}/${bi}`, head = P.head[scope] && new RegExp(P.head[scope]);
+    const scope = `${grade.id}/${subject.id}/${bi}`, head = P.head[scope] && new RegExp(P.head[scope]);
     if (P.reference.includes(scope)) book.reference = true;
     book.sections.forEach((sec, si) => {
       const key = `${scope}/${si}`;
@@ -228,11 +227,12 @@ for (const f of fs.readdirSync(dir).filter(f => f.endsWith(".json") && !f.starts
   C[key] = data;
 }
 
-// Ο τίτλος κάθε ενότητας της Β΄ (και της Οδύσσειας της Α΄) με κάρτες είναι ο τίτλος του βιβλίου. Σε σελίδες που δεν είναι μαθήματα δεν μπαίνει περιεχόμενο.
+// Σε σελίδες που δεν είναι μαθήματα (Α΄ και Β΄) δεν μπαίνει περιεχόμενο. Ο τίτλος κάθε ενότητας της Β΄ (και της Οδύσσειας της Α΄) με κάρτες είναι ο τίτλος του βιβλίου.
 for (const [key, unit] of [...Object.entries(officialContent), ...Object.entries(C)]) {
-  if (!key.startsWith("B/") && !key.startsWith("A/translated/")) continue;
+  if (!key.startsWith("A/") && !key.startsWith("B/")) continue;
   const { section } = sectionAt(key);
   if (section.kind) throw new Error(`${key}: η σελίδα «${section.title}» είναι ${section.kind === "head" ? "επικεφαλίδα" : "σελίδα πληροφοριών"}, όχι μάθημα· δεν παίρνει κάρτες`);
+  if (key.startsWith("A/") && !key.startsWith("A/translated/")) continue;
   if (officialContent[key] === unit) officialContent[key] = { ...unit, title: section.title }; else unit.title = section.title;
 }
 
