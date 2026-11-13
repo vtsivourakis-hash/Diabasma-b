@@ -228,9 +228,9 @@ for (const f of fs.readdirSync(dir).filter(f => f.endsWith(".json") && !f.starts
   C[key] = data;
 }
 
-// Ο τίτλος κάθε ενότητας της Β΄ με κάρτες είναι ο τίτλος του βιβλίου. Σε σελίδες που δεν είναι μαθήματα δεν μπαίνει περιεχόμενο.
+// Ο τίτλος κάθε ενότητας της Β΄ (και της Οδύσσειας της Α΄) με κάρτες είναι ο τίτλος του βιβλίου. Σε σελίδες που δεν είναι μαθήματα δεν μπαίνει περιεχόμενο.
 for (const [key, unit] of [...Object.entries(officialContent), ...Object.entries(C)]) {
-  if (!key.startsWith("B/")) continue;
+  if (!key.startsWith("B/") && !key.startsWith("A/translated/")) continue;
   const { section } = sectionAt(key);
   if (section.kind) throw new Error(`${key}: η σελίδα «${section.title}» είναι ${section.kind === "head" ? "επικεφαλίδα" : "σελίδα πληροφοριών"}, όχι μάθημα· δεν παίρνει κάρτες`);
   if (officialContent[key] === unit) officialContent[key] = { ...unit, title: section.title }; else unit.title = section.title;
