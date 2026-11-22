@@ -451,6 +451,18 @@ footer p{margin:0 0 6px}
 @media (max-width:400px){ .tab{font-size:9.5px;letter-spacing:-.01em} nav.tabs{padding-left:2px;padding-right:2px} }
 @media (max-width:350px){ .tab .lb{font-size:8.5px} }
 @media (min-width:640px){ .wrap{padding-top:24px} }
+/* Στο κινητό η κεφαλίδα είναι μία γραμμή· το «Α΄ · Β΄ · Γ΄ Γυμνασίου» φαίνεται στη σελίδα της τάξης (#class) */
+.hero-lede{display:none}
+@media (max-width:639px){
+  .wrap{padding-top:6px}
+  header{margin:0 0 4px;gap:10px}
+  .hero{padding-top:16px}
+  header .logo{width:30px;height:30px;border-radius:9px;font-size:14px}
+  h1{font-size:18px}
+  .lede{display:none}
+  .themebtn{width:36px;height:36px;border-radius:11px}
+  .hero .hero-lede{display:block;margin-top:12px}
+}
 /*__CATALOGUE_CSS__*/
 /*__APP_CSS__*/
 /*__PLAN_CSS__*/
@@ -475,7 +487,7 @@ footer p{margin:0 0 6px}
     <a class="tab" href="#sources" data-p="sources"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7v1"/></svg></span><span class="lb">Πηγές</span></a>
   </nav>
 
-<nav class="app-toolbar" aria-label="Γρήγορη πλοήγηση"><button class="app-tool" id="app-back" type="button" aria-label="Πίσω">←</button><a class="app-tool" id="app-home" href="#tomorrow">Αρχική</a><span class="app-location" id="app-location"></span><button class="app-tool" id="app-voice" type="button" aria-pressed="false" aria-label="Διάβασε το τρέχον περιεχόμενο δυνατά">🔊 Άκουσε</button><button class="app-tool" id="app-search" type="button">Αναζήτηση</button><a class="app-tool" href="#timer" aria-label="Χρονόμετρο μελέτης">25΄</a></nav>
+<nav class="app-toolbar" aria-label="Γρήγορη πλοήγηση"><button class="app-tool" id="app-back" type="button" aria-label="Πίσω">←</button><span class="app-location" id="app-location"></span><button class="app-tool" id="app-voice" type="button" aria-pressed="false" aria-label="Διάβασε το τρέχον περιεχόμενο δυνατά">🔊 Άκουσε</button><button class="app-tool" id="app-search" type="button">Αναζήτηση</button><a class="app-tool" href="#timer" aria-label="Χρονόμετρο μελέτης">25΄</a></nav>
   <a id="app-resume" class="app-resume" hidden></a>
   <div class="app-download" hidden><div><strong>Το Διάβασμα ως εφαρμογή</strong><p>Δοκιμαστική έκδοση · δικό της παράθυρο, εύκολη πλοήγηση.</p></div><button class="app-tool" id="app-open" type="button">Λήψη app</button></div>
   <dialog class="app-dialog" id="app-download" aria-labelledby="app-dialog-title"><button class="app-tool app-dialog-close" id="app-close" type="button" aria-label="Κλείσιμο">✕</button><span class="ref" id="app-mode">Δοκιμαστική έκδοση</span><h2 id="app-dialog-title">Το διάβασμά σου, σε δικό του παράθυρο.</h2><p>Αρχική, πίσω, αναζήτηση και χρονόμετρο με ένα πάτημα. Συνέχισε από την τελευταία ενότητα που άνοιξες.</p><a class="btn" href="downloads/Diabasma-test-windows.zip" download>Λήψη για Windows · δοκιμαστική</a><ol><li>Κατέβασε και αποσυμπίεσε το ZIP σε έναν φάκελο.</li><li>Άνοιξε το <b>Start-Diabasma.cmd</b>. Χρειάζεται Microsoft Edge ή Google Chrome και ανοίγει σε ξεχωριστό παράθυρο.</li><li>Οι ενσωματωμένες ενότητες δουλεύουν χωρίς internet. Τα εξωτερικά βιβλία χρειάζονται σύνδεση ή δικό σου PDF.</li></ol><button class="btn ghost" id="app-install" type="button" hidden>Εγκατάσταση σε αυτή τη συσκευή</button><p id="app-install-status" role="status"></p><details><summary>Κινητό ή άλλος υπολογιστής</summary><p>Άνοιξε το site και διάλεξε «Εγκατάσταση εφαρμογής» από το μενού του browser. Σε iPhone/iPad: Safari → Κοινή χρήση → Προσθήκη στην οθόνη Αφετηρίας.</p></details><p>Η τοπική έκδοση είναι ένα δοκιμαστικό στιγμιότυπο. Για νέο υλικό κατέβασε ξανά το ZIP. Η πρόοδος μένει στη συσκευή και δεν μεταφέρεται αυτόματα από το site.</p></dialog>
@@ -591,7 +603,8 @@ function route(){
   const panel = p === "class" || p === "course" || p === "lesson" ? "catalogue" : ["tomorrow","plan","study","prep","mock","check","calendar","day"].includes(p) ? "plan" : p;
   document.querySelectorAll(".panel").forEach(el => el.hidden = el.id !== panel);
   renderGradeNav();
-  $('#grade-nav').hidden = shownGrades().length < 2;
+  /* Η επιλογή τάξης φαίνεται μόνο στο «Αύριο» και στη σελίδα της τάξης */
+  $('#grade-nav').hidden = shownGrades().length < 2 || !["tomorrow", "class"].includes(p);
   document.title = `Διάβασμα · ${getGrade(selectedGrade).label}`;
   const activeTab = ["course","lesson","class","send"].includes(p) ? "class" : p === "timer" || p === "schedule" ? "practice" : panel === "plan" ? "tomorrow" : p;
   document.querySelectorAll(".tab").forEach(t => {
