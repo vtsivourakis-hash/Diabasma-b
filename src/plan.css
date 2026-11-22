@@ -377,3 +377,5 @@ a.dm-box:hover{border-color:var(--accent)}
 .bd-sh{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin:0 0 6px;font-size:14px}
 .bd-sh b{color:var(--hi)}
 .bd-sh .bd-all{margin:0;flex:none}
+.fc-xp{display:grid;gap:8px;margin:14px 0 4px}
+.fc-xp .btn{white-space:normal;text-align:left}

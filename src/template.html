@@ -841,7 +841,10 @@ function renderUnit(key){
   const c = C[key], s = st(key), [g, sid, bi, si] = key.split("/"), lesson = officialLesson(g, sid, +bi, +si), el = $("#catalogue"), iliad = sid === "translated";
   let body = "", go = null;
   if(s.view === "sum" && unitData(key)){
-    body = cardLauncher(key, c.summary.map(b => b.h), `<button class="btn ghost" data-go="quiz">Μετά: Quiz →</button>`);
+    /* Στα Αρχαία η «Περίληψη» ακολουθεί τον πίνακα περιεχομένων του βιβλίου: Α. Κείμενο, Β1., Β2., Γ1., Γ2. */
+    /* Κεφάλαιο της Γραμματικής με εξηγήσεις «βήμα βήμα»: πρώτα αυτές, μετά οι κάρτες */
+    const xp = (c.explain || []).map(e => `<a class="fd-row" href="#study/${key}/x/${e.id}"><span class="fd-num">✎</span><span class="pl-t"><b>${esc(e.h)}</b><small>Βήμα βήμα: ${e.steps.length} οθόνες, ${e.qi.length} ερωτήσεις</small></span><span aria-hidden="true">›</span></a>`).join("");
+    body = unitNo(key) ? `<div class="sum-launch">${tocFeedHtml(key, -1)}<button class="btn ghost" data-go="quiz">Μετά: Quiz →</button></div>` : (xp ? `<div class="sheet fd-list">${xp}</div>` : "") + cardLauncher(key, c.summary.map(b => b.h), `<button class="btn ghost" data-go="quiz">Μετά: Quiz →</button>`);
   } else if(s.view === "sum"){
     const n = c.summary.length, i = Math.min(s.idx, n - 1), b = c.summary[i], last = i === n - 1;
     body = `${s.fromBook != null ? `<button class="retex" data-ret>← Πίσω στην άσκηση του βιβλίου</button>` : ""}${s.from !== null ? `<button class="retex" data-ret>← Πίσω στην ${iliad ? "ερώτηση" : "άσκηση"} ${s.from + 1}</button>` : ""}<div class="prog"><div class="bar" role="img" aria-label="Θέμα ${i+1} από ${n}"><i style="width:${Math.round((i+1) / n * 100)}%"></i></div><span>${i+1}/${n}</span></div>

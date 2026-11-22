@@ -576,6 +576,9 @@ function cardView(key, i){
   } else if(part === "idea"){
     const b = c.b;
     body = `<span class="fc-k k-idea${b.warn ? " warn" : ""}">${b.warn ? "Προσοχή" : PART_NAME.idea}</span><h2>${H(b.h)}</h2>${b.quote ? `<p class="quote" lang="grc">${b.quote}</p>` : ""}<p class="fc-big">${T(b.t)}</p>${b.f ? `<p class="f formula">${b.f}</p>` : ""}`;
+    /* Στα Αρχαία: αν το ίδιο τμήμα του βιβλίου έχει εξήγηση «βήμα βήμα», η κάρτα δείχνει τον δρόμο προς αυτήν */
+    const xs = b.book ? explainersAt(key.split("/")[1], b.book) : [];
+    if(xs.length) body += `<div class="fc-xp">${xs.map(x => `<a class="btn ghost" href="${x.href}">Βήμα βήμα: ${x.label} →</a>`).join("")}</div>`;
   } else if(part === "life"){
     /* Από το δεύτερο παράδειγμα, ένα μπορεί να είναι πρόβλεψη {s, opts, ok, r}: πρώτα «τι γίνεται;», μετά η απάντηση.
        Όσο η τελευταία πρόβλεψη δεν έχει απάντηση, δεν δίνεται άλλο παράδειγμα· το επόμενο μέρος μένει ανοιχτό. */
@@ -1341,6 +1344,14 @@ function lessonItems(key){
     const locs = c.b ? c.b.book : c.voc ? [home] : null;
     if(locs) out.push({ id:`${key}|c|${i}`, key, kind:"c", i, locs, href:`#study/${key}/c/${i}`, label:c.voc ? "Οι λέξεις της ενότητας" : cardTitle(key, c), sub:`Κάρτα ${i + 1}` });
   });
+  return out;
+}
+/* Οι εξηγήσεις «βήμα βήμα» στο ίδιο τμήμα ενότητας του βιβλίου με την κάρτα (Β1, Β2, Γ…· όχι το Α. Κείμενο ούτε ολόκληρο κεφάλαιο της Γραμματικής) */
+function explainersAt(sid, locs){
+  const t = tocOf(selectedGrade);
+  if(!t || !groupsOf().some(g => g.id === sid)) return [];
+  const idx = bookIndex(sid), out = [];
+  locs.filter(l => l[0] === "u" && !/^u:\d+:A$/.test(l)).forEach(l => (idx.get(l) || []).forEach(x => { if(x.kind === "x" && !out.some(y => y.id === x.id)) out.push(x); }));
   return out;
 }
 /* Θέση στο βιβλίο → τα κομμάτια της, από όλα τα αρχεία του μαθήματος */
