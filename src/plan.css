@@ -342,10 +342,18 @@ a.dm-box:hover{border-color:var(--accent)}
 .fc-pred .btn.ghost{margin-top:8px}
 
 /* Το κείμενο λέξη λέξη (#study/<κλειδί>/text) */
-.tx-gr{font-family:'Literata',Georgia,serif;font-size:21px;line-height:1.6;margin:10px 0 14px;color:var(--text)}
+.tx-gr{font-family:'Literata',Georgia,serif;font-size:21px;line-height:1.6;margin:10px 0 14px;color:var(--text);white-space:pre-line}
+.tx-who{display:block;margin:8px 0 -6px;font-size:12.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-family:inherit}
 .tx-src{margin:-6px 0 14px;font-size:13.5px;color:var(--muted)}
 .tx-w{display:grid;gap:8px;margin:0 0 14px}
 .tx-w>div{display:grid;gap:2px;padding:9px 12px;border-radius:12px;background:var(--mark-soft)}
 .tx-w b{font-family:'Literata',Georgia,serif;font-weight:400;font-size:18px}
 .tx-w span{font-size:15.5px;line-height:1.4;color:var(--muted)}
 .tx-note{margin:0 0 12px;font-size:16px;line-height:1.5;color:var(--muted)}
+
+/* «Φτιάξε το μάθημά σου» (#build) */
+.bd-tabs{margin:0 0 14px;display:grid;grid-template-columns:repeat(4,1fr)}
+.bd-tabs button{font-size:13.5px;padding-left:4px;padding-right:4px}
+.bd-tabs b{color:var(--hi)}
+.bd-all{display:block;margin:2px 0 8px auto}
+.pl-ut small{display:block;font-size:13px;color:var(--muted);margin-top:2px}

@@ -595,12 +595,12 @@ function route(){
   let parts;
   try { parts = decodeURIComponent(location.hash.slice(1)).split("/").filter(Boolean); } catch(e){ parts = []; }
   let p = parts[0] || "tomorrow";
-  if(!["tomorrow","plan","study","prep","mock","class","course","lesson","sources","practice","timer","schedule","send","school","terms","check","calendar","day","test"].includes(p)) p = "class";
+  if(!["tomorrow","plan","study","prep","mock","class","course","lesson","sources","practice","timer","schedule","send","school","terms","check","calendar","day","test","build","les"].includes(p)) p = "class";
   /* Κρυφές τάξεις (βλ. SHOWN_GRADES): οι διαδρομές τους οδηγούν στη Β΄ */
   if((p === "class" || p === "course" || p === "lesson") && parts[1] && !SHOWN_GRADES.includes(parts[1])){ location.replace("#class/" + selectedGrade); return; }
   if(p === "class" || p === "course" || p === "lesson") selectGrade(parts[1] || selectedGrade);
   if(p === "send") selectGrade('B');
-  const panel = p === "class" || p === "course" || p === "lesson" ? "catalogue" : ["tomorrow","plan","study","prep","mock","check","calendar","day","test"].includes(p) ? "plan" : p;
+  const panel = p === "class" || p === "course" || p === "lesson" ? "catalogue" : ["tomorrow","plan","study","prep","mock","check","calendar","day","test","build","les"].includes(p) ? "plan" : p;
   document.querySelectorAll(".panel").forEach(el => el.hidden = el.id !== panel);
   renderGradeNav();
   /* Η επιλογή τάξης φαίνεται μόνο στο «Αύριο» και στη σελίδα της τάξης */

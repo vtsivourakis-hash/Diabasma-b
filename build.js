@@ -243,15 +243,19 @@ for (const f of fs.readdirSync(dir).filter(f => f.endsWith(".json") && !f.starts
     if (![1, 2, 3].includes(e.lvl)) throw new Error(`${f}: η άσκηση ${i + 1} θέλει "lvl": 1 (Εύκολη), 2 (Μέτρια) ή 3 (Δύσκολη)`);
   });
   checkCards(f, data);
+  // Στα Αρχαία κάθε κάρτα έχει είδος, για το «Φτιάξε το μάθημά σου»: text, lex, gram, synt
+  if (key.split("/")[1] === "ancient") data.summary.forEach((c, i) => {
+    if (!["text", "lex", "gram", "synt"].includes(c.part)) throw new Error(`${f}: η κάρτα ${i + 1} («${c.h}») θέλει "part": text, lex, gram ή synt`);
+  });
   // "text": το αρχαίο κείμενο σε κομμάτια, λέξη λέξη (#study/<κλειδί>/text). Κάθε λέξη του w πρέπει να υπάρχει στο κομμάτι.
   if (data.text) {
     if (!data.text.src || !data.text.parts?.length) throw new Error(`${f}: το text θέλει src και parts`);
     data.text.parts.forEach((p, i) => {
       if (!p.gr || !p.tr || !p.w?.length) throw new Error(`${f}: το κομμάτι ${i + 1} του text θέλει gr, w και tr`);
-      const words = p.gr.normalize("NFC").split(/[\s,.;·]+/);
+      const words = p.gr.normalize("NFC").split(/[\s,.;·:«»!?–\[\]…]+/);
       for (const [gr, mean] of p.w) {
         if (!mean) throw new Error(`${f}: text ${i + 1}: «${gr}» χωρίς σημασία`);
-        for (const t of gr.normalize("NFC").split(/[\s,.;·]+/).filter(Boolean)) if (!words.includes(t)) throw new Error(`${f}: text ${i + 1}: το «${t}» δεν είναι στο κομμάτι`);
+        for (const t of gr.normalize("NFC").split(/[\s,.;·:«»!?–\[\]…]+/).filter(Boolean)) if (!words.includes(t)) throw new Error(`${f}: text ${i + 1}: το «${t}» δεν είναι στο κομμάτι`);
       }
     });
   }
