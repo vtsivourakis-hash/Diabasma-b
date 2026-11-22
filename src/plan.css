@@ -333,3 +333,9 @@ a.dm-box:hover{border-color:var(--accent)}
 .pl-resume{margin:0 0 14px;min-height:0;padding:10px 14px}
 .pl-resume .pl-t small{margin:0 0 1px}
 .pl-resume .pl-t b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Πρόβλεψη στο «Στη ζωή»: οι επιλογές μέσα στο κουτί του παραδείγματος, λίγο πιο σφιχτές */
+.fc-pred .opt{padding:9px 12px;margin:0 0 6px;font-size:15px}
+.fc-pred .opt .l{width:24px;height:24px;font-size:12px}
+.fc-pred .opt:first-of-type{margin-top:10px}
+.fc-pred-r .fc-then{margin-top:8px}
+.fc-pred .btn.ghost{margin-top:8px}

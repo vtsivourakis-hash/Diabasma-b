@@ -101,7 +101,17 @@ function checkCards(name, lesson) {
     if (card.check !== undefined && (typeof card.check !== "string" || !card.check)) throw new Error(`${at}: το check θέλει ένα κείμενο (τι να ρωτήσει τον καθηγητή)`);
     if (card.check && !card.def) throw new Error(`${at}: το check εμφανίζεται δίπλα στο def, άρα η κάρτα θέλει def`);
     if (card.hooks && !card.def) throw new Error(`${at}: τα hooks εμφανίζονται δίπλα στο def, άρα η κάρτα θέλει def`);
-    if (card.more && (!Array.isArray(card.more) || card.more.some(t => typeof t !== "string" || !t))) throw new Error(`${at}: το more θέλει λίστα με κείμενα`);
+    // more: κείμενα, ή {s, opts, ok, r} για πρόβλεψη («τι γίνεται;» πριν από την απάντηση). Το πρώτο παράδειγμα (ex) είναι πάντα απλό κείμενο.
+    if (card.ex !== undefined && typeof card.ex !== "string") throw new Error(`${at}: το ex (το πρώτο παράδειγμα) είναι πάντα κείμενο· η πρόβλεψη μπαίνει στο more`);
+    if (card.more && (!Array.isArray(card.more) || card.more.some(t => typeof t === "string" ? !t : !t || typeof t !== "object"))) throw new Error(`${at}: το more θέλει λίστα με κείμενα ή προβλέψεις {s, r}`);
+    const preds = (card.more || []).filter(t => typeof t === "object");
+    preds.forEach(p => {
+      if (typeof p.s !== "string" || !p.s || typeof p.r !== "string" || !p.r) throw new Error(`${at}: η πρόβλεψη στο more θέλει s (η κατάσταση) και r (τι γίνεται)`);
+      if (p.opts !== undefined && (!Array.isArray(p.opts) || p.opts.length < 2 || p.opts.length > 3 || p.opts.some(t => typeof t !== "string" || !t) || new Set(p.opts).size !== p.opts.length)) throw new Error(`${at}: τα opts της πρόβλεψης θέλουν 2-3 διαφορετικά κείμενα`);
+      if (p.ok !== undefined && !(p.opts && Number.isInteger(p.ok) && p.ok >= 0 && p.ok < p.opts.length)) throw new Error(`${at}: το ok της πρόβλεψης δείχνει σε επιλογή που δεν υπάρχει`);
+    });
+    if (preds.length > 1) throw new Error(`${at}: το πολύ μία πρόβλεψη σε κάθε κάρτα`);
+    if (preds.length && [TOUR_UNIT, TOUR_UNIT.split("/").join("-") + ".json"].includes(name) && i === TOUR_CARD) throw new Error(`${at}: η κάρτα της ξενάγησης δεν παίρνει πρόβλεψη`);
     const th = card.think;
     if (th !== undefined) {
       if (!th || typeof th !== "object" || typeof th.q !== "string" || !th.q || typeof th.then !== "string" || !th.then) throw new Error(`${at}: το think θέλει q και then`);

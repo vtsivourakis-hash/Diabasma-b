@@ -447,7 +447,7 @@ const cardMarks = key => store.get("diab-cards", {})[key] || {};
 function markCard(key, i, v){ const all = store.get("diab-cards", {}), m = all[key] || (all[key] = {}); if(m[i] !== v){ m[i] = v; store.set("diab-cards", all); } }
 function cardProgress(key){ const m = cardMarks(key), n = deckOf(key).length; return { n, ok:Object.keys(m).filter(i => i < n && m[i] === 1).length, seen:Object.keys(m).filter(i => i < n).length }; }
 /* Η κατάσταση της ενότητας σε αυτή την επίσκεψη: μέρος ανά κάρτα, παραδείγματα και βοήθειες που άνοιξαν, απαντήσεις */
-const unitState = key => PL.u[key] || (PL.u[key] = { part:{}, life:{}, ti:{}, hints:{}, ans:{}, quiz:{}, alt:{}, think:{}, mode:{}, step:{}, seq:{}, review:null, anim:"" });
+const unitState = key => PL.u[key] || (PL.u[key] = { part:{}, life:{}, ti:{}, hints:{}, ans:{}, quiz:{}, alt:{}, think:{}, pred:{}, mode:{}, step:{}, seq:{}, review:null, anim:"" });
 /* «Δοκίμασε» σε τρεις τρόπους: «Δες πώς» (η λύση βήμα βήμα), «Με τη σειρά» (ο μαθητής βάζει τα βήματα στη σειρά)
    και «Μόνος σου» (στο τετράδιο, με βοήθειες). Η πρώτη άσκηση της κάρτας ανοίγει στο «Δες πώς», η δεύτερη στο «Με τη σειρά»
    όπου γίνεται, οι επόμενες στο «Μόνος σου». Η σειρά γίνεται με 3+ βήματα, στα Μαθηματικά και στη Φυσική ή με "seq": true. */
@@ -519,7 +519,7 @@ function cardView(key, i){
   const order = s.review || deck.map((x, j) => j), at = order.indexOf(i), nextCard = order[at + 1], prevCard = at > 0 ? order[at - 1] : null;
   if(!alt && last && !c.qs.length && !cardMarks(key)[i]) markCard(key, i, 1);
   /* neutral: επιλογές χωρίς σωστό/λάθος χρώμα («Σκέψου πρώτα», «Με τη σειρά») */
-  let body = "", sec = "", prim = "", neutral = part === "think";
+  let body = "", sec = "", prim = "", neutral = part === "think", gated = false;
   const exId = i + "/" + Math.min(s.ti[i] || 0, c.ex.length - 1);
   const nextLabel = nextCard !== undefined ? "Επόμενη κάρτα ↑" : "Τέλος ενότητας ↑";
   if(part === "think"){
@@ -533,9 +533,23 @@ function cardView(key, i){
     const b = c.b;
     body = `<span class="fc-k k-idea${b.warn ? " warn" : ""}">${b.warn ? "Προσοχή" : PART_NAME.idea}</span><h2>${H(b.h)}</h2>${b.quote ? `<p class="quote" lang="grc">${b.quote}</p>` : ""}<p class="fc-big">${T(b.t)}</p>${b.f ? `<p class="f formula">${b.f}</p>` : ""}`;
   } else if(part === "life"){
-    const list = [c.b.ex, ...(c.b.more || [])].filter(Boolean), shown = Math.min((s.life[i] || 0) + 1, list.length);
-    body = `<span class="fc-k k-life">${PART_NAME.life}${list.length > 1 ? ` · ${shown} από ${list.length}` : ""}</span><h2>${H(c.b.h)}</h2>${list.slice(0, shown).map((t, j) => `<div class="box exb fc-ex${j === shown - 1 && j ? " fc-new" : ""}"><b>Παράδειγμα${list.length > 1 ? " " + (j + 1) : ""}</b><p>${T(t)}</p></div>`).join("")}`;
-    if(shown < list.length) sec = `<button class="fc-sec" data-fc="more">Κι άλλο παράδειγμα</button>`;
+    /* Από το δεύτερο παράδειγμα, ένα μπορεί να είναι πρόβλεψη {s, opts, ok, r}: πρώτα «τι γίνεται;», μετά η απάντηση.
+       Όσο η τελευταία πρόβλεψη δεν έχει απάντηση, δεν δίνεται άλλο παράδειγμα· το επόμενο μέρος μένει ανοιχτό. */
+    const list = [c.b.ex, ...(c.b.more || [])].filter(Boolean), shown = Math.min((s.life[i] || 0) + 1, list.length), pr = s.pred[i] || {};
+    const label = j => `<b>Παράδειγμα${list.length > 1 ? " " + (j + 1) : ""}</b>`;
+    const box = (x, j) => {
+      const cls = `box exb fc-ex${typeof x === "string" ? "" : " fc-pred"}${j === shown - 1 && j ? " fc-new" : ""}`;
+      if(typeof x === "string") return `<div class="${cls}">${label(j)}<p>${T(x)}</p></div>`;
+      const p = pr[j], has = p !== undefined, ack = has && x.opts && Number.isInteger(x.ok) ? (p === x.ok ? "Καλά το σκέφτηκες." : "Λογικό να το σκεφτείς έτσι. Δες τι γίνεται.") : "";
+      return `<div class="${cls}">${label(j)}<p>${T(x.s)}</p>
+        ${x.opts ? x.opts.map((o, k) => `<button class="opt${has && k === p ? " picked" : ""}" data-fc-popt="${j}|${k}"${has ? " disabled" : ""}><span class="l" aria-hidden="true">${LETTERS[k]}</span><span>${T(o)}</span></button>`).join("") : has ? "" : `<p class="pl-think">Τι λες ότι γίνεται;</p><button class="btn ghost" data-fc="pshow" data-j="${j}">Δες τι γίνεται</button>`}
+</div>
+        <div class="fc-pred-r" aria-live="polite">${has ? `<div class="fc-then">${ack ? `<p class="fc-ack">${ack}</p>` : ""}<p>${T(x.r)}</p></div>` : ""}</div>`;
+    };
+    body = `<span class="fc-k k-life">${PART_NAME.life}${list.length > 1 ? ` · ${shown} από ${list.length}` : ""}</span><h2>${H(c.b.h)}</h2>${list.slice(0, shown).map(box).join("")}`;
+    neutral = list.slice(0, shown).some(x => typeof x !== "string");
+    gated = typeof list[shown - 1] !== "string" && pr[shown - 1] === undefined;
+    if(shown < list.length && !gated) sec = `<button class="fc-sec" data-fc="more">Κι άλλο παράδειγμα</button>`;
   } else if(part === "fig"){
     body = `<span class="fc-k k-fig">${PART_NAME.fig}</span><h2>${H(c.b.h)}</h2>${figure(c.b.fig)}`;
   } else if(part === "try"){
@@ -600,7 +614,7 @@ function cardView(key, i){
     prim = `<button class="btn" data-fc="back">Πίσω στην κάρτα</button>`;
   }
   if(!prim) prim = last ? `<button class="btn" data-fc="down">${nextLabel}</button>` : `<button class="btn" data-fc="right">${PART_NAME[parts[pi + 1]]} →</button>`;
-  if(!sec && !alt && c.b && !["think", "check", "def"].includes(part) && (c.b.alt || (c.b.more || []).length)) sec = `<button class="fc-sec" data-fc="lost">Δεν το κατάλαβα</button>`;
+  if(!sec && !alt && !gated && c.b && !["think", "check", "def"].includes(part) && (c.b.alt || (c.b.more || []).length)) sec = `<button class="fc-sec" data-fc="lost">Δεν το κατάλαβα</button>`;
   const anim = CALM.matches ? "" : s.anim;
   s.anim = "";
   el.innerHTML = `<div class="fc" role="dialog" aria-modal="true" aria-label="${esc(strip(cardTitle(key, c)))}">
@@ -641,6 +655,7 @@ function cardView(key, i){
     back:() => { s.alt[i].open = false; s.anim = "in-prev"; cardView(key, i); },
     /* «Δεν το κατάλαβα»: η άλλη ματιά, αν υπάρχει· αλλιώς ένα ακόμα παράδειγμα */
     step:() => { s.step[exId] = (s.step[exId] || 1) + 1; cardView(key, i); fcReveal(".pl-sol li:last-child"); },
+    pshow:b => { (s.pred[i] || (s.pred[i] = {}))[+b.dataset.j] = -1; cardView(key, i); fcReveal(".fc-then"); },
     thought:() => { s.think[i] = { picked:-1 }; cardView(key, i); fcReveal(".fc-then"); },
     lost:() => {
       if(c.b.alt){ s.alt[i] = Object.assign(s.alt[i] || {}, { open:true }); s.anim = "in-next"; cardView(key, i); return; }
@@ -648,7 +663,7 @@ function cardView(key, i){
     },
     close:() => { if(PL.fromFeed === key) history.back(); else location.replace("#study/" + key); }
   };
-  el.querySelectorAll("[data-fc]").forEach(b => b.onclick = () => act[b.dataset.fc]());
+  el.querySelectorAll("[data-fc]").forEach(b => b.onclick = () => act[b.dataset.fc](b));
   el.querySelectorAll("[data-pl-voice]").forEach(b => b.onclick = () => $("#app-voice").click());
   el.querySelectorAll("[data-fc-opt]").forEach(b => b.onclick = () => {
     const z = s.quiz[i], q = z.qs[z.qi], j = +b.dataset.fcOpt, ok = q.opts[j].ok;
@@ -659,6 +674,13 @@ function cardView(key, i){
     try { navigator.vibrate && navigator.vibrate(ok ? 30 : [40, 60, 40]); } catch(e){}
     cardView(key, i);
     fcReveal(".why");
+  });
+  /* Πρόβλεψη στο «Στη ζωή»: όπως το «Σκέψου πρώτα», χωρίς σωστό/λάθος και χωρίς να μετράει */
+  el.querySelectorAll("[data-fc-popt]").forEach(b => b.onclick = () => {
+    const [j, k] = b.dataset.fcPopt.split("|").map(Number);
+    (s.pred[i] || (s.pred[i] = {}))[j] = k;
+    cardView(key, i);
+    fcReveal(".fc-then");
   });
   /* Σκέψου πρώτα: η επιλογή μένει μόνο σε αυτή την επίσκεψη και δεν αλλάζει το ✓/↻ της κάρτας */
   el.querySelectorAll("[data-fc-topt]").forEach(b => b.onclick = () => {
@@ -730,6 +752,8 @@ function fitCard(el, pg, pgKey, canSplit){
     [...inn.children].forEach(k => {
       const r = k.getBoundingClientRect(), h = r.height, n = inn.children.length, at = r.top - top0();
       if(h <= lim && at + h <= room()) return;
+      /* Η πρόβλεψη (κατάσταση και επιλογές) δεν κόβεται: αν δεν χωράει εδώ, πάει όλη στην επόμενη σελίδα */
+      if(k.classList.contains("fc-pred") && h <= lim) return;
       /* Το πρώτο κομμάτι γεμίζει όσο χώρο μένει κάτω από τον τίτλο· τα επόμενα μια ολόκληρη σελίδα */
       const first = at < room() - 60 ? room() - at : lim;
       if(at + h <= room() && h <= lim) return;
