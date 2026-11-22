@@ -359,7 +359,16 @@ const cardMarks = key => store.get("diab-cards", {})[key] || {};
 function markCard(key, i, v){ const all = store.get("diab-cards", {}), m = all[key] || (all[key] = {}); if(m[i] !== v){ m[i] = v; store.set("diab-cards", all); } }
 function cardProgress(key){ const m = cardMarks(key), n = deckOf(key).length; return { n, ok:Object.keys(m).filter(i => i < n && m[i] === 1).length, seen:Object.keys(m).filter(i => i < n).length }; }
 /* Η κατάσταση της ενότητας σε αυτή την επίσκεψη: μέρος ανά κάρτα, παραδείγματα και βοήθειες που άνοιξαν, απαντήσεις */
-const unitState = key => PL.u[key] || (PL.u[key] = { part:{}, life:{}, ti:{}, hints:{}, ans:{}, quiz:{}, alt:{}, think:{}, review:null, anim:"" });
+const unitState = key => PL.u[key] || (PL.u[key] = { part:{}, life:{}, ti:{}, hints:{}, ans:{}, quiz:{}, alt:{}, think:{}, mode:{}, step:{}, seq:{}, review:null, anim:"" });
+/* «Δοκίμασε» σε τρεις τρόπους: «Δες πώς» (η λύση βήμα βήμα), «Με τη σειρά» (ο μαθητής βάζει τα βήματα στη σειρά)
+   και «Μόνος σου» (στο τετράδιο, με βοήθειες). Η πρώτη άσκηση της κάρτας ανοίγει στο «Δες πώς», η δεύτερη στο «Με τη σειρά»
+   όπου γίνεται, οι επόμενες στο «Μόνος σου». Η σειρά γίνεται με 3+ βήματα, στα Μαθηματικά και στη Φυσική ή με "seq": true. */
+const canOrder = (key, e) => e.steps.length >= 3 && (e.seq === true || (e.seq !== false && ["math", "physics"].includes(key.split("/")[1])));
+function defaultMode(key, k, e){
+  if(k === 0) return "worked";
+  if(k === 1 && canOrder(key, e)) return "ordered";
+  return "own";
+}
 
 function renderStudy(key, parts){
   if(ALIAS[key]){ location.replace("#study/" + ALIAS[key]); return; }
@@ -420,7 +429,9 @@ function cardView(key, i){
   const parts = c.parts, alt = s.alt[i] && s.alt[i].open, pi = Math.min(s.part[i] || 0, parts.length - 1), part = alt ? "alt" : parts[pi], last = pi === parts.length - 1;
   const order = s.review || deck.map((x, j) => j), at = order.indexOf(i), nextCard = order[at + 1], prevCard = at > 0 ? order[at - 1] : null;
   if(!alt && last && !c.qs.length && !cardMarks(key)[i]) markCard(key, i, 1);
-  let body = "", sec = "", prim = "";
+  /* neutral: επιλογές χωρίς σωστό/λάθος χρώμα («Σκέψου πρώτα», «Με τη σειρά») */
+  let body = "", sec = "", prim = "", neutral = part === "think";
+  const exId = i + "/" + Math.min(s.ti[i] || 0, c.ex.length - 1);
   const nextLabel = nextCard !== undefined ? "Επόμενη κάρτα ↑" : "Τέλος ενότητας ↑";
   if(part === "think"){
     const th = c.b.think, p = s.think[i] && s.think[i].picked, has = p !== undefined;
@@ -439,13 +450,35 @@ function cardView(key, i){
   } else if(part === "fig"){
     body = `<span class="fc-k k-fig">${PART_NAME.fig}</span><h2>${H(c.b.h)}</h2>${figure(c.b.fig)}`;
   } else if(part === "try"){
-    const k = Math.min(s.ti[i] || 0, c.ex.length - 1), e = u.ex[c.ex[k]], id = i + "/" + k, shown = s.hints[id] || 0, ans = s.ans[id], left = e.steps.length - shown;
+    const k = Math.min(s.ti[i] || 0, c.ex.length - 1), e = u.ex[c.ex[k]], id = exId, mode = s.mode[id] || defaultMode(key, k, e), n = e.steps.length;
+    neutral = mode === "ordered";
+    const answer = `<p class="ans">Απάντηση: <span>${T(e.ans)}</span></p>`;
     body = `<span class="fc-k k-try">${PART_NAME.try}${c.ex.length > 1 ? ` · ${k + 1} από ${c.ex.length}` : ""}</span><span class="lvl l${e.lvl}">${LEVELS[e.lvl]}</span>
-      <p class="fc-q">${e.h && !C[key] ? `<b>${esc(e.h)}${/[;:;?.!]$/.test(e.h) ? "" : ":"}</b> ` : ""}${T(e.q)}</p>
-      <p class="pl-think">Λύσε την στο τετράδιο. Αν κολλήσεις, πάρε μια βοήθεια.</p>
+      <div class="seg fc-mode" role="group" aria-label="Πώς θα δουλέψεις">${[["worked", "Δες πώς"], canOrder(key, e) && ["ordered", "Με τη σειρά"], ["own", "Μόνος σου"]].filter(Boolean).map(([m, t]) => `<button type="button" data-fc-mode="${m}" aria-pressed="${m === mode}">${t}</button>`).join("")}</div>
+      <p class="fc-q">${e.h && !C[key] ? `<b>${esc(e.h)}${/[;:;?.!]$/.test(e.h) ? "" : ":"}</b> ` : ""}${T(e.q)}</p>`;
+    if(mode === "worked"){
+      const shown = Math.min(s.step[id] || 1, n);
+      body += `<p class="pl-think">Δες πώς λύνεται, βήμα βήμα.</p>
+      <ol class="pl-sol">${e.steps.slice(0, shown).map(x => `<li>${T(x)}</li>`).join("")}</ol>
+      ${shown < n ? `<button class="btn ghost" data-fc="step">Επόμενο βήμα →</button>` : answer}`;
+    } else if(mode === "ordered"){
+      /* Οι επιλογές: το σωστό επόμενο βήμα και ως 2 από τα επόμενα. Ανακατεύονται μία φορά ανά ερώτηση. Το τελευταίο μπαίνει μόνο του. */
+      const q = s.seq[id] || (s.seq[id] = { done:[], opts:null, wrong:null });
+      if(q.done.length === n - 1) q.done.push(n - 1);
+      const done = q.done.length === n;
+      if(!done && !q.opts) q.opts = shuffle([q.done.length, ...shuffle(e.steps.map((x, j) => j).slice(q.done.length + 1)).slice(0, 2)]);
+      body += `<p class="pl-think">Βάλε τα βήματα στη σωστή σειρά.</p>
+      ${q.done.length ? `<ol class="pl-sol fc-locked">${q.done.map(j => `<li>${T(e.steps[j])}</li>`).join("")}</ol>` : ""}
+      ${done ? `${answer}<p class="fc-verdict">Αυτή είναι όλη η λύση.</p>` : `<h3 class="fc-qh">${q.done.length ? "Ποιο είναι το επόμενο βήμα;" : "Ποιο είναι το πρώτο βήμα;"}</h3>
+      ${q.opts.map((j, x) => `<button class="opt${q.wrong === j ? " picked" : ""}" data-fc-sopt="${j}"><span class="l" aria-hidden="true">${LETTERS[x]}</span><span>${T(e.steps[j])}</span></button>`).join("")}
+      <div aria-live="polite">${q.wrong !== null ? `<p class="fc-not">Όχι ακόμα — αυτό έρχεται πιο μετά.</p>` : ""}</div>`}`;
+    } else {
+      const shown = s.hints[id] || 0, ans = s.ans[id], left = n - shown;
+      body += `<p class="pl-think">Λύσε την στο τετράδιο. Αν κολλήσεις, πάρε μια βοήθεια.</p>
       ${shown ? `<ol class="pl-sol">${e.steps.slice(0, shown).map(x => `<li>${T(x)}</li>`).join("")}</ol>` : ""}
       ${left && !ans ? `<button class="btn ghost" data-fc="hint">${shown ? "Κι άλλη βοήθεια" : "Χρειάζομαι βοήθεια"} (${left} ακόμη)</button>` : ""}
-      ${ans ? `<p class="ans">Απάντηση: <span>${T(e.ans)}</span></p>` : `<button class="btn ghost" data-fc="ans">Έλεγξε την απάντησή σου</button>`}`;
+      ${ans ? answer : `<button class="btn ghost" data-fc="ans">Έλεγξε την απάντησή σου</button>`}`;
+    }
     if(k < c.ex.length - 1) sec = `<button class="fc-sec" data-fc="nextex">Άλλη μία άσκηση</button>`;
   } else if(part === "check"){
     const z = s.quiz[i] || (s.quiz[i] = Object.assign(newQuiz(c.qs.map(oi => ({key, oi})), "card"), {wrong:0})), q = z.qs[z.qi], p = z.picked[z.qi], has = p !== undefined;
@@ -484,7 +517,7 @@ function cardView(key, i){
   el.innerHTML = `<div class="fc" role="dialog" aria-modal="true" aria-label="${esc(strip(cardTitle(key, c)))}">
     <div class="pl-segs" style="--n:${parts.length}" role="img" aria-label="Μέρος ${pi + 1} από ${parts.length}">${parts.map((x, j) => `<span class="${j <= pi ? "on" : ""}"></span>`).join("")}</div>
     <div class="pl-bar"><h2 class="pl-where">Κάρτα ${i + 1} από ${deck.length}${s.review ? " · ξανά" : ""}</h2><span class="pl-tools"><button class="pl-round" data-pl-voice aria-label="Διάβασέ το μου φωναχτά"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg></button><button class="pl-round" data-fc="close" aria-label="Πίσω στις κάρτες"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></span></div>
-    <section class="fc-body fc-read p-${part}${anim ? " " + anim : ""}"><div class="fc-in">${body}</div></section>
+    <section class="fc-body fc-read p-${part}${neutral ? " fc-neutral" : ""}${anim ? " " + anim : ""}"><div class="fc-in">${body}</div></section>
     <div class="fc-actions">${sec}${prim}</div>
     <p class="fc-hint">← → τα μέρη της κάρτας · ↑ η επόμενη κάρτα</p>
     <div class="fc-rotate" aria-hidden="true"><p><span>📱</span>Γύρισε το κινητό όρθιο για να διαβάσεις την κάρτα.</p></div>
@@ -518,6 +551,7 @@ function cardView(key, i){
     alt:() => { s.alt[i] = { open:true }; s.anim = "in-next"; cardView(key, i); },
     back:() => { s.alt[i].open = false; s.anim = "in-prev"; cardView(key, i); },
     /* «Δεν το κατάλαβα»: η άλλη ματιά, αν υπάρχει· αλλιώς ένα ακόμα παράδειγμα */
+    step:() => { s.step[exId] = (s.step[exId] || 1) + 1; cardView(key, i); fcReveal(".pl-sol li:last-child"); },
     thought:() => { s.think[i] = { picked:-1 }; cardView(key, i); fcReveal(".fc-then"); },
     lost:() => {
       if(c.b.alt){ s.alt[i] = Object.assign(s.alt[i] || {}, { open:true }); s.anim = "in-next"; cardView(key, i); return; }
@@ -542,6 +576,13 @@ function cardView(key, i){
     s.think[i] = { picked:+b.dataset.fcTopt };
     cardView(key, i);
     fcReveal(".fc-then");
+  });
+  /* Δοκίμασε: αλλαγή τρόπου (κάθε τρόπος κρατά τη δική του πρόοδο) και οι επιλογές του «Με τη σειρά» */
+  el.querySelectorAll("[data-fc-mode]").forEach(b => b.onclick = () => { s.mode[exId] = b.dataset.fcMode; pg[pgKey] = 0; cardView(key, i); });
+  el.querySelectorAll("[data-fc-sopt]").forEach(b => b.onclick = () => {
+    const q = s.seq[exId], j = +b.dataset.fcSopt;
+    if(j === q.done.length){ q.done.push(j); q.opts = null; q.wrong = null; cardView(key, i); fcReveal(".fc-locked li:last-child"); }
+    else { q.wrong = j; cardView(key, i); fcReveal(".fc-not"); }
   });
   el.querySelectorAll("[data-fc-aopt]").forEach(b => b.onclick = () => {
     const st = s.alt[i], j = +b.dataset.fcAopt;

@@ -152,12 +152,19 @@
 .k-idea{color:var(--hi)}.k-idea.warn{color:var(--red)}
 .k-think{color:var(--c-indigo)}.k-life{color:var(--c-lime)}.k-fig{color:var(--c-cyan)}.k-try{color:var(--c-orange)}.k-check{color:var(--c-pink)}.k-def{color:var(--muted)}.k-alt{color:var(--c-amber)}
 .fc-body .lvl{float:right}
-/* Σκέψου πρώτα: χωρίς σωστό/λάθος· η επιλογή φαίνεται ουδέτερα */
+/* Σκέψου πρώτα και «Με τη σειρά»: χωρίς σωστό/λάθος· η επιλογή φαίνεται ουδέτερα */
 .fc-body.p-think{background:linear-gradient(170deg,color-mix(in srgb,var(--c-indigo) 12%,var(--card)),var(--card) 60%)}
 .p-think .fc-q{margin:0 0 14px}
-.p-think .opt.picked{border:1.5px solid var(--c-indigo);background:color-mix(in srgb,var(--c-indigo) 12%,var(--card2))}
-.p-think .opt.picked .l{background:var(--c-indigo);border-color:var(--c-indigo);color:var(--paper)}
-.p-think .opt:disabled:not(.picked){opacity:.6}
+.fc-neutral .opt.picked{border:1.5px solid var(--c-indigo);background:color-mix(in srgb,var(--c-indigo) 12%,var(--card2))}
+.fc-neutral .opt.picked .l{background:var(--c-indigo);border-color:var(--c-indigo);color:var(--paper)}
+.fc-neutral .opt:disabled:not(.picked){opacity:.6}
+/* Δοκίμασε: οι τρεις τρόποι (μικρό .seg) και τα βήματα που μπήκαν στη σειρά */
+.fc-mode{margin:10px 0 0;padding:3px;border-radius:12px}
+.fc-mode button{padding:7px 2px;border-radius:9px;font-size:13px}
+.fc-locked{list-style:none;padding-left:0}
+.fc-locked li{position:relative;padding:6px 10px 6px 30px;border-radius:10px;background:var(--card2);box-shadow:inset 3px 0 0 var(--ok)}
+.fc-locked li::before{content:"✓";position:absolute;left:10px;top:6px;font-weight:800;color:var(--ok)}
+.fc-not{margin:4px 0 0;font-weight:700;color:var(--muted)}
 .fc-then{margin:6px 0 0;padding:12px 14px;border-radius:14px;background:var(--card2);box-shadow:inset 3px 0 0 var(--c-indigo);font-size:16px;line-height:1.45}
 .fc-then p{margin:0}
 .fc-then .fc-ack{margin-bottom:4px;font-weight:800;color:var(--c-indigo)}

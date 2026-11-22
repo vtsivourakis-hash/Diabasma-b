@@ -115,6 +115,9 @@ function checkCards(name, lesson) {
       if (a.q && (!a.q.q || !a.q.c || a.q.w?.length !== 3 || !a.q.why || a.q.w.includes(a.q.c))) throw new Error(`${at}: η ερώτηση του alt θέλει q, c, 3 διαφορετικές λάθος απαντήσεις και why`);
     }
   });
+  lesson.ex.forEach((x, i) => {
+    if ("seq" in x && typeof x.seq !== "boolean") throw new Error(`${name}: η άσκηση ${i + 1}: το seq θέλει true ή false («Με τη σειρά» ναι ή όχι)`);
+  });
   for (const [list, what] of [[lesson.quiz, "ερώτηση"], [lesson.ex, "άσκηση"]]) list.forEach((x, i) => {
     if (typeof x.topic === "number" && !(Number.isInteger(x.topic) && x.topic >= 0 && x.topic < n)) throw new Error(`${name}: η ${what} ${i + 1} δείχνει σε κάρτα ${x.topic} που δεν υπάρχει`);
   });
