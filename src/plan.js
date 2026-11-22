@@ -125,14 +125,16 @@ function bindLookBack(el){
 function renderTomorrow(){
   const el = $("#plan"), date = nextSchoolDay(), wd = dayAt(date).getDay(), soon = daysTo(date) === 1, day = dayPlan(date), sched = loadSchedule();
   const tests = loadPlan().filter(e => e.kind === "test").sort((a, b) => a.date.localeCompare(b.date));
-  const row = sid => {
+  const row = (sid, skip = true) => {
     const s = gradeSubject(selectedGrade, sid), keys = unitsOf(sid), sug = keys.length ? suggestUnit(sid) : null, test = day.tests.includes(sid);
     const sub = sug ? `${lastUnit(sid) ? "Συνέχεια" : "Ξεκίνα"}: ${unitLabel(sug)}` : "Άνοιξε το βιβλίο του μαθήματος";
-    return `<li class="pl-item"><a class="pl-row" href="${keys.length ? "#plan/" + sid : courseHref(selectedGrade, sid)}">${subjectIcon(sid)}<span class="pl-t"><b>${esc(s.name)}${test ? ` <span class="pl-badge">Διαγώνισμα</span>` : ""}</b><small>${sub}</small></span><span class="pl-go" aria-hidden="true">›</span></a><button class="pl-x" data-pl-skip="${sid}" aria-label="Δεν το έχουμε ${soon ? "αύριο" : WEEK_ACC[wd]}: ${esc(s.name)}">✕</button></li>`;
+    return `<li class="pl-item"><a class="pl-row" href="${keys.length ? "#plan/" + sid : courseHref(selectedGrade, sid)}">${subjectIcon(sid)}<span class="pl-t"><b>${esc(s.name)}${test ? ` <span class="pl-badge">Διαγώνισμα</span>` : ""}</b><small>${sub}</small></span><span class="pl-go" aria-hidden="true">›</span></a>${skip ? `<button class="pl-x" data-pl-skip="${sid}" aria-label="Δεν το έχουμε ${soon ? "αύριο" : WEEK_ACC[wd]}: ${esc(s.name)}">✕</button>` : ""}</li>`;
   };
   const n = day.ids.length;
+  /* Χωρίς πρόγραμμα και χωρίς τίποτα για αύριο (π.χ. πρώτη επίσκεψη): τα μαθήματα της τάξης που έχουν κάρτες, με τη σειρά των βιβλίων */
+  const first = !sched && !n, all = first ? groupsOf().map(g => g.id).filter(sid => unitsOf(sid).length) : [];
   const lead = n ? `Έχεις ${n === 1 ? "1 μάθημα" : n + " μαθήματα"}. Διάλεξε από πού θα ξεκινήσεις. Λίγο κάθε μέρα φτάνει.`
-    : sched ? "Δεν έχεις μαθήματα στο πρόγραμμα για αυτή τη μέρα. Πρόσθεσε κάτι αν χρειάζεται." : "Γράψε μία φορά το πρόγραμμα της τάξης σου και εδώ θα βλέπεις τι έχεις κάθε μέρα.";
+    : sched ? "Δεν έχεις μαθήματα στο πρόγραμμα για αυτή τη μέρα. Πρόσθεσε κάτι αν χρειάζεται." : "Διάλεξε ένα μάθημα και ξεκίνα. Αν γράψεις το πρόγραμμα της τάξης σου, εδώ θα βλέπεις κάθε μέρα τι έχεις.";
   const subjects = getGrade(selectedGrade).subjects.filter(s => !INFO_ONLY[s.id] || s.books.some(b => b.own));
   const form = PL.add ? `<form class="sheet pl-form" id="pl-form">
       <h3 class="pl-h">Κάτι άλλο</h3>
@@ -143,14 +145,15 @@ function renderTomorrow(){
     </form>` : `<button class="pl-add" data-pl-add>+ Κάτι άλλο: διάβασμα ή διαγώνισμα</button>`;
   el.innerHTML = `<div class="hero"><span class="ref">${dayName(date)}</span><h2 class="ct">${soon ? "Για αύριο" : "Για " + WEEK_ACC[wd]}</h2><p>${lead}</p></div>
     ${lookBackHtml()}
-    ${n ? `<ul class="pl-list">${day.ids.map(row).join("")}</ul>` : ""}
+    ${n ? `<ul class="pl-list">${day.ids.map(sid => row(sid)).join("")}</ul>` : ""}
+    ${all.length ? `<h3 class="pl-h">Μαθήματα της ${getGrade(selectedGrade).label.split(" ")[0]}</h3><ul class="pl-list">${all.map(sid => row(sid, false)).join("")}</ul>` : ""}
     ${day.skipped.length ? `<p class="pnote">Κρυμμένα για αυτή τη μέρα: ${day.skipped.map(id => esc(gradeSubject(selectedGrade, id).name)).join(", ")}. <button class="linkbtn" data-pl-unskip>Φέρ' τα πίσω</button></p>` : ""}
     ${form}
     ${tests.length ? `<h3 class="pl-h">Έρχεται</h3><ul class="pl-list">${tests.map(e => {
       const s = gradeSubject(selectedGrade, e.sid), has = unitsOf(e.sid).length;
       return `<li class="pl-item"><a class="pl-row" href="${has ? "#plan/" + e.sid : courseHref(selectedGrade, e.sid)}">${subjectIcon(e.sid)}<span class="pl-t"><b>${esc(s.name)}</b><small>Διαγώνισμα · ${dayName(e.date)} · ${whenText(e.date)}</small></span><span class="pl-when">${Math.max(0, daysTo(e.date))}<small>${daysTo(e.date) === 1 ? "μέρα" : "μέρες"}</small></span></a><button class="pl-x" data-pl-del="${e.sid}|${e.date}" aria-label="Αφαίρεση του διαγωνίσματος: ${esc(s.name)}">✕</button></li>`;
     }).join("")}</ul>` : ""}
-    ${sched ? `<div class="row"><a class="btn ghost" href="#schedule">Το πρόγραμμά μου</a><a class="btn ghost" href="#calendar">Το ημερολόγιό μου</a></div><a class="btn ghost" href="#day">Η μέρα μου</a>` : `<a class="btn" href="#schedule">Γράψε το πρόγραμμά σου</a><a class="btn ghost" href="#day">Η μέρα μου</a>`}
+    ${sched ? `<div class="row"><a class="btn ghost" href="#schedule">Το πρόγραμμά μου</a><a class="btn ghost" href="#calendar">Το ημερολόγιό μου</a></div><a class="btn ghost" href="#day">Η μέρα μου</a>` : `<a class="btn${first ? " ghost" : ""}" href="#schedule">Γράψε το πρόγραμμά σου</a>${first ? `<p class="pnote">Με το πρόγραμμα, το Αύριο δείχνει μόνο τα μαθήματα της επόμενης μέρας.</p>` : ""}<a class="btn ghost" href="#day">Η μέρα μου</a>`}
     <p class="pnote center">Το πρόγραμμα και ό,τι προσθέτεις μένουν μόνο σε αυτή τη συσκευή.</p>
     <p class="pnote center">Πώς δουλεύει η σελίδα; <button class="linkbtn" type="button" data-tour-start>Ξενάγηση</button></p>`;
 
