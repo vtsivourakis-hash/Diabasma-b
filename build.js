@@ -243,6 +243,18 @@ for (const f of fs.readdirSync(dir).filter(f => f.endsWith(".json") && !f.starts
     if (![1, 2, 3].includes(e.lvl)) throw new Error(`${f}: η άσκηση ${i + 1} θέλει "lvl": 1 (Εύκολη), 2 (Μέτρια) ή 3 (Δύσκολη)`);
   });
   checkCards(f, data);
+  // "text": το αρχαίο κείμενο σε κομμάτια, λέξη λέξη (#study/<κλειδί>/text). Κάθε λέξη του w πρέπει να υπάρχει στο κομμάτι.
+  if (data.text) {
+    if (!data.text.src || !data.text.parts?.length) throw new Error(`${f}: το text θέλει src και parts`);
+    data.text.parts.forEach((p, i) => {
+      if (!p.gr || !p.tr || !p.w?.length) throw new Error(`${f}: το κομμάτι ${i + 1} του text θέλει gr, w και tr`);
+      const words = p.gr.normalize("NFC").split(/[\s,.;·]+/);
+      for (const [gr, mean] of p.w) {
+        if (!mean) throw new Error(`${f}: text ${i + 1}: «${gr}» χωρίς σημασία`);
+        for (const t of gr.normalize("NFC").split(/[\s,.;·]+/).filter(Boolean)) if (!words.includes(t)) throw new Error(`${f}: text ${i + 1}: το «${t}» δεν είναι στο κομμάτι`);
+      }
+    });
+  }
   for (const m of raw.matchAll(/\{\{[^|}]+\|([^}]+)\}\}/g)) {
     if (!G[m[1]]) throw new Error(`${f}: η λέξη γραμματικής "${m[0]}" δείχνει σε "${m[1]}", που δεν υπάρχει στο _grammar.json`);
   }

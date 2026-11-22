@@ -340,3 +340,12 @@ a.dm-box:hover{border-color:var(--accent)}
 .fc-pred .opt:first-of-type{margin-top:10px}
 .fc-pred-r .fc-then{margin-top:8px}
 .fc-pred .btn.ghost{margin-top:8px}
+
+/* Το κείμενο λέξη λέξη (#study/<κλειδί>/text) */
+.tx-gr{font-family:'Literata',Georgia,serif;font-size:21px;line-height:1.6;margin:10px 0 14px;color:var(--text)}
+.tx-src{margin:-6px 0 14px;font-size:13.5px;color:var(--muted)}
+.tx-w{display:grid;gap:8px;margin:0 0 14px}
+.tx-w>div{display:grid;gap:2px;padding:9px 12px;border-radius:12px;background:var(--mark-soft)}
+.tx-w b{font-family:'Literata',Georgia,serif;font-weight:400;font-size:18px}
+.tx-w span{font-size:15.5px;line-height:1.4;color:var(--muted)}
+.tx-note{margin:0 0 12px;font-size:16px;line-height:1.5;color:var(--muted)}
