@@ -314,3 +314,18 @@ a.dm-box:hover{border-color:var(--accent)}
 .dm-kind{flex:none;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--c-orange)}
 .dm-act.once{border-style:dashed}.dm-act.once .dm-kind{color:var(--hi)}
 .dm-msg{color:var(--red)}
+/* Πες τους με δικά σου λόγια (#study/…/recall): οι τρεις απαντήσεις σε μία γραμμή, χωρίς χρώμα σωστού/λάθους */
+.pl-recall small{display:block;margin-top:3px;font-size:12.5px;font-weight:600;opacity:.8}
+.pl-defs{margin-top:14px}
+.rc-prompt{margin:4px 0 0;font-size:17px;line-height:1.5;color:var(--muted)}
+.rc-rate{flex:1;display:flex;gap:8px}
+.fc-actions .rc-rate .btn{flex:1;min-width:0;padding:8px 6px;font-size:14px;line-height:1.2}
+/* Μια ματιά πίσω (στο «Αύριο») */
+.pl-back{padding:12px 14px;margin:0 0 18px}
+.pl-back .pl-row{padding:8px 0 0;border:0;background:none;box-shadow:none}
+.pl-back .btn{margin-top:10px;padding:11px 16px}
+.pl-back .fc-qh{font-size:18px;line-height:1.3;margin:8px 0 12px}
+.pl-back .fd-list{margin-top:8px}
+.k-back{color:var(--c-teal)}
+.pl-back-u{display:block;margin-top:2px;font-size:12.5px;color:var(--muted)}
+.pl-back-end{margin:8px 0 0;font-size:17px;font-weight:800}

@@ -55,6 +55,72 @@ function renderPlanRoute(p, parts){
   else if(p === "day") renderDay(parts[1]);
 }
 
+/* «Μια ματιά πίσω»: 3 ερωτήσεις από μια ενότητα που διάβασες πριν από 2–10 μέρες (από το diab-days), όχι από μάθημα
+   που έχεις αύριο. Πρώτα η παλαιότερη· όχι η ίδια δύο μέρες στη σειρά, αν υπάρχει άλλη. Η επιλογή της μέρας μένει στο
+   diab-back ({date, key, done}), για να μην αλλάζει μέσα στη μέρα. Χωρίς βαθμό και χωρίς σερί. */
+const daysAgo = date => Math.round((dayAt(ymd(new Date())) - dayAt(date)) / 864e5);
+function lookBackFrom(key){ return Object.entries(store.get("diab-days", {})).filter(([d, m]) => /^\d{4}-\d\d-\d\d$/.test(d) && daysAgo(d) >= 2 && daysAgo(d) <= 10 && Object.values(m || {}).includes(key)).map(([d]) => d).sort()[0]; }
+function pickLookBack(){
+  const today = ymd(new Date()), y = new Date(); y.setDate(y.getDate() - 1);
+  const saved = store.get("diab-back", null), back = saved && typeof saved.key === "string" && saved.key[0] === selectedGrade && unitData(saved.key) ? saved : null;
+  if(back && back.date === today) return back;
+  const next = dayPlan(nextSchoolDay()).ids;
+  const fits = key => typeof key === "string" && key[0] === selectedGrade && unitData(key)?.quiz?.length >= 3 && Object.keys(cardMarks(key)).length > 0 && !next.includes(key.split("/")[1]);
+  let list = [...new Set(Object.values(store.get("diab-days", {})).flatMap(m => Object.values(m || {})))].filter(k => fits(k) && lookBackFrom(k)).sort((a, b) => lookBackFrom(a).localeCompare(lookBackFrom(b)));
+  if(back && back.date === ymd(y) && list.length > 1) list = list.filter(k => k !== back.key);
+  if(!list.length) return null;
+  const pick = { date:today, key:list[0], done:false };
+  store.set("diab-back", pick);
+  return pick;
+}
+/* Οι 3 ερωτήσεις: πρώτα όσες ανήκουν σε κάρτα ↻, μετά όσες βγήκαν λάθος, μετά τυχαίες */
+function lookBackItems(key){
+  const quiz = unitData(key).quiz, m = cardMarks(key), mis = store.get("diab-mistakes", {})[key] || [], pick = [];
+  const add = list => list.forEach(oi => { if(pick.length < 3 && quiz[oi] && !pick.includes(oi)) pick.push(oi); });
+  add(quiz.map((q, oi) => oi).filter(oi => Number.isInteger(quiz[oi].topic) && m[quiz[oi].topic] === 2));
+  add(mis);
+  add(shuffle(quiz.map((q, oi) => oi)));
+  return pick.map(oi => ({key, oi}));
+}
+function lookBackHtml(){
+  const lb = pickLookBack();
+  if(!lb) return "";
+  const key = lb.key, sid = key.split("/")[1], z = PL.back && PL.back.key === key && PL.back.date === lb.date ? PL.back : null;
+  if(!z){
+    if(lb.done) return "";
+    const from = lookBackFrom(key), d = from ? dayAt(from) : null;
+    if(d) d.setDate(d.getDate() - 1);
+    const when = !d ? "πριν από λίγες μέρες" : d.getDay() === 0 || d.getDay() === 6 ? "το Σαββατοκύριακο" : WEEK_ACC[d.getDay()];
+    return `<section class="sheet pl-back" aria-label="Μια ματιά πίσω"><span class="fc-k k-back">Μια ματιά πίσω</span>
+      <a class="pl-row" href="#study/${key}">${subjectIcon(sid)}<span class="pl-t"><b>${unitLabel(key)}</b><small>Το διάβασες ${when}. 3 ερωτήσεις, ένα λεπτό.</small></span></a>
+      <button class="btn" data-back-go>Πάμε</button></section>`;
+  }
+  if(z.fin) return `<section class="sheet pl-back" aria-label="Μια ματιά πίσω"><span class="fc-k k-back">Μια ματιά πίσω</span>
+      <p class="pl-back-end">Αυτό ήταν για σήμερα.</p>
+      ${z.wrong.length ? `<div class="fd-list">${z.wrong.map(t => `<a class="fd-row" href="#study/${key}/c/${t}"><span class="fd-num">${t + 1}</span><span class="pl-t"><b>Δες την κάρτα ${t + 1}</b><small>${cardTitle(key, deckOf(key)[t])}</small></span><span aria-hidden="true">›</span></a>`).join("")}</div>` : ""}
+      <a class="btn ghost" href="#study/${key}">Δες την ενότητα ξανά</a></section>`;
+  const q = z.z.qs[z.qi], p = z.z.picked[z.qi], has = p !== undefined;
+  return `<section class="sheet pl-back" aria-label="Μια ματιά πίσω"><span class="fc-k k-back">Μια ματιά πίσω · ${z.qi + 1} από 3</span><small class="pl-back-u">${unitLabel(key)}</small>
+    <h3 class="fc-qh">${rich(q.q)}</h3>
+    ${q.opts.map((o, j) => `<button class="opt${!has ? "" : o.ok ? " right" + (j === p ? " picked" : "") : j === p ? " wrong picked" : " dim"}" data-back-opt="${j}"${has ? " disabled" : ""}><span class="l" aria-hidden="true">${has && o.ok ? "✓" : has && j === p ? "✕" : LETTERS[j]}</span><span>${plain(o.t)}</span></button>`).join("")}
+    <div aria-live="polite">${has ? `<div class="why">${q.opts[p].ok ? `<b class="y">Σωστά</b>` : `<b class="n">Όχι ακριβώς</b>`}${rich(q.why)}</div>` : ""}</div>
+    ${has ? `<button class="btn" data-back-next>${z.qi < z.z.qs.length - 1 ? "Επόμενη" : "Τέλος"}</button>` : ""}</section>`;
+}
+function bindLookBack(el){
+  const go = $("[data-back-go]", el);
+  if(go) go.onclick = () => { const lb = pickLookBack(); PL.back = { key:lb.key, date:lb.date, z:newQuiz(lookBackItems(lb.key), "back"), qi:0, wrong:[], fin:false }; renderTomorrow(); $(".pl-back .fc-qh").scrollIntoView({block:"nearest"}); };
+  el.querySelectorAll("[data-back-opt]").forEach(b => b.onclick = () => {
+    const z = PL.back, q = z.z.qs[z.qi], j = +b.dataset.backOpt, ok = q.opts[j].ok, t = unitData(z.key).quiz[q.oi].topic;
+    z.z.picked[z.qi] = j; markAnswer(z.key, q.oi, ok);
+    if(!ok && Number.isInteger(t) && t < deckOf(z.key).length && !z.wrong.includes(t)) z.wrong.push(t);
+    if(z.qi === z.z.qs.length - 1) store.set("diab-back", { date:z.date, key:z.key, done:true });
+    renderTomorrow();
+    const w = $(".pl-back .why"); if(w) w.scrollIntoView({block:"nearest"});
+  });
+  const nx = $("[data-back-next]", el);
+  if(nx) nx.onclick = () => { const z = PL.back; if(z.qi < z.z.qs.length - 1) z.qi++; else z.fin = true; renderTomorrow(); };
+}
+
 /* Η αρχική: τι έχεις την επόμενη σχολική μέρα και ποια διαγωνίσματα έρχονται */
 function renderTomorrow(){
   const el = $("#plan"), date = nextSchoolDay(), wd = dayAt(date).getDay(), soon = daysTo(date) === 1, day = dayPlan(date), sched = loadSchedule();
@@ -76,6 +142,7 @@ function renderTomorrow(){
       <div class="row"><button class="btn" type="submit">Πρόσθεσε</button><button class="btn ghost" type="button" data-pl-cancel>Άκυρο</button></div>
     </form>` : `<button class="pl-add" data-pl-add>+ Κάτι άλλο: διάβασμα ή διαγώνισμα</button>`;
   el.innerHTML = `<div class="hero"><span class="ref">${dayName(date)}</span><h2 class="ct">${soon ? "Για αύριο" : "Για " + WEEK_ACC[wd]}</h2><p>${lead}</p></div>
+    ${lookBackHtml()}
     ${n ? `<ul class="pl-list">${day.ids.map(row).join("")}</ul>` : ""}
     ${day.skipped.length ? `<p class="pnote">Κρυμμένα για αυτή τη μέρα: ${day.skipped.map(id => esc(gradeSubject(selectedGrade, id).name)).join(", ")}. <button class="linkbtn" data-pl-unskip>Φέρ' τα πίσω</button></p>` : ""}
     ${form}
@@ -87,6 +154,7 @@ function renderTomorrow(){
     <p class="pnote center">Το πρόγραμμα και ό,τι προσθέτεις μένουν μόνο σε αυτή τη συσκευή.</p>
     <p class="pnote center">Πώς δουλεύει η σελίδα; <button class="linkbtn" type="button" data-tour-start>Ξενάγηση</button></p>`;
 
+  bindLookBack(el);
   const plan = loadPlan();
   el.querySelectorAll("[data-pl-skip]").forEach(b => b.onclick = () => {
     const sid = b.dataset.plSkip, rest = plan.filter(e => !(e.date === date && e.sid === sid && e.kind === "study"));
@@ -380,6 +448,7 @@ function renderStudy(key, parts){
   const n = deckOf(key).length;
   if(parts[0] === "c" && +parts[1] >= 0 && +parts[1] < n) cardView(key, +parts[1]);
   else if(parts[0] === "end") unitEnd(key);
+  else if(parts[0] === "recall") unitRecall(key, parts[1]);
   else if(parts.length) location.replace("#study/" + key);
   else unitFeed(key);
 }
@@ -810,7 +879,7 @@ function unitEnd(key){
   const qi = PL.queue.indexOf(key), nextUnit = qi >= 0 ? PL.queue[qi + 1] : null;
   const ids = dayPlan(nextSchoolDay()).ids.filter(id => unitsOf(id).length), nextSid = ids.find(id => id !== sid);
   const row = i => `<a class="fd-row" href="#study/${key}/c/${i}"><span class="fd-num">${i + 1}</span><span class="pl-t"><b>${cardTitle(key, deck[i])}</b></span><span aria-hidden="true">›</span></a>`;
-  const defs = deck.filter(c => c.b && c.b.def);
+  const defs = deck.filter(c => c.b && c.b.def), lead = again.length || defs.length;
   el.innerHTML = `<div class="pl-done">
       <svg class="pl-confetti" viewBox="0 0 260 90" aria-hidden="true"><path d="M22 20l4 9 9 4-9 4-4 9-4-9-9-4 9-4z" style="fill:var(--c-pink)"/><circle cx="236" cy="18" r="5" style="fill:var(--c-cyan)"/><rect x="214" y="62" width="10" height="10" rx="2" transform="rotate(20 219 67)" style="fill:var(--c-amber)"/><circle cx="40" cy="76" r="4" style="fill:var(--c-lime)"/><circle cx="130" cy="45" r="36" stroke-width="3" style="fill:color-mix(in srgb,var(--c-lime) 16%,transparent);stroke:var(--c-lime)"/><path d="M114 46l11 11 22-24" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--c-lime)"/></svg>
       <h2 class="ct">${p.ok === p.n ? "Τα κατάλαβες όλα!" : p.ok ? `${p.ok} από ${p.n} τα κατάλαβες!` : "Τέλος ενότητας"}</h2>
@@ -818,15 +887,16 @@ function unitEnd(key){
     <div class="fd-strip" style="--n:${p.n}">${deck.map((c, i) => `<a href="#study/${key}/c/${i}" class="${m[i] === 1 ? "ok" : m[i] === 2 ? "again" : ""}" aria-label="Κάρτα ${i + 1}: ${m[i] === 1 ? "την κατάλαβες" : m[i] === 2 ? "θέλει μια ματιά ακόμα" : "δεν την έκανες ακόμα"}"></a>`).join("")}</div>
     ${again.length ? `<div class="sheet fd-list"><h3 class="pl-h">Ας τα ξαναδούμε</h3>${again.map(row).join("")}</div>` : ""}
     ${unseen.length ? `<div class="sheet fd-list"><h3 class="pl-h">Δεν τις έκανες ακόμα</h3>${unseen.map(row).join("")}</div>` : ""}
-    ${defs.length ? `<details class="sheet pl-again"><summary><span class="pl-again-ic" aria-hidden="true">✎</span><span class="pl-t"><b>Για το διαγώνισμα</b><small>${defs.length === 1 ? "1 ορισμός ή κανόνας" : defs.length + " ορισμοί και κανόνες"}, όλοι μαζί</small></span></summary>${defs.map(c => `<div class="pl-miss"><p><b>${C[key] ? c.b.h : esc(c.b.h)}</b></p><p>${T(c.b.def)}</p>${c.b.check ? `<p class="teach-mini"><b>Ρώτα τον καθηγητή:</b> ${T(c.b.check)}</p>` : ""}${hookList(key, c.b).filter(x => x.pin).map(x => `<p class="hook-mini">${PIN_SVG}<span>${x.own ? x.t : T(x.t)}</span></p>`).join("")}</div>`).join("")}</details>` : ""}
     <div class="pl-actions">
       ${again.length ? `<button class="btn" data-fd-again>Ξανά ${again.length === 1 ? "αυτή την κάρτα" : `αυτές τις ${again.length} κάρτες`}</button>` : ""}
-      ${nextUnit ? `<a class="btn${again.length ? " ghost" : ""}" href="#study/${nextUnit}">Επόμενη ενότητα: ${unitLabel(nextUnit)}</a>` : nextSid ? `<a class="btn${again.length ? " ghost" : ""}" href="#plan/${nextSid}">Επόμενο για αύριο: ${esc(gradeSubject(selectedGrade, nextSid).name)}</a>` : ""}
+      ${defs.length ? `<a class="btn pl-recall${again.length ? " ghost" : ""}" href="#study/${key}/recall">Πες τους με δικά σου λόγια<small>${defs.length === 1 ? "1 ορισμός ή κανόνας" : defs.length + " ορισμοί και κανόνες"}</small></a>` : ""}
+      ${nextUnit ? `<a class="btn${lead ? " ghost" : ""}" href="#study/${nextUnit}">Επόμενη ενότητα: ${unitLabel(nextUnit)}</a>` : nextSid ? `<a class="btn${lead ? " ghost" : ""}" href="#plan/${nextSid}">Επόμενο για αύριο: ${esc(gradeSubject(selectedGrade, nextSid).name)}</a>` : ""}
       <a class="btn ghost" href="#check/${key}">Έλεγχος: όλες οι ερωτήσεις</a>
       ${bookButton(key)}
       <a class="btn ghost" href="#tomorrow">Φτάνει για σήμερα</a>
-      <p class="pnote center"><a href="#study/${key}">Όλες οι κάρτες</a></p>
-    </div>`;
+    </div>
+    ${defs.length ? `<details class="sheet pl-again pl-defs"><summary><span class="pl-again-ic" aria-hidden="true">✎</span><span class="pl-t"><b>Δες τους όλους μαζί</b><small>${defs.length === 1 ? "1 ορισμός ή κανόνας" : defs.length + " ορισμοί και κανόνες"}, για διάβασμα</small></span></summary>${defs.map(c => `<div class="pl-miss"><p><b>${C[key] ? c.b.h : esc(c.b.h)}</b></p><p>${T(c.b.def)}</p>${c.b.check ? `<p class="teach-mini"><b>Ρώτα τον καθηγητή:</b> ${T(c.b.check)}</p>` : ""}${hookList(key, c.b).filter(x => x.pin).map(x => `<p class="hook-mini">${PIN_SVG}<span>${x.own ? x.t : T(x.t)}</span></p>`).join("")}</div>`).join("")}</details>` : ""}
+    <p class="pnote center"><a href="#study/${key}">Όλες οι κάρτες</a></p>`;
   bindBookButton(el, key);
   const b = $("[data-fd-again]", el);
   /* Ξανά: οι κάρτες ξεκινούν από την αρχή, με το επόμενο παράδειγμα και νέα σειρά στις ερωτήσεις */
@@ -834,6 +904,77 @@ function unitEnd(key){
     again.forEach(i => { s.part[i] = 0; s.life[i] = (s.life[i] || 0) + 1; delete s.quiz[i]; delete s.alt[i]; });
     s.review = again; location.hash = "#study/" + key + "/c/" + again[0];
   };
+}
+
+/* «Πες τους με δικά σου λόγια» (#study/<κλειδί>/recall/<θέση>): οι κανόνες της ενότητας (def) ένας ένας. Πρώτα ο μαθητής
+   τον λέει από μνήμης, μετά βλέπει πώς τον γράφει το βιβλίο και λέει πώς πήγε. «Μισό» και «Δεν το θυμόμουν» κάνουν την κάρτα ↻·
+   το «Το είπα» δεν αλλάζει τίποτα (το ✓ βγαίνει μόνο από τις ερωτήσεις). Οι απαντήσεις μένουν μόνο σε αυτή την επίσκεψη.
+   Κάθε κανόνας είναι μια θέση στο ιστορικό, για να δουλεύει το «πίσω» του κινητού· base = πόσα βήματα πίσω είναι το τέλος ενότητας. */
+/* Στο κινητό το «Δεν το θυμόμουν» δεν χωράει σε μία γραμμή· φαίνεται «Όχι» και ο αναγνώστης οθόνης ακούει όλη τη φράση */
+const RC_RATE = { ok:["Το είπα"], half:["Μισό"], no:["Όχι", "Δεν το θυμόμουν"] };
+function unitRecall(key, at){
+  const el = $("#plan"), deck = deckOf(key), s = unitState(key), T = t => unitText(key, t), H = t => C[key] ? t : esc(t);
+  const all = deck.map((c, i) => i).filter(i => deck[i].b && deck[i].b.def);
+  if(!all.length){ location.replace("#study/" + key + "/end"); return; }
+  if(at === undefined){ s.recall = { list:all, shown:{}, res:{}, base:1 }; location.replace("#study/" + key + "/recall/0"); return; }
+  const r = s.recall || (s.recall = { list:all, shown:{}, res:{}, base:null }), n = r.list.length, pos = Math.max(0, Math.min(+at || 0, n));
+  const end = () => { if(r.base) history.go(-(r.base + pos)); else location.replace("#study/" + key + "/end"); };
+  const pg = s.pg || (s.pg = {}), pgKey = "rc:" + pos;
+  let body = "", act = "";
+  if(pos === n){
+    const ok = r.list.filter((x, j) => r.res[j] === "ok").length, miss = r.list.filter((x, j) => r.res[j] && r.res[j] !== "ok");
+    body = `<span class="fc-k k-def">${PART_NAME.def}</span><h2>${ok === n ? "Τους είπες όλους!" : `Θυμήθηκες ${ok} από ${n}`}</h2>
+      ${miss.length ? `<div class="sheet fd-list"><h3 class="pl-h">Ξαναδές τους</h3>${miss.map(i => `<a class="fd-row" href="#study/${key}/c/${i}"><span class="fd-num">${i + 1}</span><span class="pl-t"><b>${cardTitle(key, deck[i])}</b></span><span aria-hidden="true">›</span></a>`).join("")}</div>` : `<p class="fc-big">Ωραία δουλειά. Οι κανόνες της ενότητας είναι στη θέση τους.</p>`}`;
+    act = `${miss.length ? `<button class="btn" data-rc="again">Ξανά αυτούς</button>` : ""}<button class="btn${miss.length ? " ghost" : ""}" data-rc="end">Τέλος ενότητας</button>`;
+  } else {
+    const b = deck[r.list[pos]].b, shown = r.shown[pos];
+    body = `<span class="fc-k k-def">${PART_NAME.def} · ${pos + 1} από ${n}</span><h2>${H(b.h)}</h2>`;
+    if(!shown){
+      body += `<p class="rc-prompt">Πες τον κανόνα δυνατά ή στο μυαλό σου. Μετά δες πώς τον γράφει το βιβλίο.</p>`;
+      act = `<button class="btn" data-rc="show">Δείξε μου τον κανόνα</button>`;
+    } else {
+      const hooks = hookList(key, b).filter(x => x.pin);
+      body += `<div class="box defb"><b>${esc(b.defLabel || "Στο διαγώνισμα γράφεις")}</b><p class="fc-big">${T(b.def)}</p></div>
+        ${b.check ? `<div class="fc-teach"><span class="fc-k k-teach">Ρώτα τον καθηγητή</span><p>${T(b.check)}</p></div>` : ""}
+        ${hooks.length ? `<div class="fc-hooks"><span class="fc-k k-hook">Κόλπο για να θυμάσαι</span>${hooks.map(x => `<div class="hook pinned"><p>${x.own ? x.t : T(x.t)}</p></div>`).join("")}</div>` : ""}`;
+      act = `<div class="rc-rate" role="group" aria-label="Πώς πήγε;">${Object.entries(RC_RATE).map(([v, [t, full]]) => `<button class="btn ghost" data-rc="${v}"${full ? ` aria-label="${full}"` : ""}>${t}</button>`).join("")}</div>`;
+    }
+  }
+  const anim = CALM.matches ? "" : s.anim;
+  s.anim = "";
+  el.innerHTML = `<div class="fc fc-recall" role="dialog" aria-modal="true" aria-label="Πες τους με δικά σου λόγια">
+    <div class="pl-segs" style="--n:${n}" role="img" aria-label="Κανόνας ${Math.min(pos + 1, n)} από ${n}">${r.list.map((x, j) => `<span class="${j <= pos ? "on" : ""}"></span>`).join("")}</div>
+    <div class="pl-bar"><h2 class="pl-where">${pos < n ? `Κανόνας ${pos + 1} από ${n}` : "Τέλος"}</h2><span class="pl-tools"><button class="pl-round" data-pl-voice aria-label="Διάβασέ το μου φωναχτά"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg></button><button class="pl-round" data-rc="end" aria-label="Πίσω στο τέλος ενότητας"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></span></div>
+    <section class="fc-body fc-read p-recall${anim ? " " + anim : ""}"><div class="fc-in">${body}</div></section>
+    <div class="fc-actions">${act}</div>
+    <p class="fc-hint">${pos < n && !r.shown[pos] ? "→ δείξε μου · ← ο προηγούμενος" : "← ο προηγούμενος κανόνας"}</p>
+  </div>`;
+  const next = () => { s.anim = "in-next"; location.hash = "#study/" + key + "/recall/" + (pos + 1); };
+  const rate = v => { r.res[pos] = v; if(v !== "ok") markCard(key, r.list[pos], 2); next(); };
+  const acts = {
+    show:() => { r.shown[pos] = true; s.anim = "in-next"; pg[pgKey] = 0; unitRecall(key, pos); fcReveal(".defb"); },
+    ok:() => rate("ok"), half:() => rate("half"), no:() => rate("no"),
+    again:() => { s.recall = { list:r.list.filter((x, j) => r.res[j] && r.res[j] !== "ok"), shown:{}, res:{}, base:r.base ? r.base + pos + 1 : null }; s.anim = "in-next"; location.hash = "#study/" + key + "/recall/0"; },
+    end
+  };
+  el.querySelectorAll("[data-rc]").forEach(b => b.onclick = () => acts[b.dataset.rc]());
+  el.querySelectorAll("[data-pl-voice]").forEach(b => b.onclick = () => $("#app-voice").click());
+  /* → δείχνει τον κανόνα (ή την επόμενη σελίδα του)· ← ο προηγούμενος κανόνας. Μετά το «Δείξε μου» ο μαθητής διαλέγει μόνος του. */
+  const go = d => {
+    const f = PL.fit, p = pg[pgKey] || 0;
+    if(f && f.pages > 1 && p + d >= 0 && p + d < f.pages){ pg[pgKey] = p + d; s.anim = d > 0 ? "in-next" : "in-prev"; unitRecall(key, pos); return true; }
+    if(d > 0){ if(pos < n && !r.shown[pos]){ acts.show(); return true; } return false; }
+    if(pos === 0) return false;
+    s.anim = "in-prev";
+    if(r.base) history.back(); else location.replace("#study/" + key + "/recall/" + (pos - 1));
+    return true;
+  };
+  PL.fc = { go, card:() => false };
+  keyNav = go;
+  bindCardGestures($(".fc", el));
+  PL.fcRedraw = () => unitRecall(key, pos);
+  PL.fit = fitCard(el, pg, pgKey, true);
+  if(PL.fit && PL.fit.page < PL.fit.pages - 1){ $(".fc-actions", el).innerHTML = `<button class="btn" data-rc-more>Συνέχεια →</button>`; $("[data-rc-more]", el).onclick = () => go(1); }
 }
 
 /* Προετοιμασία για διαγώνισμα: 10 ερωτήσεις από τις ενότητες που διάλεξες, ανακατεμένες.
