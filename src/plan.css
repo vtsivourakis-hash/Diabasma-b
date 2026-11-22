@@ -90,6 +90,7 @@
 .fd-st.again{background:color-mix(in srgb,var(--c-amber) 18%,transparent);color:var(--c-amber)}
 .fd-f{font-family:'Inter Tight','Inter',sans-serif;font-weight:800;font-size:17px;line-height:1.25;color:var(--c-cyan);overflow-wrap:anywhere}
 .fd-t{font-size:13px;line-height:1.4;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.fd-q::before{content:"?";display:inline-grid;place-items:center;width:18px;height:18px;margin-right:6px;border-radius:50%;background:var(--c-indigo);color:var(--paper);font-size:12px;font-weight:800;vertical-align:1px}
 .fd-end{justify-content:center;border-style:dashed;background:transparent}
 .fd-end b{margin-top:0;color:var(--hi)}
 .fd-strip{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:5px;margin:16px 0}
@@ -149,8 +150,17 @@
 .fc-body .formula{font-size:22px}
 .fc-k{display:inline-block;font-size:12.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
 .k-idea{color:var(--hi)}.k-idea.warn{color:var(--red)}
-.k-life{color:var(--c-lime)}.k-fig{color:var(--c-cyan)}.k-try{color:var(--c-orange)}.k-check{color:var(--c-pink)}.k-def{color:var(--muted)}.k-alt{color:var(--c-amber)}
+.k-think{color:var(--c-indigo)}.k-life{color:var(--c-lime)}.k-fig{color:var(--c-cyan)}.k-try{color:var(--c-orange)}.k-check{color:var(--c-pink)}.k-def{color:var(--muted)}.k-alt{color:var(--c-amber)}
 .fc-body .lvl{float:right}
+/* Σκέψου πρώτα: χωρίς σωστό/λάθος· η επιλογή φαίνεται ουδέτερα */
+.fc-body.p-think{background:linear-gradient(170deg,color-mix(in srgb,var(--c-indigo) 12%,var(--card)),var(--card) 60%)}
+.p-think .fc-q{margin:0 0 14px}
+.p-think .opt.picked{border:1.5px solid var(--c-indigo);background:color-mix(in srgb,var(--c-indigo) 12%,var(--card2))}
+.p-think .opt.picked .l{background:var(--c-indigo);border-color:var(--c-indigo);color:var(--paper)}
+.p-think .opt:disabled:not(.picked){opacity:.6}
+.fc-then{margin:6px 0 0;padding:12px 14px;border-radius:14px;background:var(--card2);box-shadow:inset 3px 0 0 var(--c-indigo);font-size:16px;line-height:1.45}
+.fc-then p{margin:0}
+.fc-then .fc-ack{margin-bottom:4px;font-weight:800;color:var(--c-indigo)}
 .fc-q{font-size:18px;line-height:1.5;margin:12px 0 0}
 .fc-ex{font-size:16.5px}
 .fc-new{animation:pl-in .3s ease-out}

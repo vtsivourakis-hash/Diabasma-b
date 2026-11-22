@@ -318,12 +318,12 @@ function renderChooser(sid){
 }
 
 /* Η ενότητα ως κάρτες (#study/<κλειδί>): κάθε θέμα της περίληψης είναι μία ιδέα με τα δικά της μέρη.
-   Η ιδέα (t), Στη ζωή (ex και more), Στο σχήμα (fig), Δοκίμασε (οι λυμένες με "topic" σε αυτή την κάρτα),
+   Σκέψου πρώτα (think, προαιρετικό: μια ερώτηση πριν από την ιδέα, χωρίς σωστό/λάθος και χωρίς να μετράει), Η ιδέα (t), Στη ζωή (ex και more), Στο σχήμα (fig), Δοκίμασε (οι λυμένες με "topic" σε αυτή την κάρτα),
    Το κατάλαβες; (οι ερωτήσεις με "topic"), Για το διαγώνισμα (def). Μια κάρτα δείχνει μόνο τα μέρη που έχει.
    Όταν μια ερώτηση βγει λάθος, το «Πες το μου αλλιώς» (alt) δίνει άλλη ματιά, το συχνό λάθος και μια νέα ερώτηση.
    Λυμένες και ερωτήσεις χωρίς "topic" μπαίνουν σε μια τελευταία κάρτα «Όλη η ενότητα».
    Κατάσταση ανά κάρτα (diab-cards): 1 = το κατάλαβες, 2 = θέλει μια ματιά ακόμα. */
-const PART_NAME = {idea:"Η ιδέα", life:"Στη ζωή", fig:"Στο σχήμα", try:"Δοκίμασε", check:"Το κατάλαβες;", def:"Για το διαγώνισμα", voc:"Λέξεις"};
+const PART_NAME = {think:"Σκέψου πρώτα", idea:"Η ιδέα", life:"Στη ζωή", fig:"Στο σχήμα", try:"Δοκίμασε", check:"Το κατάλαβες;", def:"Για το διαγώνισμα", voc:"Λέξεις"};
 const deckCache = {};
 function deckOf(key){
   if(deckCache[key]) return deckCache[key];
@@ -331,7 +331,7 @@ function deckOf(key){
   const byLvl = list => list.sort((a, b) => u.ex[a].lvl - u.ex[b].lvl || a - b);
   const cards = u.summary.map((b, i) => {
     const ex = byLvl(u.ex.map((e, j) => j).filter(j => has(u.ex[j]) && u.ex[j].topic === i)), qs = u.quiz.map((q, j) => j).filter(j => has(u.quiz[j]) && u.quiz[j].topic === i);
-    const parts = ["idea", (b.ex || b.more?.length) && "life", b.fig && "fig", ex.length && "try", qs.length && "check", b.def && "def"].filter(Boolean);
+    const parts = [b.think && "think", "idea", (b.ex || b.more?.length) && "life", b.fig && "fig", ex.length && "try", qs.length && "check", b.def && "def"].filter(Boolean);
     return {b, ex, qs, parts};
   });
   if(u.vocab?.length) cards.push({voc:true, ex:[], qs:[], parts:["voc"]});
@@ -359,7 +359,7 @@ const cardMarks = key => store.get("diab-cards", {})[key] || {};
 function markCard(key, i, v){ const all = store.get("diab-cards", {}), m = all[key] || (all[key] = {}); if(m[i] !== v){ m[i] = v; store.set("diab-cards", all); } }
 function cardProgress(key){ const m = cardMarks(key), n = deckOf(key).length; return { n, ok:Object.keys(m).filter(i => i < n && m[i] === 1).length, seen:Object.keys(m).filter(i => i < n).length }; }
 /* Η κατάσταση της ενότητας σε αυτή την επίσκεψη: μέρος ανά κάρτα, παραδείγματα και βοήθειες που άνοιξαν, απαντήσεις */
-const unitState = key => PL.u[key] || (PL.u[key] = { part:{}, life:{}, ti:{}, hints:{}, ans:{}, quiz:{}, alt:{}, review:null, anim:"" });
+const unitState = key => PL.u[key] || (PL.u[key] = { part:{}, life:{}, ti:{}, hints:{}, ans:{}, quiz:{}, alt:{}, think:{}, review:null, anim:"" });
 
 function renderStudy(key, parts){
   if(ALIAS[key]){ location.replace("#study/" + ALIAS[key]); return; }
@@ -387,7 +387,7 @@ function unitFeed(key){
     <div class="fd-prog"><div class="bar" role="img" aria-label="${p.ok} από ${p.n} κάρτες"><i style="width:${Math.round(p.ok / p.n * 100)}%"></i></div><span>${p.ok} από ${p.n} τα κατάλαβες</span></div>
     <div class="fd-grid">${deck.map((c, i) => {
       const st = m[i] === 1 ? `<span class="fd-st ok" aria-label="Το κατάλαβες">✓</span>` : m[i] === 2 ? `<span class="fd-st again" aria-label="Θέλει μια ματιά ακόμα">↻</span>` : "";
-      const teaser = c.b ? (c.b.f ? `<span class="fd-f">${c.b.f}</span>` : `<span class="fd-t">${C[key] ? strip(c.b.t) : esc(c.b.t)}</span>`) : `<span class="fd-t">${c.voc ? "Οι λέξεις της ενότητας" : "Ασκήσεις και ερωτήσεις από όλη την ενότητα"}</span>`;
+      const teaser = c.b ? (c.b.think ? `<span class="fd-t fd-q">${C[key] ? strip(c.b.think.q) : esc(c.b.think.q)}</span>` : c.b.f ? `<span class="fd-f">${c.b.f}</span>` : `<span class="fd-t">${C[key] ? strip(c.b.t) : esc(c.b.t)}</span>`) : `<span class="fd-t">${c.voc ? "Οι λέξεις της ενότητας" : "Ασκήσεις και ερωτήσεις από όλη την ενότητα"}</span>`;
       return `<a class="fd-tile${i === now ? " now" : ""}${c.b && c.b.warn ? " warn" : ""}" href="#study/${key}/c/${i}"><span class="fd-h"><span class="fd-n">${i + 1}${i === now ? " · Εδώ είσαι" : c.b && c.b.warn ? " · Προσοχή" : ""}</span>${st}</span>${teaser}<b>${cardTitle(key, c)}</b>${meta(c) ? `<small>${meta(c)}</small>` : ""}</a>`;
     }).join("")}<a class="fd-tile fd-end" href="#study/${key}/end"><span class="fd-h"><span class="fd-n">Τέλος</span></span><b>Τι κατάλαβα και τι θέλει μια ματιά ακόμα</b></a></div>
     <a class="btn" href="#study/${key}/c/${now < 0 ? 0 : now}">${now < 0 ? "Ξανά από την αρχή" : now === 0 && !p.seen ? "Ξεκίνα" : `Συνέχισε από την κάρτα ${now + 1}`}</a>
@@ -415,12 +415,21 @@ function bindBookButton(el, key){
 /* Μία κάρτα σε όλη την οθόνη. ← → τα μέρη της, ↑ ↓ η επόμενη ή η προηγούμενη κάρτα. */
 function cardView(key, i){
   const el = $("#plan"), deck = deckOf(key), c = deck[i], s = unitState(key), u = unitData(key), T = t => unitText(key, t), H = t => C[key] ? t : esc(t);
+  /* Στο «Ας τα ξαναδούμε» η κάρτα ανοίγει στην ιδέα: το «Σκέψου πρώτα» έχει νόημα μόνο την πρώτη φορά */
+  if(s.review && c.parts[0] === "think" && !(s.part[i] > 0)) s.part[i] = 1;
   const parts = c.parts, alt = s.alt[i] && s.alt[i].open, pi = Math.min(s.part[i] || 0, parts.length - 1), part = alt ? "alt" : parts[pi], last = pi === parts.length - 1;
   const order = s.review || deck.map((x, j) => j), at = order.indexOf(i), nextCard = order[at + 1], prevCard = at > 0 ? order[at - 1] : null;
   if(!alt && last && !c.qs.length && !cardMarks(key)[i]) markCard(key, i, 1);
   let body = "", sec = "", prim = "";
   const nextLabel = nextCard !== undefined ? "Επόμενη κάρτα ↑" : "Τέλος ενότητας ↑";
-  if(part === "idea"){
+  if(part === "think"){
+    const th = c.b.think, p = s.think[i] && s.think[i].picked, has = p !== undefined;
+    const ack = has && th.opts && Number.isInteger(th.ok) ? (p === th.ok ? "Καλά το σκέφτηκες." : "Λογικό να το σκεφτείς έτσι. Δες γιατί δεν είναι.") : "";
+    body = `<span class="fc-k k-think">${PART_NAME.think}</span><h2>${H(c.b.h)}</h2><p class="fc-big fc-q">${T(th.q)}</p>
+      ${(th.opts || []).map((o, j) => `<button class="opt${has && j === p ? " picked" : ""}" data-fc-topt="${j}"${has ? " disabled" : ""}><span class="l" aria-hidden="true">${LETTERS[j]}</span><span>${T(o)}</span></button>`).join("")}
+      <div aria-live="polite">${has ? `<div class="fc-then">${ack ? `<p class="fc-ack">${ack}</p>` : ""}<p>${T(th.then)}</p></div>` : ""}</div>`;
+    if(!has) prim = th.opts ? `<span class="fc-wait">Διάλεξε μια απάντηση</span>` : `<button class="btn" data-fc="thought">Το σκέφτηκα — δείξε μου</button>`;
+  } else if(part === "idea"){
     const b = c.b;
     body = `<span class="fc-k k-idea${b.warn ? " warn" : ""}">${b.warn ? "Προσοχή" : PART_NAME.idea}</span><h2>${H(b.h)}</h2>${b.quote ? `<p class="quote" lang="grc">${b.quote}</p>` : ""}<p class="fc-big">${T(b.t)}</p>${b.f ? `<p class="f formula">${b.f}</p>` : ""}`;
   } else if(part === "life"){
@@ -469,7 +478,7 @@ function cardView(key, i){
     prim = `<button class="btn" data-fc="back">Πίσω στην κάρτα</button>`;
   }
   if(!prim) prim = last ? `<button class="btn" data-fc="down">${nextLabel}</button>` : `<button class="btn" data-fc="right">${PART_NAME[parts[pi + 1]]} →</button>`;
-  if(!sec && !alt && c.b && part !== "check" && part !== "def" && (c.b.alt || (c.b.more || []).length)) sec = `<button class="fc-sec" data-fc="lost">Δεν το κατάλαβα</button>`;
+  if(!sec && !alt && c.b && !["think", "check", "def"].includes(part) && (c.b.alt || (c.b.more || []).length)) sec = `<button class="fc-sec" data-fc="lost">Δεν το κατάλαβα</button>`;
   const anim = CALM.matches ? "" : s.anim;
   s.anim = "";
   el.innerHTML = `<div class="fc" role="dialog" aria-modal="true" aria-label="${esc(strip(cardTitle(key, c)))}">
@@ -485,7 +494,7 @@ function cardView(key, i){
   const go = (d, a = d > 0 ? "in-next" : "in-prev") => {
     const f = PL.fit, p = pg[pgKey] || 0;
     if(f && f.pages > 1 && p + d >= 0 && p + d < f.pages){ pg[pgKey] = p + d; s.anim = a; cardView(key, i); return true; }
-    const j = pi + d; if(alt || j < 0 || j >= parts.length) return false;
+    const j = pi + d; if(alt || j < 0 || j >= parts.length || s.review && parts[j] === "think") return false;
     s.part[i] = j; s.anim = a; pg[i + ":" + parts[j]] = d > 0 ? 0 : 99; cardView(key, i); return true;
   };
   const card = d => {
@@ -509,6 +518,7 @@ function cardView(key, i){
     alt:() => { s.alt[i] = { open:true }; s.anim = "in-next"; cardView(key, i); },
     back:() => { s.alt[i].open = false; s.anim = "in-prev"; cardView(key, i); },
     /* «Δεν το κατάλαβα»: η άλλη ματιά, αν υπάρχει· αλλιώς ένα ακόμα παράδειγμα */
+    thought:() => { s.think[i] = { picked:-1 }; cardView(key, i); fcReveal(".fc-then"); },
     lost:() => {
       if(c.b.alt){ s.alt[i] = Object.assign(s.alt[i] || {}, { open:true }); s.anim = "in-next"; cardView(key, i); return; }
       s.life[i] = (s.life[i] || 0) + 1; s.part[i] = parts.indexOf("life"); s.anim = "in-next"; cardView(key, i);
@@ -526,6 +536,12 @@ function cardView(key, i){
     try { navigator.vibrate && navigator.vibrate(ok ? 30 : [40, 60, 40]); } catch(e){}
     cardView(key, i);
     fcReveal(".why");
+  });
+  /* Σκέψου πρώτα: η επιλογή μένει μόνο σε αυτή την επίσκεψη και δεν αλλάζει το ✓/↻ της κάρτας */
+  el.querySelectorAll("[data-fc-topt]").forEach(b => b.onclick = () => {
+    s.think[i] = { picked:+b.dataset.fcTopt };
+    cardView(key, i);
+    fcReveal(".fc-then");
   });
   el.querySelectorAll("[data-fc-aopt]").forEach(b => b.onclick = () => {
     const st = s.alt[i], j = +b.dataset.fcAopt;

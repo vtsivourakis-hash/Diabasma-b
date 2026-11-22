@@ -88,8 +88,10 @@ function checkFig(f, at) {
       for (const p of f.points || []) if (!(p.lon >= m.box.w && p.lon <= m.box.e && p.lat >= m.box.s && p.lat <= m.box.n) || !p.label) throw new Error(`${at}: κάθε σημείο θέλει lon, lat μέσα στον χάρτη και label`);
     } else if (f.type !== "vessels") throw new Error(`${at}: άγνωστος τύπος ${f.type}`);
 }
-// Τα πεδία της κάρτας για τη ροή «μία ιδέα σε κάθε κάρτα»: more (κι άλλα παραδείγματα), alt («Πες το μου αλλιώς»),
+// Τα πεδία της κάρτας για τη ροή «μία ιδέα σε κάθε κάρτα»: think («Σκέψου πρώτα»), more (κι άλλα παραδείγματα), alt («Πες το μου αλλιώς»),
 // και "topic" στις λυμένες και στις ερωτήσεις (σε ποια κάρτα ανήκουν)
+// Η κάρτα της ξενάγησης (src/tour.js) μένει χωρίς «Σκέψου πρώτα», για να ταιριάζουν τα βήματά της
+const TOUR_UNIT = "B/geography/0/2", TOUR_CARD = 3;
 function checkCards(name, lesson) {
   const n = lesson.summary.length;
   lesson.summary.forEach((card, i) => {
@@ -100,6 +102,13 @@ function checkCards(name, lesson) {
     if (card.check && !card.def) throw new Error(`${at}: το check εμφανίζεται δίπλα στο def, άρα η κάρτα θέλει def`);
     if (card.hooks && !card.def) throw new Error(`${at}: τα hooks εμφανίζονται δίπλα στο def, άρα η κάρτα θέλει def`);
     if (card.more && (!Array.isArray(card.more) || card.more.some(t => typeof t !== "string" || !t))) throw new Error(`${at}: το more θέλει λίστα με κείμενα`);
+    const th = card.think;
+    if (th !== undefined) {
+      if (!th || typeof th !== "object" || typeof th.q !== "string" || !th.q || typeof th.then !== "string" || !th.then) throw new Error(`${at}: το think θέλει q και then`);
+      if (th.opts !== undefined && (!Array.isArray(th.opts) || th.opts.length < 2 || th.opts.length > 3 || th.opts.some(t => typeof t !== "string" || !t) || new Set(th.opts).size !== th.opts.length)) throw new Error(`${at}: τα opts του think θέλουν 2-3 διαφορετικά κείμενα`);
+      if (th.ok !== undefined && !(th.opts && Number.isInteger(th.ok) && th.ok >= 0 && th.ok < th.opts.length)) throw new Error(`${at}: το ok του think δείχνει σε επιλογή που δεν υπάρχει`);
+      if ([TOUR_UNIT, TOUR_UNIT.split("/").join("-") + ".json"].includes(name) && i === TOUR_CARD) throw new Error(`${at}: η κάρτα της ξενάγησης δεν παίρνει think`);
+    }
     const a = card.alt;
     if (a) {
       if (!a.t) throw new Error(`${at}: το alt θέλει t (η άλλη ματιά)`);
