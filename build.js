@@ -223,6 +223,20 @@ for (const [k, t] of Object.entries(TERMS)) {
   if (!t.h || !t.t || !t.match?.length) throw new Error(`_terms.json: ο όρος "${k}" θέλει h, t και match`);
 }
 
+// Ο πίνακας περιεχομένων του βιβλίου των Αρχαίων (src/ancient-toc.json) και το "book" κάθε κάρτας: πού ανήκει στο βιβλίο,
+// στη Γραμματική ή στο Συντακτικό. Έτσι η σελίδα της ενότητας και το «Φτιάξε το μάθημά σου» ακολουθούν το βιβλίο.
+const ANCIENT_TOC = JSON.parse(fs.readFileSync(path.join(__dirname, "src", "ancient-toc.json"), "utf8"));
+function checkBookLoc(f, at, locs, grade) {
+  const t = ANCIENT_TOC[grade];
+  if (!t) return;
+  if (!Array.isArray(locs) || !locs.length) throw new Error(`${f}: ${at} θέλει "book": ["u:<ενότητα>:<τμήμα>" ή "g:<κεφάλαιο>" ή "y:<κεφάλαιο>"]`);
+  for (const loc of locs) {
+    const [k, a, b] = loc.split(":");
+    const ok = k === "u" ? (t.units[a] || []).some(([c]) => c === b) : k === "g" ? !!sectionAt(`${grade}/ancient/${t.grammar}/${a}`) : k === "y" ? !!sectionAt(`${grade}/ancient/${t.syntax}/${a}`) : false;
+    if (!ok) throw new Error(`${f}: ${at}: άγνωστη θέση βιβλίου «${loc}»`);
+  }
+}
+
 const C = {};
 for (const f of fs.readdirSync(dir).filter(f => f.endsWith(".json") && !f.startsWith("_")).sort()) {
   // Το όνομα του αρχείου είναι η ενότητα του βιβλίου: B-math-0-2.json -> "B/math/0/2"
@@ -252,7 +266,9 @@ for (const f of fs.readdirSync(dir).filter(f => f.endsWith(".json") && !f.starts
   // Στα Αρχαία κάθε κάρτα έχει είδος, για το «Φτιάξε το μάθημά σου»: text, lex, gram, synt
   if (key.split("/")[1] === "ancient") data.summary.forEach((c, i) => {
     if (!["text", "lex", "gram", "synt"].includes(c.part)) throw new Error(`${f}: η κάρτα ${i + 1} («${c.h}») θέλει "part": text, lex, gram ή synt`);
+    checkBookLoc(f, `η κάρτα ${i + 1} («${c.h}»)`, c.book, key[0]);
   });
+  if (key.split("/")[1] === "ancient") for (const e of data.explain || []) checkBookLoc(f, `explain ${e.id}`, e.book, key[0]);
   // "text": το αρχαίο κείμενο σε κομμάτια, λέξη λέξη (#study/<κλειδί>/text). Κάθε λέξη του w πρέπει να υπάρχει στο κομμάτι.
   if (data.text) {
     if (!data.text.src || !data.text.parts?.length) throw new Error(`${f}: το text θέλει src και parts`);
@@ -340,7 +356,7 @@ tests.forEach(t => {
 });
 
 const template = fs.readFileSync(path.join(__dirname, "src", "template.html"), "utf8");
-for (const mark of ["/*__DATA__*/", "/*__GRAMMAR__*/", "/*__TERMS__*/", "/*__BOOK_HELP__*/", "/*__TESTS__*/", "/*__CATALOGUE_JS__*/", "/*__CATALOGUE_CSS__*/", "/*__PLAN_JS__*/", "/*__PLAN_CSS__*/", "/*__TOUR_JS__*/", "/*__TOUR_CSS__*/"]) {
+for (const mark of ["/*__DATA__*/", "/*__GRAMMAR__*/", "/*__TERMS__*/", "/*__ANCIENT_TOC__*/", "/*__BOOK_HELP__*/", "/*__TESTS__*/", "/*__CATALOGUE_JS__*/", "/*__CATALOGUE_CSS__*/", "/*__PLAN_JS__*/", "/*__PLAN_CSS__*/", "/*__TOUR_JS__*/", "/*__TOUR_CSS__*/"]) {
   if (!template.includes(mark)) throw new Error(`Το template δεν έχει το ${mark}`);
 }
 const json = value => JSON.stringify(value).replace(/</g, "\\u003c");
@@ -349,7 +365,7 @@ const catalogueJS = fs.readFileSync(path.join(__dirname,"src","catalogue.js"),"u
   .replace("/*__OFFICIAL_CONTENT__*/", () => json(officialContent))
   .replace("/*__EXPLANATIONS__*/", () => json(explanations))
   .replace("/*__EUROPE_MAP__*/", () => usesMap ? fs.readFileSync(path.join(__dirname, "src", "europe-map.json"), "utf8").trim() : "null");
-const html = template.replace("/*__DATA__*/", () => json(C)).replace("/*__GRAMMAR__*/", () => json(G)).replace("/*__TERMS__*/", () => json(TERMS)).replace("/*__BOOK_HELP__*/", () => json(bookHelp)).replace("/*__TESTS__*/", () => json(tests))
+const html = template.replace("/*__DATA__*/", () => json(C)).replace("/*__GRAMMAR__*/", () => json(G)).replace("/*__TERMS__*/", () => json(TERMS)).replace("/*__ANCIENT_TOC__*/", () => json(ANCIENT_TOC)).replace("/*__BOOK_HELP__*/", () => json(bookHelp)).replace("/*__TESTS__*/", () => json(tests))
   .replace("/*__CATALOGUE_JS__*/", () => catalogueJS)
   .replace("/*__CATALOGUE_CSS__*/", () => fs.readFileSync(path.join(__dirname,"src","catalogue.css"),"utf8"))
   .replace("/*__APP_CSS__*/", () => fs.readFileSync(path.join(__dirname,"src","app.css"),"utf8"))

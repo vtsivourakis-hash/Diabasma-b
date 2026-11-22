@@ -490,23 +490,54 @@ function unitFeed(key){
   s.review = null;
   const now = deck.findIndex((c, i) => m[i] !== 1), T = t => unitText(key, t);
   const meta = c => [c.parts.includes("fig") && "Σχήμα", c.ex.length && (c.ex.length === 1 ? "1 άσκηση" : c.ex.length + " ασκήσεις"), c.qs.length && (c.qs.length === 1 ? "1 ερώτηση" : c.qs.length + " ερωτήσεις")].filter(Boolean).join(" · ");
-  const test = PL.testFrom && testOf(PL.testFrom);
-  el.innerHTML = `<a class="back" href="${test ? "#test/" + test.id : unitsOf(sid).length ? "#plan/" + sid : "#tomorrow"}">← ${test ? esc(test.title) : unitName(key)}</a>
-    <div class="pl-title"><span class="ref">${unitName(key)}${unitNum(key) ? " · " + unitNum(key).replace(" · ", "") : ""}</span><h2 class="ct">${unitTitle(key)}</h2></div>
-    ${unitStatus(key, p)}
-    ${unitData(key).text || unitData(key).explain ? `<ul class="pl-list">${unitData(key).text ? `<li class="pl-item"><a class="pl-row" href="#study/${key}/text">${subjectIcon(sid)}<span class="pl-t"><b>Το κείμενο, λέξη λέξη</b><small>${unitData(key).text.parts.length} κομμάτια, με τη μετάφραση</small></span><span class="pl-go" aria-hidden="true">›</span></a></li>` : ""}${unitData(key).text?.tqi ? `<li class="pl-item"><a class="pl-row" href="#study/${key}/tq/0">${subjectIcon(sid)}<span class="pl-t"><b>Κατάλαβες το κείμενο;</b><small>${unitData(key).text.tqi.length} ερωτήσεις κατανόησης</small></span><span class="pl-go" aria-hidden="true">›</span></a></li>` : ""}${(unitData(key).explain || []).map(e => `<li class="pl-item"><a class="pl-row" href="#study/${key}/x/${e.id}">${subjectIcon(sid)}<span class="pl-t"><b>${esc(e.h)}</b><small>${STRAND_NAME[e.kind]} · βήμα βήμα, ${e.steps.length} οθόνες και ${e.qi.length} ερωτήσεις</small></span><span class="pl-go" aria-hidden="true">›</span></a></li>`).join("")}</ul>` : ""}
-    <div class="fd-prog"><div class="bar" role="img" aria-label="${p.ok} από ${p.n} κάρτες"><i style="width:${Math.round(p.ok / p.n * 100)}%"></i></div><span>${p.ok} από ${p.n} τα κατάλαβες</span></div>
+  const oldFeed = () => `${unitData(key).text || unitData(key).explain ? `<ul class="pl-list">${unitData(key).text ? `<li class="pl-item"><a class="pl-row" href="#study/${key}/text">${subjectIcon(sid)}<span class="pl-t"><b>Το κείμενο, λέξη λέξη</b><small>${unitData(key).text.parts.length} κομμάτια, με τη μετάφραση</small></span><span class="pl-go" aria-hidden="true">›</span></a></li>` : ""}${unitData(key).text?.tqi ? `<li class="pl-item"><a class="pl-row" href="#study/${key}/tq/0">${subjectIcon(sid)}<span class="pl-t"><b>Κατάλαβες το κείμενο;</b><small>${unitData(key).text.tqi.length} ερωτήσεις κατανόησης</small></span><span class="pl-go" aria-hidden="true">›</span></a></li>` : ""}${(unitData(key).explain || []).map(e => `<li class="pl-item"><a class="pl-row" href="#study/${key}/x/${e.id}">${subjectIcon(sid)}<span class="pl-t"><b>${esc(e.h)}</b><small>${KIND_NAME[e.kind]} · βήμα βήμα, ${e.steps.length} οθόνες και ${e.qi.length} ερωτήσεις</small></span><span class="pl-go" aria-hidden="true">›</span></a></li>`).join("")}</ul>` : ""}
     <div class="fd-grid">${deck.map((c, i) => {
       const st = m[i] === 1 ? `<span class="fd-st ok" aria-label="Το κατάλαβες">✓</span>` : m[i] === 2 ? `<span class="fd-st again" aria-label="Θέλει μια ματιά ακόμα">↻</span>` : "";
       const teaser = c.b ? (c.b.think ? `<span class="fd-t fd-q">${C[key] ? strip(c.b.think.q) : esc(c.b.think.q)}</span>` : c.b.f ? `<span class="fd-f">${c.b.f}</span>` : `<span class="fd-t">${C[key] ? strip(c.b.t) : esc(c.b.t)}</span>`) : `<span class="fd-t">${c.voc ? "Οι λέξεις της ενότητας" : "Ασκήσεις και ερωτήσεις από όλη την ενότητα"}</span>`;
       return `<a class="fd-tile${i === now ? " now" : ""}${c.b && c.b.warn ? " warn" : ""}" href="#study/${key}/c/${i}"><span class="fd-h"><span class="fd-n">${i + 1}${i === now ? " · Εδώ είσαι" : c.b && c.b.warn ? " · Προσοχή" : ""}</span>${st}</span>${teaser}<b>${cardTitle(key, c)}</b>${meta(c) ? `<small>${meta(c)}</small>` : ""}</a>`;
-    }).join("")}<a class="fd-tile fd-end" href="#study/${key}/end"><span class="fd-h"><span class="fd-n">Τέλος</span></span><b>Τι κατάλαβα και τι θέλει μια ματιά ακόμα</b></a></div>
+    }).join("")}<a class="fd-tile fd-end" href="#study/${key}/end"><span class="fd-h"><span class="fd-n">Τέλος</span></span><b>Τι κατάλαβα και τι θέλει μια ματιά ακόμα</b></a></div>`;
+  const test = PL.testFrom && testOf(PL.testFrom);
+  el.innerHTML = `<a class="back" href="${test ? "#test/" + test.id : unitsOf(sid).length ? "#plan/" + sid : "#tomorrow"}">← ${test ? esc(test.title) : unitName(key)}</a>
+    <div class="pl-title"><span class="ref">${unitName(key)}${unitNum(key) ? " · " + unitNum(key).replace(" · ", "") : ""}</span><h2 class="ct">${unitTitle(key)}</h2></div>
+    ${unitStatus(key, p)}
+    <div class="fd-prog"><div class="bar" role="img" aria-label="${p.ok} από ${p.n} κάρτες"><i style="width:${Math.round(p.ok / p.n * 100)}%"></i></div><span>${p.ok} από ${p.n} τα κατάλαβες</span></div>
+    ${unitNo(key) ? tocFeedHtml(key, now) : oldFeed()}
     <a class="btn" href="#study/${key}/c/${now < 0 ? 0 : now}">${now < 0 ? "Ξανά από την αρχή" : now === 0 && !p.seen ? "Ξεκίνα" : `Συνέχισε από την κάρτα ${now + 1}`}</a>
     ${bookButton(key)}
     <p class="pnote center">Πάτα μια κάρτα για να ανοίξει σε όλη την οθόνη. <a href="${unitHref(key)}">Όλη η ενότητα σε μία σελίδα</a></p>`;
   bindBookButton(el, key);
   bindUnitStatus(el, key);
   PL.fromFeed = key;
+}
+
+/* Η σελίδα μιας ενότητας των Αρχαίων με τη σειρά του πίνακα περιεχομένων του βιβλίου: σε κάθε τμήμα (Α. Κείμενο, Β1., Β2., Γ1., Γ2.)
+   ό,τι έχουμε γι' αυτό, από οποιοδήποτε αρχείο (π.χ. η απρόσωπη σύνταξη, που την έχουμε γράψει στην Ενότητα 3, μπαίνει στο Γ2 της 5).
+   Στο τέλος, όσες κάρτες αυτής της ενότητας ανήκουν σε άλλο σημείο του βιβλίου ή στη Γραμματική και στο Συντακτικό. */
+function tileHtml(k, i, here){
+  const deck = deckOf(k), c = deck[i], m = cardMarks(k);
+  const meta = [c.parts.includes("fig") && "Σχήμα", c.ex.length && (c.ex.length === 1 ? "1 άσκηση" : c.ex.length + " ασκήσεις"), c.qs.length && (c.qs.length === 1 ? "1 ερώτηση" : c.qs.length + " ερωτήσεις")].filter(Boolean).join(" · ");
+  const st = m[i] === 1 ? `<span class="fd-st ok" aria-label="Το κατάλαβες">✓</span>` : m[i] === 2 ? `<span class="fd-st again" aria-label="Θέλει μια ματιά ακόμα">↻</span>` : "";
+  const teaser = c.b ? `<span class="fd-t">${C[k] ? strip(c.b.think ? c.b.think.q : c.b.t) : esc(c.b.t)}</span>` : `<span class="fd-t">${c.voc ? "Οι λέξεις της ενότητας" : ""}</span>`;
+  return `<a class="fd-tile${here ? " now" : ""}" href="#study/${k}/c/${i}"><span class="fd-h"><span class="fd-n">${i + 1}${here ? " · Εδώ είσαι" : ""}${k !== PL.feedKey ? " · " + unitShort(k) : ""}</span>${st}</span>${teaser}<b>${cardTitle(k, c)}</b>${meta ? `<small>${meta}</small>` : ""}</a>`;
+}
+function tocFeedHtml(key, now){
+  const n = unitNo(key), t = tocOf(key[0]), sid = key.split("/")[1], idx = bookIndex(sid);
+  PL.feedKey = key;
+  const row = x => `<li class="pl-item"><a class="pl-row" href="${x.kind === "t" ? `#study/${x.key}/text` : x.href}">${subjectIcon(sid)}<span class="pl-t"><b>${x.kind === "t" ? "Το κείμενο, λέξη λέξη" : x.label}</b><small>${x.kind === "t" ? `${unitData(x.key).text.parts.length} κομμάτια, με τη μετάφραση` : esc(x.sub)}${x.key !== key ? " · " + unitShort(x.key) : ""}</small></span><span class="pl-go" aria-hidden="true">›</span></a></li>`;
+  const block = list => {
+    const rows = list.filter(x => x.kind !== "c" && !(x.kind === "t" && x.i > 0)), cards = list.filter(x => x.kind === "c");
+    return `${rows.length ? `<ul class="pl-list">${rows.map(row).join("")}</ul>` : ""}${cards.length ? `<div class="fd-grid">${cards.map(x => tileHtml(x.key, x.i, x.key === key && x.i === now)).join("")}</div>` : ""}`;
+  };
+  const secs = t.units[n].map(([c, h]) => {
+    const list = idx.get(`u:${n}:${c}`) || [];
+    const parent = t.units[n].some(([d]) => d.startsWith(c + "."));
+    return `<section class="toc-sec${c.includes(".") ? " sub" : ""}"><h3 class="toc-h"><b>${secCode(c)}${c.includes(".") ? "" : "."}</b> ${esc(h)}</h3>${list.length ? block(list) : parent ? "" : `<p class="bd-none">Δεν υπάρχει ακόμα.</p>`}</section>`;
+  }).join("");
+  const away = lessonItems(key).filter(x => !x.locs.some(l => l.startsWith(`u:${n}:`)));
+  const groups = [];
+  away.forEach(x => { const at = x.locs[0], g = groups.find(y => y.at === at); if(g) g.items.push(x); else groups.push({ at, items:[x] }); });
+  return secs + (groups.length ? `<section class="toc-sec toc-away"><h3 class="toc-h">Γράψαμε σε αυτή την ενότητα, αλλά στο βιβλίο είναι αλλού</h3>${groups.map(g => `<p class="toc-at">${esc(locTitle(g.at, key[0]))}</p>${block(g.items)}`).join("")}</section>` : "")
+    + `<div class="fd-grid"><a class="fd-tile fd-end" href="#study/${key}/end"><span class="fd-h"><span class="fd-n">Τέλος</span></span><b>Τι κατάλαβα και τι θέλει μια ματιά ακόμα</b></a></div>`;
 }
 
 /* «Ασκήσεις του βιβλίου»: ανοίγει την καρτέλα «Βιβλίο» στη σελίδα της ενότητας. Εκεί ο μαθητής διαβάζει
@@ -1043,6 +1074,7 @@ function stepView(key, id, at){
   if(pos < steps.length){
     const x = steps[pos];
     body = `<span class="fc-k k-think">${esc(title)} · ${pos + 1} από ${steps.length}</span><h2>${esc(x.h)}</h2>
+      ${pos === 0 && e.ext ? `<p class="tx-note">Εκτός της ύλης 2026–2027. Ρώτα τον καθηγητή σου αν το θέλει.</p>` : ""}
       ${x.t ? `<p class="fc-big">${x.t}</p>` : ""}
       ${x.rows ? `<div class="tx-w tx-syn">${x.rows.map(([a, b]) => `<div><b lang="grc">${esc(a)}</b><span>${LT(b)}</span></div>`).join("")}</div>` : ""}
       ${x.ex ? `<div class="box defb"><b>Παράδειγμα</b><p>${LT(x.ex)}</p></div>` : ""}`;
@@ -1275,28 +1307,59 @@ function renderTest(id, sub){
   lessonPage(testLesson(t), sub);
 }
 
-/* «Φτιάξε το μάθημά σου» (#build/<μάθημα>[/<id>]): στα Αρχαία κάθε κάρτα έχει είδος (part): Κείμενο, Λεξιλογικά,
-   Γραμματική, Συντακτικό. Ο μαθητής τσεκάρει από οποιαδήποτε ενότητα ό,τι έκαναν στην τάξη και το αποθηκεύει ως
-   μάθημα (#les/<id>). Τα μαθήματα μένουν μόνο στη συσκευή (diab-lessons: {id: {name, g, sid, items, at}}).
-   Κομμάτι = "<κλειδί>|t|<θέση>" (κομμάτι του κειμένου λέξη λέξη) ή "<κλειδί>|c|<κάρτα>". */
-const STRANDS = [["text", "Κείμενο"], ["lex", "Λεξιλογικά"], ["gram", "Γραμματική"], ["synt", "Συντακτικό"], ["verb", "Ρήματα"]];
-const STRAND_NAME = Object.fromEntries(STRANDS);
-const typedUnits = sid => unitsOf(sid).filter(k => unitData(k).summary.some(c => c.part) || unitData(k).explain);
+/* «Φτιάξε το μάθημά σου» (#build/<μάθημα>[/<id>]) και η σελίδα της ενότητας στα Αρχαία ακολουθούν τον πίνακα περιεχομένων
+   του βιβλίου (src/ancient-toc.json): Α. Κείμενο, Β1. Λεξιλογικός Πίνακας, Β2. Ετυμολογικά, Γ1. Γραμματική, Γ2. Σύνταξη.
+   Κάθε κομμάτι έχει θέσεις (locs): "u:<ενότητα>:<τμήμα>", "g:<κεφ. Γραμματικής>", "y:<κεφ. Συντακτικού>", από το "book" της
+   κάρτας ή της εξήγησης. Έτσι ο μαθητής διαλέγει το κείμενο μιας ενότητας και τη γραμματική μιας άλλης, ή κεφάλαια από τη
+   Γραμματική και το Συντακτικό. Τα μαθήματα μένουν μόνο στη συσκευή (diab-lessons: {id: {name, g, sid, items, at}}).
+   Κομμάτι = "<κλειδί>|t|<θέση>" (κείμενο λέξη λέξη), "<κλειδί>|q|tq" (κατανόηση), "<κλειδί>|x|<id>" (βήμα βήμα) ή "<κλειδί>|c|<κάρτα>". */
+const BOOK_SRC = [["book", "Βιβλίο"], ["gram", "Γραμματική"], ["synt", "Συντακτικό"]];
+const KIND_NAME = { lex:"Λεξιλογικά", gram:"Γραμματική", synt:"Συντακτικό", verb:"Ρήμα" };
+const tocOf = g => ANCIENT_TOC[g] || null;
+/* Η ενότητα του βασικού βιβλίου (π.χ. "3"), αν το κλειδί είναι ενότητα του πίνακα περιεχομένων */
+const unitNo = key => { const t = tocOf(key[0]), [, sid, b, i] = key.split("/"); return t && sid === "ancient" && +b === t.main && t.units[i] ? i : null; };
+function homeLoc(key){
+  const t = tocOf(key[0]), [, , b, i] = key.split("/");
+  return !t ? null : unitNo(key) ? `u:${i}:A` : +b === t.grammar ? `g:${i}` : +b === t.syntax ? `y:${i}` : null;
+}
+const secCode = c => c.replace(/^A/, "Α").replace(/^B/, "Β");
+const tocTitle = (g, which, i) => gradeSubject(g, "ancient")?.books[tocOf(g)[which]]?.sections[i]?.title || "";
+function locTitle(loc, g = selectedGrade){
+  const [k, a, c] = loc.split(":"), t = tocOf(g);
+  if(k === "u"){ const s = (t.units[a] || []).find(x => x[0] === c); return `Ενότητα ${a} · ${secCode(c)}${c.includes(".") ? "" : "."} ${s ? s[1] : ""}`; }
+  return `${k === "g" ? "Γραμματική" : "Συντακτικό"} · ${tocTitle(g, k === "g" ? "grammar" : "syntax", a)}`;
+}
+const typedUnits = sid => unitsOf(sid).filter(k => unitData(k).summary.some(c => c.book) || unitData(k).explain);
 function lessonItems(key){
-  const u = unitData(key), deck = deckOf(key), out = [];
-  (u.text?.parts || []).forEach((p, i) => out.push({ id:`${key}|t|${i}`, key, kind:"t", i, strand:"text", href:`#study/${key}/text/${i}`,
+  const u = unitData(key), deck = deckOf(key), out = [], home = homeLoc(key);
+  if(!home) return out;
+  (u.text?.parts || []).forEach((p, i) => out.push({ id:`${key}|t|${i}`, key, kind:"t", i, locs:[home], href:`#study/${key}/text/${i}`,
     label:`Το κείμενο λέξη λέξη, κομμάτι ${i + 1}`, sub:p.gr.split(/\s+/).slice(0, 5).join(" ") + "…" }));
-  if(u.text?.tqi) out.push({ id:`${key}|q|tq`, key, kind:"q", i:0, strand:"text", href:`#study/${key}/tq/0`, label:"Κατάλαβες το κείμενο;", sub:`${u.text.tqi.length} ερωτήσεις κατανόησης` });
-  (u.explain || []).forEach(e => out.push({ id:`${key}|x|${e.id}`, key, kind:"x", i:0, xid:e.id, strand:e.kind, href:`#study/${key}/x/${e.id}`, label:esc(e.h), sub:`Βήμα βήμα: ${e.steps.length} οθόνες, ${e.qi.length} ερωτήσεις` }));
+  if(u.text?.tqi) out.push({ id:`${key}|q|tq`, key, kind:"q", i:0, locs:[home], href:`#study/${key}/tq/0`, label:"Κατάλαβες το κείμενο;", sub:`${u.text.tqi.length} ερωτήσεις κατανόησης` });
+  (u.explain || []).forEach(e => out.push({ id:`${key}|x|${e.id}`, key, kind:"x", i:0, xid:e.id, locs:e.book || [home], href:`#study/${key}/x/${e.id}`, label:esc(e.h), sub:`Βήμα βήμα: ${e.steps.length} οθόνες, ${e.qi.length} ερωτήσεις${e.ext ? " · εκτός ύλης 2026–27" : ""}` }));
   deck.forEach((c, i) => {
-    /* Οι λέξεις της ενότητας πάνε με το κείμενο· σε κεφάλαιο της Γραμματικής (χωρίς κείμενο) με τη γραμματική */
-    const strand = c.b ? c.b.part : c.voc ? (u.summary.some(b => b.part === "text") ? "text" : u.summary[0].part) : null;
-    if(strand) out.push({ id:`${key}|c|${i}`, key, kind:"c", i, strand, href:`#study/${key}/c/${i}`, label:c.voc ? "Οι λέξεις της ενότητας" : cardTitle(key, c), sub:`Κάρτα ${i + 1}` });
+    const locs = c.b ? c.b.book : c.voc ? [home] : null;
+    if(locs) out.push({ id:`${key}|c|${i}`, key, kind:"c", i, locs, href:`#study/${key}/c/${i}`, label:c.voc ? "Οι λέξεις της ενότητας" : cardTitle(key, c), sub:`Κάρτα ${i + 1}` });
   });
   return out;
 }
-/* Όλα τα κομμάτια με τη σειρά του μαθήματος: πρώτα το είδος, μετά η σειρά του βιβλίου */
-const allItems = sid => STRANDS.flatMap(([st]) => typedUnits(sid).flatMap(k => lessonItems(k).filter(x => x.strand === st)));
+/* Θέση στο βιβλίο → τα κομμάτια της, από όλα τα αρχεία του μαθήματος */
+let bookIdx = null;
+function bookIndex(sid){
+  if(bookIdx && bookIdx.g === selectedGrade && bookIdx.sid === sid) return bookIdx.m;
+  const m = new Map();
+  typedUnits(sid).forEach(k => lessonItems(k).forEach(x => x.locs.forEach(l => { if(!m.has(l)) m.set(l, []); m.get(l).push(x); })));
+  return (bookIdx = { g:selectedGrade, sid, m }).m;
+}
+/* Όλα τα κομμάτια με τη σειρά του βιβλίου: ενότητες και τμήματά τους, μετά Γραμματική, μετά Συντακτικό. at = πού μπαίνει πρώτη φορά. */
+function allItems(sid){
+  const t = tocOf(selectedGrade), idx = bookIndex(sid), seen = new Set(), out = [];
+  if(!t) return out;
+  const push = loc => (idx.get(loc) || []).forEach(x => { if(!seen.has(x.id)){ seen.add(x.id); out.push(Object.assign({}, x, { at:loc })); } });
+  Object.keys(t.units).sort((a, b) => a - b).forEach(n => t.units[n].forEach(([c]) => push(`u:${n}:${c}`)));
+  [...idx.keys()].filter(l => l[0] !== "u").sort((a, b) => a[0] === b[0] ? a.slice(2) - b.slice(2) : a[0] === "g" ? -1 : 1).forEach(push);
+  return out;
+}
 const loadLessons = () => { const v = store.get("diab-lessons", {}); return v && typeof v === "object" ? v : {}; };
 const lessonOf = id => { const l = loadLessons()[id]; return l && Array.isArray(l.items) ? Object.assign({ id, base:"#les/" + id }, l) : null; };
 const lessonsOf = sid => Object.keys(loadLessons()).map(lessonOf).filter(l => l && l.g === selectedGrade && l.sid === sid).sort((a, b) => (b.at || 0) - (a.at || 0));
@@ -1313,31 +1376,44 @@ function lessonScope(l){
 
 function renderBuild(sid, id){
   PL.run = null; PL.testFrom = null;
-  const el = $("#plan"), g = subjectGroup(sid), all = g ? allItems(sid) : [];
+  const el = $("#plan"), g = subjectGroup(sid), t = tocOf(selectedGrade), all = g && t ? allItems(sid) : [];
   if(!all.length){ location.replace(g ? "#plan/" + sid : "#tomorrow"); return; }
-  const old = id ? lessonOf(id) : null;
-  if(!PL.build || PL.build.sid !== sid || PL.build.id !== (old ? id : null)) PL.build = { sid, id:old ? id : null, sel:new Set(old ? old.items : []), tab:"text", open:{} };
-  const b = PL.build, sel = b.sel;
-  const count = st => all.filter(x => x.strand === st && sel.has(x.id)).length;
-  const groups = typedUnits(sid).map(k => [k, lessonItems(k).filter(x => x.strand === b.tab)]).filter(([, l]) => l.length);
-  const box = x => `<label class="pl-unit${sel.has(x.id) ? " on" : ""}"><input type="checkbox" data-bi="${x.id}"${sel.has(x.id) ? " checked" : ""}><span class="pl-ut">${x.label}<small>${esc(x.sub)}</small></span></label>`;
+  const old = id ? lessonOf(id) : null, idx = bookIndex(sid);
+  if(!PL.build || PL.build.sid !== sid || PL.build.id !== (old ? id : null)) PL.build = { sid, id:old ? id : null, sel:new Set(old ? old.items : []), tab:"book", open:{} };
+  const b = PL.build, sel = b.sel, src = l => l[0] === "u" ? "book" : l[0] === "g" ? "gram" : "synt";
+  const count = tab => all.filter(x => sel.has(x.id) && x.locs.some(l => src(l) === tab)).length;
+  const box = x => `<label class="pl-unit${sel.has(x.id) ? " on" : ""}"><input type="checkbox" data-bi="${x.id}"${sel.has(x.id) ? " checked" : ""}><span class="pl-ut">${x.label}<small>${esc(x.sub)}${unitNo(x.key) || x.locs.length > 1 ? " · " + unitShort(x.key) : ""}</small></span></label>`;
+  const toggle = (key, list) => list.length ? `<button type="button" class="linkbtn bd-all" data-ball="${key}">${list.every(x => sel.has(x.id)) ? "Κανένα" : "Όλα"}</button>` : "";
+  const group = (key, title, list, inner) => { const on = list.filter(x => sel.has(x.id)).length; return `<details class="pl-chap"${b.open[key] || on ? " open" : ""} data-bk="${key}"><summary><span>${title}</span><small>${on ? on + " / " : ""}${list.length}</small></summary>${toggle(key, list)}${inner}</details>`; };
+  const unitList = n => t.units[n].flatMap(([c]) => idx.get(`u:${n}:${c}`) || []).filter((x, i, a) => a.findIndex(y => y.id === x.id) === i);
+  let body = "";
+  if(b.tab === "book"){
+    body = Object.keys(t.units).sort((a, c) => a - c).filter(n => unitList(n).length).map(n => group(`unit:${n}`, esc(tocTitle(selectedGrade, "main", n)), unitList(n), t.units[n].map(([c, h]) => {
+      const list = idx.get(`u:${n}:${c}`) || [];
+      const parent = t.units[n].some(([d]) => d.startsWith(c + "."));
+      return `<div class="bd-sec${c.includes(".") ? " sub" : ""}"><div class="bd-sh"><span><b>${secCode(c)}${c.includes(".") ? "" : "."}</b> ${esc(h)}</span>${toggle(`u:${n}:${c}`, list)}</div>${list.length ? list.map(box).join("") : parent ? "" : `<p class="bd-none">Δεν υπάρχει ακόμα.</p>`}</div>`;
+    }).join(""))).join("");
+  } else {
+    const k = b.tab === "gram" ? "g" : "y";
+    body = [...idx.keys()].filter(l => l[0] === k).sort((a, c) => a.slice(2) - c.slice(2)).map(l => group(l, esc(tocTitle(selectedGrade, b.tab === "gram" ? "grammar" : "syntax", l.slice(2))), idx.get(l), idx.get(l).map(box).join(""))).join("") || `<p class="pnote">Δεν υπάρχει ακόμα τίποτα εδώ.</p>`;
+  }
   const today = new Date();
   el.innerHTML = `<a class="back" href="${old ? old.base : "#plan/" + sid}">← ${old ? esc(old.name) : esc(g.name)}</a>
     <div class="pl-head">${subjectIcon(sid)}<div><h2 class="ct">${old ? "Αλλαγές στο μάθημα" : "Φτιάξε το μάθημά σου"}</h2><p class="pl-sub">${esc(g.name)}</p></div></div>
-    <p class="pl-note">Τσέκαρε ό,τι κάνατε στην τάξη, από όποια ενότητα ή κεφάλαιο. Το μάθημα θα έχει πρώτα το κείμενο, μετά τα λεξιλογικά, τη γραμματική και το συντακτικό.</p>
-    <div class="seg bd-tabs" role="group" aria-label="Είδος">${STRANDS.map(([st, name]) => `<button type="button" data-bt="${st}" aria-pressed="${b.tab === st}">${name}${count(st) ? ` <b>${count(st)}</b>` : ""}</button>`).join("")}</div>
-    ${groups.map(([k, list]) => { const on = list.filter(x => sel.has(x.id)).length; return `<details class="pl-chap"${b.open[b.tab + k] || on ? " open" : ""} data-bk="${k}"><summary><span>${unitLabel(k)}</span><small>${on ? on + " / " : ""}${list.length}</small></summary>
-      <button type="button" class="linkbtn bd-all" data-ball="${k}">${on === list.length ? "Κανένα" : "Όλα"}</button>${list.map(box).join("")}</details>`; }).join("") || `<p class="pnote">Δεν υπάρχει ακόμα τίποτα εδώ.</p>`}
+    <p class="pl-note">Τσέκαρε ό,τι κάνατε στην τάξη ή ό,τι έχει το διαγώνισμα: από το βιβλίο (κείμενο, λεξιλογικά, γραμματική, σύνταξη κάθε ενότητας), από τη Γραμματική ή από το Συντακτικό. Μπορείς να πάρεις το κείμενο μιας ενότητας και τη γραμματική μιας άλλης.</p>
+    <div class="seg bd-tabs" role="group" aria-label="Βιβλίο">${BOOK_SRC.map(([k, name]) => `<button type="button" data-bt="${k}" aria-pressed="${b.tab === k}">${name}${count(k) ? ` <b>${count(k)}</b>` : ""}</button>`).join("")}</div>
+    ${body}
     <form class="sheet pl-form" id="bd-form"><label class="pl-field"><span>Όνομα</span><input id="bd-name" maxlength="60" value="${esc(old ? old.name : `Μάθημα ${today.getDate()}/${today.getMonth() + 1}`)}"></label>
       <button class="btn" type="submit"${sel.size ? "" : " disabled"}>${old ? "Αποθήκευση" : "Φτιάξε το μάθημα"}${sel.size ? ` (${sel.size})` : ""}</button>
       <p class="pnote center">Μένει μόνο σε αυτή τη συσκευή.</p></form>`;
   el.querySelectorAll("[data-bt]").forEach(x => x.onclick = () => { b.tab = x.dataset.bt; renderBuild(sid, id); });
-  el.querySelectorAll("details[data-bk]").forEach(d => d.ontoggle = () => { b.open[b.tab + d.dataset.bk] = d.open; });
+  el.querySelectorAll("details[data-bk]").forEach(d => d.ontoggle = () => { b.open[d.dataset.bk] = d.open; });
   const keep = f => { const y = window.scrollY; f(); renderBuild(sid, id); window.scrollTo({top:y}); };
   el.querySelectorAll("[data-bi]").forEach(x => x.onchange = () => keep(() => x.checked ? sel.add(x.dataset.bi) : sel.delete(x.dataset.bi)));
   el.querySelectorAll("[data-ball]").forEach(x => x.onclick = () => keep(() => {
-    const list = lessonItems(x.dataset.ball).filter(y => y.strand === b.tab), every = list.every(y => sel.has(y.id));
-    list.forEach(y => every ? sel.delete(y.id) : sel.add(y.id)); b.open[b.tab + x.dataset.ball] = true;
+    const k = x.dataset.ball, list = k.startsWith("unit:") ? unitList(k.slice(5)) : idx.get(k) || [], every = list.every(y => sel.has(y.id));
+    list.forEach(y => every ? sel.delete(y.id) : sel.add(y.id));
+    b.open[k] = true; const up = x.closest("details[data-bk]"); if(up) b.open[up.dataset.bk] = true;
   }));
   $("#bd-form", el).onsubmit = e => {
     e.preventDefault();
@@ -1367,8 +1443,10 @@ function lessonPage(l, sub){
   const back = `<a class="back" href="${l.fixed ? "#tomorrow" : "#plan/" + l.sid}">← ${l.fixed ? "Αύριο" : esc(s.name)}</a>`;
   if(!list.length){ el.innerHTML = back + `<p class="pnote">Αυτό το μάθημα είναι άδειο.</p>${l.fixed ? "" : `<a class="btn" href="#build/${l.sid}/${l.id}">Αλλαγές</a>`}`; return; }
   const row = (x, n) => `<a class="fd-row" href="${x.href}" data-ln="${n}"><span class="fd-num">${n + 1}</span><span class="pl-t"><b>${x.label}</b><small>${unitLabel(x.key)} · ${esc(x.sub)}</small></span><span aria-hidden="true">›</span></a>`;
-  let n = 0;
-  const parts = STRANDS.map(([st, name]) => { const sl = list.filter(x => x.strand === st); return sl.length ? `<div class="sheet fd-list"><h3 class="pl-h">${name}</h3>${sl.map(x => row(x, n++)).join("")}</div>` : ""; }).join("");
+  /* Με τη σειρά του βιβλίου, ανά τμήμα: «Ενότητα 3 · Α. Κείμενο», «Γραμματική · 21ο Κεφάλαιο…» */
+  const groups = [];
+  list.forEach((x, i) => { const last = groups[groups.length - 1]; if(last && last.at === x.at) last.items.push([x, i]); else groups.push({ at:x.at, items:[[x, i]] }); });
+  const parts = groups.map(gr => `<div class="sheet fd-list"><h3 class="pl-h">${esc(locTitle(gr.at, l.g))}</h3>${gr.items.map(([x, i]) => row(x, i)).join("")}</div>`).join("");
   const done = run && run.done, resume = run && !done && run.at > 0;
   el.innerHTML = back + `<div class="pl-head">${subjectIcon(l.sid)}<div><h2 class="ct">${esc(l.name)}</h2><p class="pl-sub">${esc(s.name)}${l.date ? ` · ${dayName(l.date)} · ${whenText(l.date)}` : ""} · ${list.length} κομμάτια</p></div></div>
     ${done ? `<p class="pl-note">Τα πέρασες όλα! Τώρα δες τι θυμάσαι με την προετοιμασία.</p>` : ""}

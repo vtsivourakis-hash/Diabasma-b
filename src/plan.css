@@ -363,3 +363,17 @@ a.dm-box:hover{border-color:var(--accent)}
 .tx-syn small{font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--hi)}
 .tx-syn span{color:var(--text)}
 .tx-k{display:block;margin:0 0 8px}
+
+/* Η ενότητα των Αρχαίων με τη σειρά του πίνακα περιεχομένων του βιβλίου */
+.toc-sec{margin:18px 0 6px}
+.toc-sec.sub{margin-top:10px;padding-left:12px;border-left:2px solid var(--line)}
+.toc-h{margin:0 0 8px;font-size:15.5px;line-height:1.35;font-weight:700}
+.toc-h b{color:var(--hi);margin-right:2px}
+.toc-at{margin:12px 0 6px;font-size:13.5px;font-weight:700;color:var(--muted)}
+.toc-away{padding-top:8px;border-top:1px dashed var(--line)}
+.bd-none{margin:2px 0 8px;font-size:13.5px;color:var(--muted)}
+.bd-sec{margin:10px 0 4px}
+.bd-sec.sub{padding-left:12px;border-left:2px solid var(--line)}
+.bd-sh{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin:0 0 6px;font-size:14px}
+.bd-sh b{color:var(--hi)}
+.bd-sh .bd-all{margin:0;flex:none}
