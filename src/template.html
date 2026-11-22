@@ -721,7 +721,7 @@ const unitNum = key => {
   const t = strip(unitTitle(key));
   return t.startsWith(m[1]) && /^[\s:.·]/.test(t.slice(m[1].length)) ? "" : m[1] + " · ";
 };
-const unitItems = key => unitData(key).quiz.map((_, oi) => ({key, oi}));
+const unitItems = key => unitData(key).quiz.map((q, oi) => ({key, oi, xp:q.xp})).filter(x => !x.xp).map(({key, oi}) => ({key, oi}));
 /* Κάθε φορά οι ερωτήσεις και οι απαντήσεις τους έρχονται με άλλη σειρά */
 function newQuiz(items, mode){
   return { mode, qi:0, picked:{}, done:false, anim:"", t0:Date.now(), t1:null,
@@ -970,7 +970,7 @@ function scopeGroups(grade){
     return {id:s.id, name:s.name, chapters};
   }).filter(s => s.chapters.length);
 }
-const quizPool = keys => keys.flatMap(key => unitData(key).quiz.map((_, oi) => ({key, oi})));
+const quizPool = keys => keys.flatMap(key => unitData(key).quiz.map((q, oi) => q.xp ? null : {key, oi}).filter(Boolean));
 function startExam(keys){
   P.keys = keys; P.rev = null;
   const pool = shuffle(quizPool(keys));

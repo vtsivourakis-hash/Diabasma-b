@@ -273,6 +273,19 @@ for (const f of fs.readdirSync(dir).filter(f => f.endsWith(".json") && !f.starts
   for (const m of raw.matchAll(/\{\{[^|}]+\|([^}]+)\}\}/g)) {
     if (!G[m[1]]) throw new Error(`${f}: η λέξη γραμματικής "${m[0]}" δείχνει σε "${m[1]}", που δεν υπάρχει στο _grammar.json`);
   }
+  // «Βήμα βήμα» (explain): εξηγήσεις γραμματικής, συντακτικού, λεξιλογικών και ρημάτων, και οι ερωτήσεις κατανόησης του κειμένου (text.tq).
+  // Οι ερωτήσεις τους μπαίνουν στο τέλος του quiz με "xp" (δεν ανήκουν σε κάρτα)· το qi κρατά τις θέσεις τους.
+  const addQs = (list, xp, at) => list.map((q, i) => {
+    if (!q.q || !q.c || !Array.isArray(q.w) || q.w.length !== 3 || q.w.includes(q.c) || !q.why) throw new Error(`${f}: ${at}, ερώτηση ${i + 1}: θέλει q, c, 3 λάθος στο w και why`);
+    data.quiz.push({ ...q, xp }); return data.quiz.length - 1;
+  });
+  for (const e of data.explain || []) {
+    if (!e.id || !["lex", "gram", "synt", "verb"].includes(e.kind) || !e.h || !e.steps?.length || !e.quiz?.length) throw new Error(`${f}: explain «${e.id}» θέλει id, kind (lex/gram/synt/verb), h, steps και quiz`);
+    if ((data.explain).filter(x => x.id === e.id).length > 1) throw new Error(`${f}: διπλό explain ${e.id}`);
+    e.steps.forEach((st, i) => { if (!st.h || !(st.t || st.rows?.length)) throw new Error(`${f}: explain ${e.id}, βήμα ${i + 1}: θέλει h και t ή rows`); });
+    e.qi = addQs(e.quiz, e.id, `explain ${e.id}`); delete e.quiz;
+  }
+  if (data.text?.tq) { data.text.tqi = addQs(data.text.tq, "tq", "text.tq"); delete data.text.tq; }
   C[key] = data;
 }
 
@@ -322,6 +335,7 @@ tests.forEach(t => {
     if (!p.what) throw new Error(`${at}: ${p.key} θέλει what`);
     if (p.cards && !(p.cards.length && p.cards.every(i => Number.isInteger(i) && i >= 0 && i < unit.summary.length))) throw new Error(`${at}: ${p.key} έχει κάρτα που δεν υπάρχει`);
     if (p.cards && !unit.quiz.some(q => p.cards.includes(q.topic))) throw new Error(`${at}: ${p.key} χωρίς ερωτήσεις για τις κάρτες ${p.cards}`);
+    for (const x of p.explain || []) if (!(unit.explain || []).some(e => e.id === x)) throw new Error(`${at}: ${p.key} δεν έχει explain ${x}`);
   });
 });
 
