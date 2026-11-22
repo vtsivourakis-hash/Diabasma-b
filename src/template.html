@@ -699,8 +699,14 @@ const unitData = key => C[key] || OFFICIAL_CONTENT[key];
 const unitHref = key => "#lesson/" + key;
 const unitText = (key, t) => C[key] ? rich(t) : esc(t);
 const unitTitle = key => C[key] ? C[key].title : esc(unitData(key).title);
-/* Οι τίτλοι του content/ δεν έχουν αριθμό· τον παίρνουμε από την ενότητα του βιβλίου, π.χ. «Α1.1: …» → «Α1.1 · » */
-const unitNum = key => { if(!C[key]) return ""; const [g, sid, b, i] = key.split("/"), m = (officialLesson(g, sid, +b, +i)?.section.title || "").match(/^([ΑΒΓ]?\d+(?:\.\d+)+)/); return m ? m[1] + " · " : ""; };
+/* Ο αριθμός της ενότητας από το βιβλίο, π.χ. «Α1.1: …» → «Α1.1 · ». Κενό αν ο τίτλος ξεκινά ήδη με αυτόν τον αριθμό. */
+const unitNum = key => {
+  if(!C[key]) return "";
+  const [g, sid, b, i] = key.split("/"), m = (officialLesson(g, sid, +b, +i)?.section.title || "").match(/^([ΑΒΓ]?\d+(?:\.\d+)+)/);
+  if(!m) return "";
+  const t = strip(unitTitle(key));
+  return t.startsWith(m[1]) && /^[\s:.·]/.test(t.slice(m[1].length)) ? "" : m[1] + " · ";
+};
 const unitItems = key => unitData(key).quiz.map((_, oi) => ({key, oi}));
 /* Κάθε φορά οι ερωτήσεις και οι απαντήσεις τους έρχονται με άλλη σειρά */
 function newQuiz(items, mode){
