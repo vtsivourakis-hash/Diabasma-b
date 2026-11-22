@@ -24,6 +24,7 @@
 .pl-head .ct{margin:0}
 .pl-sub{margin:2px 0 0;font-size:14px;color:var(--muted)}
 .pl-note{margin:0 0 16px;padding:12px 14px;border-radius:14px;font-size:14.5px;line-height:1.45;background:var(--mark-soft);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+a.pl-note{display:block;color:inherit;text-decoration:none}
 .pl-chap{margin:0 0 10px}
 .pl-chap summary{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:44px;padding:4px 2px;cursor:pointer;font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;list-style:none}
 .pl-chap summary::-webkit-details-marker{display:none}

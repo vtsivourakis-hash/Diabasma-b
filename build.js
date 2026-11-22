@@ -282,8 +282,24 @@ for (const file of fs.readdirSync(path.join(__dirname, "src")).filter(name => /^
   }
 }
 
+// Σελίδες για ένα διαγώνισμα (src/tests.json, #test/<id>): η ύλη του, ως ενότητες ή κάρτες ενοτήτων.
+// Κάθε διαγώνισμα: id, g, sid, date, title, parts [{key, what, cards?}]. Χωρίς cards μετρά όλη η ενότητα.
+const tests = JSON.parse(fs.readFileSync(path.join(__dirname, "src", "tests.json"), "utf8"));
+tests.forEach(t => {
+  const at = `tests.json: ${t.id}`;
+  if (!t.id || !t.g || !t.sid || !/^\d{4}-\d\d-\d\d$/.test(t.date || "") || !t.title || !t.parts?.length) throw new Error(`${at} θέλει id, g, sid, date, title και parts`);
+  if (tests.filter(x => x.id === t.id).length > 1) throw new Error(`${at}: διπλό id`);
+  t.parts.forEach(p => {
+    const unit = C[p.key] || officialContent[p.key];
+    if (!unit || !p.key.startsWith(`${t.g}/${t.sid}/`)) throw new Error(`${at}: άγνωστη ενότητα ${p.key}`);
+    if (!p.what) throw new Error(`${at}: ${p.key} θέλει what`);
+    if (p.cards && !(p.cards.length && p.cards.every(i => Number.isInteger(i) && i >= 0 && i < unit.summary.length))) throw new Error(`${at}: ${p.key} έχει κάρτα που δεν υπάρχει`);
+    if (p.cards && !unit.quiz.some(q => p.cards.includes(q.topic))) throw new Error(`${at}: ${p.key} χωρίς ερωτήσεις για τις κάρτες ${p.cards}`);
+  });
+});
+
 const template = fs.readFileSync(path.join(__dirname, "src", "template.html"), "utf8");
-for (const mark of ["/*__DATA__*/", "/*__GRAMMAR__*/", "/*__BOOK_HELP__*/", "/*__CATALOGUE_JS__*/", "/*__CATALOGUE_CSS__*/", "/*__PLAN_JS__*/", "/*__PLAN_CSS__*/", "/*__TOUR_JS__*/", "/*__TOUR_CSS__*/"]) {
+for (const mark of ["/*__DATA__*/", "/*__GRAMMAR__*/", "/*__BOOK_HELP__*/", "/*__TESTS__*/", "/*__CATALOGUE_JS__*/", "/*__CATALOGUE_CSS__*/", "/*__PLAN_JS__*/", "/*__PLAN_CSS__*/", "/*__TOUR_JS__*/", "/*__TOUR_CSS__*/"]) {
   if (!template.includes(mark)) throw new Error(`Το template δεν έχει το ${mark}`);
 }
 const json = value => JSON.stringify(value).replace(/</g, "\\u003c");
@@ -292,7 +308,7 @@ const catalogueJS = fs.readFileSync(path.join(__dirname,"src","catalogue.js"),"u
   .replace("/*__OFFICIAL_CONTENT__*/", () => json(officialContent))
   .replace("/*__EXPLANATIONS__*/", () => json(explanations))
   .replace("/*__EUROPE_MAP__*/", () => usesMap ? fs.readFileSync(path.join(__dirname, "src", "europe-map.json"), "utf8").trim() : "null");
-const html = template.replace("/*__DATA__*/", () => json(C)).replace("/*__GRAMMAR__*/", () => json(G)).replace("/*__BOOK_HELP__*/", () => json(bookHelp))
+const html = template.replace("/*__DATA__*/", () => json(C)).replace("/*__GRAMMAR__*/", () => json(G)).replace("/*__BOOK_HELP__*/", () => json(bookHelp)).replace("/*__TESTS__*/", () => json(tests))
   .replace("/*__CATALOGUE_JS__*/", () => catalogueJS)
   .replace("/*__CATALOGUE_CSS__*/", () => fs.readFileSync(path.join(__dirname,"src","catalogue.css"),"utf8"))
   .replace("/*__APP_CSS__*/", () => fs.readFileSync(path.join(__dirname,"src","app.css"),"utf8"))

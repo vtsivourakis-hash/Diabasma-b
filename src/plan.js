@@ -53,6 +53,7 @@ function renderPlanRoute(p, parts){
   else if(p === "check") renderCheck(parts.slice(1, 5).join("/"));
   else if(p === "calendar") renderCalendar(parts[1]);
   else if(p === "day") renderDay(parts[1]);
+  else if(p === "test") renderTest(parts[1], parts[2]);
 }
 
 /* «Μια ματιά πίσω»: 3 ερωτήσεις από μια ενότητα που διάβασες πριν από 2–10 μέρες (από το diab-days), όχι από μάθημα
@@ -152,6 +153,7 @@ function renderTomorrow(){
       <div class="row"><button class="btn" type="submit">Πρόσθεσε</button><button class="btn ghost" type="button" data-pl-cancel>Άκυρο</button></div>
     </form>` : `<button class="pl-add" data-pl-add>+ Κάτι άλλο: διάβασμα ή διαγώνισμα</button>`;
   el.innerHTML = `<div class="hero"><span class="ref">${dayName(date)}</span><h2 class="ct">${soon ? "Για αύριο" : "Για " + WEEK_ACC[wd]}</h2><p>${lead}</p></div>
+    ${upcomingTests().map(t => `<ul class="pl-list"><li class="pl-item"><a class="pl-row" href="#test/${t.id}">${subjectIcon(t.sid)}<span class="pl-t"><b>${esc(gradeSubject(t.g, t.sid).name)} <span class="pl-badge">Διαγώνισμα</span></b><small>${esc(t.title)} · ${dayName(t.date)} · ${whenText(t.date)}</small></span><span class="pl-go" aria-hidden="true">›</span></a></li></ul>`).join("")}
     ${resumeHtml()}
     ${lookBackHtml()}
     ${n ? `<ul class="pl-list">${day.ids.map(sid => row(sid)).join("")}</ul>` : ""}
@@ -378,6 +380,7 @@ function renderChooser(sid){
   const prepBtn = `<button class="btn${test ? "" : " ghost"}" data-pl-prep${n ? "" : " disabled"}>Προετοιμασία για διαγώνισμα</button>`;
   el.innerHTML = `<a class="back" href="#tomorrow">← Αύριο</a>
     <div class="pl-head">${subjectIcon(sid)}<div><h2 class="ct">${esc(g.name)}</h2><p class="pl-sub">${test ? `Διαγώνισμα ${dayName(test.date)} · ${whenText(test.date)}` : "Τι κάνατε στην τάξη;"}</p></div></div>
+    ${upcomingTests().filter(t => t.sid === sid).map(t => `<a class="pl-note" href="#test/${t.id}">Για το <b>${esc(t.title.toLowerCase())}</b> (${dayName(t.date)}) υπάρχει έτοιμη σελίδα με την ύλη του →</a>`).join("")}
     <p class="pl-note">${note}</p>
     ${g.chapters.map(c => `<details class="pl-chap"${c.keys.some(k => sel.has(k) || k === sug) || g.chapters.length === 1 ? " open" : ""}><summary><span>${esc(c.name)}</span><small>${c.keys.length}</small></summary>
       ${c.keys.map(k => { const on = sel.has(k), pr = cardProgress(k); return `<label class="pl-unit${on ? " on" : ""}"><input type="checkbox" data-pk="${k}"${on ? " checked" : ""}><span class="pl-ut">${unitLabel(k)}</span>${k === sug && !pr.seen && scoreOf(k) === null ? `<span class="pl-sug">Πρόταση</span>` : ""}${scoreOf(k) !== null || pr.seen ? unitRing(k, 28) : ""}</label>`; }).join("")}
@@ -1023,14 +1026,14 @@ function unitRecall(key, at){
 
 /* Προετοιμασία για διαγώνισμα: 10 ερωτήσεις από τις ενότητες που διάλεξες, ανακατεμένες.
    Στο τέλος δείχνει ανά ενότητα τι να ξαναδείς, χωρίς βαθμό. */
-function renderPrep(sid){
+function renderPrep(sid, sc){
   const el = $("#plan"), g = subjectGroup(sid), sel = PL.sel[sid];
-  const keys = g ? unitsOf(sid).filter(k => sel && sel.has(k)) : [];
+  const keys = sc ? sc.keys : g ? unitsOf(sid).filter(k => sel && sel.has(k)) : [];
   if(!keys.length){ location.replace(g ? "#plan/" + sid : "#tomorrow"); return; }
-  const id = keys.join(",");
-  if(!PL.prep || PL.prep.id !== id) PL.prep = { id, z:newQuiz(shuffle(quizPool(keys)).slice(0, 10), "prep") };
-  const z = PL.prep.z, test = loadPlan().filter(e => e.kind === "test" && e.sid === sid).sort((a, b) => a.date.localeCompare(b.date))[0];
-  const head = `<div class="pl-bar"><div><span class="ref">${test ? `Διαγώνισμα · ${esc(g.name)} · ${WEEK[dayAt(test.date).getDay()]}` : `Προετοιμασία · ${esc(g.name)}`}</span><h2 class="pl-where">${keys.length === 1 ? unitLabel(keys[0]) : keys.length + " ενότητες"}</h2></div><span class="pl-tools"><a class="pl-round" href="#plan/${sid}" aria-label="Κλείσιμο"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></a></span></div>`;
+  const id = sc ? sc.id : keys.join(","), close = sc ? sc.back : "#plan/" + sid;
+  if(!PL.prep || PL.prep.id !== id) PL.prep = { id, z:newQuiz(shuffle(sc ? sc.pool : quizPool(keys)).slice(0, 10), "prep") };
+  const z = PL.prep.z, test = sc || loadPlan().filter(e => e.kind === "test" && e.sid === sid).sort((a, b) => a.date.localeCompare(b.date))[0];
+  const head = `<div class="pl-bar"><div><span class="ref">${test ? `Διαγώνισμα · ${esc(g.name)} · ${WEEK[dayAt(test.date).getDay()]}` : `Προετοιμασία · ${esc(g.name)}`}</span><h2 class="pl-where">${sc ? esc(sc.title) : keys.length === 1 ? unitLabel(keys[0]) : keys.length + " ενότητες"}</h2></div><span class="pl-tools"><a class="pl-round" href="${close}" aria-label="Κλείσιμο"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></a></span></div>`;
   if(z.done){
     const by = {};
     z.qs.forEach((q, i) => { const b = by[q.key] || (by[q.key] = [0, 0]); b[1]++; if(z.picked[i] !== undefined && q.opts[z.picked[i]].ok) b[0]++; });
@@ -1038,11 +1041,11 @@ function renderPrep(sid){
     el.innerHTML = head + `<div class="pl-done"><h2 class="ct">${right * 5 >= z.qs.length * 4 ? "Είσαι σε καλό δρόμο!" : "Καλή δουλειά!"}</h2><p>Βρήκες σωστά ${right} από ${z.qs.length}. Ό,τι σου ξέφυγε, τώρα ξέρεις πού να το βρεις.</p></div>
       <h3 class="pl-h">Τι να ξαναδείς</h3><div class="brk">${rows.map(k => { const [r, t] = by[k]; return `<a href="#study/${k}"><span>${unitLabel(k)}</span><b class="${r === t ? "ok" : r * 2 >= t ? "mid" : "low"}">${r}/${t}</b></a>`; }).join("")}</div>
       <div class="pl-actions"><button class="btn" data-pl-again>Νέος γύρος με άλλες ερωτήσεις</button><a class="btn ghost" href="#tomorrow">Φτάνει για σήμερα</a></div>`;
-    $("[data-pl-again]", el).onclick = () => { PL.prep = null; renderPrep(sid); window.scrollTo({top:0}); };
+    $("[data-pl-again]", el).onclick = () => { PL.prep = null; renderPrep(sid, sc); window.scrollTo({top:0}); };
     return;
   }
-  const rr = () => renderPrep(sid), v = quizView(z, rr);
-  el.innerHTML = head + `<p class="pnote">Ερωτήσεις από όλες τις ενότητες που διάλεξες. Χωρίς βαθμό: μόνο για να δεις τι θυμάσαι.</p>` + v.body;
+  const rr = () => renderPrep(sid, sc), v = quizView(z, rr);
+  el.innerHTML = head + `<p class="pnote">${sc ? "Ερωτήσεις μόνο από την ύλη του διαγωνίσματος." : "Ερωτήσεις από όλες τις ενότητες που διάλεξες."} Χωρίς βαθμό: μόνο για να δεις τι θυμάσαι.</p>` + v.body;
   keyNav = v.go;
   el.querySelectorAll("[data-nav]").forEach(b => b.onclick = () => v.go && v.go(+b.dataset.nav));
   const slide = $(".slide", el);
@@ -1053,8 +1056,8 @@ function renderPrep(sid){
 /* Δοκιμαστικό διαγώνισμα (#mock/<μάθημα>): σαν αληθινό διαγώνισμα, από τις ενότητες που διάλεξες.
    Μέρος Α: 6 ερωτήσεις πολλαπλής επιλογής, χωρίς να φαίνεται αν είναι σωστές. Μέρος Β: 3 θέματα για το τετράδιο
    (Εύκολο, Μέτριο, Δύσκολο). Με την «Παράδοση» φαίνονται οι απαντήσεις, η μέθοδος και το αποτέλεσμα. Χωρίς βαθμό. */
-function mockExercises(keys){
-  const pool = keys.flatMap(key => unitData(key).ex.map((e, ei) => ({key, ei, lvl:e.lvl}))), used = new Set(), out = [];
+function mockExercises(pool){
+  const used = new Set(), out = [];
   for(const lvl of [1, 2, 3]){
     const list = shuffle(pool.filter(x => x.lvl === lvl && !out.includes(x)));
     const pick = list.find(x => !used.has(x.key)) || list[0] || shuffle(pool.filter(x => !out.includes(x)))[0];
@@ -1062,14 +1065,14 @@ function mockExercises(keys){
   }
   return out;
 }
-function renderMock(sid){
+function renderMock(sid, sc){
   const el = $("#plan"), g = subjectGroup(sid), sel = PL.sel[sid];
-  const keys = g ? unitsOf(sid).filter(k => sel && sel.has(k)) : [];
+  const keys = sc ? sc.keys : g ? unitsOf(sid).filter(k => sel && sel.has(k)) : [];
   if(!keys.length){ location.replace(g ? "#plan/" + sid : "#tomorrow"); return; }
-  const id = keys.join(",");
-  if(!PL.mock || PL.mock.id !== id) PL.mock = { id, z:newQuiz(shuffle(quizPool(keys)).slice(0, 6), "mock"), ex:mockExercises(keys), done:false, t0:Date.now(), t1:null };
-  const m = PL.mock, z = m.z, T = (key, t) => unitText(key, t), rr = () => renderMock(sid);
-  const head = `<div class="pl-bar"><div><span class="ref">Δοκιμαστικό · ${esc(g.name)}</span><h2 class="pl-where">${keys.length === 1 ? unitLabel(keys[0]) : keys.length + " ενότητες"}</h2></div><span class="pl-tools"><a class="pl-round" href="#plan/${sid}" aria-label="Κλείσιμο"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></a></span></div>`;
+  const id = sc ? sc.id : keys.join(","), close = sc ? sc.back : "#plan/" + sid;
+  if(!PL.mock || PL.mock.id !== id) PL.mock = { id, z:newQuiz(shuffle(sc ? sc.pool : quizPool(keys)).slice(0, 6), "mock"), ex:mockExercises(sc ? sc.ex : exPool(keys)), done:false, t0:Date.now(), t1:null };
+  const m = PL.mock, z = m.z, T = (key, t) => unitText(key, t), rr = () => renderMock(sid, sc);
+  const head = `<div class="pl-bar"><div><span class="ref">Δοκιμαστικό · ${esc(g.name)}</span><h2 class="pl-where">${sc ? esc(sc.title) : keys.length === 1 ? unitLabel(keys[0]) : keys.length + " ενότητες"}</h2></div><span class="pl-tools"><a class="pl-round" href="${close}" aria-label="Κλείσιμο"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></a></span></div>`;
   const cardOf = (key, topic) => Number.isInteger(topic) ? `<a class="mk-theory" href="#study/${key}/c/${topic}">Θεωρία: ${C[key] ? unitData(key).summary[topic].h : esc(unitData(key).summary[topic].h)} →</a>` : "";
   const partA = z.qs.map((q, i) => {
     const p = z.picked[i], has = p !== undefined, oq = unitData(q.key).quiz[q.oi];
@@ -1095,8 +1098,8 @@ function renderMock(sid){
       ${weak.length ? `<h3 class="pl-h">Τι να ξαναδείς</h3><div class="brk">${weak.map(k => `<a href="#study/${k}"><span>${unitLabel(k)}</span><b class="${by[k][0] * 2 >= by[k][1] ? "mid" : "low"}">${by[k][0]}/${by[k][1]}</b></a>`).join("")}</div>` : ""}
       <h3 class="pl-h">Μέρος Α · Οι απαντήσεις</h3>${partA}
       ${partB ? `<h3 class="pl-h">Μέρος Β · Οι λύσεις</h3>${partB}` : ""}
-      <div class="pl-actions"><button class="btn" data-mk-new>Νέο δοκιμαστικό</button><a class="btn ghost" href="#plan/${sid}">Πίσω στις ενότητες</a></div>`;
-    $("[data-mk-new]", el).onclick = () => { PL.mock = null; renderMock(sid); window.scrollTo({top:0}); };
+      <div class="pl-actions"><button class="btn" data-mk-new>Νέο δοκιμαστικό</button><a class="btn ghost" href="${close}">${sc ? "Πίσω στο διαγώνισμα" : "Πίσω στις ενότητες"}</a></div>`;
+    $("[data-mk-new]", el).onclick = () => { PL.mock = null; renderMock(sid, sc); window.scrollTo({top:0}); };
     return;
   }
   el.innerHTML = head + `<p class="pnote">Σαν αληθινό διαγώνισμα: απάντησε όσα μπορείς και μετά πάτα «Παράδοση». Τότε θα δεις τις απαντήσεις και τις λύσεις. Χωρίς βαθμό.</p>
@@ -1111,6 +1114,39 @@ function renderMock(sid){
     z.qs.forEach((q, i) => { if(z.picked[i] !== undefined) markAnswer(q.key, q.oi, q.opts[z.picked[i]].ok); });
     m.done = true; m.t1 = Date.now(); rr(); window.scrollTo({top:0});
   };
+}
+
+const exPool = keys => keys.flatMap(key => unitData(key).ex.map((e, ei) => ({key, ei, lvl:e.lvl})));
+
+/* Σελίδα για ένα συγκεκριμένο διαγώνισμα (#test/<id>, από το src/tests.json): η ύλη του, ως ενότητες ή μόνο κάποιες κάρτες
+   μιας ενότητας, με διάβασμα, προετοιμασία (#test/<id>/prep) και δοκιμαστικό (#test/<id>/mock) μόνο από αυτή την ύλη. */
+const testOf = id => TESTS.find(t => t.id === id);
+const upcomingTests = () => TESTS.filter(t => t.g === selectedGrade && daysTo(t.date) >= 0 && daysTo(t.date) <= 14 && gradeSubject(t.g, t.sid)).sort((a, b) => a.date.localeCompare(b.date));
+const testHref = (t, p) => p.cards ? `#study/${p.key}/c/${p.cards[0]}` : `#study/${p.key}`;
+function testScope(t){
+  const has = (p, topic) => !p.cards || p.cards.includes(topic);
+  return { id:"test:" + t.id, title:t.title, date:t.date, back:"#test/" + t.id, keys:[...new Set(t.parts.map(p => p.key))],
+    pool:t.parts.flatMap(p => unitData(p.key).quiz.map((q, oi) => ({key:p.key, oi, topic:q.topic})).filter(x => has(p, x.topic)).map(({key, oi}) => ({key, oi}))),
+    ex:t.parts.flatMap(p => unitData(p.key).ex.map((e, ei) => ({key:p.key, ei, lvl:e.lvl, topic:e.topic})).filter(x => has(p, x.topic))) };
+}
+function renderTest(id, sub){
+  const t = testOf(id);
+  if(!t){ location.replace("#tomorrow"); return; }
+  if(t.g !== selectedGrade) selectGrade(t.g);
+  if(sub === "prep") return renderPrep(t.sid, testScope(t));
+  if(sub === "mock") return renderMock(t.sid, testScope(t));
+  const el = $("#plan"), s = gradeSubject(t.g, t.sid), full = t.parts.filter(p => !p.cards).map(p => p.key);
+  el.innerHTML = `<a class="back" href="#tomorrow">← Αύριο</a>
+    <div class="pl-head">${subjectIcon(t.sid)}<div><h2 class="ct">${esc(t.title)}</h2><p class="pl-sub">${esc(s.name)} · ${dayName(t.date)} · ${whenText(t.date)}</p></div></div>
+    <h3 class="pl-h">Τι έχει το διαγώνισμα</h3>
+    <div class="sheet fd-list">${t.parts.map((p, i) => `<a class="fd-row" href="${testHref(t, p)}"><span class="fd-num">${i + 1}</span><span class="pl-t"><b>${esc(p.what)}</b><small>${unitLabel(p.key)}${p.cards ? ` · ${p.cards.length === 1 ? "μόνο η κάρτα" : "μόνο οι κάρτες"} ${p.cards.map(c => `«${cardTitle(p.key, deckOf(p.key)[c])}»`).join(", ")}` : ""}</small></span><span aria-hidden="true">›</span></a>`).join("")}</div>
+    <div class="pl-actions">
+      <button class="btn" data-ts-study>Διάβασμα με τη σειρά</button>
+      <a class="btn ghost" href="#test/${t.id}/prep">Προετοιμασία για διαγώνισμα</a>
+      <a class="btn ghost" href="#test/${t.id}/mock">Δοκιμαστικό διαγώνισμα</a>
+    </div>
+    <p class="pnote">Οι ερωτήσεις και τα θέματα είναι μόνο από αυτή την ύλη.${full.length < t.parts.length ? " Το «Διάβασμα με τη σειρά» περνά από τις ολόκληρες ενότητες· τις μεμονωμένες κάρτες άνοιξέ τες από τη λίστα." : ""}</p>`;
+  $("[data-ts-study]", el).onclick = () => { PL.queue = full.length ? full : [t.parts[0].key]; location.hash = testHref(t, t.parts.find(p => p.key === PL.queue[0])); };
 }
 
 /* Επίπεδα γνώσης. Ο μαθητής διαβάζει όπως τον βολεύει (κάρτες, βιβλίο, σημειώσεις) και εδώ ελέγχει τι ξέρει.
