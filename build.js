@@ -217,6 +217,12 @@ for (const [k, g] of Object.entries(G)) {
   for (const n of ["sg", "pl"]) if (g[n] && g[n].length !== 5) throw new Error(`_grammar.json: ${k}.${n}: θέλει 5 πτώσεις`);
 }
 
+// Όροι γραμματικής και συντακτικού (content/_terms.json): κάθε όρος γίνεται κουμπί στο «λέξη λέξη» και στη σύνταξη.
+const TERMS = JSON.parse(fs.readFileSync(path.join(dir, "_terms.json"), "utf8"));
+for (const [k, t] of Object.entries(TERMS)) {
+  if (!t.h || !t.t || !t.match?.length) throw new Error(`_terms.json: ο όρος "${k}" θέλει h, t και match`);
+}
+
 const C = {};
 for (const f of fs.readdirSync(dir).filter(f => f.endsWith(".json") && !f.startsWith("_")).sort()) {
   // Το όνομα του αρχείου είναι η ενότητα του βιβλίου: B-math-0-2.json -> "B/math/0/2"
@@ -256,6 +262,11 @@ for (const f of fs.readdirSync(dir).filter(f => f.endsWith(".json") && !f.starts
       for (const [gr, mean] of p.w) {
         if (!mean) throw new Error(`${f}: text ${i + 1}: «${gr}» χωρίς σημασία`);
         for (const t of gr.normalize("NFC").split(/[\s,.;·:«»!?–\[\]…]+/).filter(Boolean)) if (!words.includes(t)) throw new Error(`${f}: text ${i + 1}: το «${t}» δεν είναι στο κομμάτι`);
+      }
+      // "syn": η σύνταξη του κομματιού, [ρόλος, λέξεις του κομματιού, εξήγηση]· ό,τι είναι σε παρένθεση εννοείται
+      for (const [role, gr, note] of p.syn || []) {
+        if (!role || !gr || !note) throw new Error(`${f}: text ${i + 1}: κάθε γραμμή του syn θέλει [ρόλος, λέξεις, εξήγηση]`);
+        for (const t of gr.normalize("NFC").replace(/\([^)]*\)/g, " ").split(/[\s,.;·:«»!?–\[\]…\/]+/).filter(Boolean)) if (!words.includes(t)) throw new Error(`${f}: text ${i + 1}, syn: το «${t}» δεν είναι στο κομμάτι`);
       }
     });
   }
@@ -315,7 +326,7 @@ tests.forEach(t => {
 });
 
 const template = fs.readFileSync(path.join(__dirname, "src", "template.html"), "utf8");
-for (const mark of ["/*__DATA__*/", "/*__GRAMMAR__*/", "/*__BOOK_HELP__*/", "/*__TESTS__*/", "/*__CATALOGUE_JS__*/", "/*__CATALOGUE_CSS__*/", "/*__PLAN_JS__*/", "/*__PLAN_CSS__*/", "/*__TOUR_JS__*/", "/*__TOUR_CSS__*/"]) {
+for (const mark of ["/*__DATA__*/", "/*__GRAMMAR__*/", "/*__TERMS__*/", "/*__BOOK_HELP__*/", "/*__TESTS__*/", "/*__CATALOGUE_JS__*/", "/*__CATALOGUE_CSS__*/", "/*__PLAN_JS__*/", "/*__PLAN_CSS__*/", "/*__TOUR_JS__*/", "/*__TOUR_CSS__*/"]) {
   if (!template.includes(mark)) throw new Error(`Το template δεν έχει το ${mark}`);
 }
 const json = value => JSON.stringify(value).replace(/</g, "\\u003c");
@@ -324,7 +335,7 @@ const catalogueJS = fs.readFileSync(path.join(__dirname,"src","catalogue.js"),"u
   .replace("/*__OFFICIAL_CONTENT__*/", () => json(officialContent))
   .replace("/*__EXPLANATIONS__*/", () => json(explanations))
   .replace("/*__EUROPE_MAP__*/", () => usesMap ? fs.readFileSync(path.join(__dirname, "src", "europe-map.json"), "utf8").trim() : "null");
-const html = template.replace("/*__DATA__*/", () => json(C)).replace("/*__GRAMMAR__*/", () => json(G)).replace("/*__BOOK_HELP__*/", () => json(bookHelp)).replace("/*__TESTS__*/", () => json(tests))
+const html = template.replace("/*__DATA__*/", () => json(C)).replace("/*__GRAMMAR__*/", () => json(G)).replace("/*__TERMS__*/", () => json(TERMS)).replace("/*__BOOK_HELP__*/", () => json(bookHelp)).replace("/*__TESTS__*/", () => json(tests))
   .replace("/*__CATALOGUE_JS__*/", () => catalogueJS)
   .replace("/*__CATALOGUE_CSS__*/", () => fs.readFileSync(path.join(__dirname,"src","catalogue.css"),"utf8"))
   .replace("/*__APP_CSS__*/", () => fs.readFileSync(path.join(__dirname,"src","app.css"),"utf8"))

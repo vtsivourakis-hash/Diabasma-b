@@ -357,3 +357,8 @@ a.dm-box:hover{border-color:var(--accent)}
 .bd-tabs b{color:var(--hi)}
 .bd-all{display:block;margin:2px 0 8px auto}
 .pl-ut small{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+.tx-term{all:unset;cursor:pointer;color:var(--ink);text-decoration:underline dotted;text-underline-offset:3px}
+.tx-term:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+.tx-syn small{font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--hi)}
+.tx-syn span{color:var(--text)}
+.tx-k{display:block;margin:0 0 8px}

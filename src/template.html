@@ -570,6 +570,7 @@ const C = /*__DATA__*/;
 /* Μια ενότητα του content/ μπορεί να καλύπτει κι άλλες ενότητες του ίδιου βιβλίου ("also"): ενότητα → κύρια ενότητα */
 const ALIAS = Object.fromEntries(Object.entries(C).flatMap(([k, c]) => (c.also || []).map(a => [a, k])));
 const GR = /*__GRAMMAR__*/;
+const TERMS = /*__TERMS__*/;
 /* Βοήθεια για τις ασκήσεις του βιβλίου που προτείνει η ύλη. Η εκφώνηση δεν αντιγράφεται: δείχνουμε πού είναι στο βιβλίο,
    δίνουμε βοήθειες μία μία (κάποιες είναι επιλογή του μαθητή) και, όταν το ζητήσει, μόνο το τελικό αποτέλεσμα για έλεγχο. */
 const BOOK_HELP = /*__BOOK_HELP__*/;
@@ -1206,6 +1207,28 @@ function openGrammar(key){
   $("#gsheet .gbody").scrollTop = 0;
   if(!d.open){ d.showModal(); history.pushState({gram:key}, ""); }
 }
+/* Όροι γραμματικής και συντακτικού (content/_terms.json): στο ίδιο φύλλο με τους πίνακες */
+const TERM_RX = (() => {
+  const list = Object.entries(TERMS).flatMap(([k, t]) => t.match.map(m => [m, k])).sort((a, b) => b[0].length - a[0].length);
+  return { re:new RegExp("(" + list.map(([m]) => m.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|") + ")(?!\\p{L})", "gu"), key:Object.fromEntries(list) };
+})();
+/* Κάνει κουμπιά τους όρους σε κείμενο που έχει ήδη περάσει από esc. Κάθε όρος μόνο την πρώτη φορά στο seen. */
+function linkTerms(html, seen){
+  return html.replace(TERM_RX.re, m => { const k = TERM_RX.key[m]; if(!k || seen.has(k)) return m; seen.add(k); return `<button type="button" class="tx-term" data-term="${k}">${m}</button>`; });
+}
+function openTerm(key){
+  const t = TERMS[key], d = $("#gsheet");
+  if(!t) return;
+  $("#gsheet .gbody").innerHTML = `<div class="ghead"><span class="ref">Γραμματική και συντακτικό</span><h2>${esc(t.h)}</h2></div>
+    <p class="gnote">${esc(t.t)}</p>
+    ${[["Πώς το βρίσκεις", t.find], ["Πότε μπαίνει", t.when], ["Πώς το μεταφράζεις", t.tr], ["Παράδειγμα", t.ex]].filter(x => x[1]).map(([h, v]) => `<div class="pp"><b>${h}</b><p>${esc(v)}</p></div>`).join("")}`;
+  $("#gsheet .gbody").scrollTop = 0;
+  if(!d.open){ d.showModal(); history.pushState({gram:key}, ""); }
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-term]");
+  if(b && TERMS[b.dataset.term]){ e.preventDefault(); openTerm(b.dataset.term); }
+});
 function closeGrammar(){ if(history.state && history.state.gram) history.back(); else $("#gsheet").close(); }
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-g]");

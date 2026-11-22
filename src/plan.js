@@ -968,6 +968,9 @@ function unitEnd(key){
 function textView(key, at){
   const el = $("#plan"), tx = unitData(key).text, n = tx.parts.length, s = unitState(key), pos = Math.max(0, Math.min(+at || 0, n));
   const lv = s.txLv || (s.txLv = {}), l = lv[pos] || 0, pg = s.pg || (s.pg = {}), pgKey = "tx:" + pos + ":" + l;
+  /* Τα βήματα κάθε κομματιού: το αρχαίο, λέξη λέξη, η σύνταξη (αν υπάρχει), η μετάφραση */
+  const steps = pos < n ? ["gr", "w", ...(tx.parts[pos].syn ? ["syn"] : []), "tr"] : [], step = steps[l], last = steps.length - 1;
+  const seen = new Set(), LT = t => linkTerms(esc(t), seen);
   const inRun = runAt(`${key}|t|${pos}`), back = inRun ? inRun.base : PL.testFrom ? "#test/" + PL.testFrom : "#study/" + key;
   let body = "", act = "";
   if(pos === n){
@@ -980,12 +983,13 @@ function textView(key, at){
     body = `<span class="fc-k k-think">Το κείμενο · ${pos + 1} από ${n}</span>
       ${pos === 0 && l === 0 && tx.intro ? `<p class="tx-note">${esc(tx.intro)}</p>` : ""}
       ${p.who ? `<p class="tx-who">${esc(p.who)}</p>` : ""}<p class="tx-gr" lang="grc">${esc(p.gr)}</p>
-      ${l === 0 ? `<p class="rc-prompt">Διάβασέ το δυνατά. Ποιες λέξεις καταλαβαίνεις ήδη; Μετά δες τες μία μία.</p>` : ""}
-      ${l === 1 ? `<div class="tx-w">${p.w.map(([g, m]) => `<div><b lang="grc">${esc(g)}</b><span>${esc(m)}</span></div>`).join("")}</div><p class="rc-prompt">Πες τη μετάφραση στο μυαλό σου και μετά δες τη δική μας.</p>` : ""}
-      ${l === 2 ? `<div class="box defb"><b>Η μετάφραση</b><p class="fc-big">${esc(p.tr)}</p></div>${p.note ? `<p class="tx-note">${esc(p.note)}</p>` : ""}` : ""}`;
-    act = l === 0 ? `<button class="btn" data-tx="up">Λέξη λέξη</button>`
-      : l === 1 ? `<button class="btn" data-tx="up">Η μετάφραση</button><button class="btn ghost" data-tx="down">Ξανά το αρχαίο</button>`
-      : `<button class="btn" data-tx="next">${inRun ? "Επόμενο" : pos < n - 1 ? "Επόμενο κομμάτι" : "Όλο το κείμενο"}</button><button class="btn ghost" data-tx="down">Ξανά οι λέξεις</button>`;
+      ${step === "gr" ? `<p class="rc-prompt">Διάβασέ το δυνατά. Ποιες λέξεις καταλαβαίνεις ήδη; Μετά δες τες μία μία.</p>` : ""}
+      ${step === "w" ? `<div class="tx-w">${p.w.map(([g, m]) => `<div><b lang="grc">${esc(g)}</b><span>${LT(m)}</span></div>`).join("")}</div><p class="rc-prompt">${p.syn ? "Βρες το ρήμα και ποιος κάνει τι. Μετά δες πώς δένει η πρόταση." : "Πες τη μετάφραση στο μυαλό σου και μετά δες τη δική μας."}</p>` : ""}
+      ${step === "syn" ? `<span class="fc-k k-def tx-k">Γραμματική και συντακτικό</span><div class="tx-w tx-syn">${p.syn.map(([r, g, x]) => `<div><small>${LT(r)}</small><b lang="grc">${esc(g)}</b><span>${LT(x)}</span></div>`).join("")}</div><p class="rc-prompt">Πάτα έναν όρο για να δεις τι είναι. Μετά πες τη μετάφραση στο μυαλό σου.</p>` : ""}
+      ${step === "tr" ? `<div class="box defb"><b>Η μετάφραση</b><p class="fc-big">${esc(p.tr)}</p></div>${p.note ? `<p class="tx-note">${esc(p.note)}</p>` : ""}` : ""}`;
+    const label = { w:"Λέξη λέξη", syn:"Γραμματική και συντακτικό", tr:"Η μετάφραση" }, back = { gr:"Ξανά το αρχαίο", w:"Ξανά οι λέξεις", syn:"Ξανά η σύνταξη" };
+    act = l < last ? `<button class="btn" data-tx="up">${label[steps[l + 1]]}</button>${l ? `<button class="btn ghost" data-tx="down">${back[steps[l - 1]]}</button>` : ""}`
+      : `<button class="btn" data-tx="next">${inRun ? "Επόμενο" : pos < n - 1 ? "Επόμενο κομμάτι" : "Όλο το κείμενο"}</button><button class="btn ghost" data-tx="down">${back[steps[l - 1]]}</button>`;
   }
   const anim = CALM.matches ? "" : s.anim;
   s.anim = "";
@@ -1008,7 +1012,7 @@ function textView(key, at){
   const go = d => {
     const f = PL.fit, p = pg[pgKey] || 0;
     if(f && f.pages > 1 && p + d >= 0 && p + d < f.pages){ pg[pgKey] = p + d; s.anim = d > 0 ? "in-next" : "in-prev"; textView(key, pos); return true; }
-    if(d > 0){ if(pos === n) return false; if(l < 2) acts.up(); else acts.next(); return true; }
+    if(d > 0){ if(pos === n) return false; if(l < last) acts.up(); else acts.next(); return true; }
     if(l > 0 && pos < n){ acts.down(); return true; }
     if(inRun){ s.anim = "in-prev"; return runStep(-1); }
     if(pos === 0) return false;
