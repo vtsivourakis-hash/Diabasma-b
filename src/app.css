@@ -13,6 +13,7 @@
 .app-download{margin:0 0 18px;padding:14px 16px;border:1px solid var(--line);border-radius:16px;background:var(--card);display:flex;align-items:center;gap:12px}
 .app-download p{margin:3px 0 0;color:var(--muted);font-size:12px}
 .app-download>div{flex:1}
+.app-download[hidden]{display:none}
 .app-dialog{width:calc(100% - 32px);max-width:560px;max-height:85dvh;overflow:auto;border:1px solid var(--line);border-radius:22px;padding:24px;background:var(--card);color:var(--text)}
 .app-dialog::backdrop{background:rgba(0,0,0,.65)}
 .app-dialog h2{font-size:24px;margin:10px 0}

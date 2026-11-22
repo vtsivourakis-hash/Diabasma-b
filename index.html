@@ -591,6 +591,7 @@ footer p{margin:0 0 6px}
 .app-download{margin:0 0 18px;padding:14px 16px;border:1px solid var(--line);border-radius:16px;background:var(--card);display:flex;align-items:center;gap:12px}
 .app-download p{margin:3px 0 0;color:var(--muted);font-size:12px}
 .app-download>div{flex:1}
+.app-download[hidden]{display:none}
 .app-dialog{width:calc(100% - 32px);max-width:560px;max-height:85dvh;overflow:auto;border:1px solid var(--line);border-radius:22px;padding:24px;background:var(--card);color:var(--text)}
 .app-dialog::backdrop{background:rgba(0,0,0,.65)}
 .app-dialog h2{font-size:24px;margin:10px 0}
@@ -963,7 +964,7 @@ a.dm-box:hover{border-color:var(--accent)}
 
 <nav class="app-toolbar" aria-label="Γρήγορη πλοήγηση"><button class="app-tool" id="app-back" type="button" aria-label="Πίσω">←</button><a class="app-tool" id="app-home" href="#tomorrow">Αρχική</a><span class="app-location" id="app-location"></span><button class="app-tool" id="app-voice" type="button" aria-pressed="false" aria-label="Διάβασε το τρέχον περιεχόμενο δυνατά">🔊 Άκουσε</button><button class="app-tool" id="app-search" type="button">Αναζήτηση</button><a class="app-tool" href="#timer" aria-label="Χρονόμετρο μελέτης">25΄</a></nav>
   <a id="app-resume" class="app-resume" hidden></a>
-  <div class="app-download"><div><strong>Το Διάβασμα ως εφαρμογή</strong><p>Δοκιμαστική έκδοση · δικό της παράθυρο, εύκολη πλοήγηση.</p></div><button class="app-tool" id="app-open" type="button">Λήψη app</button></div>
+  <div class="app-download" hidden><div><strong>Το Διάβασμα ως εφαρμογή</strong><p>Δοκιμαστική έκδοση · δικό της παράθυρο, εύκολη πλοήγηση.</p></div><button class="app-tool" id="app-open" type="button">Λήψη app</button></div>
   <dialog class="app-dialog" id="app-download" aria-labelledby="app-dialog-title"><button class="app-tool app-dialog-close" id="app-close" type="button" aria-label="Κλείσιμο">✕</button><span class="ref" id="app-mode">Δοκιμαστική έκδοση</span><h2 id="app-dialog-title">Το διάβασμά σου, σε δικό του παράθυρο.</h2><p>Αρχική, πίσω, αναζήτηση και χρονόμετρο με ένα πάτημα. Συνέχισε από την τελευταία ενότητα που άνοιξες.</p><a class="btn" href="downloads/Diabasma-test-windows.zip" download>Λήψη για Windows · δοκιμαστική</a><ol><li>Κατέβασε και αποσυμπίεσε το ZIP σε έναν φάκελο.</li><li>Άνοιξε το <b>Start-Diabasma.cmd</b>. Χρειάζεται Microsoft Edge ή Google Chrome και ανοίγει σε ξεχωριστό παράθυρο.</li><li>Οι ενσωματωμένες ενότητες δουλεύουν χωρίς internet. Τα εξωτερικά βιβλία χρειάζονται σύνδεση ή δικό σου PDF.</li></ol><button class="btn ghost" id="app-install" type="button" hidden>Εγκατάσταση σε αυτή τη συσκευή</button><p id="app-install-status" role="status"></p><details><summary>Κινητό ή άλλος υπολογιστής</summary><p>Άνοιξε το site και διάλεξε «Εγκατάσταση εφαρμογής» από το μενού του browser. Σε iPhone/iPad: Safari → Κοινή χρήση → Προσθήκη στην οθόνη Αφετηρίας.</p></details><p>Η τοπική έκδοση είναι ένα δοκιμαστικό στιγμιότυπο. Για νέο υλικό κατέβασε ξανά το ZIP. Η πρόοδος μένει στη συσκευή και δεν μεταφέρεται αυτόματα από το site.</p></dialog>
 
   <nav class="seg grade-nav" id="grade-nav" aria-label="Επιλογή τάξης"></nav>
