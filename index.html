@@ -3121,6 +3121,14 @@ function renderChooser(sid){
    Όταν μια ερώτηση βγει λάθος, το «Πες το μου αλλιώς» (alt) δίνει άλλη ματιά, το συχνό λάθος και μια νέα ερώτηση.
    Λυμένες και ερωτήσεις χωρίς "topic" μπαίνουν σε μια τελευταία κάρτα «Όλη η ενότητα».
    Κατάσταση ανά κάρτα (diab-cards): 1 = το κατάλαβες, 2 = θέλει μια ματιά ακόμα. */
+/* Οδηγίες για πλήκτρα μόνο όπου υπάρχει πληκτρολόγιο και ποντίκι. Στην αφή μια φορά ανά επίσκεψη «Σύρε…»,
+   στην πρώτη κάρτα που ανοίγει· φεύγει με το πρώτο σύρσιμο ή την πρώτη αλλαγή μέρους. Δεν αποθηκεύεται τίποτα. */
+const HAS_KEYS = matchMedia("(hover:hover) and (pointer:fine)").matches;
+function touchHint(flag, at, text){
+  if(HAS_KEYS) return "";
+  if(PL[flag] === undefined) PL[flag] = at;
+  return PL[flag] === at ? `<p class="fc-hint">${text}</p>` : "";
+}
 const PART_NAME = {think:"Σκέψου πρώτα", idea:"Η ιδέα", life:"Στη ζωή", fig:"Στο σχήμα", try:"Δοκίμασε", check:"Το κατάλαβες;", def:"Για το διαγώνισμα", voc:"Λέξεις"};
 const deckCache = {};
 function deckOf(key){
@@ -3318,7 +3326,7 @@ function cardView(key, i){
     <div class="pl-bar"><h2 class="pl-where">Κάρτα ${i + 1} από ${deck.length}${s.review ? " · ξανά" : ""}</h2><span class="pl-tools"><button class="pl-round" data-pl-voice aria-label="Διάβασέ το μου φωναχτά"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg></button><button class="pl-round" data-fc="close" aria-label="Πίσω στις κάρτες"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></span></div>
     <section class="fc-body fc-read p-${part}${neutral ? " fc-neutral" : ""}${anim ? " " + anim : ""}"><div class="fc-in">${body}</div></section>
     <div class="fc-actions">${sec}${prim}</div>
-    <p class="fc-hint">← → τα μέρη της κάρτας · ↑ η επόμενη κάρτα</p>
+    ${HAS_KEYS ? `<p class="fc-hint">← → τα μέρη της κάρτας · ↓ η επόμενη κάρτα</p>` : touchHint("swipeHint", key + "/" + i, "Σύρε αριστερά για το επόμενο μέρος, πάνω για την επόμενη κάρτα")}
     <div class="fc-rotate" aria-hidden="true"><p><span>📱</span>Γύρισε το κινητό όρθιο για να διαβάσεις την κάρτα.</p></div>
   </div>`;
 
@@ -3327,13 +3335,13 @@ function cardView(key, i){
     const f = PL.fit, p = pg[pgKey] || 0;
     if(f && f.pages > 1 && p + d >= 0 && p + d < f.pages){ pg[pgKey] = p + d; s.anim = a; cardView(key, i); return true; }
     const j = pi + d; if(alt || j < 0 || j >= parts.length || s.review && parts[j] === "think") return false;
-    s.part[i] = j; s.anim = a; pg[i + ":" + parts[j]] = d > 0 ? 0 : 99; cardView(key, i); return true;
+    PL.swipeHint = null; s.part[i] = j; s.anim = a; pg[i + ":" + parts[j]] = d > 0 ? 0 : 99; cardView(key, i); return true;
   };
   const card = d => {
     const j = d > 0 ? nextCard : prevCard;
     if(d > 0 && j === undefined){ location.replace("#study/" + key + "/end"); return true; }
     if(j === null || j === undefined) return false;
-    s.anim = d > 0 ? "in-up" : "in-down";
+    PL.swipeHint = null; s.anim = d > 0 ? "in-up" : "in-down";
     if(s.alt[i]) s.alt[i].open = false;
     location.replace("#study/" + key + "/c/" + j);
     return true;
@@ -3677,12 +3685,12 @@ function unitRecall(key, at){
     <div class="pl-bar"><h2 class="pl-where">${pos < n ? `Κανόνας ${pos + 1} από ${n}` : "Τέλος"}</h2><span class="pl-tools"><button class="pl-round" data-pl-voice aria-label="Διάβασέ το μου φωναχτά"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg></button><button class="pl-round" data-rc="end" aria-label="Πίσω στο τέλος ενότητας"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></span></div>
     <section class="fc-body fc-read p-recall${anim ? " " + anim : ""}"><div class="fc-in">${body}</div></section>
     <div class="fc-actions">${act}</div>
-    <p class="fc-hint">${pos < n && !r.shown[pos] ? "→ δείξε μου · ← ο προηγούμενος" : "← ο προηγούμενος κανόνας"}</p>
+    ${HAS_KEYS ? `<p class="fc-hint">${pos < n && !r.shown[pos] ? "→ δείξε μου · ← ο προηγούμενος" : "← ο προηγούμενος κανόνας"}</p>` : pos < n && !r.shown[pos] ? touchHint("rcHint", key, "Σύρε αριστερά για να δεις τον κανόνα") : ""}
   </div>`;
   const next = () => { s.anim = "in-next"; location.hash = "#study/" + key + "/recall/" + (pos + 1); };
   const rate = v => { r.res[pos] = v; if(v !== "ok") markCard(key, r.list[pos], 2); next(); };
   const acts = {
-    show:() => { r.shown[pos] = true; s.anim = "in-next"; pg[pgKey] = 0; unitRecall(key, pos); fcReveal(".defb"); },
+    show:() => { PL.rcHint = null; r.shown[pos] = true; s.anim = "in-next"; pg[pgKey] = 0; unitRecall(key, pos); fcReveal(".defb"); },
     ok:() => rate("ok"), half:() => rate("half"), no:() => rate("no"),
     again:() => { s.recall = { list:r.list.filter((x, j) => r.res[j] && r.res[j] !== "ok"), shown:{}, res:{}, base:r.base ? r.base + pos + 1 : null }; s.anim = "in-next"; location.hash = "#study/" + key + "/recall/0"; },
     end
