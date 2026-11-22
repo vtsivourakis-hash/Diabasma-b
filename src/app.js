@@ -35,11 +35,11 @@ function updateAppNavigation(){
   document.querySelector('#app-location').textContent = heading ? heading.textContent : getGrade(selectedGrade).label;
   const isLesson = /^#lesson\//.test(hash);
   if(isLesson && heading) store.set('diab-last-lesson', {hash,title:heading.textContent});
-  const last = store.get('diab-last-lesson', null), resume = document.querySelector('#app-resume');
-  const valid = last && typeof last.hash === 'string' && /^#lesson\/[ABC]\/[a-z-]+\/\d+\/\d+$/.test(last.hash) && typeof last.title === 'string';
-  // «Συνέχισε» μόνο στο «Αύριο» (η αρχική), και όχι όταν δείχνει την ίδια σελίδα
-  resume.hidden = !valid || last.hash === hash || (location.hash || '#tomorrow') !== '#tomorrow';
-  if(valid){resume.href = last.hash;resume.textContent = 'Συνέχισε: ' + last.title;}
+}
+// Το τελευταίο μάθημα (#lesson/…) που άνοιξε ο μαθητής, για το «Συνέχισε» στο «Αύριο». Μόνο έγκυρες διαδρομές.
+function lastLesson(){
+  const last = store.get('diab-last-lesson', null);
+  return last && typeof last.hash === 'string' && /^#lesson\/[ABC]\/[a-z-]+\/\d+\/\d+$/.test(last.hash) && typeof last.title === 'string' ? last : null;
 }
 window.addEventListener('hashchange', updateAppNavigation);
 updateInstall();

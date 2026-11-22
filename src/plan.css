@@ -329,3 +329,7 @@ a.dm-box:hover{border-color:var(--accent)}
 .k-back{color:var(--c-teal)}
 .pl-back-u{display:block;margin-top:2px;font-size:12.5px;color:var(--muted)}
 .pl-back-end{margin:8px 0 0;font-size:17px;font-weight:800}
+/* «Συνέχισε» στο «Αύριο»: μία γραμμή κάτω από τον τίτλο */
+.pl-resume{margin:0 0 14px;min-height:0;padding:10px 14px}
+.pl-resume .pl-t small{margin:0 0 1px}
+.pl-resume .pl-t b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

@@ -600,8 +600,6 @@ footer p{margin:0 0 6px}
 #app-voice[aria-pressed="true"]{background:var(--text);color:var(--paper)}
 .voice-status{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .app-location{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;color:var(--muted)}
-.app-resume{display:block;margin-bottom:16px;padding:12px 14px;background:var(--card2);border:1px solid var(--line);border-radius:12px;font-size:14px;text-decoration:none}
-.app-resume[hidden]{display:none}
 .app-download{margin:0 0 18px;padding:14px 16px;border:1px solid var(--line);border-radius:16px;background:var(--card);display:flex;align-items:center;gap:12px}
 .app-download p{margin:3px 0 0;color:var(--muted);font-size:12px}
 .app-download>div{flex:1}
@@ -614,7 +612,7 @@ footer p{margin:0 0 6px}
 .app-dialog .btn[hidden]{display:none}
 .app-dialog-close{float:right}
 @media(min-width:1000px){body{padding-bottom:0;padding-left:210px}.wrap{max-width:980px;padding:24px 32px}nav.tabs{right:auto;top:0;width:210px;border-top:0;border-right:1px solid var(--line);padding:110px 16px 24px;flex-direction:column;justify-content:flex-start;gap:10px}.tab{flex:0 0 auto;max-width:none;flex-direction:row;gap:12px;padding:14px;font-size:15px;border-radius:12px}.tab[aria-current="page"]{background:var(--glow)}.tab[aria-current="page"]::before{display:none}.subject-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.app-toolbar{top:0}.app-location{font-size:14px}}
-@media(max-width:639px){.app-toolbar{padding:3px 0;margin-bottom:10px}.app-tool{min-height:40px;padding-top:6px;padding-bottom:6px}.app-resume{margin-bottom:10px;padding:8px 12px;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
+@media(max-width:639px){.app-toolbar{padding:3px 0;margin-bottom:10px}.app-tool{min-height:40px;padding-top:6px;padding-bottom:6px}}
 @media(max-width:420px){.app-tool{padding:8px 10px}.app-location{display:none}.app-toolbar{justify-content:space-between}.app-download{align-items:flex-start}}
 
 /* «Άκουσε»: όσο διαβάζει, η πάνω μπάρα γίνεται χειριστήριο. Η πρόταση που ακούγεται φωτίζεται. */
@@ -968,6 +966,10 @@ a.dm-box:hover{border-color:var(--accent)}
 .k-back{color:var(--c-teal)}
 .pl-back-u{display:block;margin-top:2px;font-size:12.5px;color:var(--muted)}
 .pl-back-end{margin:8px 0 0;font-size:17px;font-weight:800}
+/* «Συνέχισε» στο «Αύριο»: μία γραμμή κάτω από τον τίτλο */
+.pl-resume{margin:0 0 14px;min-height:0;padding:10px 14px}
+.pl-resume .pl-t small{margin:0 0 1px}
+.pl-resume .pl-t b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* Ξενάγηση: σκοτεινή οθόνη με «τρύπα» γύρω από το στοιχείο, και ένα συννεφάκι με το κείμενο */
 .tour{position:fixed;inset:0;z-index:60;pointer-events:none}
@@ -1010,7 +1012,6 @@ a.dm-box:hover{border-color:var(--accent)}
   </nav>
 
 <nav class="app-toolbar" aria-label="Γρήγορη πλοήγηση"><button class="app-tool" id="app-back" type="button" aria-label="Πίσω">←</button><span class="app-location" id="app-location"></span><button class="app-tool" id="app-voice" type="button" aria-pressed="false" aria-label="Διάβασε το τρέχον περιεχόμενο δυνατά">🔊 Άκουσε</button><button class="app-tool" id="app-search" type="button">Αναζήτηση</button><a class="app-tool" href="#timer" aria-label="Χρονόμετρο μελέτης">25΄</a></nav>
-  <a id="app-resume" class="app-resume" hidden></a>
   <div class="app-download" hidden><div><strong>Το Διάβασμα ως εφαρμογή</strong><p>Δοκιμαστική έκδοση · δικό της παράθυρο, εύκολη πλοήγηση.</p></div><button class="app-tool" id="app-open" type="button">Λήψη app</button></div>
   <dialog class="app-dialog" id="app-download" aria-labelledby="app-dialog-title"><button class="app-tool app-dialog-close" id="app-close" type="button" aria-label="Κλείσιμο">✕</button><span class="ref" id="app-mode">Δοκιμαστική έκδοση</span><h2 id="app-dialog-title">Το διάβασμά σου, σε δικό του παράθυρο.</h2><p>Αρχική, πίσω, αναζήτηση και χρονόμετρο με ένα πάτημα. Συνέχισε από την τελευταία ενότητα που άνοιξες.</p><a class="btn" href="downloads/Diabasma-test-windows.zip" download>Λήψη για Windows · δοκιμαστική</a><ol><li>Κατέβασε και αποσυμπίεσε το ZIP σε έναν φάκελο.</li><li>Άνοιξε το <b>Start-Diabasma.cmd</b>. Χρειάζεται Microsoft Edge ή Google Chrome και ανοίγει σε ξεχωριστό παράθυρο.</li><li>Οι ενσωματωμένες ενότητες δουλεύουν χωρίς internet. Τα εξωτερικά βιβλία χρειάζονται σύνδεση ή δικό σου PDF.</li></ol><button class="btn ghost" id="app-install" type="button" hidden>Εγκατάσταση σε αυτή τη συσκευή</button><p id="app-install-status" role="status"></p><details><summary>Κινητό ή άλλος υπολογιστής</summary><p>Άνοιξε το site και διάλεξε «Εγκατάσταση εφαρμογής» από το μενού του browser. Σε iPhone/iPad: Safari → Κοινή χρήση → Προσθήκη στην οθόνη Αφετηρίας.</p></details><p>Η τοπική έκδοση είναι ένα δοκιμαστικό στιγμιότυπο. Για νέο υλικό κατέβασε ξανά το ZIP. Η πρόοδος μένει στη συσκευή και δεν μεταφέρεται αυτόματα από το site.</p></dialog>
 
@@ -2448,11 +2449,11 @@ function updateAppNavigation(){
   document.querySelector('#app-location').textContent = heading ? heading.textContent : getGrade(selectedGrade).label;
   const isLesson = /^#lesson\//.test(hash);
   if(isLesson && heading) store.set('diab-last-lesson', {hash,title:heading.textContent});
-  const last = store.get('diab-last-lesson', null), resume = document.querySelector('#app-resume');
-  const valid = last && typeof last.hash === 'string' && /^#lesson\/[ABC]\/[a-z-]+\/\d+\/\d+$/.test(last.hash) && typeof last.title === 'string';
-  // «Συνέχισε» μόνο στο «Αύριο» (η αρχική), και όχι όταν δείχνει την ίδια σελίδα
-  resume.hidden = !valid || last.hash === hash || (location.hash || '#tomorrow') !== '#tomorrow';
-  if(valid){resume.href = last.hash;resume.textContent = 'Συνέχισε: ' + last.title;}
+}
+// Το τελευταίο μάθημα (#lesson/…) που άνοιξε ο μαθητής, για το «Συνέχισε» στο «Αύριο». Μόνο έγκυρες διαδρομές.
+function lastLesson(){
+  const last = store.get('diab-last-lesson', null);
+  return last && typeof last.hash === 'string' && /^#lesson\/[ABC]\/[a-z-]+\/\d+\/\d+$/.test(last.hash) && typeof last.title === 'string' ? last : null;
 }
 window.addEventListener('hashchange', updateAppNavigation);
 updateInstall();
@@ -2867,6 +2868,14 @@ function bindLookBack(el){
   if(nx) nx.onclick = () => { const z = PL.back; if(z.qi < z.z.qs.length - 1) z.qi++; else z.fin = true; renderTomorrow(); };
 }
 
+/* «Συνέχισε»: το τελευταίο μάθημα που άνοιξε ο μαθητής στον κατάλογο (diab-last-lesson), κάτω από τον τίτλο του «Αύριο» */
+function resumeHtml(){
+  const last = lastLesson();
+  if(!last) return "";
+  const sid = last.hash.split("/")[2];
+  return `<a class="pl-row pl-resume" href="${esc(last.hash)}">${subjectIcon(sid)}<span class="pl-t"><small>Συνέχισε</small><b>${esc(last.title)}</b></span><span class="pl-go" aria-hidden="true">›</span></a>`;
+}
+
 /* Η αρχική: τι έχεις την επόμενη σχολική μέρα και ποια διαγωνίσματα έρχονται */
 function renderTomorrow(){
   const el = $("#plan"), date = nextSchoolDay(), wd = dayAt(date).getDay(), soon = daysTo(date) === 1, day = dayPlan(date), sched = loadSchedule();
@@ -2890,6 +2899,7 @@ function renderTomorrow(){
       <div class="row"><button class="btn" type="submit">Πρόσθεσε</button><button class="btn ghost" type="button" data-pl-cancel>Άκυρο</button></div>
     </form>` : `<button class="pl-add" data-pl-add>+ Κάτι άλλο: διάβασμα ή διαγώνισμα</button>`;
   el.innerHTML = `<div class="hero"><span class="ref">${dayName(date)}</span><h2 class="ct">${soon ? "Για αύριο" : "Για " + WEEK_ACC[wd]}</h2><p>${lead}</p></div>
+    ${resumeHtml()}
     ${lookBackHtml()}
     ${n ? `<ul class="pl-list">${day.ids.map(sid => row(sid)).join("")}</ul>` : ""}
     ${all.length ? `<h3 class="pl-h">Μαθήματα της ${getGrade(selectedGrade).label.split(" ")[0]}</h3><ul class="pl-list">${all.map(sid => row(sid, false)).join("")}</ul>` : ""}

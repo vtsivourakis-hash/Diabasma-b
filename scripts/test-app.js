@@ -31,11 +31,10 @@ const context=vm.createContext({document:{querySelector:q=>q==='.panel:not([hidd
 vm.runInContext(fs.readFileSync(path.join(root,'src/app.js'),'utf8'),context);
 vm.runInContext('updateAppNavigation()',context);assert.equal(element('#app-back').disabled,true);
 context.location.hash='#lesson/A/home-economics/0/0';heading.textContent='Η οικογένεια';vm.runInContext('updateAppNavigation()',context);
-assert.equal(element('#app-back').disabled,false);assert.equal(element('#app-resume').hidden,true);
-context.location.hash='#class/B';vm.runInContext('updateAppNavigation()',context);assert.equal(element('#app-resume').hidden,true);
-context.location.hash='#tomorrow';vm.runInContext('updateAppNavigation()',context);
-assert.equal(element('#app-resume').hidden,false);assert.equal(element('#app-resume').href,'#lesson/A/home-economics/0/0');
-saved.set('diab-last-lesson',{hash:'javascript:alert(1)',title:'Unsafe'});vm.runInContext('updateAppNavigation()',context);assert.equal(element('#app-resume').hidden,true);
+assert.equal(element('#app-back').disabled,false);
+context.location.hash='#class/B';vm.runInContext('updateAppNavigation()',context);
+assert.equal(vm.runInContext('lastLesson()',context).hash,'#lesson/A/home-economics/0/0');
+saved.set('diab-last-lesson',{hash:'javascript:alert(1)',title:'Unsafe'});assert.equal(vm.runInContext('lastLesson()',context),null);
 element('#app-open').onclick();assert.equal(element('#app-download').open,true);element('#app-close').onclick();assert.equal(element('#app-download').open,false);
 let prevented=false;listeners.beforeinstallprompt[0]({preventDefault(){prevented=true;},async prompt(){prompts++;},userChoice:Promise.resolve({outcome:'dismissed'})});assert.ok(prevented);assert.equal(element('#app-install').hidden,false);
 module.exports = element('#app-install').onclick().then(()=>{assert.equal(prompts,1);assert.equal(element('#app-install').hidden,true);console.log('OK: portable package, bundled scripts, safe resume routes, back state, dialog and install lifecycle');});

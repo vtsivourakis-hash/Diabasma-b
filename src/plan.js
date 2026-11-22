@@ -121,6 +121,14 @@ function bindLookBack(el){
   if(nx) nx.onclick = () => { const z = PL.back; if(z.qi < z.z.qs.length - 1) z.qi++; else z.fin = true; renderTomorrow(); };
 }
 
+/* «Συνέχισε»: το τελευταίο μάθημα που άνοιξε ο μαθητής στον κατάλογο (diab-last-lesson), κάτω από τον τίτλο του «Αύριο» */
+function resumeHtml(){
+  const last = lastLesson();
+  if(!last) return "";
+  const sid = last.hash.split("/")[2];
+  return `<a class="pl-row pl-resume" href="${esc(last.hash)}">${subjectIcon(sid)}<span class="pl-t"><small>Συνέχισε</small><b>${esc(last.title)}</b></span><span class="pl-go" aria-hidden="true">›</span></a>`;
+}
+
 /* Η αρχική: τι έχεις την επόμενη σχολική μέρα και ποια διαγωνίσματα έρχονται */
 function renderTomorrow(){
   const el = $("#plan"), date = nextSchoolDay(), wd = dayAt(date).getDay(), soon = daysTo(date) === 1, day = dayPlan(date), sched = loadSchedule();
@@ -144,6 +152,7 @@ function renderTomorrow(){
       <div class="row"><button class="btn" type="submit">Πρόσθεσε</button><button class="btn ghost" type="button" data-pl-cancel>Άκυρο</button></div>
     </form>` : `<button class="pl-add" data-pl-add>+ Κάτι άλλο: διάβασμα ή διαγώνισμα</button>`;
   el.innerHTML = `<div class="hero"><span class="ref">${dayName(date)}</span><h2 class="ct">${soon ? "Για αύριο" : "Για " + WEEK_ACC[wd]}</h2><p>${lead}</p></div>
+    ${resumeHtml()}
     ${lookBackHtml()}
     ${n ? `<ul class="pl-list">${day.ids.map(sid => row(sid)).join("")}</ul>` : ""}
     ${all.length ? `<h3 class="pl-h">Μαθήματα της ${getGrade(selectedGrade).label.split(" ")[0]}</h3><ul class="pl-list">${all.map(sid => row(sid, false)).join("")}</ul>` : ""}
